@@ -1,0 +1,23 @@
+{
+  "header": {
+    "language": "Язык",
+    "switchToRussian": "Переключить на русский",
+    "switchToEnglish": "Переключить на английский"
+  },
+  "auth": {
+    "forgotPassword": "Забыли пароль?"
+  },
+  "forgotPassword": {
+    "title": "Забыли пароль?",
+    "description": "Введите ваш email адрес и мы отправим вам ссылку для сброса пароля.",
+    "enterEmail": "Введите ваш email адрес",
+    "sendResetLink": "Отправить ссылку для сброса",
+    "sending": "Отправляем...",
+    "emailSent": "Email отправлен!",
+    "checkEmail": "Мы отправили ссылку для сброса пароля на",
+    "emailInstructions": "Нажмите на ссылку в письме, чтобы сбросить пароль. Если вы не видите письмо, проверьте папку спам.",
+    "tryDifferentEmail": "Попробовать другой email",
+    "backToHome": "Вернуться на главную",
+    "backToLogin": "Вернуться к входу"
+  }
+}

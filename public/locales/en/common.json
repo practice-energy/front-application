@@ -1,0 +1,23 @@
+{
+  "header": {
+    "language": "Language",
+    "switchToRussian": "Switch to Russian",
+    "switchToEnglish": "Switch to English"
+  },
+  "auth": {
+    "forgotPassword": "Forgot password?"
+  },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "description": "Enter your email address and we'll send you a link to reset your password.",
+    "enterEmail": "Enter your email address",
+    "sendResetLink": "Send reset link",
+    "sending": "Sending...",
+    "emailSent": "Email sent!",
+    "checkEmail": "We've sent a password reset link to",
+    "emailInstructions": "Click the link in the email to reset your password. If you don't see the email, check your spam folder.",
+    "tryDifferentEmail": "Try a different email",
+    "backToHome": "Back to home",
+    "backToLogin": "Back to login"
+  }
+}
