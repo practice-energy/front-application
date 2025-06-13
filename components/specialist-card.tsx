@@ -24,11 +24,8 @@ interface SpecialistCardProps {
   showSpecialties?: boolean
 }
 
-export function SpecialistCard({ specialist, onClick, showSpecialties = true }: SpecialistCardProps) {
+export function SpecialistCard({ specialist, onClick, showSpecialties = false }: SpecialistCardProps) {
   const { t } = useTranslations()
-
-  // Add safety check for specialties
-  const specialties = specialist.specialties || []
 
   return (
     <Card
@@ -36,7 +33,7 @@ export function SpecialistCard({ specialist, onClick, showSpecialties = true }: 
       onClick={onClick || (() => console.log(`Viewing profile of ${specialist.name}`))}
     >
       <div className="relative">
-        {/* Profile Image - smaller size */}
+        {/* Profile Image */}
         <div className="relative aspect-square rounded-t-xl overflow-hidden">
           <img
             src={specialist.image || "/placeholder.svg"}
@@ -65,7 +62,7 @@ export function SpecialistCard({ specialist, onClick, showSpecialties = true }: 
           )}
         </div>
 
-        {/* Content - more compact */}
+        {/* Content */}
         <div className="p-3">
           {/* Name and Rating */}
           <div className="flex items-start justify-between mb-1">
@@ -80,7 +77,7 @@ export function SpecialistCard({ specialist, onClick, showSpecialties = true }: 
           </div>
 
           {/* Location */}
-          <div className="flex items-center space-x-1 mb-2">
+          <div className="flex items-center space-x-1">
             <MapPin className="h-3 w-3 text-gray-400" />
             <span className="text-xs text-gray-500">{specialist.location}</span>
             <span className="text-xs text-gray-400">•</span>
@@ -88,24 +85,6 @@ export function SpecialistCard({ specialist, onClick, showSpecialties = true }: 
               {specialist.reviews} {t("specialist.practices")}
             </span>
           </div>
-
-          {/* Specialties Tag Cloud */}
-          {showSpecialties && specialties.length > 0 && (
-            <div className="space-y-1">
-              <div className="text-xs font-medium text-gray-700 mb-1">{t("specialist.specialties")}:</div>
-              <div className="flex flex-wrap gap-1">
-                {specialties.map((specialty, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="text-xs px-1.5 py-0.5 bg-gradient-to-r from-violet-50 to-purple-50 text-violet-700 border border-violet-200 hover:from-violet-100 hover:to-purple-100 transition-colors"
-                  >
-                    {specialty}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </Card>

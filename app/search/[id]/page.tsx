@@ -192,37 +192,6 @@ const mockServices = [
       },
     },
   },
-  {
-    id: 4,
-    name: "Business Strategy Consultation",
-    duration: "90 minutes",
-    price: 250,
-    image: "/placeholder.svg?height=400&width=600&text=Strategy+Planning",
-    description: "Comprehensive business planning and strategy development to optimize your operations.",
-    specialist: {
-      id: 2,
-      name: "Marcus Chen",
-      title: "Business Strategy Consultant",
-      image: "/placeholder.svg?height=100&width=100&text=Marcus",
-      rating: 4.8,
-      reviews: 89,
-      workHours: { start: 8, end: 18 },
-      availability: {
-        monday: ["8:00", "9:00", "10:00", "14:00", "15:00", "16:00", "17:00"],
-        tuesday: ["9:00", "11:00", "13:00", "15:00", "16:00", "17:00"],
-        wednesday: ["8:00", "10:00", "12:00", "14:00", "16:00", "17:00"],
-        thursday: ["9:00", "11:00", "13:00", "15:00", "17:00"],
-        friday: ["8:00", "10:00", "12:00", "15:00", "16:00"],
-      },
-      bookedSlots: {
-        monday: ["11:00-14:00"],
-        tuesday: ["8:00-9:00", "10:00-11:00", "14:00-15:00"],
-        wednesday: ["9:00-10:00", "11:00-12:00", "13:00-14:00", "15:00-16:00"],
-        thursday: ["8:00-9:00", "10:00-11:00", "12:00-13:00", "14:00-15:00", "16:00-17:00"],
-        friday: ["9:00-10:00", "11:00-12:00", "13:00-15:00", "17:00-18:00"],
-      },
-    },
-  },
 ]
 
 // Memoized components for better performance

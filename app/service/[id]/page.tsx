@@ -1,19 +1,17 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Star, Clock, Calendar, MessageCircle, ChevronLeft, ChevronRight, ArrowUp } from "lucide-react"
+import { ArrowLeft, Star, Clock, Calendar, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/auth-modal"
 import { BookingConfirmation } from "@/components/booking-confirmation"
 import { useTranslations } from "@/hooks/use-translations"
 import { SlotBasedTimeAvailability } from "@/components/slot-based-time-availability"
 import { AirbnbCalendar } from "@/components/airbnb-calendar"
+import { SearchBar } from "@/components/search-bar"
 
 // Mock service data
 const allServices = [
@@ -131,14 +129,9 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [selectedTimeRange, setSelectedTimeRange] = useState<string | null>(null)
-  const [message, setMessage] = useState("")
-  const [chatMessages, setChatMessages] = useState<{ text: string; sender: "user" | "specialist" }[]>([
-    { text: "Hello! How can I help you with this service?", sender: "specialist" },
-  ])
 
   // Refs for scrolling
   const bookingRef = useRef<HTMLDivElement>(null)
-  const messageRef = useRef<HTMLDivElement>(null)
 
   // Find the service by ID
   const service = allServices.find((s) => s.id === Number(params.id)) || allServices[0]
@@ -147,10 +140,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   // Scroll to sections
   const scrollToBooking = () => {
     bookingRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const scrollToMessage = () => {
-    messageRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
   // Get day of week
@@ -235,30 +224,10 @@ export default function ServicePage({ params }: { params: { id: string } }) {
     }
   }
 
-  // Handle sending a message
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!isAuthenticated) {
-      setAuthModalOpen(true)
-      return
-    }
-
-    if (message.trim()) {
-      setChatMessages([...chatMessages, { text: message, sender: "user" }])
-      setMessage("")
-
-      // Mock response after a short delay
-      setTimeout(() => {
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            text: `Thank you for your message about ${service.name}. I'll get back to you as soon as possible.`,
-            sender: "specialist",
-          },
-        ])
-      }, 1000)
-    }
+  // Handle search
+  const handleSearch = (query: string, category?: string) => {
+    const searchId = Date.now().toString()
+    router.push(`/search/${searchId}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
   }
 
   // Render time availability diagram
@@ -406,41 +375,9 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                 </div>
               </div>
 
-              {/* Message Section */}
-              <div ref={messageRef} id="message" className="bg-gray-50 rounded-xl p-6">
-                {/* Simple Chat Messages */}
-                <div className="bg-white rounded-lg border mb-4 max-h-60 overflow-y-auto">
-                  <div className="p-4 space-y-3">
-                    {chatMessages.map((msg, index) => (
-                      <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-                        <div
-                          className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                            msg.sender === "user" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          <p className="text-sm">{msg.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Simple Message Input */}
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                  <Input
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1"
-                  />
-                  <Button
-                    type="submit"
-                    disabled={!message.trim()}
-                    className="bg-violet-600 hover:bg-violet-700 text-white"
-                  >
-                    <ArrowUp className="h-4 w-4" />
-                  </Button>
-                </form>
+              {/* Search Bar Section */}
+              <div>
+                <SearchBar onSearch={handleSearch} showHeading={false} />
               </div>
             </div>
 
@@ -482,7 +419,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                       <Calendar className="h-4 w-4 mr-2" />
                       Book This Service
                     </Button>
-                    <Button variant="outline" className="w-full" onClick={scrollToMessage}>
+                    <Button variant="outline" className="w-full">
                       <MessageCircle className="h-4 w-4 mr-2" />
                       Contact Specialist
                     </Button>

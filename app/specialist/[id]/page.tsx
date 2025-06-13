@@ -1,14 +1,11 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Star, MapPin, Calendar, ChevronLeft, ChevronRight, MessageCircle, ArrowUp, X } from "lucide-react"
+import { ArrowLeft, Star, MapPin, Calendar, ChevronLeft, ChevronRight, MessageCircle, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/auth-modal"
 import { BookingConfirmation } from "@/components/booking-confirmation"
@@ -17,6 +14,7 @@ import { DateSelection } from "@/components/date-selection"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { SlotBasedTimeAvailability } from "@/components/slot-based-time-availability"
 import { SpecialistPhotoGallery } from "@/components/specialist-photo-gallery"
+import { SearchBar } from "@/components/search-bar"
 
 // Mock feedback data
 const feedbacks = [
@@ -307,17 +305,12 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [selectedTimeRange, setSelectedTimeRange] = useState<string | null>(null)
   const [selectedService, setSelectedService] = useState<any>(null)
-  const [message, setMessage] = useState("")
-  const [chatMessages, setChatMessages] = useState<{ text: string; sender: "user" | "specialist" }[]>([
-    { text: "Hello! How can I help you today?", sender: "specialist" },
-  ])
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
   const [galleryOpen, setGalleryOpen] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
   // Refs for scrolling
   const bookingRef = useRef<HTMLDivElement>(null)
-  const messageRef = useRef<HTMLDivElement>(null)
   const feedbackScrollRef = useRef<HTMLDivElement>(null)
 
   // Find the specialist by ID
@@ -374,10 +367,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   // Scroll to sections
   const scrollToBooking = () => {
     bookingRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const scrollToMessage = () => {
-    messageRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
   // Handle time selection from availability diagram
@@ -451,32 +440,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
     }
   }
 
-  // Handle sending a message
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!isAuthenticated) {
-      setAuthModalOpen(true)
-      return
-    }
-
-    if (message.trim()) {
-      setChatMessages([...chatMessages, { text: message, sender: "user" }])
-      setMessage("")
-
-      // Mock response after a short delay
-      setTimeout(() => {
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            text: `Thank you for your message. I'll get back to you as soon as possible.`,
-            sender: "specialist",
-          },
-        ])
-      }, 1000)
-    }
-  }
-
   // Render star rating
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -509,6 +472,12 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   // Handle service card click to navigate to service page
   const handleServiceCardClick = (serviceId: number) => {
     router.push(`/service/${serviceId}`)
+  }
+
+  // Handle search
+  const handleSearch = (query: string, category?: string) => {
+    const searchId = Date.now().toString()
+    router.push(`/search/${searchId}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
   }
 
   return (
@@ -723,41 +692,9 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
 
-                {/* Simple Message Section */}
-                <div ref={messageRef} className="bg-gray-50 rounded-xl p-6">
-                  {/* Simple Chat Messages */}
-                  <div className="bg-white rounded-lg border mb-4 max-h-60 overflow-y-auto">
-                    <div className="p-4 space-y-3">
-                      {chatMessages.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-                          <div
-                            className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                              msg.sender === "user" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            <p className="text-sm">{msg.text}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Simple Message Input */}
-                  <form onSubmit={handleSendMessage} className="flex gap-2">
-                    <Input
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Type your message..."
-                      className="flex-1"
-                    />
-                    <Button
-                      type="submit"
-                      disabled={!message.trim()}
-                      className="bg-violet-600 hover:bg-violet-700 text-white"
-                    >
-                      <ArrowUp className="h-4 w-4" />
-                    </Button>
-                  </form>
+                {/* Search Bar Section */}
+                <div>
+                  <SearchBar onSearch={handleSearch} showHeading={false} />
                 </div>
               </div>
             </div>
@@ -788,7 +725,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                       <Calendar className="h-4 w-4 mr-2" />
                       {t("specialistProfile.bookSession")}
                     </Button>
-                    <Button variant="outline" className="w-full" onClick={scrollToMessage}>
+                    <Button variant="outline" className="w-full">
                       <MessageCircle className="h-4 w-4 mr-2" />
                       {t("specialistProfile.sendMessage")}
                     </Button>
