@@ -11,6 +11,7 @@ import Image from "next/image"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
+import { v4 as uuidv4 } from "uuid"
 
 const searchCategories = [
   { key: "cognition", label: "Познание" },
@@ -234,7 +235,7 @@ export const SearchBar = React.memo(function SearchBar({
         setIsMenuOpen(false)
         setUploadedFiles([])
       } else {
-        const searchId = Date.now().toString()
+        const searchId = uuidv4()
 
         window.dispatchEvent(
           new CustomEvent("newChatCreated", {

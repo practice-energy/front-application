@@ -12,7 +12,7 @@ import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { AboutSection } from "@/components/about-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
-import { mockSpecialist } from "@/services/mock-data"
+import { getSpecialistById } from "@/services/mock-data"
 import { ShareSpecialistModal } from "@/components/share-specialist-modal"
 import { cn } from "@/lib/utils"
 import { BackButton } from "@/components/ui/button-back"
@@ -36,7 +36,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   // Find the specialist by ID
-  const specialist = mockSpecialist
+  const specialist = getSpecialistById(id)
 
   // If specialist not found, show not-found page
   if (!specialist) {
@@ -130,8 +130,8 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                 <div className="px-6 pb-6 space-y-8">
                   <AboutSection
                       title={`${t("specialistProfile.about")} ${specialist.name}`}
-                      description={specialist.bio}
-                      fullDescription={specialist.fullBio}
+                      description={specialist.description}
+                      fullDescription={specialist.description}
                       education={specialist.education}
                       experience={specialist.experience}
                       showEducationExperience={true}
