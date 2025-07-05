@@ -25,7 +25,7 @@ export function ListingCard({ listing }: ListingCardProps) {
     <Card className="group cursor-pointer border-0 shadow-none hover:shadow-lg transition-shadow duration-200">
       <div className="relative">
         {/* Image */}
-        <div className="relative aspect-square rounded-xl overflow-hidden">
+        <div className="relative aspect-square rounded-sm overflow-hidden">
           <img
             src={listing.image || "/placeholder.svg"}
             alt={listing.title}

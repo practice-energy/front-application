@@ -23,30 +23,31 @@ export default function EmailVerifiedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       <main className="px-4 sm:px-6 lg:px-8 max-w-md mx-auto py-16">
-        <Card className="p-8 text-center">
+        <Card className="p-8 text-center bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-violet-600" />
+            <div className="w-16 h-16 bg-violet-100 dark:bg-violet-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+              <CheckCircle className="w-8 h-8 text-violet-600 dark:text-violet-400" />
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Email Verified Successfully!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-300">
+            Email Verified Successfully!
+          </h1>
 
-          <div className="flex items-center justify-center mb-6 text-gray-600">
+          <div className="flex items-center justify-center mb-6 text-gray-600 dark:text-gray-400 transition-colors duration-300">
             <Mail className="w-5 h-5 mr-2" />
             <span className="text-sm">{email}</span>
           </div>
 
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-600 dark:text-gray-400 mb-8 transition-colors duration-300">
             Your email address has been successfully verified. You can now access all features of your account.
           </p>
 
           <Button
             onClick={handleContinue}
-            className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
+            className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white transition-all duration-300"
           >
             Continue to Profile
           </Button>

@@ -203,7 +203,7 @@ export function ProfileOverview({ profileData }: ProfileOverviewProps) {
               </h3>
 
               <div className="space-y-4">
-                <div className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-200">
+                <div className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-sm border border-violet-200">
                   <div className="flex items-center mb-2">
                     <Calendar className="h-5 w-5 mr-2 text-violet-600" />
                     <Label className="text-sm font-medium text-violet-700">Member Since</Label>

@@ -2,44 +2,18 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { User, Calendar, Heart, LogOut } from "lucide-react"
+import { ChevronDownIcon, UserIcon, ArrowRightOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
-import { useAuth } from "@/hooks/use-auth"
-import { useActiveRoute, useRouteAvailability, getRouteHref } from "@/utils/route-detection"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import type { RouteConfig } from "@/types/header"
 
-interface ProfileDropdownProps {
+interface ProfileDropdownV2Props {
   legacyRoutes?: boolean
-  onLogout: () => void
+  onLogout?: () => void
 }
 
-const navigationItems: RouteConfig[] = [
-  {
-    primary: "/profile?section=overview",
-    legacy: "/profile?section=overview",
-    label: "Profile",
-    icon: User,
-  },
-  {
-    primary: "/profile?section=calendar",
-    legacy: "/profile?section=calendar",
-    label: "Meetings & Schedule",
-    icon: Calendar,
-  },
-  {
-    primary: "/profile?section=saved",
-    legacy: "/profile?section=saved",
-    label: "Saved",
-    icon: Heart,
-  },
-]
-
-export function ProfileDropdownV2({ legacyRoutes = false, onLogout }: ProfileDropdownProps) {
+export function ProfileDropdownV2({ legacyRoutes = false, onLogout }: ProfileDropdownV2Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const { user } = useAuth()
-  const { isActiveRoute } = useActiveRoute()
-  const routeAvailability = useRouteAvailability()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -54,13 +28,11 @@ export function ProfileDropdownV2({ legacyRoutes = false, onLogout }: ProfileDro
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const handleItemClick = () => {
+  const handleLogout = () => {
     setIsOpen(false)
-  }
-
-  const handleLogoutClick = () => {
-    setIsOpen(false)
-    onLogout()
+    if (onLogout) {
+      onLogout()
+    }
   }
 
   return (
@@ -68,23 +40,33 @@ export function ProfileDropdownV2({ legacyRoutes = false, onLogout }: ProfileDro
       {/* Profile Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
+        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.02 }}
         className={cn(
-          "flex items-center justify-center",
-          "h-10 w-10 min-h-[44px] min-w-[44px]", // Ensure 44x44px minimum
-          "rounded-full transition-colors duration-200",
-          "hover:bg-gray-100 focus:bg-gray-100",
-          "focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2",
+          "flex items-center space-x-2 px-3 py-2",
+          "min-h-[44px]", // Ensure minimum touch target
+          "rounded-lg transition-all duration-300 ease-in-out",
+          "hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800",
+          "focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900",
           "touch-manipulation cursor-pointer",
         )}
-        whileTap={{ scale: 0.95 }}
-        whileHover={{ scale: 1.05 }}
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label="Profile menu"
       >
-        <div className="h-8 w-8 rounded-full bg-violet-100 flex items-center justify-center">
-          <User className="h-5 w-5 text-violet-600" />
-        </div>
+        <Avatar className="h-8 w-8">
+          <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Profile" />
+          <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400">
+            JD
+          </AvatarFallback>
+        </Avatar>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="text-gray-500 dark:text-gray-400"
+        >
+          <ChevronDownIcon className="h-4 w-4" />
+        </motion.div>
       </motion.button>
 
       {/* Dropdown Menu */}
@@ -94,69 +76,76 @@ export function ProfileDropdownV2({ legacyRoutes = false, onLogout }: ProfileDro
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className={cn(
-              "absolute right-0 top-full mt-2 w-64",
-              "bg-white rounded-lg shadow-lg border border-gray-200",
+              "absolute right-0 top-full mt-2 w-56",
+              "bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700",
               "py-2 z-50 overflow-hidden",
             )}
             role="menu"
           >
-            {/* User Info Header */}
-            <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900 truncate">{user?.name || "User"}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            {/* Profile Section */}
+            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+              <div className="flex items-center space-x-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Profile" />
+                  <AvatarFallback className="bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400">
+                    JD
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">John Doe</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">john.doe@example.com</p>
+                </div>
+              </div>
             </div>
 
-            {/* Navigation Items */}
+            {/* Menu Items */}
             <div className="py-1">
-              {navigationItems.map((item) => {
-                const isActive = isActiveRoute(item.primary, item.legacy)
-                const isAvailable = routeAvailability[item.primary] !== false
-                const href = getRouteHref(item.primary, item.legacy, isAvailable, legacyRoutes)
-
-                return (
-                  <Link
-                    key={item.primary}
-                    href={href}
-                    onClick={handleItemClick}
-                    className={cn(
-                      "flex items-center px-4 py-2 text-sm transition-colors",
-                      "hover:bg-gray-50 focus:bg-gray-50",
-                      "focus:outline-none",
-                      isActive ? "text-violet-600 bg-violet-50 border-r-2 border-violet-600" : "text-gray-700",
-                    )}
-                    role="menuitem"
-                  >
-                    <item.icon className={cn("mr-3 h-4 w-4", isActive ? "text-violet-600" : "text-gray-400")} />
-                    <span className="flex-1">{item.label}</span>
-                    {isActive && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-2 h-2 bg-violet-600 rounded-full ml-2"
-                      />
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-
-            {/* Logout */}
-            <div className="border-t border-gray-100 py-1">
-              <button
-                onClick={handleLogoutClick}
+              <Link
+                href="/profile"
+                onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center w-full px-4 py-2 text-sm text-gray-700",
-                  "hover:bg-gray-50 focus:bg-gray-50",
-                  "focus:outline-none transition-colors",
+                  "flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300",
+                  "hover:bg-gray-50 dark:hover:bg-gray-700 focus:bg-gray-50 dark:focus:bg-gray-700",
+                  "focus:outline-none transition-colors duration-200",
                 )}
                 role="menuitem"
               >
-                <LogOut className="mr-3 h-4 w-4 text-gray-400" />
-                Logout
-              </button>
+                <UserIcon className="mr-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                Profile
+              </Link>
+
+              <Link
+                href="/profile?section=preferences"
+                onClick={() => setIsOpen(false)}
+                className={cn(
+                  "flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300",
+                  "hover:bg-gray-50 dark:hover:bg-gray-700 focus:bg-gray-50 dark:focus:bg-gray-700",
+                  "focus:outline-none transition-colors duration-200",
+                )}
+                role="menuitem"
+              >
+                <Cog6ToothIcon className="mr-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                Preferences
+              </Link>
             </div>
+
+            <div className="border-t border-gray-100 dark:border-gray-700 my-1" />
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className={cn(
+                "flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300",
+                "hover:bg-gray-50 dark:hover:bg-gray-700 focus:bg-gray-50 dark:focus:bg-gray-700",
+                "focus:outline-none transition-colors duration-200 text-left",
+              )}
+              role="menuitem"
+            >
+              <ArrowRightOnRectangleIcon className="mr-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
+              Sign out
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

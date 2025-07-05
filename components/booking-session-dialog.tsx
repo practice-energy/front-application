@@ -256,7 +256,7 @@ export function BookingSessionDialog({
                         />
                       </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 rounded-xl border border-amber-200 dark:border-amber-700 min-w-[120px]">
+                    <div className="flex flex-col items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 rounded-sm border border-amber-200 dark:border-amber-700 min-w-[120px]">
                       <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 mb-1" />
                       <span className="text-sm font-medium text-amber-800 dark:text-amber-200">Duration</span>
                       <span className="text-lg font-bold text-amber-900 dark:text-amber-100">

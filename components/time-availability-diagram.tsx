@@ -45,7 +45,7 @@ export function TimeAvailabilityDiagram({
         })}
       </Label>
 
-      <Card className="p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl">
+      <Card className="p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm rounded-sm">
         <div className="space-y-6">
           {/* Time Scale Header */}
           <div className="flex items-center justify-between text-xs font-medium text-gray-500 dark:text-gray-400 px-1">

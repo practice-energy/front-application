@@ -2,59 +2,50 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
-import { MainSidebar } from "@/components/main-sidebar"
+import { useAuth } from "@/hooks/use-auth"
 import { Header } from "@/components/header"
+import { MainSidebar } from "@/components/main-sidebar"
+import { useSidebar } from "@/contexts/sidebar-context"
+import { useEffect } from "react"
 
 interface SidebarLayoutProps {
   children: React.ReactNode
 }
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
-  const [isCollapsed, setIsCollapsed] = useState(true)
-  const pathname = usePathname()
+  const { isAuthenticated } = useAuth()
+  const { isCollapsed } = useSidebar()
 
-  // Determine if sidebar should be shown based on current route
-  const showSidebar = !pathname.startsWith("/specialist/") && !pathname.startsWith("/service/")
-
-  // Load initial state from localStorage
+  // Update body margin when sidebar state changes
   useEffect(() => {
-    const savedState = localStorage.getItem("sidebarCollapsed")
-    if (savedState !== null) {
-      setIsCollapsed(JSON.parse(savedState))
+    if (typeof document !== "undefined") {
+      // Используем custom event для уведомления компонентов о изменении состояния сайдбара
+      window.dispatchEvent(
+        new CustomEvent("sidebarToggle", {
+          detail: { isCollapsed, width: isCollapsed ? 0 : 320 }
+        })
+      )
+
+      // Отложенная установка стилей для лучшей синхронизации рендеринга
+      const applyStyles = () => {
+        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? "320px" : "0"
+        document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+      }
+
+      requestAnimationFrame(applyStyles)
     }
-  }, [])
-
-  // Listen for sidebar toggle events
-  useEffect(() => {
-    const handleSidebarToggle = (event: CustomEvent) => {
-      setIsCollapsed(event.detail.isCollapsed)
-    }
-
-    window.addEventListener("sidebarToggle", handleSidebarToggle as EventListener)
-    window.addEventListener("headerSidebarToggle", handleSidebarToggle as EventListener)
-
     return () => {
-      window.removeEventListener("sidebarToggle", handleSidebarToggle as EventListener)
-      window.removeEventListener("headerSidebarToggle", handleSidebarToggle as EventListener)
+      if (typeof document !== "undefined") {
+        document.body.style.marginLeft = "0"
+      }
     }
-  }, [])
-
-  if (!showSidebar) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="transition-all duration-300">{children}</main>
-      </div>
-    )
-  }
+  }, [isAuthenticated, isCollapsed])
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
-      <MainSidebar isCollapsed={isCollapsed} />
-      <main className="transition-all duration-300">{children}</main>
+      {isAuthenticated && <MainSidebar />}
+      <main className="min-h-[calc(100vh-4rem)]">{children}</main>
     </div>
   )
 }

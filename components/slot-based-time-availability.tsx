@@ -160,7 +160,7 @@ const SlotBasedTimeAvailability = memo(
 
     return (
       <div className="space-y-4">
-        <Card className="p-6 bg-white border border-gray-200 shadow-sm rounded-xl h-[400px] flex flex-col">
+        <Card className="p-6 bg-white border border-gray-200 shadow-sm rounded-sm h-[400px] flex flex-col">
           <div className="space-y-4">
             {/* Time slots grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1">

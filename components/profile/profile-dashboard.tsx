@@ -18,6 +18,9 @@ const SecuritySection = lazy(() =>
 const BalanceSection = lazy(() =>
   import("@/components/profile/sections/balance-section").then((m) => ({ default: m.BalanceSection })),
 )
+const PreferencesSection = lazy(() =>
+  import("@/components/profile/sections/preferences-section").then((m) => ({ default: m.PreferencesSection })),
+)
 
 function LoadingSkeleton() {
   return (
@@ -60,8 +63,14 @@ export function ProfileDashboard() {
         )
       case "balance":
         return (
-           <Suspense fallback={<LoadingSkeleton />}>
+          <Suspense fallback={<LoadingSkeleton />}>
             <BalanceSection />
+          </Suspense>
+        )
+      case "preferences":
+        return (
+          <Suspense fallback={<LoadingSkeleton />}>
+            <PreferencesSection />
           </Suspense>
         )
       default:

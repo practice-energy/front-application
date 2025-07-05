@@ -1,161 +1,376 @@
 "use client"
 
-import { useState } from "react"
-import { useProfileStore } from "@/stores/profile-store"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { SpecialistCard } from "@/components/specialist-card"
-import { Trash2, SortAsc, FolderOpen } from "lucide-react"
-import { savedService } from "@/services/mock-data"
-import { useTranslations } from "@/hooks/use-translations"
+import { Badge } from "@/components/ui/badge"
+import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
+import { InstagramServiceCard } from "@/components/instagram-service-card"
+import { useLikes } from "@/hooks/use-likes"
+import { HeartIcon, FolderOpenIcon, UsersIcon, BriefcaseIcon, TrashIcon } from "@heroicons/react/24/outline"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
 
-// Sort options
-const SORT_OPTIONS = [
-  { value: "recent", label: "Recently Added" },
-  { value: "az", label: "A-Z" },
-  { value: "rating", label: "Rating: High to Low" },
+// Mock data with more items
+const allSpecialists = [
+  {
+    id: 1,
+    image: "/placeholder.svg?height=300&width=300",
+    name: "Elena Rodriguez",
+    title: "Spiritual Guide & Life Coach",
+    location: "San Francisco, CA",
+    rating: 4.9,
+    reviews: 127,
+    specialties: ["Astrology", "Life Coaching", "Meditation"],
+    isNew: true,
+    savedAt: new Date("2024-01-15"),
+  },
+  {
+    id: 2,
+    image: "/placeholder.svg?height=300&width=300",
+    name: "Marcus Chen",
+    title: "Business Strategy Consultant",
+    location: "New York, NY",
+    rating: 4.7,
+    reviews: 89,
+    specialties: ["Business Strategy", "Leadership", "Finance"],
+    isNew: false,
+    savedAt: new Date("2024-01-10"),
+  },
+  {
+    id: 3,
+    image: "/placeholder.svg?height=300&width=300",
+    name: "Dr. Sarah Williams",
+    title: "Wellness & Nutrition Expert",
+    location: "Los Angeles, CA",
+    rating: 4.8,
+    reviews: 203,
+    specialties: ["Nutrition", "Wellness", "Yoga"],
+    isNew: false,
+    savedAt: new Date("2024-01-20"),
+  },
+  {
+    id: 4,
+    image: "/placeholder.svg?height=300&width=300",
+    name: "James Thompson",
+    title: "Career Development Coach",
+    location: "Chicago, IL",
+    rating: 4.6,
+    reviews: 156,
+    specialties: ["Career Coaching", "Resume Writing", "Interview Prep"],
+    isNew: false,
+    savedAt: new Date("2024-01-08"),
+  },
+  {
+    id: 5,
+    image: "/placeholder.svg?height=300&width=300",
+    name: "Dr. Maria Garcia",
+    title: "Mental Health Therapist",
+    location: "Miami, FL",
+    rating: 4.9,
+    reviews: 234,
+    specialties: ["Therapy", "Anxiety", "Depression"],
+    isNew: true,
+    savedAt: new Date("2024-01-25"),
+  },
+]
+
+const allServices = [
+  {
+    id: 1,
+    name: "Personal Astrology Reading",
+    duration: "60 minutes",
+    price: 120,
+    rating: 4.9,
+    reviews: 85,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Comprehensive birth chart analysis and personal insights to help you understand your life path, strengths, challenges, and opportunities for growth.",
+    savedAt: new Date("2024-01-18"),
+  },
+  {
+    id: 2,
+    name: "Life Coaching Session",
+    duration: "50 minutes",
+    price: 95,
+    rating: 4.8,
+    reviews: 67,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Goal-setting and personal development guidance to help you overcome obstacles, clarify your vision, and create actionable steps toward your desired future.",
+    savedAt: new Date("2024-01-12"),
+  },
+  {
+    id: 3,
+    name: "Meditation Guidance",
+    duration: "45 minutes",
+    price: 80,
+    rating: 4.7,
+    reviews: 92,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Personalized meditation techniques and practice sessions tailored to your specific needs, helping you develop mindfulness and inner peace.",
+    savedAt: new Date("2024-01-22"),
+  },
+  {
+    id: 4,
+    name: "Business Strategy Consultation",
+    duration: "90 minutes",
+    price: 150,
+    rating: 4.8,
+    reviews: 43,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Strategic business planning and growth consultation to help scale your business and overcome operational challenges.",
+    savedAt: new Date("2024-01-14"),
+  },
+  {
+    id: 5,
+    name: "Nutrition Planning",
+    duration: "60 minutes",
+    price: 85,
+    rating: 4.6,
+    reviews: 78,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Personalized nutrition plan and dietary guidance tailored to your health goals and lifestyle preferences.",
+    savedAt: new Date("2024-01-19"),
+  },
+  {
+    id: 6,
+    name: "Career Coaching Session",
+    duration: "75 minutes",
+    price: 110,
+    rating: 4.7,
+    reviews: 56,
+    image: "/placeholder.svg?height=400&width=320",
+    description:
+      "Professional career guidance including resume review, interview preparation, and strategic career planning.",
+    savedAt: new Date("2024-01-16"),
+  },
 ]
 
 export function SavedSection() {
-  const { t } = useTranslations()
-  const { savedSpecialists, clearAllSpecialists, setLoading } = useProfileStore()
-  const [sortOption, setSortOption] = useState<string>("recent")
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const router = useRouter()
+  const { getLikedItems } = useLikes()
+  const [activeTab, setActiveTab] = useState<"specialists" | "services">("specialists")
+  const [savedSpecialists, setSavedSpecialists] = useState<typeof allSpecialists>([])
+  const [savedServices, setSavedServices] = useState<typeof allServices>([])
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false)
 
-  const handleClearAll = async () => {
-    setLoading(true)
-    try {
-      await savedService.clearAll()
-      clearAllSpecialists()
-      setIsDialogOpen(false)
-    } catch (error) {
-      console.error("Failed to clear specialists:", error)
-    } finally {
-      setLoading(false)
+  // Load saved items - for demo, show all items as saved
+  useEffect(() => {
+    // In a real app, this would filter based on actual liked items
+    // For demo purposes, we'll show all items as saved
+    setSavedSpecialists(allSpecialists)
+    setSavedServices(allServices)
+  }, [])
+
+  const totalSaved = savedSpecialists.length + savedServices.length
+  const currentItems = activeTab === "specialists" ? savedSpecialists : savedServices
+  const currentCount = currentItems.length
+
+  const handleClearAll = () => {
+    if (activeTab === "specialists") {
+      setSavedSpecialists([])
+    } else {
+      setSavedServices([])
     }
+    setIsClearDialogOpen(false)
   }
 
-  // Convert savedSpecialists to the format expected by SpecialistCard
-  const formattedSpecialists = savedSpecialists.map((specialist) => ({
-    id: specialist.id,
-    image: specialist.photo,
-    name: specialist.name,
-    title: specialist.specialties.join(", "),
-    location: "Local",
-    rating: specialist.rating,
-    reviews: specialist.reviewCount,
-    specialties: specialist.specialties,
-    isNew: false,
-    savedAt: specialist.savedDate,
-  }))
+  const handleBrowseSpecialists = () => {
+    // Generate new search ID and navigate
+    const newSearchId = Date.now().toString()
+    router.push(`/search/${newSearchId}`)
+  }
 
-  // Sort specialists based on selected option
-  const sortedSpecialists = [...formattedSpecialists].sort((a, b) => {
-    switch (sortOption) {
-      case "az":
-        return a.name.localeCompare(b.name)
-      case "rating":
-        return b.rating - a.rating
-      case "recent":
-      default:
-        return b.savedAt.getTime() - a.savedAt.getTime()
-    }
-  })
+  const handleBrowseServices = () => {
+    // Generate new search ID and navigate
+    const newSearchId = Date.now().toString()
+    router.push(`/search/${newSearchId}`)
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-[935px] mx-auto px-4 lg:px-6 space-y-6 transition-all duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("savedSection.title", "Saved Specialists")}</h1>
-          <p className="text-gray-600">
-            {t(
-              "savedSection.count",
-              { count: savedSpecialists.length },
-              `${savedSpecialists.length} specialists saved`,
+        {/* Clear All Button */}
+        {currentCount > 0 && (
+          <Button
+            variant="outline"
+            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20 dark:border-gray-600 w-full sm:w-auto"
+            onClick={() => setIsClearDialogOpen(true)}
+          >
+            <TrashIcon className="h-4 w-4" />
+            Clear All {activeTab === "specialists" ? "Specialists" : "Services"}
+          </Button>
+        )}
+      </div>
+
+      {/* Enhanced Tabs */}
+      <div className="bg-gray-50 dark:bg-gray-800 p-1.5 rounded-sm shadow-sm">
+        <div className="flex space-x-1">
+          <button
+            onClick={() => setActiveTab("specialists")}
+            className={cn(
+              "flex-1 px-4 lg:px-6 py-3 rounded-lg font-medium transition-all duration-200",
+              "flex items-center justify-center gap-2 lg:gap-3",
+              activeTab === "specialists"
+                ? "bg-white dark:bg-gray-700 text-violet-600 dark:text-violet-400 shadow-sm ring-1 ring-violet-100 dark:ring-violet-800"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50",
             )}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Sort Control */}
-          <div className="flex items-center gap-2">
-            <SortAsc className="h-4 w-4 text-gray-500" />
-            <Select value={sortOption} onValueChange={(value) => setSortOption(value)}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {t(`savedSection.sortOptions.${option.value}`, option.label)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Clear All Button */}
-          {savedSpecialists.length > 0 && (
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50">
-                  <Trash2 className="h-4 w-4" />
-                  {t("savedSection.clearAll", "Clear All")}
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{t("savedSection.confirmClear.title", "Remove all saved specialists?")}</DialogTitle>
-                  <DialogDescription>
-                    {t(
-                      "savedSection.confirmClear.description",
-                      "This will permanently remove all specialists from your saved list.",
-                    )}
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    {t("common.cancel", "Cancel")}
-                  </Button>
-                  <Button variant="destructive" onClick={handleClearAll}>
-                    {t("common.confirm", "Confirm")}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
+          >
+            <UsersIcon className="h-4 w-4" />
+            <span className="text-sm lg:text-base">Specialists</span>
+            {savedSpecialists.length > 0 && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-xs min-w-[20px] h-5",
+                  activeTab === "specialists"
+                    ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800"
+                    : "bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300",
+                )}
+              >
+                {savedSpecialists.length}
+              </Badge>
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab("services")}
+            className={cn(
+              "flex-1 px-4 lg:px-6 py-3 rounded-lg font-medium transition-all duration-200",
+              "flex items-center justify-center gap-2 lg:gap-3",
+              activeTab === "services"
+                ? "bg-white dark:bg-gray-700 text-violet-600 dark:text-violet-400 shadow-sm ring-1 ring-violet-100 dark:ring-violet-800"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50",
+            )}
+          >
+            <BriefcaseIcon className="h-4 w-4" />
+            <span className="text-sm lg:text-base">Services</span>
+            {savedServices.length > 0 && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-xs min-w-[20px] h-5",
+                  activeTab === "services"
+                    ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800"
+                    : "bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300",
+                )}
+              >
+                {savedServices.length}
+              </Badge>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Content */}
-      {savedSpecialists.length === 0 ? (
-        <Card className="p-6">
-          <div className="text-center py-12">
-            <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-lg font-medium">{t("savedSection.empty.title", "No saved specialists")}</h3>
-            <p className="mt-1 text-gray-500">
-              {t("savedSection.empty.description", "Start saving specialists to see them appear here")}
+      {/* Content Grid with Enhanced Spacing */}
+      <div
+        className="min-h-[400px]"
+        style={{
+          transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+        }}
+      >
+        {activeTab === "specialists" && (
+          <>
+            {savedSpecialists.length === 0 ? (
+              <Card className="p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700 shadow-sm rounded-lg">
+                <div className="text-center py-12">
+                  <HeartIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No saved specialists</h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    Start exploring and save specialists you're interested in
+                  </p>
+                  <Button
+                    onClick={handleBrowseSpecialists}
+                    className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600"
+                  >
+                    Browse Specialists
+                  </Button>
+                </div>
+              </Card>
+            ) : (
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-3"
+                style={{
+                  transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+                }}
+              >
+                {savedSpecialists.map((specialist) => (
+                  <div key={specialist.id} className="hover:scale-[1.02] transition-transform duration-200">
+                    <InstagramSpecialistCard specialist={specialist} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === "services" && (
+          <>
+            {savedServices.length === 0 ? (
+              <Card className="p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700 shadow-sm rounded-lg">
+                <div className="text-center py-12">
+                  <FolderOpenIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No saved services</h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    Discover amazing services and save the ones you'd like to try
+                  </p>
+                  <Button
+                    onClick={handleBrowseServices}
+                    className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600"
+                  >
+                    Browse Services
+                  </Button>
+                </div>
+              </Card>
+            ) : (
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-3"
+                style={{
+                  transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+                }}
+              >
+                {savedServices.map((service) => (
+                  <div key={service.id} className="hover:scale-[1.02] transition-transform duration-200">
+                    <InstagramServiceCard service={service} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Clear All Modal */}
+      {isClearDialogOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={() => setIsClearDialogOpen(false)}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md p-6 transform transition-all duration-200 scale-100 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold dark:text-gray-100 mb-2">Clear all saved {activeTab}?</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              This will remove all {activeTab} from your saved list. This action cannot be undone.
             </p>
-            <Button className="mt-6">{t("savedSection.empty.browseButton", "Browse Specialists")}</Button>
-          </div>
-        </Card>
-      ) : (
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {sortedSpecialists.map((specialist) => (
-              <SpecialistCard key={specialist.id} specialist={specialist} showSpecialties={true} />
-            ))}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setIsClearDialogOpen(false)}
+                className="flex-1 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleClearAll} className="flex-1">
+                Clear All
+              </Button>
+            </div>
           </div>
         </div>
       )}

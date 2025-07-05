@@ -29,19 +29,23 @@ export default function ForgotPasswordPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 transition-colors duration-300">
+        <Card className="w-full max-w-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+            <div className="mx-auto mb-4 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle className="text-2xl font-bold">{t("forgotPassword.emailSent")}</CardTitle>
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
+              {t("forgotPassword.emailSent")}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-center text-gray-600">
+            <p className="text-center text-gray-600 dark:text-gray-400 transition-colors duration-300">
               {t("forgotPassword.checkEmail")} <span className="font-medium">{email}</span>
             </p>
-            <p className="text-center text-sm text-gray-500">{t("forgotPassword.emailInstructions")}</p>
+            <p className="text-center text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300">
+              {t("forgotPassword.emailInstructions")}
+            </p>
             <div className="space-y-3">
               <Button
                 onClick={() => {
@@ -49,12 +53,12 @@ export default function ForgotPasswordPage() {
                   setEmail("")
                 }}
                 variant="outline"
-                className="w-full"
+                className="w-full border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
               >
                 {t("forgotPassword.tryDifferentEmail")}
               </Button>
               <Link href="/" className="block">
-                <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-600">
+                <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white transition-all duration-300">
                   {t("forgotPassword.backToHome")}
                 </Button>
               </Link>
@@ -66,27 +70,34 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 transition-colors duration-300">
+      <Card className="w-full max-w-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">{t("forgotPassword.title")}</CardTitle>
-          <p className="text-gray-600 mt-2">{t("forgotPassword.description")}</p>
+          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
+            {t("forgotPassword.title")}
+          </CardTitle>
+          <p className="text-gray-600 dark:text-gray-400 mt-2 transition-colors duration-300">
+            {t("forgotPassword.description")}
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300"
+              >
                 {t("auth.email")}
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <Input
                   id="email"
                   type="email"
                   placeholder={t("forgotPassword.enterEmail")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                   required
                 />
               </div>
@@ -94,7 +105,7 @@ export default function ForgotPasswordPage() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-violet-500 to-purple-600"
+              className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white transition-all duration-300"
               disabled={isLoading}
             >
               {isLoading ? t("forgotPassword.sending") : t("forgotPassword.sendResetLink")}
@@ -102,7 +113,10 @@ export default function ForgotPasswordPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <Link href="/" className="inline-flex items-center text-sm text-violet-600 hover:text-violet-700">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors duration-300"
+            >
               <ArrowLeft className="w-4 h-4 mr-1" />
               {t("forgotPassword.backToLogin")}
             </Link>

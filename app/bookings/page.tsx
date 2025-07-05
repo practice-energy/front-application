@@ -175,23 +175,27 @@ export default function BookingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Header />
       <main className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{t("specialist.bookings")}</h1>
-            <p className="text-muted-foreground mt-1">{t("specialist.manageBookings")}</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
+              {t("specialist.bookings")}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 transition-colors duration-300">
+              {t("specialist.manageBookings")}
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
             {/* Filter */}
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                 <SelectItem value="all">{t("specialist.activeBookings")}</SelectItem>
                 <SelectItem value="pending">{t("specialist.pending")}</SelectItem>
                 <SelectItem value="confirmed">{t("specialist.confirmed")}</SelectItem>
@@ -204,13 +208,13 @@ export default function BookingsPage() {
             <div className="flex items-center space-x-2">
               <Badge
                 variant="secondary"
-                className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400"
+                className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400 transition-colors duration-300"
               >
                 {bookings.filter((b) => b.status === "pending").length} {t("specialist.pending")}
               </Badge>
               <Badge
                 variant="secondary"
-                className="bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                className="bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400 transition-colors duration-300"
               >
                 {bookings.filter((b) => b.status === "confirmed").length} {t("specialist.confirmed")}
               </Badge>
@@ -222,39 +226,47 @@ export default function BookingsPage() {
           {filteredBookings.map((booking) => (
             <Card
               key={booking.id}
-              className="overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+              className="overflow-hidden hover:shadow-lg transition-all cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
               onClick={() => router.push(`/booking/${booking.id}`)}
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start space-x-4 flex-1">
-                    <div className="w-14 h-14 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div className="w-14 h-14 bg-gradient-to-r from-amber-500 to-orange-600 rounded-sm flex items-center justify-center shadow-lg">
                       <User className="h-7 w-7 text-white" />
                     </div>
 
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-3">
-                        <h3 className="text-xl font-semibold text-foreground">{booking.clientName}</h3>
-                        <Badge className={`${getStatusColor(booking.status)} font-medium`}>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                          {booking.clientName}
+                        </h3>
+                        <Badge
+                          className={`${getStatusColor(booking.status)} font-medium transition-colors duration-300`}
+                        >
                           {t(`specialist.${booking.status}`)}
                         </Badge>
                       </div>
 
-                      <div className="bg-muted/50 rounded-lg p-4 mb-4">
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 transition-colors duration-300">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="flex items-center text-sm">
-                            <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                            <span className="font-medium text-foreground">{formatDate(booking.date)}</span>
+                            <Calendar className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                            <span className="font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                              {formatDate(booking.date)}
+                            </span>
                           </div>
                           <div className="flex items-center text-sm">
-                            <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-                            <span className="font-medium text-foreground">
+                            <Clock className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                            <span className="font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
                               {booking.time} ({booking.duration})
                             </span>
                           </div>
                           <div className="flex items-center text-sm">
-                            <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
-                            <span className="font-medium text-foreground">{booking.price} Centi</span>
+                            <CreditCard className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
+                            <span className="font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                              {booking.price} Centi
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -262,12 +274,18 @@ export default function BookingsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div className="space-y-2">
                           <div>
-                            <p className="text-sm font-medium text-foreground">{t("specialist.service")}</p>
-                            <p className="text-sm text-muted-foreground">{booking.service}</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                              {t("specialist.service")}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                              {booking.service}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-foreground">{t("specialist.sessionType")}</p>
-                            <div className="flex items-center text-sm text-muted-foreground">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                              {t("specialist.sessionType")}
+                            </p>
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
                               {booking.type === "video" ? (
                                 <>
                                   <Video className="h-4 w-4 mr-1" /> {t("specialist.videoCall")}
@@ -283,13 +301,21 @@ export default function BookingsPage() {
 
                         <div className="space-y-2">
                           <div>
-                            <p className="text-sm font-medium text-foreground">{t("specialist.email")}</p>
-                            <p className="text-sm text-muted-foreground">{booking.clientEmail}</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                              {t("specialist.email")}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                              {booking.clientEmail}
+                            </p>
                           </div>
                           {booking.clientPhone && (
                             <div>
-                              <p className="text-sm font-medium text-foreground">{t("specialist.phone")}</p>
-                              <p className="text-sm text-muted-foreground">{booking.clientPhone}</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                                {t("specialist.phone")}
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                                {booking.clientPhone}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -297,15 +323,23 @@ export default function BookingsPage() {
 
                       {booking.location && (
                         <div className="mb-4">
-                          <p className="text-sm font-medium text-foreground mb-1">{t("specialist.location")}</p>
-                          <p className="text-sm text-muted-foreground">{booking.location}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-300">
+                            {t("specialist.location")}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            {booking.location}
+                          </p>
                         </div>
                       )}
 
                       {booking.notes && (
-                        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-                          <p className="text-sm font-medium text-foreground mb-1">{t("specialist.notes")}</p>
-                          <p className="text-sm text-muted-foreground">{booking.notes}</p>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 transition-colors duration-300">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1 transition-colors duration-300">
+                            {t("specialist.notes")}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            {booking.notes}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -320,7 +354,7 @@ export default function BookingsPage() {
                             e.stopPropagation()
                             handleApprove(booking.id)
                           }}
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="bg-green-600 hover:bg-green-700 text-white transition-colors duration-300"
                         >
                           <Check className="h-4 w-4 mr-1" />
                           {t("specialist.approve")}
@@ -332,7 +366,7 @@ export default function BookingsPage() {
                             e.stopPropagation()
                             handleDecline(booking.id)
                           }}
-                          className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+                          className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-300"
                         >
                           <X className="h-4 w-4 mr-1" />
                           {t("specialist.decline")}
@@ -346,6 +380,7 @@ export default function BookingsPage() {
                         e.stopPropagation()
                         handleEdit(booking)
                       }}
+                      className="border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
                     >
                       <Edit className="h-4 w-4 mr-1" />
                       {t("common.edit")}
@@ -357,6 +392,7 @@ export default function BookingsPage() {
                         e.stopPropagation()
                         router.push(`/specialist-messages/${booking.id}`)
                       }}
+                      className="border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
                     >
                       <MessageCircle className="h-4 w-4 mr-1" />
                       {t("specialist.message")}
@@ -370,9 +406,11 @@ export default function BookingsPage() {
 
         {filteredBookings.length === 0 && (
           <div className="text-center py-12">
-            <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">{t("specialist.noBookingsFound")}</h3>
-            <p className="text-muted-foreground">
+            <Calendar className="h-16 w-16 text-gray-400 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+              {t("specialist.noBookingsFound")}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
               {filterStatus === "all"
                 ? t("specialist.noBookingsYet")
                 : t("specialist.noBookingsFiltered", { status: filterStatus })}
@@ -382,10 +420,12 @@ export default function BookingsPage() {
 
         {/* Edit Booking Dialog */}
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <DialogHeader>
-              <DialogTitle>{t("specialist.editBooking")}</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                {t("specialist.editBooking")}
+              </DialogTitle>
+              <DialogDescription className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
                 {t("specialist.editBookingDesc", { clientName: selectedBooking?.clientName })}
               </DialogDescription>
             </DialogHeader>
@@ -394,36 +434,47 @@ export default function BookingsPage() {
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="date">{t("booking.date")}</Label>
+                    <Label htmlFor="date" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                      {t("booking.date")}
+                    </Label>
                     <Input
                       id="date"
                       type="date"
                       value={editedBooking.date}
                       onChange={(e) => setEditedBooking({ ...editedBooking, date: e.target.value })}
+                      className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="time">{t("booking.time")}</Label>
+                    <Label htmlFor="time" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                      {t("booking.time")}
+                    </Label>
                     <Input
                       id="time"
                       type="time"
                       value={editedBooking.time}
                       onChange={(e) => setEditedBooking({ ...editedBooking, time: e.target.value })}
+                      className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="duration">{t("booking.duration")}</Label>
+                    <Label
+                      htmlFor="duration"
+                      className="text-gray-900 dark:text-gray-100 transition-colors duration-300"
+                    >
+                      {t("booking.duration")}
+                    </Label>
                     <Select
                       value={editedBooking.duration}
                       onValueChange={(value) => setEditedBooking({ ...editedBooking, duration: value })}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                         <SelectItem value="30 minutes">30 minutes</SelectItem>
                         <SelectItem value="45 minutes">45 minutes</SelectItem>
                         <SelectItem value="60 minutes">60 minutes</SelectItem>
@@ -433,28 +484,33 @@ export default function BookingsPage() {
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="price">{t("booking.price")} (Centi)</Label>
+                    <Label htmlFor="price" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                      {t("booking.price")} (Centi)
+                    </Label>
                     <Input
                       id="price"
                       type="number"
                       value={editedBooking.price}
                       onChange={(e) => setEditedBooking({ ...editedBooking, price: Number.parseInt(e.target.value) })}
+                      className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="type">{t("specialist.sessionType")}</Label>
+                  <Label htmlFor="type" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                    {t("specialist.sessionType")}
+                  </Label>
                   <Select
                     value={editedBooking.type}
                     onValueChange={(value: "video" | "in-person") =>
                       setEditedBooking({ ...editedBooking, type: value })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                       <SelectItem value="video">{t("specialist.videoCall")}</SelectItem>
                       <SelectItem value="in-person">{t("specialist.inPerson")}</SelectItem>
                     </SelectContent>
@@ -463,34 +519,50 @@ export default function BookingsPage() {
 
                 {editedBooking.type === "in-person" && (
                   <div>
-                    <Label htmlFor="location">{t("specialist.location")}</Label>
+                    <Label
+                      htmlFor="location"
+                      className="text-gray-900 dark:text-gray-100 transition-colors duration-300"
+                    >
+                      {t("specialist.location")}
+                    </Label>
                     <Input
                       id="location"
                       value={editedBooking.location || ""}
                       onChange={(e) => setEditedBooking({ ...editedBooking, location: e.target.value })}
                       placeholder={t("specialist.enterLocation")}
+                      className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                     />
                   </div>
                 )}
 
                 <div>
-                  <Label htmlFor="notes">{t("specialist.notes")}</Label>
+                  <Label htmlFor="notes" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                    {t("specialist.notes")}
+                  </Label>
                   <Textarea
                     id="notes"
                     value={editedBooking.notes || ""}
                     onChange={(e) => setEditedBooking({ ...editedBooking, notes: e.target.value })}
                     placeholder={t("specialist.addNotes")}
                     rows={3}
+                    className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                   />
                 </div>
               </div>
             )}
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setEditDialogOpen(false)}
+                className="border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
+              >
                 {t("common.cancel")}
               </Button>
-              <Button onClick={handleSaveEdit} className="bg-gradient-to-r from-amber-500 to-orange-600">
+              <Button
+                onClick={handleSaveEdit}
+                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-300"
+              >
                 {t("common.save")}
               </Button>
             </DialogFooter>

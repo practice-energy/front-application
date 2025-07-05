@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useProfileStore } from "@/stores/profile-store"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -28,6 +28,7 @@ export function ProfilePhotoModal({ isOpen, onClose }: ProfilePhotoModalProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isDragOver, setIsDragOver] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [profilePhotoPreview, setProfilePhotoPreview] = useState<string | null>(null)
 
   const handleFileSelect = (file: File) => {
     if (file && file.type.startsWith("image/")) {
@@ -69,22 +70,41 @@ export function ProfilePhotoModal({ isOpen, onClose }: ProfilePhotoModalProps) {
     }
   }
 
-  const handleSave = () => {
-    if (user && selectedImage) {
-      const updatedUser = {
-        ...user,
-        photo_url: selectedImage,
+  const handleSave = async () => {
+    try {
+      if (user && selectedImage) {
+        const updatedUser = {
+          ...user,
+          photo_url: selectedImage,
+        }
+        setUser(updatedUser)
       }
-      setUser(updatedUser)
+      onClose()
+      setSelectedImage(null)
+    } catch (error) {
+      console.error("Failed to update profile photo:", error)
     }
-    onClose()
-    setSelectedImage(null)
   }
 
   const handleCancel = () => {
     setSelectedImage(null)
+    setProfilePhotoPreview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
     onClose()
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedImage(null)
+      setProfilePhotoPreview(null)
+      setIsUploading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
+    }
+  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleCancel}>

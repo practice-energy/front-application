@@ -1,5 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15 3L15 13M15 17L15 21" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-<path d="M2 11V13C2 16.7712 2 18.6569 3.17157 19.8284C4.34315 21 6.22876 21 10 21H14C17.7712 21 19.6569 21 20.8284 19.8284C22 18.6569 22 16.7712 22 13V11C22 7.22876 22 5.34315 20.8284 4.17157C19.6569 3 17.7712 3 14 3H10C6.22876 3 4.34315 3 3.17157 4.17157C2.51839 4.82475 2.22937 5.69989 2.10149 7" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="304.000000pt" height="240.000000pt" viewBox="0 0 304.000000 240.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,240.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M738 1836 c-56 -20 -85 -42 -116 -88 l-27 -42 -3 -510 c-2 -352 0
+-523 8 -549 14 -49 65 -106 115 -128 37 -17 83 -19 681 -19 l640 0 51 25 c32
+16 61 41 79 67 l29 41 3 529 c2 505 2 529 -17 565 -26 52 -68 89 -120 108 -37
+13 -130 15 -665 15 -492 -1 -629 -4 -658 -14z m642 -661 l0 -515 -303 0 c-222
+0 -306 3 -315 12 -9 9 -12 134 -12 499 0 430 2 489 16 503 13 14 56 16 315 16
+l299 0 0 -515z m654 493 c23 -33 23 -953 0 -986 -15 -22 -19 -22 -255 -22
+l-239 0 0 515 0 515 239 0 c236 0 240 0 255 -22z"/>
+<path d="M1650 1440 l0 -80 145 0 145 0 0 80 0 80 -145 0 -145 0 0 -80z"/>
+<path d="M1650 1170 l0 -81 143 3 142 3 3 78 3 77 -146 0 -145 0 0 -80z"/>
+<path d="M1650 910 l0 -80 145 0 145 0 0 80 0 80 -145 0 -145 0 0 -80z"/>
+</g>
 </svg>

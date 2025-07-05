@@ -48,23 +48,29 @@ export default function SetNewPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       <Header />
       <main className="px-4 sm:px-6 lg:px-8 max-w-md mx-auto py-16">
-        <Card className="p-8">
+        <Card className="p-8 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center">
-              <Lock className="w-8 h-8 text-violet-600" />
+            <div className="w-16 h-16 bg-violet-100 dark:bg-violet-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+              <Lock className="w-8 h-8 text-violet-600 dark:text-violet-400" />
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 text-center">Set New Password</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 text-center transition-colors duration-300">
+            Set New Password
+          </h1>
 
-          <p className="text-gray-600 mb-8 text-center">Please enter your new password below</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-8 text-center transition-colors duration-300">
+            Please enter your new password below
+          </p>
 
           <div className="space-y-6">
             <div>
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword" className="text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                New Password
+              </Label>
               <div className="relative mt-1">
                 <Input
                   id="newPassword"
@@ -72,23 +78,24 @@ export default function SetNewPasswordPage() {
                   value={passwords.new}
                   onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
                   placeholder="Enter new password"
+                  className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility("new")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-300"
                 >
                   {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {passwords.new && !isPasswordValid && (
-                <div className="flex items-center mt-1 text-red-600 text-sm">
+                <div className="flex items-center mt-1 text-red-600 dark:text-red-400 text-sm transition-colors duration-300">
                   <AlertCircle className="h-4 w-4 mr-1" />
                   Password must be at least 8 characters long
                 </div>
               )}
               {passwords.new && isPasswordValid && (
-                <div className="flex items-center mt-1 text-green-600 text-sm">
+                <div className="flex items-center mt-1 text-green-600 dark:text-green-400 text-sm transition-colors duration-300">
                   <Check className="h-4 w-4 mr-1" />
                   Password meets requirements
                 </div>
@@ -96,7 +103,12 @@ export default function SetNewPasswordPage() {
             </div>
 
             <div>
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label
+                htmlFor="confirmPassword"
+                className="text-gray-900 dark:text-gray-100 transition-colors duration-300"
+              >
+                Confirm New Password
+              </Label>
               <div className="relative mt-1">
                 <Input
                   id="confirmPassword"
@@ -104,23 +116,24 @@ export default function SetNewPasswordPage() {
                   value={passwords.confirm}
                   onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
                   placeholder="Confirm new password"
+                  className="bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 transition-colors duration-300"
                 />
                 <button
                   type="button"
                   onClick={() => togglePasswordVisibility("confirm")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-300"
                 >
                   {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {passwords.confirm && !doPasswordsMatch && (
-                <div className="flex items-center mt-1 text-red-600 text-sm">
+                <div className="flex items-center mt-1 text-red-600 dark:text-red-400 text-sm transition-colors duration-300">
                   <AlertCircle className="h-4 w-4 mr-1" />
                   Passwords do not match
                 </div>
               )}
               {passwords.confirm && doPasswordsMatch && passwords.new && (
-                <div className="flex items-center mt-1 text-green-600 text-sm">
+                <div className="flex items-center mt-1 text-green-600 dark:text-green-400 text-sm transition-colors duration-300">
                   <Check className="h-4 w-4 mr-1" />
                   Passwords match
                 </div>
@@ -130,7 +143,7 @@ export default function SetNewPasswordPage() {
             <Button
               onClick={handleSubmit}
               disabled={!canSubmit || isSubmitting}
-              className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
+              className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white transition-all duration-300"
             >
               {isSubmitting ? "Updating Password..." : "Update Password"}
             </Button>

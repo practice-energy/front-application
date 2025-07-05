@@ -71,7 +71,7 @@ export function InteractiveTimeAvailability({
         })}
       </Label>
 
-      <Card className="p-6 bg-white border border-gray-200 shadow-sm rounded-xl">
+      <Card className="p-6 bg-white border border-gray-200 shadow-sm rounded-sm">
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
           {availableSlots.map((time) => {
             const isBooked = isTimeSlotBooked(time)

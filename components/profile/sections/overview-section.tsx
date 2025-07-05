@@ -1,140 +1,213 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useProfileStore } from "@/stores/profile-store"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Edit, Camera, CheckCircle, AlertCircle, Calendar, BookOpen, Heart } from "lucide-react"
-import { ProfileEditModal } from "@/components/profile/profile-edit-modal"
-import { ProfilePhotoModal } from "@/components/profile/profile-photo-modal"
+import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
+import { PersonalInfoCard } from "@/components/profile/personal-info-card"
+import { ExperienceCard } from "@/components/profile/experience-card"
+import { EducationCard } from "@/components/profile/education-card"
+import { motion, AnimatePresence } from "framer-motion"
+import { Skeleton } from "@/components/ui/skeleton"
+
+interface ExperienceItem {
+  description: string
+  certificate?: File | null
+}
+
+interface ProfileData {
+  first_name: string
+  last_name: string
+  bio: string
+  location: string
+  photos: File[]
+  experience: ExperienceItem[]
+  education: ExperienceItem[]
+}
 
 export function OverviewSection() {
   const { user, stats } = useProfileStore()
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  // Saved data (what's displayed in View mode)
+  const [savedData, setSavedData] = useState<ProfileData>({
+    first_name: "",
+    last_name: "",
+    bio: "",
+    location: "",
+    photos: [],
+    experience: [],
+    education: [],
+  })
+
+  // Draft data (what's being edited in Edit mode)
+  const [draftData, setDraftData] = useState<ProfileData>({
+    first_name: "",
+    last_name: "",
+    bio: "",
+    location: "",
+    photos: [],
+    experience: [],
+    education: [],
+  })
+
+  // Validation errors
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Initialize data when user loads
+  useEffect(() => {
+    if (user) {
+      const userData = {
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        bio: user.bio || "",
+        location: user.location || "",
+        photos: user.photos || [],
+        experience: user.experience || [],
+        education: user.education || [],
+      }
+      setSavedData(userData)
+      setDraftData(userData)
+    }
+  }, [user])
+
+  // Check for changes
+  useEffect(() => {
+    const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
+    setHasChanges(changed)
+  }, [draftData, savedData])
+
+  const currentData = isEditMode ? draftData : savedData
+
+  const handleInputChange = (field: keyof ProfileData, value: string | string[] | File[] | ExperienceItem[]) => {
+    setDraftData((prev) => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }))
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!draftData.first_name.trim()) {
+      newErrors.first_name = "First name is required"
+    }
+    if (!draftData.last_name.trim()) {
+      newErrors.last_name = "Last name is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handlePublish = async () => {
+    setIsSaving(true)
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Update saved data to new published state
+      setSavedData(draftData)
+      setHasChanges(false)
+
+      console.log("Saving profile data:", draftData)
+    } catch (error) {
+      console.error("Failed to save profile:", error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleModeToggle = async (mode: "view" | "edit") => {
+    if (mode === "view") {
+      // Validate before switching to view mode
+      if (!validateForm()) {
+        return // ModeToggleBar will handle the error display
+      }
+
+      setIsTransitioning(true)
+
+      if (hasChanges) {
+        await handlePublish()
+      }
+
+      // Small delay for smoother transition
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      setIsTransitioning(false)
+    }
+
+    setIsTransitioning(true)
+
+    setIsEditMode(mode === "edit")
+
+    // Small delay for smoother transition
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    setIsTransitioning(false)
+  }
 
   if (!user || !stats) {
-    return <div>Loading...</div>
+    return (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        </div>
+    )
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Profile Overview</h1>
-        <p className="text-gray-600">Manage your account and view your activity</p>
+      <div className="w-full">
+        <ModeToggleBar
+            isEditMode={isEditMode}
+            onModeToggle={handleModeToggle}
+        />
+
+        <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8">
+          <AnimatePresence mode="wait">
+            {isTransitioning ? (
+                <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                >
+                  <Skeleton className="h-[400px] w-full rounded-sm" />
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
+                </motion.div>
+            ) : (
+                <motion.div
+                    key="content"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-6"
+                >
+                  <PersonalInfoCard
+                      data={currentData}
+                      isEditMode={isEditMode}
+                      onInputChange={handleInputChange}
+                      errors={errors}
+                  />
+
+                  <EducationCard
+                      data={currentData.education}
+                      isEditMode={isEditMode}
+                      onEducationChange={(education) => handleInputChange("education", education)}
+                  />
+
+                  <ExperienceCard
+                      data={currentData.experience}
+                      isEditMode={isEditMode}
+                      onExperienceChange={(experience) => handleInputChange("experience", experience)}
+                  />
+                </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-
-      {/* Profile Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-          <CardDescription>Your profile details and verification status</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Profile Photo and Basic Info */}
-          <div className="flex flex-col sm:flex-row gap-6">
-            {/* Avatar */}
-            <div className="flex flex-col items-center space-y-3">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={user.photo_url || "/placeholder.svg"} />
-                <AvatarFallback className="text-xl">
-                  {user.first_name[0]}
-                  {user.last_name[0]}
-                </AvatarFallback>
-              </Avatar>
-              <Button variant="outline" size="sm" onClick={() => setIsPhotoModalOpen(true)} className="gap-2">
-                <Camera className="h-4 w-4" />
-                Update Photo
-              </Button>
-            </div>
-
-            {/* User Details */}
-            <div className="flex-1 space-y-4">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {user.first_name} {user.last_name}
-                </h3>
-                <p className="text-gray-600">{user.email.address}</p>
-              </div>
-
-              {/* Email Verification Status */}
-              <div className="flex items-center gap-2">
-                {user.email.verified ? (
-                  <Badge className="bg-green-100 text-green-700 border-green-200">
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                    Email Verified
-                  </Badge>
-                ) : (
-                  <Badge className="bg-orange-100 text-orange-700 border-orange-200">
-                    <AlertCircle className="h-3 w-3 mr-1" />
-                    Email Not Verified
-                  </Badge>
-                )}
-              </div>
-
-              {/* Edit Profile Button - Fixed Position */}
-              <div className="pt-2">
-                <Button onClick={() => setIsEditModalOpen(true)} className="gap-2">
-                  <Edit className="h-4 w-4" />
-                  Edit Profile
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card
-          className="hover:shadow-md transition-shadow cursor-pointer"
-          onClick={() => useProfileStore.getState().setActiveSection("calendar")}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Bookings</CardTitle>
-            <Calendar className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.activeBookings}</div>
-            <p className="text-xs text-gray-600">Upcoming sessions</p>
-          </CardContent>
-        </Card>
-
-        <Card
-          className="hover:shadow-md transition-shadow cursor-pointer"
-          onClick={() => useProfileStore.getState().setActiveSection("calendar")}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completed Sessions</CardTitle>
-            <BookOpen className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.completedSessions}</div>
-            <p className="text-xs text-gray-600">Total completed</p>
-          </CardContent>
-        </Card>
-
-        <Card
-          className="hover:shadow-md transition-shadow cursor-pointer"
-          onClick={() => useProfileStore.getState().setActiveSection("saved")}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saved Specialists</CardTitle>
-            <Heart className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalSaved}</div>
-            <p className="text-xs text-gray-600">Specialists saved</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Modals */}
-      <ProfileEditModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
-      <ProfilePhotoModal isOpen={isPhotoModalOpen} onClose={() => setIsPhotoModalOpen(false)} />
-    </div>
   )
 }

@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { useEffect } from "react"
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -41,21 +42,35 @@ export function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
     },
   })
 
-  const onSubmit = (data: ProfileFormData) => {
-    if (user) {
-      const updatedUser = {
-        ...user,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        email: {
-          ...user.email,
-          address: data.email,
-          verified: data.email !== user.email.address ? false : user.email.verified,
-        },
-      }
-      setUser(updatedUser)
+  useEffect(() => {
+    if (isOpen && user) {
+      form.reset({
+        firstName: user.first_name || "",
+        lastName: user.last_name || "",
+        email: user.email.address || "",
+      })
     }
-    onClose()
+  }, [isOpen, user, form])
+
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      if (user) {
+        const updatedUser = {
+          ...user,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: {
+            ...user.email,
+            address: data.email,
+            verified: data.email !== user.email.address ? false : user.email.verified,
+          },
+        }
+        setUser(updatedUser)
+      }
+      onClose()
+    } catch (error) {
+      console.error("Failed to update profile:", error)
+    }
   }
 
   return (

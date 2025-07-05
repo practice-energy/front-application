@@ -296,13 +296,13 @@ export function BookingSection({ specialist, onBooking }: BookingSectionProps) {
                       onChange={(e) => setSelectedTime(e.target.value)}
                       min="09:00"
                       max="18:00"
-                      className="pl-10 h-14 text-xl font-semibold border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 dark:focus:border-amber-400 bg-white dark:bg-gray-800 rounded-xl shadow-sm transition-all duration-200"
+                      className="pl-10 h-14 text-xl font-semibold border-2 border-amber-200 dark:border-amber-700 focus:border-amber-500 dark:focus:border-amber-400 bg-white dark:bg-gray-800 rounded-sm shadow-sm transition-all duration-200"
                       placeholder="Select time"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 rounded-xl border border-amber-200 dark:border-amber-700 min-w-[120px]">
+                <div className="flex flex-col items-center justify-center px-4 py-2 bg-white dark:bg-gray-800 rounded-sm border border-amber-200 dark:border-amber-700 min-w-[120px]">
                   <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 mb-1" />
                   <span className="text-sm font-medium text-amber-800 dark:text-amber-200">Duration</span>
                   <span className="text-lg font-bold text-amber-900 dark:text-amber-100">

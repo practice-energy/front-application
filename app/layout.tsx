@@ -4,7 +4,8 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/hooks/use-auth"
 import { I18nProvider } from "@/components/i18n-provider"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/hooks/use-theme"
+import { SidebarProvider } from "@/contexts/sidebar-context"
 import { SidebarLayout } from "@/components/sidebar-layout"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -22,11 +23,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const savedTheme = localStorage.getItem('theme') || 'system';
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (savedTheme === 'system' && systemDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.className} bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nProvider>
             <AuthProvider>
-              <SidebarLayout>{children}</SidebarLayout>
+              <SidebarProvider>
+                <SidebarLayout>{children}</SidebarLayout>
+              </SidebarProvider>
             </AuthProvider>
           </I18nProvider>
         </ThemeProvider>

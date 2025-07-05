@@ -2,454 +2,520 @@
 
 import type React from "react"
 
-import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { List, CalendarIcon, FolderOpen, Check, X, Star, Video, MapPin, Clock } from "lucide-react"
+import { Video, User, Check, X, Calendar } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { Booking } from "@/types/booking"
 import { mockBookings } from "@/services/booking-data"
-import { AirbnbCalendar } from "@/components/airbnb-calendar"
-import type { Booking, BookingStatus, ViewMode } from "@/types/booking"
 
-export function CalendarSection() {
-  const [viewMode, setViewMode] = useState<ViewMode>("list")
-  const [activeTab, setActiveTab] = useState<BookingStatus>("upcoming")
-  const [bookings, setBookings] = useState(mockBookings)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [cancellingBooking, setCancellingBooking] = useState<string | null>(null)
+interface CalendarSectionProps {
+  className?: string
+}
 
-  // Group bookings by status
-  const groupedBookings = useMemo(() => {
-    const groups = {
-      upcoming: bookings.filter((b) => b.status === "upcoming").sort((a, b) => a.date.getTime() - b.date.getTime()),
-      completed: bookings.filter((b) => b.status === "completed").sort((a, b) => b.date.getTime() - a.date.getTime()),
-      cancelled: bookings.filter((b) => b.status === "cancelled").sort((a, b) => b.date.getTime() - a.date.getTime()),
+interface MeetingCard {
+  id: string
+  service: {
+    id: string
+    name: string
+    photo?: string
+  }
+  specialist: {
+    id: string
+    name: string
+    photo: string
+  }
+  date: string
+  time: string
+  duration: number
+  format: "video" | "in-person"
+  status: "upcoming" | "completed" | "cancelled"
+  price: number
+  requiresConfirmation?: boolean
+}
+
+// Convert booking to meeting card format
+function convertBookingToMeetingCard(booking: Booking): MeetingCard {
+  try {
+    return {
+      id: booking.id,
+      service: {
+        id: booking.serviceId || booking.id,
+        name: booking.service?.name || "Unknown Service",
+        photo: undefined, // No actual photos in mock data
+      },
+      specialist: {
+        id: booking.specialist?.id || "unknown",
+        name: booking.specialist?.name || "Unknown Specialist",
+        photo: booking.specialist?.photo || "/placeholder.svg?height=40&width=40",
+      },
+      date: booking.date ? booking.date.toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+      time: booking.date
+        ? booking.date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })
+        : "12:00 PM",
+      duration: booking.duration || 60,
+      format: booking.format || "video",
+      status: booking.status || "upcoming",
+      price: booking.service?.price || 0,
+      requiresConfirmation: booking.requiresConfirmation || false,
     }
-    return groups
-  }, [bookings])
-
-  // Get bookings for selected date
-  const getSelectedDateBookings = () => {
-    if (!selectedDate) return []
-    return bookings.filter((booking) => {
-      const bookingDate = new Date(booking.date)
-      return bookingDate.toDateString() === selectedDate.toDateString()
-    })
-  }
-
-  // Event handlers
-  const handleApprove = (bookingId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
-    setBookings((prev) =>
-      prev.map((booking) => (booking.id === bookingId ? { ...booking, requiresConfirmation: false } : booking)),
-    )
-  }
-
-  const handleCancel = (bookingId: string) => {
-    setBookings((prev) =>
-      prev.map((booking) => (booking.id === bookingId ? { ...booking, status: "cancelled" as const } : booking)),
-    )
-    setCancellingBooking(null)
-  }
-
-  const handleCancelClick = (bookingId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
-    setCancellingBooking(bookingId)
-  }
-
-  const handleReview = (bookingId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
-    console.log(`Opening review modal for booking: ${bookingId}`)
-  }
-
-  const handleCardClick = (serviceId: string) => {
-    // Navigate to service page
-    window.location.href = `/service/${serviceId}`
-  }
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    })
-  }
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    })
-  }
-
-  // Render booking card in specialist services style
-  const renderBookingCard = (booking: Booking) => {
-    return (
-      <Card
-        key={booking.id}
-        className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 overflow-hidden w-full"
-        style={{ width: "280px" }}
-        onClick={() => handleCardClick(booking.serviceId)}
-      >
-        <CardContent className="p-0">
-          {/* Service image/photo at top */}
-          <div className="relative w-full h-40 bg-gray-100 overflow-hidden">
-            <img
-              src={booking.specialist.photo || "/placeholder.svg?height=160&width=280&query=service"}
-              alt={booking.service.name}
-              className="w-full h-full object-cover"
-            />
-            {/* Price badge */}
-            <div className="absolute bottom-3 right-3">
-              <Badge className="bg-white text-gray-900 border border-gray-200 font-bold text-base px-3 py-1 shadow-sm">
-                ${booking.service.price}
-              </Badge>
-            </div>
-          </div>
-
-          {/* Service details */}
-          <div className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} />
-                <AvatarFallback>
-                  {booking.specialist.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm text-gray-600">{booking.specialist.name}</span>
-            </div>
-
-            <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-violet-600 transition-colors line-clamp-2">
-              {booking.service.name}
-            </h3>
-
-            {/* Date and time */}
-            <div className="flex items-center gap-1 text-sm text-gray-600 mb-2">
-              <Clock className="w-4 h-4" />
-              <span>
-                {formatDate(booking.date)} at {formatTime(booking.date)} ({booking.duration}min)
-              </span>
-            </div>
-
-            {/* Format and status */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-1 text-sm text-gray-500">
-                {booking.format === "video" ? (
-                  <>
-                    <Video className="w-4 h-4" />
-                    <span>Video</span>
-                  </>
-                ) : (
-                  <>
-                    <MapPin className="w-4 h-4" />
-                    <span>In-person</span>
-                  </>
-                )}
-              </div>
-              <Badge
-                className={cn(
-                  "text-xs font-medium",
-                  booking.status === "upcoming" && "bg-violet-100 text-violet-700",
-                  booking.status === "completed" && "bg-emerald-100 text-emerald-700",
-                  booking.status === "cancelled" && "bg-gray-100 text-gray-700",
-                )}
-              >
-                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-              </Badge>
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex gap-2">
-              {booking.status === "upcoming" && (
-                <>
-                  {booking.requiresConfirmation && (
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-violet-600 hover:bg-violet-700 text-white border border-violet-600"
-                      onClick={(e) => handleApprove(booking.id, e)}
-                    >
-                      <Check className="w-4 h-4 mr-1" />
-                      Approve
-                    </Button>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 text-gray-600 border-gray-300 hover:bg-gray-50"
-                    onClick={(e) => handleCancelClick(booking.id, e)}
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Cancel
-                  </Button>
-                </>
-              )}
-
-              {booking.status === "completed" && (
-                <Button
-                  size="sm"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600"
-                  onClick={(e) => handleReview(booking.id, e)}
-                >
-                  <Star className="w-4 h-4 mr-1" />
-                  Leave Review
-                </Button>
-              )}
-
-              {booking.status === "cancelled" && (
-                <div className="w-full text-center text-sm text-gray-500 py-2">No actions available</div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // Render empty state
-  const renderEmptyState = (status: BookingStatus) => {
-    const messages = {
-      upcoming: {
-        title: "No upcoming bookings",
-        description: "You don't have any upcoming sessions scheduled.",
+  } catch (error) {
+    console.error("Error converting booking:", booking, error)
+    // Return a fallback meeting card
+    return {
+      id: booking.id || Math.random().toString(),
+      service: {
+        id: "fallback-service",
+        name: "Service Session",
       },
-      completed: {
-        title: "No completed sessions",
-        description: "Your completed sessions will appear here.",
+      specialist: {
+        id: "fallback-specialist",
+        name: "Specialist",
+        photo: "/placeholder.svg?height=40&width=40",
       },
-      cancelled: {
-        title: "No cancelled bookings",
-        description: "Any cancelled bookings will appear here.",
-      },
+      date: new Date().toISOString().split("T")[0],
+      time: "12:00 PM",
+      duration: 60,
+      format: "video",
+      status: "upcoming",
+      price: 50,
     }
-
-    return (
-      <Card className="bg-white col-span-full">
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <FolderOpen className="h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{messages[status].title}</h3>
-          <p className="text-gray-600 text-center max-w-md">{messages[status].description}</p>
-        </CardContent>
-      </Card>
-    )
   }
+}
 
+// Loading skeleton component
+function MeetingCardSkeleton() {
   return (
-    <div className="space-y-6 bg-gray-50 min-h-screen p-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Calendar & Bookings</h1>
-          <p className="text-gray-600">Manage your sessions and appointments</p>
-        </div>
-
-        {/* View Toggle - Icons Only */}
-        <div className="flex items-center bg-white rounded-lg border border-gray-200 p-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setViewMode("list")}
-            className={cn("p-2", viewMode === "list" && "bg-violet-600 hover:bg-violet-700 text-white")}
-          >
-            <List className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setViewMode("calendar")}
-            className={cn("p-2", viewMode === "calendar" && "bg-violet-600 hover:bg-violet-700 text-white")}
-          >
-            <CalendarIcon className="w-4 h-4" />
-          </Button>
+    <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden animate-pulse">
+      {/* Header skeleton - MOVED TO TOP */}
+      <div className="p-4 pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-sm"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
+          </div>
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded-full w-20"></div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto">
-        {/* Bookings Section */}
-        <div className={cn("flex-1", viewMode === "calendar" ? "lg:w-2/3" : "w-full")}>
-          {viewMode === "list" ? (
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as BookingStatus)}>
-              <TabsList className="grid w-full grid-cols-3 bg-gray-100">
-                <TabsTrigger
-                  value="upcoming"
-                  className="data-[state=active]:bg-white data-[state=active]:text-violet-700 relative"
-                >
-                  Upcoming
-                  {groupedBookings.upcoming.length > 0 && (
-                    <Badge className="ml-2 bg-violet-100 text-violet-700 text-xs px-2 py-0.5">
-                      {groupedBookings.upcoming.length}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="completed"
-                  className="data-[state=active]:bg-white data-[state=active]:text-violet-700 relative"
-                >
-                  Completed
-                  {groupedBookings.completed.length > 0 && (
-                    <Badge className="ml-2 bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5">
-                      {groupedBookings.completed.length}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="cancelled"
-                  className="data-[state=active]:bg-white data-[state=active]:text-violet-700 relative"
-                >
-                  Cancelled
-                  {groupedBookings.cancelled.length > 0 && (
-                    <Badge className="ml-2 bg-gray-100 text-gray-700 text-xs px-2 py-0.5">
-                      {groupedBookings.cancelled.length}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-              </TabsList>
+      {/* Photo placeholder skeleton */}
+      <div className="w-full h-80 md:h-96 bg-gray-200 dark:bg-gray-700"></div>
 
-              <TabsContent value="upcoming" className="mt-6">
-                {groupedBookings.upcoming.length === 0 ? (
-                  renderEmptyState("upcoming")
-                ) : (
-                  <div className="relative">
-                    <div className="flex flex-wrap gap-4 max-h-[700px] overflow-y-auto p-1 pb-8">
-                      {groupedBookings.upcoming.map((booking) => renderBookingCard(booking))}
-                    </div>
-                    {/* Blur bottom border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="completed" className="mt-6">
-                {groupedBookings.completed.length === 0 ? (
-                  renderEmptyState("completed")
-                ) : (
-                  <div className="relative">
-                    <div className="flex flex-wrap gap-4 max-h-[700px] overflow-y-auto p-1 pb-8">
-                      {groupedBookings.completed.map((booking) => renderBookingCard(booking))}
-                    </div>
-                    {/* Blur bottom border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="cancelled" className="mt-6">
-                {groupedBookings.cancelled.length === 0 ? (
-                  renderEmptyState("cancelled")
-                ) : (
-                  <div className="relative">
-                    <div className="flex flex-wrap gap-4 max-h-[700px] overflow-y-auto p-1 pb-8">
-                      {groupedBookings.cancelled.map((booking) => renderBookingCard(booking))}
-                    </div>
-                    {/* Blur bottom border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
-          ) : (
-            /* Calendar View - Show selected date bookings */
-            <div className="space-y-6">
-              {selectedDate ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {selectedDate.toLocaleDateString("en-US", {
-                        weekday: "long",
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </h2>
-                    <Button variant="outline" size="sm" onClick={() => setSelectedDate(null)}>
-                      View All
-                    </Button>
-                  </div>
-                  <div className="relative">
-                    <div className="flex flex-wrap gap-4 max-h-[700px] overflow-y-auto p-1 pb-8">
-                      {getSelectedDateBookings().length === 0 ? (
-                        <Card className="bg-white col-span-full w-full">
-                          <CardContent className="flex flex-col items-center justify-center py-12">
-                            <CalendarIcon className="h-12 w-12 text-gray-400 mb-4" />
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No bookings for this date</h3>
-                            <p className="text-gray-600 text-center">Select another date to view bookings.</p>
-                          </CardContent>
-                        </Card>
-                      ) : (
-                        getSelectedDateBookings().map((booking) => renderBookingCard(booking))
-                      )}
-                    </div>
-                    {/* Blur bottom border */}
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
-                  </div>
-                </>
-              ) : (
-                <div className="relative">
-                  <div className="flex flex-wrap gap-4 max-h-[700px] overflow-y-auto p-1 pb-8">
-                    {bookings.map((booking) => renderBookingCard(booking))}
-                  </div>
-                  {/* Blur bottom border */}
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
-                </div>
-              )}
-            </div>
-          )}
+      {/* Content skeleton */}
+      <div className="p-4 pt-2 space-y-3">
+        <div className="space-y-2">
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mx-auto"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 mx-auto"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mx-auto"></div>
         </div>
 
-        {/* Calendar Section - Only shown in calendar mode, fixed size */}
-        {viewMode === "calendar" && (
-          <div className="lg:w-1/3 lg:min-w-[320px]">
-            <div className="lg:sticky lg:top-8">
-              <Card className="bg-white">
-                <CardContent className="p-4">
-                  <div className="w-full" style={{ minWidth: "300px" }}>
-                    <AirbnbCalendar
-                      selectedDate={selectedDate || new Date()}
-                      onDateSelect={(date) => setSelectedDate(date)}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+        <div className="flex justify-between items-center pt-2">
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+          <div className="flex gap-2">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Instagram-style meeting card component
+function InstagramMeetingCard({
+  meeting,
+  onApprove,
+  onCancel,
+  isVisible,
+}: {
+  meeting: MeetingCard
+  onApprove?: (id: string) => void
+  onCancel?: (id: string) => void
+  isVisible: boolean
+}) {
+  const router = useRouter()
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "upcoming":
+        return "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300"
+      case "completed":
+        return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+      case "cancelled":
+        return "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+      default:
+        return "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+    }
+  }
+
+  const getFormatIcon = () => {
+    if (meeting.format === "video") {
+      return <Video className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+    } else {
+      return <User className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+    }
+  }
+
+  const handleCardClick = () => {
+    router.push(`/service/${meeting.service.id}`)
+  }
+
+  const handleSpecialistClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    router.push(`/specialist/${meeting.specialist.id}`)
+  }
+
+  const handleApprove = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onApprove?.(meeting.id)
+  }
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onCancel?.(meeting.id)
+  }
+
+  const handleRebook = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    router.push(`/service/${meeting.service.id}#booking`)
+  }
+
+  // Only render content when visible (lazy loading)
+  if (!isVisible) {
+    return <MeetingCardSkeleton />
+  }
+
+  return (
+    <div
+      className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:scale-[1.01] transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
+      onClick={handleCardClick}
+    >
+      {/* Header with specialist info and status - MOVED TO TOP */}
+      <div className="flex items-center justify-between p-4 pb-2">
+        <button
+          onClick={handleSpecialistClick}
+          className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-2 -m-2 transition-colors"
+        >
+          <Avatar className="h-10 w-10 rounded-sm">
+            <AvatarImage src={meeting.specialist.photo || "/placeholder.svg"} />
+            <AvatarFallback className="rounded-sm">
+              {meeting.specialist.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+          <span className="font-medium text-gray-900 dark:text-gray-100 hover:text-violet-600 dark:hover:text-violet-400 transition-colors">
+            {meeting.specialist.name}
+          </span>
+        </button>
+        <span className={cn("rounded-full px-3 py-1 text-xs font-medium", getStatusColor(meeting.status))}>
+          {meeting.status.charAt(0).toUpperCase() + meeting.status.slice(1)}
+        </span>
+      </div>
+
+      {/* Photo placeholder */}
+      <div className="w-full h-80 md:h-96 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+        {meeting.service.photo ? (
+          <img
+            src={meeting.service.photo || "/placeholder.svg"}
+            alt={meeting.service.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-center">
+            <Calendar className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
           </div>
         )}
       </div>
 
-      {/* Cancel Confirmation Dialog */}
-      <Dialog open={!!cancellingBooking} onOpenChange={() => setCancellingBooking(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Cancel Booking</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to cancel this booking? This action cannot be undone and may incur cancellation
-              fees.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCancellingBooking(null)}>
-              Keep Booking
-            </Button>
-            <Button variant="destructive" onClick={() => cancellingBooking && handleCancel(cancellingBooking)}>
-              Cancel Booking
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Content */}
+      <div className="p-4 pt-2">
+        {/* Service details */}
+        <div className="text-center space-y-1 mb-4">
+          <h3 className="text-lg font-bold text-center mt-2 dark:text-gray-100">{meeting.service.name}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            {formatDate(meeting.date)} at {meeting.time}
+          </p>
+          <div className="flex justify-center items-center gap-1 mt-1">
+            {getFormatIcon()}
+            <span className="text-sm text-gray-600 dark:text-gray-300 capitalize">
+              {meeting.format === "video" ? "Video call" : "In-person"} • {meeting.duration}min
+            </span>
+          </div>
+        </div>
+
+        {/* Footer with price and actions - Reorganized buttons */}
+        <div className="space-y-3 pt-2 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex justify-center">
+            <span className="text-lg font-bold text-gray-900 dark:text-gray-100">${meeting.price}</span>
+          </div>
+
+          {meeting.status === "upcoming" && (
+            <div className="flex justify-between items-center">
+              {/* Approve/Rebook button - Left aligned */}
+              <div>
+                {meeting.requiresConfirmation ? (
+                    <button
+                        className="text-sm font-medium text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors px-3 py-1 rounded-md bg-violet-50 dark:bg-violet-900/20 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                        onClick={handleApprove}
+                    >
+                      <Check className="w-4 h-4 inline mr-1" />
+                      Approve
+                    </button>
+                ) : (
+                    <button
+                        className="text-sm font-medium text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors px-3 py-1 rounded-md bg-violet-50 dark:bg-violet-900/20 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                        onClick={handleRebook}
+                    >
+                      Rebook
+                    </button>
+                )}
+              </div>
+
+              {/* Cancel button - Left aligned */}
+              <button
+                  className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                  onClick={handleCancel}
+              >
+                <X className="w-4 h-4 inline mr-1" />
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Custom hook for intersection observer
+function useIntersectionObserver(options = {}) {
+  const [entries, setEntries] = useState<IntersectionObserverEntry[]>([])
+  const observer = useRef<IntersectionObserver>()
+
+  const observe = useCallback(
+    (element: Element) => {
+      if (observer.current) {
+        observer.current.observe(element)
+      }
+    },
+    [observer],
+  )
+
+  const unobserve = useCallback(
+    (element: Element) => {
+      if (observer.current) {
+        observer.current.unobserve(element)
+      }
+    },
+    [observer],
+  )
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.IntersectionObserver) {
+      observer.current = new IntersectionObserver((entries) => {
+        setEntries(entries)
+      }, options)
+    }
+
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+    }
+  }, [options])
+
+  return { entries, observe, unobserve }
+}
+
+export function CalendarSection({ className }: CalendarSectionProps) {
+  const [meetings, setMeetings] = useState<MeetingCard[]>([])
+  const [loading, setLoading] = useState(true)
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set())
+
+  const { entries, observe, unobserve } = useIntersectionObserver({
+    threshold: 0.1,
+    rootMargin: "50px",
+  })
+
+  // Convert bookings to meeting cards
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        console.log("Loading mock bookings:", mockBookings) // Debug log
+        const convertedMeetings = mockBookings.map(convertBookingToMeetingCard)
+        console.log("Converted meetings:", convertedMeetings) // Debug log
+        setMeetings(convertedMeetings)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error converting bookings:", error)
+        // Fallback: create some basic mock data if conversion fails
+        const fallbackMeetings: MeetingCard[] = [
+          {
+            id: "1",
+            service: {
+              id: "1",
+              name: "Psychology Consultation",
+            },
+            specialist: {
+              id: "1",
+              name: "Dr. Anna Smith",
+              photo: "/placeholder.svg?height=40&width=40",
+            },
+            date: new Date().toISOString().split("T")[0],
+            time: "2:00 PM",
+            duration: 60,
+            format: "video",
+            status: "upcoming",
+            price: 85,
+            requiresConfirmation: true,
+          },
+          {
+            id: "2",
+            service: {
+              id: "2",
+              name: "Life Coaching Session",
+            },
+            specialist: {
+              id: "2",
+              name: "Michael Johnson",
+              photo: "/placeholder.svg?height=40&width=40",
+            },
+            date: new Date(Date.now() + 86400000).toISOString().split("T")[0], // Tomorrow
+            time: "10:30 AM",
+            duration: 45,
+            format: "in-person",
+            status: "upcoming",
+            price: 65,
+          },
+          {
+            id: "3",
+            service: {
+              id: "3",
+              name: "Nutrition Consultation",
+            },
+            specialist: {
+              id: "3",
+              name: "Sarah Williams",
+              photo: "/placeholder.svg?height=40&width=40",
+            },
+            date: new Date(Date.now() - 86400000).toISOString().split("T")[0], // Yesterday
+            time: "4:00 PM",
+            duration: 60,
+            format: "video",
+            status: "completed",
+            price: 75,
+          },
+        ]
+        setMeetings(fallbackMeetings)
+        setLoading(false)
+      }
+    }, 800)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Handle intersection observer entries
+  useEffect(() => {
+    if (entries.length === 0) return
+
+    setVisibleCards((prevVisibleCards) => {
+      const newVisibleCards = new Set(prevVisibleCards)
+      let hasChanges = false
+
+      entries.forEach((entry) => {
+        const cardId = entry.target.getAttribute("data-card-id")
+        if (cardId) {
+          if (entry.isIntersecting && !newVisibleCards.has(cardId)) {
+            newVisibleCards.add(cardId)
+            hasChanges = true
+          }
+        }
+      })
+
+      return hasChanges ? newVisibleCards : prevVisibleCards
+    })
+  }, [entries])
+
+  // Set up intersection observer for each card
+  const cardRef = useCallback(
+    (node: HTMLDivElement | null, cardId: string) => {
+      if (node) {
+        node.setAttribute("data-card-id", cardId)
+        observe(node)
+      }
+    },
+    [observe],
+  )
+
+  const handleApprove = (meetingId: string) => {
+    setMeetings((prev) =>
+      prev.map((meeting) => (meeting.id === meetingId ? { ...meeting, requiresConfirmation: false } : meeting)),
+    )
+  }
+
+  const handleCancel = (meetingId: string) => {
+    setMeetings((prev) =>
+      prev.map((meeting) => (meeting.id === meetingId ? { ...meeting, status: "cancelled" as const } : meeting)),
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className={cn("w-full max-w-[935px] mx-auto px-4 lg:px-6 space-y-6 transition-all duration-300", className)}>
+        <div className="w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto space-y-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <MeetingCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={cn("w-full max-w-[935px] mx-auto px-4 lg:px-6 space-y-6 transition-all duration-300", className)}>
+      {meetings.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Calendar className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No bookings yet</h3>
+          <p className="text-gray-500 dark:text-gray-400">
+            Your appointments will appear here once you book a session.
+          </p>
+        </div>
+      ) : (
+        <div className="w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
+          <div className="space-y-6">
+            {meetings.map((meeting) => (
+              <div key={meeting.id} ref={(node) => cardRef(node, meeting.id)}>
+                <InstagramMeetingCard
+                  meeting={meeting}
+                  onApprove={handleApprove}
+                  onCancel={handleCancel}
+                  isVisible={visibleCards.has(meeting.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

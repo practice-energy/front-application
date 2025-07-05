@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -64,10 +64,10 @@ export function ProfileButton({ size = "md", variant = "header", className = "" 
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className={`relative rounded-full ${buttonSizes[size]} hover:bg-gray-100 ${className}`}
+                className={`relative ${buttonSizes[size]} hover:bg-gray-100 rounded-sm ${className}`}
               >
                 <Avatar className={avatarSizes[size]}>
-                  <AvatarFallback className="bg-gray-100 text-violet-600">
+                  <AvatarFallback className="bg-gray-100 text-violet-600 rounded-sm">
                     <User className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
@@ -80,7 +80,7 @@ export function ProfileButton({ size = "md", variant = "header", className = "" 
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => openAuthModal("signup")} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
-                <span>Зарегистрироваться</span>
+                <span>З��регистрироваться</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -140,12 +140,9 @@ export function ProfileButton({ size = "md", variant = "header", className = "" 
         }}
       >
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className={`relative rounded-full ${buttonSizes[size]} hover:bg-gray-100 ${className}`}
-          >
+          <Button variant="ghost" className={`relative ${buttonSizes[size]} hover:bg-gray-100 rounded-sm ${className}`}>
             <Avatar className={avatarSizes[size]}>
-              <AvatarFallback className="bg-gray-100 text-violet-600">
+              <AvatarFallback className="bg-gray-100 text-violet-600 rounded-sm">
                 {user?.name?.charAt(0) || <User className="h-4 w-4" />}
               </AvatarFallback>
             </Avatar>

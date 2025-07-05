@@ -11,7 +11,7 @@ interface User {
     title: string
     specialties: string[]
     status: "pending" | "approved" | "rejected"
-  }
+  } | null
 }
 
 interface AuthContextType {

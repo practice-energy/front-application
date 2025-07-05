@@ -142,15 +142,17 @@ export default function HelpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <main className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-violet-600 dark:bg-violet-700 rounded-lg flex items-center justify-center mx-auto mb-6 transition-colors duration-300">
             <HelpCircle className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Help Center</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-300">
+            Help Center
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors duration-300">
             Find answers to common questions and get the help you need
           </p>
         </div>
@@ -158,12 +160,12 @@ export default function HelpPage() {
         {/* Search Bar */}
         <div className="max-w-2xl mx-auto mb-8">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
             <Input
               placeholder="Search for help..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-14 text-lg border-gray-200 focus:border-violet-500 focus:ring-violet-500"
+              className="pl-12 h-14 text-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-violet-500 focus:ring-violet-500 transition-colors duration-300"
             />
           </div>
         </div>
@@ -171,21 +173,30 @@ export default function HelpPage() {
         {/* Popular Questions */}
         {!searchTerm && selectedCategory === "all" && (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Popular Questions</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 transition-colors duration-300">
+              Popular Questions
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {popularFAQs.map((faq) => (
                 <Card
                   key={faq.id}
-                  className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-gray-200 bg-white"
+                  className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg"
                   onClick={() => toggleItem(faq.id)}
                 >
                   <div className="flex items-start justify-between">
-                    <h3 className="font-semibold text-gray-900 mb-2">{faq.question}</h3>
-                    <Badge variant="secondary" className="bg-violet-100 text-violet-700 border-violet-200">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+                      {faq.question}
+                    </h3>
+                    <Badge
+                      variant="secondary"
+                      className="bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800 transition-colors duration-300 rounded-lg"
+                    >
                       Popular
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 line-clamp-2">{faq.answer}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 transition-colors duration-300">
+                    {faq.answer}
+                  </p>
                 </Card>
               ))}
             </div>
@@ -195,22 +206,27 @@ export default function HelpPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Categories Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="p-6 border-gray-200 bg-white">
-              <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
+            <Card className="p-6 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors duration-300 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors duration-300">
+                Categories
+              </h3>
               <div className="space-y-2">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors duration-300 ${
                       selectedCategory === category.id
-                        ? "bg-violet-100 text-violet-700 border border-violet-200"
-                        : "hover:bg-gray-100 text-gray-600 hover:text-gray-900"
+                        ? "bg-violet-100 text-violet-700 border border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm">{category.label}</span>
-                      <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-600 border-gray-200">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 transition-colors duration-300 rounded-lg"
+                      >
                         {category.count}
                       </Badge>
                     </div>
@@ -223,40 +239,50 @@ export default function HelpPage() {
           {/* FAQ List */}
           <div className="lg:col-span-3">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">
                 {selectedCategory === "all"
                   ? "All Questions"
                   : categories.find((c) => c.id === selectedCategory)?.label}
               </h2>
-              <span className="text-gray-600">
+              <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
                 {filteredFAQs.length} {filteredFAQs.length === 1 ? "question" : "questions"}
               </span>
             </div>
 
             <div className="space-y-4">
               {filteredFAQs.map((faq) => (
-                <Card key={faq.id} className="overflow-hidden border-gray-200 bg-white">
+                <Card
+                  key={faq.id}
+                  className="overflow-hidden border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors duration-300 rounded-lg"
+                >
                   <Collapsible open={openItems.includes(faq.id)} onOpenChange={() => toggleItem(faq.id)}>
                     <CollapsibleTrigger className="w-full">
-                      <div className="flex items-center justify-between p-6 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center justify-between p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
                         <div className="flex items-center space-x-3">
-                          <h3 className="font-semibold text-gray-900 text-left">{faq.question}</h3>
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-left transition-colors duration-300">
+                            {faq.question}
+                          </h3>
                           {faq.popular && (
-                            <Badge variant="secondary" className="bg-violet-100 text-violet-700 border-violet-200">
+                            <Badge
+                              variant="secondary"
+                              className="bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800 transition-colors duration-300 rounded-lg"
+                            >
                               Popular
                             </Badge>
                           )}
                         </div>
                         {openItems.includes(faq.id) ? (
-                          <ChevronUp className="h-5 w-5 text-gray-400" />
+                          <ChevronUp className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                         ) : (
-                          <ChevronDown className="h-5 w-5 text-gray-400" />
+                          <ChevronDown className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                         )}
                       </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <div className="px-6 pb-6 border-t border-gray-100">
-                        <p className="text-gray-600 leading-relaxed pt-4">{faq.answer}</p>
+                      <div className="px-6 pb-6 border-t border-gray-100 dark:border-gray-700">
+                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed pt-4 transition-colors duration-300">
+                          {faq.answer}
+                        </p>
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
@@ -266,9 +292,13 @@ export default function HelpPage() {
 
             {filteredFAQs.length === 0 && (
               <div className="text-center py-12">
-                <HelpCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No questions found</h3>
-                <p className="text-gray-600">Try adjusting your search terms or browse different categories</p>
+                <HelpCircle className="h-16 w-16 text-gray-400 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 transition-colors duration-300">
+                  No questions found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                  Try adjusting your search terms or browse different categories
+                </p>
               </div>
             )}
           </div>
