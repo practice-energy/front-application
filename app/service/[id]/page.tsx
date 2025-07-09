@@ -19,6 +19,7 @@ import { mockServices } from "@/services/mock-data"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
 import { ShareSpecialistModal } from "@/components/share-specialist-modal"
+import {v4 as uuidv4} from "uuid";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -43,7 +44,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   // Handle search
   const handleSearch = (query: string, category?: string) => {
-    const searchId = Date.now().toString()
+    const searchId = uuidv4()
 
     // Emit event to add chat to sidebar
     window.dispatchEvent(

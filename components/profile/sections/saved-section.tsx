@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import {mockSavedSpecialists, mockServices} from "@/services/mock-data";
 import {Service, Specialist} from "@/types/common";
+import {v4 as uuidv4} from "uuid";
 
 export function SavedSection() {
   const router = useRouter()
@@ -45,13 +46,13 @@ export function SavedSection() {
 
   const handleBrowseSpecialists = () => {
     // Generate new search ID and navigate
-    const newSearchId = Date.now().toString()
+    const newSearchId = uuidv4()
     router.push(`/search/${newSearchId}`)
   }
 
   const handleBrowseServices = () => {
     // Generate new search ID and navigate
-    const newSearchId = Date.now().toString()
+    const newSearchId = uuidv4()
     router.push(`/search/${newSearchId}`)
   }
 

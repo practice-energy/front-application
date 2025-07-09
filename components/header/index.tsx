@@ -68,17 +68,6 @@ export function Header() {
     }
   }, [burgerMenuRef, profileMenuRef, setShowBurgerMenu, setShowProfileMenu])
 
-  const handleLanguageToggle = async () => {
-    setIsLanguageSwitching(true)
-    try {
-      await changeLanguage(language === "en" ? "ru" : "en")
-    } catch (error) {
-      console.error("Failed to change language:", error)
-    } finally {
-      setIsLanguageSwitching(false)
-    }
-  }
-
   const handleAuthSuccess = () => {
     setIsAuthModalOpen(false)
   }
@@ -145,7 +134,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b bg-background backdrop-blur-lg dark:border-gray-800">
+      <header className="sticky top-0 z-50 w-full bg-background backdrop-blur-lg dark:border-gray-800">
         <nav className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">

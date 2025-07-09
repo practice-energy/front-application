@@ -21,202 +21,184 @@ import { mockSavedSpecialists, getChatDataById, addMessageToChat } from "@/servi
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 
-interface Service {
-  id: string
-  name: string
-  price: number
-  duration: string
-  image?: string
-  description?: string
-}
-
 const MessageItem = React.memo(
-  ({
-    specialistId,
-    message,
-    onSpecialistClick,
-    onServiceClick,
-    onReply,
-    onReplyClick,
-    onShare,
-    onRegenerate,
-    highlightedMessageId,
-    isAi,
-    footerContent,
-  }: {
-    specialistId: string
-    message: Message
-    onSpecialistClick: (id: string) => void
-    onServiceClick: (id: string) => void
-    onReply: (message: Message) => void
-    onReplyClick: (messageId: string) => void
-    onShare: (message: Message) => void
-    onRegenerate: (message: Message) => void
-    highlightedMessageId: string | null
-    isAi: boolean
-    footerContent?: string
-  }) => {
-    const router = useRouter()
-    const isUser = message.type === "user"
-    const isAssistant = message.type === "assistant"
-    const isSpecialist = message.type === "specialist"
-    const isHighlighted = highlightedMessageId === message.id
+    ({
+         specialistId,
+         message,
+         onSpecialistClick,
+         onServiceClick,
+         onReply,
+         onReplyClick,
+         onShare,
+         onRegenerate,
+         highlightedMessageId,
+         isAi,
+         footerContent,
+     }: {
+        specialistId: string
+        message: Message
+        onSpecialistClick: (id: string) => void
+        onServiceClick: (id: string) => void
+        onReply: (message: Message) => void
+        onReplyClick: (messageId: string) => void
+        onShare: (message: Message) => void
+        onRegenerate: (message: Message) => void
+        highlightedMessageId: string | null
+        isAi: boolean
+        footerContent?: string
+    }) => {
+        const router = useRouter()
+        const isUser = message.type === "user"
+        const isAssistant = message.type === "assistant"
+        const isSpecialist = message.type === "specialist"
+        const isHighlighted = highlightedMessageId === message.id
 
-    const handleCopyMessage = useCallback(() => {
-      const textToCopy = message.content || "Message with cards"
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        console.log("Message copied to clipboard")
-      })
-    }, [message.content])
+        const handleCopyMessage = useCallback(() => {
+            const textToCopy = message.content || "Message with cards"
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                console.log("Message copied to clipboard")
+            })
+        }, [message.content])
 
-    const handleViewSpecialistProfile = useCallback(() => {
-      if (isAssistant) {
-        return
-      }
+        const handleViewSpecialistProfile = useCallback(() => {
+            if (isAssistant) {
+                return
+            }
+            onSpecialistClick(specialistId)
+        }, [isAssistant, router])
 
-      onSpecialistClick(specialistId)
-    }, [isAssistant, router])
-
-    return (
-      <div
-        id={`message-${message.id}`}
-        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6 transition-all duration-500 ${
-          isHighlighted ? "bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-2 -m-2" : ""
-        }`}
-      >
-        <div className={`flex items-start space-x-3 max-w-4xl ${isUser ? "flex-row-reverse space-x-reverse" : ""}`}>
-          {!isUser && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              onClick={handleViewSpecialistProfile}
-              aria-label={isAssistant ? "View AI profile" : `View ${message.type} profile`}
-              title={isAssistant ? "Allura" : isSpecialist ? "Specialist" : "View profile"}
+        return (
+            <div
+                id={`message-${message.id}`}
+                className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6 transition-all duration-500 ${
+                    isHighlighted ? "bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-2 -m-2" : ""
+                }`}
             >
-              <Avatar className="w-8 h-8">
-                <AvatarImage
-                  src={isAssistant ? "/allura-logo.svg" : isSpecialist ? "/placeholder-user.png" : "/placeholder.png"}
-                  className={isAssistant ? "dark:invert dark:brightness-0 dark:filter" : ""}
-                />
-                <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                  {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          )}
+                <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-4xl w-full`}>
+                    {/* Аватарка (только для не-пользователя) */}
+                    {!isUser && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-16 h-16 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2"
+                            onClick={handleViewSpecialistProfile}
+                            aria-label={isAssistant ? "View AI profile" : `View ${message.type} profile`}
+                            title={isAssistant ? "Allura" : isSpecialist ? "Specialist" : "View profile"}
+                        >
+                            <Avatar className="w-16 h-16">
+                                <AvatarImage
+                                    src={isAssistant ? "/allura-logo.svg" : isSpecialist ? "/placeholder-user.png" : "/placeholder.png"}
+                                    className={isAssistant ? "dark:invert dark:brightness-0 dark:filter" : ""}
+                                />
+                                <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                                    {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
+                                </AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    )}
 
-          <div className="flex-1 space-y-3 min-w-0">
-            {/* Text content - bubble for users and specialists, plain text for AI */}
-            {message.content && (
-              <div>
-                {isUser || isSpecialist ? (
-                  <div
-                    className={`px-4 py-3 rounded-sm shadow-sm border ${
-                      isUser
-                        ? "bg-violet-600 text-white rounded-tr-md border-violet-600"
-                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
-                    }`}
-                  >
-                    <p className="text-sm leading-relaxed">{message.content}</p>
-                  </div>
-                ) : (
-                  <div className="text-gray-800 dark:text-gray-100">
-                    <p className="text-sm leading-relaxed">{message.content}</p>
-                  </div>
-                )}
-              </div>
-            )}
+                    {/* Текстовый блок (пузырь или обычный текст) */}
+                    <div className="flex-1 space-y-3 min-w-0 gap-3">
+                        {message.content && (
+                            <div>
+                                {isUser || isSpecialist ? (
+                                    <div
+                                        className={`px-4 py-3 gap-3 mb-3 rounded-sm shadow-sm border ${
+                                            isUser
+                                                ? "bg-violet-50 rounded-tr-md "
+                                                : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
+                                        }`}
+                                    >
+                                        <p className="text-sm leading-relaxed">{message.content}</p>
+                                    </div>
+                                ) : (
+                                    <div className="text-gray-800 dark:text-gray-100">
+                                        <p className="text-sm leading-relaxed">{message.content}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
-            {/* Specialist Cards */}
-            {message.specialists && message.specialists.length > 0 && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {message.specialists.slice(0, 2).map((specialist) => {
-                    const specialistCard = {
-                      id: Number.parseInt(specialist.id),
-                      image: specialist.avatar || "/placeholder.png?height=200&width=200",
-                      name: specialist.name,
-                      location: specialist.location || "Online",
-                      reviews: specialist.reviewCount || 100,
-                      specialties: specialist.specialties || [],
-                      isNew: false,
-                      title: specialist.title || "Specialist",
-                      avatar: specialist.avatar,
-                      reviewCount: specialist.reviewCount || 100,
-                    }
+                        {/* Карточки специалистов */}
+                        {message.specialists && message.specialists.length > 0 && (
+                            <div className="mt-3 space-y-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {message.specialists.slice(0, 2).map((specialist) => {
+                                        const specialistCard = {
+                                            id: specialist.id,
+                                            image: specialist.avatar || "/placeholder.png?height=200&width=200",
+                                            name: specialist.name,
+                                            location: specialist.location || "Online",
+                                            reviews: specialist.reviewCount || 100,
+                                            specialties: specialist.specialties || [],
+                                            isNew: false,
+                                            title: specialist.title || "Specialist",
+                                            avatar: specialist.avatar,
+                                            reviewCount: specialist.reviewCount || 100,
+                                        }
 
-                    return (
-                      <InstagramSpecialistCard
-                        key={specialist.id}
-                        specialist={specialistCard}
-                        onClick={() => onSpecialistClick(specialist.id)}
-                        showActionButtons={true} // Enable action buttons in chat context
-                      />
-                    )
-                  })}
-                </div>
-              </div>
-            )}
+                                        return (
+                                            <InstagramSpecialistCard
+                                                key={specialist.id}
+                                                specialist={specialistCard}
+                                                onClick={() => onSpecialistClick(specialist.id)}
+                                                showActionButtons={true}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
-            {/* Footer content for AI messages */}
-            {footerContent && isAssistant && !isUser && (
-              <div className="text-gray-800 dark:text-gray-100">
-                <p className="text-sm leading-relaxed">{footerContent}</p>
-              </div>
-            )}
+                        {/* Footer (только для AI) */}
+                        {footerContent && isAssistant && !isUser && (
+                            <div className="mt-3 text-gray-800 dark:text-gray-100">
+                                <p className="text-sm leading-relaxed">{footerContent}</p>
+                            </div>
+                        )}
 
-            {/* Action buttons */}
-            <div className="flex items-center justify-right mt-3">
-              <div className="flex items-center gap-2 text-xs opacity-60">
-                {isAi && isAssistant && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => onRegenerate(message)}
-                    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                    title="Regenerate response"
-                  >
-                    <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                  </motion.button>
-                )}
-                {/*<motion.button*/}
-                {/*    whileHover={{ scale: 1.1 }}*/}
-                {/*    whileTap={{ scale: 0.95 }}*/}
-                {/*    onClick={() => onReply(message)}*/}
-                {/*    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"*/}
-                {/*    title="Reply to this message"*/}
-                {/*>*/}
-                {/*  <Reply className="w-4 h-4 text-gray-600 dark:text-gray-300" />*/}
-                {/*</motion.button>*/}
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => onShare(message)}
-                  className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  title="Share message"
-                >
-                  <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleCopyMessage}
-                  className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  title="Copy message"
-                >
-                  <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </motion.button>
-                <span className="text-gray-500 dark:text-gray-400">
+                        {/* Кнопки действий */}
+                        <div className="flex items-center justify-end mt-3">
+                            <div className="flex items-center gap-2 text-xs opacity-60">
+                                {isAi && isAssistant && (
+                                    <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => onRegenerate(message)}
+                                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                                        title="Regenerate response"
+                                    >
+                                        <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                                    </motion.button>
+                                )}
+                                <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => onShare(message)}
+                                    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                                    title="Share message"
+                                >
+                                    <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={handleCopyMessage}
+                                    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                                    title="Copy message"
+                                >
+                                    <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                                </motion.button>
+                                <span className="text-gray-500 dark:text-gray-400">
                   {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
-              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    )
-  },
+        )
+    }
 )
 
 export default function SearchPage() {

@@ -99,7 +99,7 @@ export function MainSidebar() {
         !isCollapsed && (isMobile ? "w-full" : "w-80"),
       )}
     >
-      <div className={cn("p-4 space-y-3 border-b border-gray-200 dark:border-gray-700")}>
+      <div className={cn("p-4 space-y-3 border-gray-200 dark:border-gray-700")}>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{sidebarTitle}</h2>
 

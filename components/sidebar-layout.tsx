@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useAuth } from "@/hooks/use-auth"
-import { Header } from "@/components/header"
+import { Header } from "@/components/header/index"
 import { MainSidebar } from "@/components/main-sidebar/index"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { useEffect } from "react"
