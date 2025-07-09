@@ -2,11 +2,6 @@
 
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { SidebarLayout } from "@/components/sidebar-layout"
-import { SpecialistAnalytics } from "@/components/specialist-analytics"
-import { SpecialistServices } from "@/components/specialist-services"
-import { SpecialistSchedule } from "@/components/specialist-schedule"
-import { SpecialistMessages } from "@/components/specialist-messages"
 import { MainDashboard } from "@/components/specialist-dashboard/sections/main-dashboard"
 import Overview from "@/components/specialist-dashboard/sections/overview";
 
@@ -21,14 +16,6 @@ function SpecialistDashboardContent() {
         return <MainDashboard />
       case "overview":
         return <Overview />
-      case "services":
-        return <SpecialistServices />
-      case "analytics":
-        return <SpecialistAnalytics />
-      case "calendar":
-        return <SpecialistSchedule />
-      case "chats":
-        return <SpecialistMessages />
       default:
         return <MainDashboard />
     }

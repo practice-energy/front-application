@@ -10,7 +10,7 @@ import { useLikes } from "@/hooks/use-likes"
 import { HeartIcon, FolderOpenIcon, UsersIcon, BriefcaseIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import {mockSavedSpecialists, mockServices} from "@/services/mock-data";
 import {Service, Specialist} from "@/types/common";
 

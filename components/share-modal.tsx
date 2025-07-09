@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Copy, Check, Twitter, Facebook, Linkedin, MessageCircle, Mail, Link } from "lucide-react"
+import { Copy, Check, MessageCircle, Mail, Link } from "lucide-react"
 import { motion } from "framer-motion"
 import type { Message } from "@/types/chats"
 

@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useAuth } from "@/hooks/use-auth"
 import { Header } from "@/components/header"
-import { MainSidebar } from "@/components/main-sidebar"
+import { MainSidebar } from "@/components/main-sidebar/index"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { useEffect } from "react"
 

@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
 import { useSidebar } from "@/contexts/sidebar-context"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils"
 
 export function PreferencesSection() {
   const [pushNotifications, setPushNotifications] = useState(false)
