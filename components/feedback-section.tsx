@@ -2,17 +2,10 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-
-interface Feedback {
-  id: string
-  name: string
-  date: string
-  text: string
-  avatar: string
-}
+import {Review} from "@/types/common";
 
 interface FeedbackSectionProps {
-  feedbacks: Feedback[]
+  feedbacks: Review[]
   title?: string
   className?: string
 }
@@ -179,17 +172,17 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                   <div className="flex items-center mb-3">
                     <img
                         src={feedback.avatar || "/placeholder.svg"}
-                        alt={feedback.name}
+                        alt={feedback.author}
                         className="w-10 h-10 rounded-sm mr-3"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.name}</h5>
+                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</h5>
                         <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">{feedback.date}</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.text}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.comment}</p>
                 </div>
             ))}
           </div>
@@ -218,17 +211,17 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                   <div className="flex items-center mb-3">
                     <img
                         src={feedback.avatar || "/placeholder.svg"}
-                        alt={feedback.name}
+                        alt={feedback.author}
                         className="w-10 h-10 rounded-sm mr-3"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.name}</h5>
+                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</h5>
                         <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">{feedback.date}</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.text}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.comment}</p>
                 </div>
             ))}
           </div>

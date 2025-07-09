@@ -2,7 +2,7 @@
 
 import React from "react"
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { ArrowUp, X, FileText, Plus } from "lucide-react"
+import { ArrowUp, X, FileText, Paperclip } from "lucide-react"
 import { DocumentIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "@/hooks/use-translations"
@@ -37,8 +37,6 @@ export const SearchBar = React.memo(function SearchBar({
   onSearch,
   showHeading = true,
   dynamicWidth = false,
-  replyingTo,
-  onCancelReply,
   placeholder = "Поиск пути",
 }: SearchBarProps) {
   const { t } = useTranslations()
@@ -315,7 +313,7 @@ export const SearchBar = React.memo(function SearchBar({
 
     const baseStyles = {
       marginLeft: `${currentSidebarWidth}px`,
-      width: `calc(100% - ${currentSidebarWidth}px)`,
+      // width: `calc(100% - ${currentSidebarWidth}px)`,
       transition: isAnimating ? `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}` : "none",
     }
 
@@ -445,8 +443,7 @@ export const SearchBar = React.memo(function SearchBar({
     group border
                                     "
                 >
-                  <Plus className="w-4 h-4 mr-1" />
-                  <DocumentIcon className="w-4 h-4" />
+                  <Paperclip className="w-4 h-4" />
                 </Button>
 
                 {/* Settings/Practice Button */}

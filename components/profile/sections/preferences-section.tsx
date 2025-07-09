@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/use-theme"
 import { useSidebar } from "@/contexts/sidebar-context"
-import { ANIMATION_DURATION, ANIMATION_TIMING, ANIMATION_PROPERTIES } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
 
 export function PreferencesSection() {
   const [pushNotifications, setPushNotifications] = useState(false)
@@ -53,23 +53,19 @@ export function PreferencesSection() {
 
   // Animation styles
   const cardAnimation = {
-    transitionProperty: ANIMATION_PROPERTIES,
     transitionDuration: `${ANIMATION_DURATION}ms`,
     transitionTimingFunction: ANIMATION_TIMING,
   }
 
   const buttonAnimation = {
-    transitionProperty: ANIMATION_PROPERTIES,
     transitionDuration: `${ANIMATION_DURATION}ms`,
     transitionTimingFunction: ANIMATION_TIMING,
   }
 
         // Динамические стили для синхронизации с сайдбаром
         const containerStyles = {
-          transitionProperty: ANIMATION_PROPERTIES,
           transitionDuration: `${ANIMATION_DURATION}ms`,
           transitionTimingFunction: ANIMATION_TIMING,
-          transition: isAnimating ? `${ANIMATION_PROPERTIES} ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}` : 'none',
         }
 
         return (

@@ -7,21 +7,14 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Calendar, Clock, User, CreditCard, CheckCircle } from "lucide-react"
 import { useTranslations } from "@/hooks/use-translations"
+import {Service, Specialist} from "@/types/common";
 
 interface BookingConfirmationProps {
   isOpen: boolean
   onClose: () => void
   bookingDetails: {
-    specialist: {
-      name: string
-      image: string
-      title: string
-    }
-    service: {
-      name: string
-      duration: string
-      price: number
-    }
+    specialist: Specialist
+    service: Service
     date: string
     time: string
   }
@@ -119,7 +112,7 @@ export function BookingConfirmation({ isOpen, onClose, bookingDetails }: Booking
             <Card className="p-4 mb-4">
               <div className="flex items-center space-x-3">
                 <img
-                  src={bookingDetails.specialist.image || "/placeholder.svg"}
+                  src={bookingDetails.specialist.avatar || "/placeholder.svg"}
                   alt={bookingDetails.specialist.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />
@@ -137,7 +130,7 @@ export function BookingConfirmation({ isOpen, onClose, bookingDetails }: Booking
                   <User className="h-4 w-4 text-gray-400" />
                   <span className="text-sm font-medium">{t("booking.service")}:</span>
                 </div>
-                <span className="text-sm">{bookingDetails.service.name}</span>
+                <span className="text-sm">{bookingDetails.service.title}</span>
               </div>
 
               <div className="flex items-center justify-between">

@@ -50,8 +50,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
   // Handle search
   const handleSearch = (query: string, category?: string) => {
-    const searchId = Date.now().toString()
-    router.push(`/search/${searchId}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
+    router.push(`/search/${specialist.id}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
   }
 
   return (
@@ -119,7 +118,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                           <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.location}</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.reviews} practices</span>
+                          <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.reviewCount} practices</span>
                         </div>
                       </div>
                     </div>
@@ -178,7 +177,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                 bookingDetails={{
                   specialist: {
                     name: specialist.name,
-                    image: URL.createObjectURL(specialist.images[0]),
+                    image: specialist.images[0],
                     title: specialist.title,
                   },
                   service: selectedService,

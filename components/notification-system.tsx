@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer"
 import {
-  BellIcon,
   ChatBubbleLeftIcon,
   ExclamationTriangleIcon,
   ClockIcon,
   InformationCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
+import { Bell } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
@@ -179,7 +179,7 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
       case "system":
         return <InformationCircleIcon className={iconClass} />
       default:
-        return <BellIcon className={iconClass} />
+        return <Bell className={iconClass} />
     }
   }
 
@@ -283,7 +283,7 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
-          <BellIcon className="h-4 w-4" />
+          <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <Badge
               className={cn(

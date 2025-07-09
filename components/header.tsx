@@ -12,10 +12,12 @@ import {
   Shield,
   CreditCard,
   X,
-  DollarSign,
-  Clock,
-  TrendingUp,
   PanelRightClose,
+  LayoutDashboard,
+  Briefcase,
+  BarChart3,
+  MessageSquare,
+  CheckSquare,
 } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslations } from "@/hooks/use-translations"
@@ -131,6 +133,7 @@ export function Header() {
       setRole("specialist")
       router.push("/specialist-dashboard")
     }
+    setShowProfileMenu(false)
   }
 
   const handleLogoClick = () => {
@@ -144,6 +147,31 @@ export function Header() {
   const handleOpenSidebar = () => {
     if (isCollapsed) {
       toggleSidebar()
+    }
+  }
+
+  const handleCalendarClick = () => {
+    if (role === "specialist") {
+      router.push("/specialist-dashboard?section=calendar")
+    } else {
+      router.push("/profile?section=calendar")
+    }
+  }
+
+  const handleChatsClick = () => {
+    if (role === "specialist") {
+      router.push("/specialist-dashboard?section=chats")
+    }
+  }
+
+  const handleTasksClick = () => {
+    // Placeholder for tasks functionality
+    console.log("Tasks clicked")
+  }
+
+  const handleAnalyticsClick = () => {
+    if (role === "specialist") {
+      router.push("/specialist-dashboard?section=analytics")
     }
   }
 
@@ -182,34 +210,84 @@ export function Header() {
                   <span className="sr-only">Открыть сайдбар</span>
                 </Button>
               )}
+
+              {/* Navigation buttons for authenticated specialists only */}
+              {isAuthenticated && role === "specialist" && (
+                <div className="hidden md:flex items-center space-x-2 ml-4">
+                  {/* Chat button */}
+                  <Button
+                    onClick={handleChatsClick}
+                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    <span className="sr-only">Чаты</span>
+                  </Button>
+
+                  {/* Calendar button */}
+                  <Button
+                    onClick={handleCalendarClick}
+                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span className="sr-only">Календарь</span>
+                  </Button>
+
+                  {/* Tasks button - inactive for specialists */}
+                  <Button
+                    onClick={handleTasksClick}
+                    disabled
+                    className="bg-white dark:bg-gray-800 text-gray-400 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700 cursor-not-allowed"
+                  >
+                    <CheckSquare className="h-4 w-4" />
+                    <span className="sr-only">Задачи</span>
+                  </Button>
+
+                  {/* Analytics button - inactive for specialists */}
+                  <Button
+                    onClick={handleAnalyticsClick}
+                    disabled
+                    className="bg-white dark:bg-gray-800 text-gray-400 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700 cursor-not-allowed"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    <span className="sr-only">Аналитика</span>
+                  </Button>
+                </div>
+              )}
+
+              {/* Calendar button for users */}
+              {isAuthenticated && role === "user" && (
+                <div className="hidden md:flex items-center space-x-2 ml-4">
+                  <Button
+                    onClick={handleCalendarClick}
+                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span className="sr-only">Календарь</span>
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Desktop Right side */}
             <div className="hidden md:flex items-center space-x-4">
               {isAuthenticated && user?.specialistProfile === null && (
                 <Button
-                  variant="ghost"
-                  size="sm"
                   onClick={handleBecomeSpecialist}
-                  className="h-8 px-3 text-sm font-medium text-black dark:text-white transition-colors rounded-sm"
+                  className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
                 >
                   Стать специалистом
                 </Button>
               )}
 
-              {/*Role toggle button*/}
+              {/* Role toggle button moved here */}
               {isAuthenticated && user?.specialistProfile !== null && (
                 <Button
-                  variant="ghost"
-                  size="sm"
                   onClick={handleRoleToggle}
-                  className="h-8 px-3 text-sm font-medium text-black dark:text-white transition-colors rounded-sm"
+                  className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 font-medium px-3 py-3 h-9 gap-3 transition-colors duration-200 flex w-full rounded-none"
                 >
                   {role === "specialist" ? "К режиму пользователя" : "К режиму мастера"}
                 </Button>
               )}
-
-              {isAuthenticated && <NotificationSystem />}
 
               {isAuthenticated && (
                 <div className="relative" ref={profileMenuRef}>
@@ -245,10 +323,10 @@ export function Header() {
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
                       </div>
 
-                      <div className="py-2">
+                      <div>
                         <Link
                           href="/profile?section=overview"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <User className="mr-3 h-4 w-4" />
@@ -257,7 +335,7 @@ export function Header() {
 
                         <Link
                           href="/profile?section=calendar"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <Calendar className="mr-3 h-4 w-4" />
@@ -266,7 +344,7 @@ export function Header() {
 
                         <Link
                           href="/profile?section=saved"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <Heart className="mr-3 h-4 w-4" />
@@ -275,7 +353,7 @@ export function Header() {
 
                         <Link
                           href="/profile?section=security"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <Shield className="mr-3 h-4 w-4" />
@@ -284,7 +362,7 @@ export function Header() {
 
                         <Link
                           href="/profile?section=balance"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <CreditCard className="mr-3 h-4 w-4" />
@@ -293,7 +371,7 @@ export function Header() {
 
                         <Link
                           href="/profile?section=preferences"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <SwatchIcon className="mr-3 h-4 w-4" />
@@ -304,7 +382,7 @@ export function Header() {
                       <div className="border-t border-gray-100 dark:border-gray-700 py-2">
                         <Link
                           href="/help"
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <HelpCircle className="mr-3 h-4 w-4" />
@@ -315,7 +393,7 @@ export function Header() {
                       <div className="border-t border-gray-100 dark:border-gray-700 py-2">
                         <button
                           onClick={handleLogout}
-                          className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
                         >
                           <LogOut className="mr-3 h-4 w-4" />
                           Logout
@@ -326,7 +404,7 @@ export function Header() {
                 </div>
               )}
 
-              {isAuthenticated && isSpecialist && (
+              {isAuthenticated && (
                 <div className="relative" ref={burgerMenuRef}>
                   <Button
                     variant="ghost"
@@ -346,54 +424,56 @@ export function Header() {
 
                       <div className="py-1">
                         <Link
+                          href="/specialist-dashboard?section=overview"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          onClick={() => setShowBurgerMenu(false)}
+                        >
+                          <LayoutDashboard className="mr-3 h-4 w-4" />
+                          Overview
+                        </Link>
+
+                        <Link
                           href="/specialist-dashboard?section=services"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                           onClick={() => setShowBurgerMenu(false)}
                         >
-                          <User className="mr-3 h-4 w-4" />
-                          My Services
+                          <Briefcase className="mr-3 h-4 w-4" />
+                          Services
                         </Link>
 
                         <Link
-                          href="/specialist-dashboard?section=bookings"
+                          href="/specialist-dashboard?section=analytics"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          onClick={() => setShowBurgerMenu(false)}
+                        >
+                          <BarChart3 className="mr-3 h-4 w-4" />
+                          Analytics
+                        </Link>
+
+                        <Link
+                          href="/specialist-dashboard?section=calendar"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                           onClick={() => setShowBurgerMenu(false)}
                         >
                           <Calendar className="mr-3 h-4 w-4" />
-                          Bookings
+                          Calendar
                         </Link>
 
                         <Link
-                          href="/specialist-dashboard?section=earnings"
+                          href="/specialist-dashboard?section=chats"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                           onClick={() => setShowBurgerMenu(false)}
                         >
-                          <DollarSign className="mr-3 h-4 w-4" />
-                          Earnings
-                        </Link>
-
-                        <Link
-                          href="/specialist-dashboard?section=availability"
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                          onClick={() => setShowBurgerMenu(false)}
-                        >
-                          <Clock className="mr-3 h-4 w-4" />
-                          Availability
-                        </Link>
-
-                        <Link
-                          href="/specialist-dashboard?section=performance"
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                          onClick={() => setShowBurgerMenu(false)}
-                        >
-                          <TrendingUp className="mr-3 h-4 w-4" />
-                          Performance
+                          <MessageSquare className="mr-3 h-4 w-4" />
+                          Chats
                         </Link>
                       </div>
                     </div>
                   )}
                 </div>
               )}
+
+              {isAuthenticated && <NotificationSystem />}
 
               {!isAuthenticated && (
                 <Button
@@ -407,19 +487,32 @@ export function Header() {
 
             {/* Mobile hamburger menu button */}
             <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleMobileMenu}
-                className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-sm"
-                aria-label="Mobile menu"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                ) : (
-                  <Menu className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                )}
-              </Button>
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleProfileMenu}
+                  className={cn(
+                    "h-8 w-8 p-0 rounded-sm transition-all duration-200",
+                    showProfileMenu
+                      ? "border-2 border-violet-600"
+                      : "border-2 border-transparent hover:bg-violet-50 dark:hover:bg-violet-900/20",
+                  )}
+                  aria-label="Profile menu"
+                >
+                  <div
+                    className={cn(
+                      "h-full w-full rounded-sm flex items-center justify-center",
+                      "bg-violet-100 dark:bg-violet-900",
+                      showProfileMenu && "bg-violet-200 dark:bg-violet-800",
+                    )}
+                  >
+                    <User className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                  </div>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -428,15 +521,18 @@ export function Header() {
             <div className="md:hidden border-t dark:border-gray-800 py-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
               {isAuthenticated ? (
                 <>
-                  <Button
-                    variant="ghost"
-                    onClick={handleRoleToggle}
-                    className="w-full justify-start px-3 py-2 h-auto text-left rounded-sm"
-                  >
-                    {role === "specialist" ? "К режиму пользователя" : "К режиму мастера"}
-                  </Button>
-
                   <div>
+                    {/* Role toggle button in mobile */}
+                    {isAuthenticated && user?.specialistProfile !== null && (
+                      <button
+                        onClick={handleRoleToggle}
+                        className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-sm"
+                      >
+                        <User className="mr-3 h-4 w-4" />
+                        {role === "specialist" ? "К режиму пользователя" : "К режиму мастера"}
+                      </button>
+                    )}
+
                     <Link
                       href="/profile?section=overview"
                       className="flex items-center px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-sm"
@@ -502,48 +598,48 @@ export function Header() {
                       </div>
 
                       <Link
+                        href="/specialist-dashboard?section=overview"
+                        className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <LayoutDashboard className="mr-3 h-4 w-4" />
+                        Overview
+                      </Link>
+
+                      <Link
                         href="/specialist-dashboard?section=services"
                         className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <User className="mr-3 h-4 w-4" />
-                        My Services
+                        <Briefcase className="mr-3 h-4 w-4" />
+                        Services
                       </Link>
 
                       <Link
-                        href="/specialist-dashboard?section=bookings"
+                        href="/specialist-dashboard?section=analytics"
+                        className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <BarChart3 className="mr-3 h-4 w-4" />
+                        Analytics
+                      </Link>
+
+                      <Link
+                        href="/specialist-dashboard?section=calendar"
                         className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Calendar className="mr-3 h-4 w-4" />
-                        Bookings
+                        Calendar
                       </Link>
 
                       <Link
-                        href="/specialist-dashboard?section=earnings"
+                        href="/specialist-dashboard?section=chats"
                         className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <DollarSign className="mr-3 h-4 w-4" />
-                        Earnings
-                      </Link>
-
-                      <Link
-                        href="/specialist-dashboard?section=availability"
-                        className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Clock className="mr-3 h-4 w-4" />
-                        Availability
-                      </Link>
-
-                      <Link
-                        href="/specialist-dashboard?section=performance"
-                        className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-sm transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <TrendingUp className="mr-3 h-4 w-4" />
-                        Performance
+                        <MessageSquare className="mr-3 h-4 w-4" />
+                        Chats
                       </Link>
                     </>
                   )}
@@ -591,3 +687,5 @@ export function Header() {
     </>
   )
 }
+
+// Re-export the header component for backward compatibility from "./header"

@@ -59,7 +59,7 @@ export default function Overview() {
     const newErrors: Record<string, string> = {};
 
     // Валидация только при наличии ошибок
-    if (!draftData.name?.trim()) newErrors.name = "Name is required";
+    if (!draftData.title?.trim()) newErrors.name = "Name is required";
     if (!draftData.title?.trim()) newErrors.title = "Title is required";
 
     // Обновляем только новые ошибки
@@ -238,7 +238,7 @@ export default function Overview() {
                               </div>
                               <div className="flex items-center">
                                 <span className="text-gray-600 dark:text-gray-300">
-                                  {currentData.reviews} practices
+                                  {currentData.reviewCount} practices
                                 </span>
                               </div>
                             </div>
@@ -252,7 +252,7 @@ export default function Overview() {
                           <EnhancedInput
                             type="textarea"
                             label="Bio"
-                            value={currentData.fullBio || ""}
+                            value={currentData.description || ""}
                             onChange={(e) => {
                               handleInputChange("fullBio", e.target.value)
                               handleInputChange("bio", e.target.value.slice(0, 200))
@@ -290,8 +290,8 @@ export default function Overview() {
                         <div className="border-gray-200 dark:border-gray-700">
                           <AboutSection
                             title={`About ${currentData.name || "Specialist"}`}
-                            description={currentData.bio}
-                            fullDescription={currentData.fullBio}
+                            description={currentData.description}
+                            fullDescription={currentData.description}
                             education={currentData.education}
                             experience={currentData.experience}
                             showEducationExperience={true}

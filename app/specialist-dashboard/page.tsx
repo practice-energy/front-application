@@ -1,66 +1,48 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "@/hooks/use-auth"
-import Overview from "@/components/specialist-dashboard/sections/overview"
-import Services from "@/components/specialist-dashboard/sections/services"
-import { SpecialistScheduleSection } from "@/components/specialist-schedule-section"
-import { SpecialistGreeting } from "@/components/specialist-greeting"
-import { SpecialistDashboardFeedbacks } from "@/components/specialist-dashboard/feedbacks"
+import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { SidebarLayout } from "@/components/sidebar-layout"
 import { SpecialistAnalytics } from "@/components/specialist-analytics"
-import { LayoutDashboard, User, Briefcase, Calendar, MessageSquare, Star, BarChart3 } from "lucide-react"
+import { SpecialistServices } from "@/components/specialist-services"
+import { SpecialistSchedule } from "@/components/specialist-schedule"
+import { SpecialistMessages } from "@/components/specialist-messages"
+import { MainDashboard } from "@/components/specialist-dashboard/sections/main-dashboard"
+import Overview from "@/components/specialist-dashboard/sections/overview";
 
-const tabs = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "profile", label: "Profile", icon: User },
-  { id: "services", label: "Services", icon: Briefcase },
-  { id: "schedule", label: "Schedule", icon: Calendar },
-  { id: "greeting", label: "Greeting", icon: MessageSquare },
-  { id: "feedbacks", label: "Feedbacks", icon: Star },
-  { id: "analytics", label: "Analytics", icon: BarChart3 },
-]
-
-export default function SpecialistDashboardOverview() {
-  const router = useRouter()
+function SpecialistDashboardContent() {
   const searchParams = useSearchParams()
-  const { isAuthenticated, user } = useAuth()
-  const [activeTab, setActiveTab] = useState("overview")
+  const section = searchParams.get("section") || "main"
 
-  // Initialize active tab from URL params
-  useEffect(() => {
-    const section = searchParams.get("section")
-    if (section && tabs.some((tab) => tab.id === section)) {
-      setActiveTab(section)
-    }
-  }, [searchParams])
-
-  // TODO
-  // if (!isAuthenticated || !user?.isSpecialist) {
-  //   router.push("/")
-  // }
-
-  const renderTabContent = () => {
-    switch (activeTab) {
+  const renderSection = () => {
+    switch (section) {
+      case "main":
+      case "":
+        return <MainDashboard />
+      case "overview":
+        return <Overview />
       case "services":
-        return <Services />
-      case "schedule":
-        return <SpecialistScheduleSection />
-      case "greeting":
-        return <SpecialistGreeting />
-      case "feedbacks":
-        return <SpecialistDashboardFeedbacks />
+        return <SpecialistServices />
       case "analytics":
         return <SpecialistAnalytics />
+      case "calendar":
+        return <SpecialistSchedule />
+      case "chats":
+        return <SpecialistMessages />
       default:
-        return <Overview />
+        return <MainDashboard />
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{renderTabContent()}</main>
-    </div>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">{renderSection()}</div>
+  )
+}
+
+export default function SpecialistDashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SpecialistDashboardContent />
+    </Suspense>
   )
 }

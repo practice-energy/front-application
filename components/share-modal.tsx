@@ -7,23 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Copy, Check, Twitter, Facebook, Linkedin, MessageCircle, Mail, Link } from "lucide-react"
 import { motion } from "framer-motion"
-
-interface Message {
-  id: string
-  sender: "user" | "system"
-  content: {
-    text: string
-    cards?: Array<{
-      type: "specialist" | "service"
-      id: string
-      name: string
-      image?: string
-    }>
-    footerText?: string
-  }
-  timestamp: Date
-  status: "sent" | "delivered" | "read"
-}
+import type { Message } from "@/types/chats"
 
 interface ShareModalProps {
   isOpen: boolean
@@ -37,7 +21,7 @@ export function ShareModal({ isOpen, onClose, message }: ShareModalProps) {
 
   if (!message) return null
 
-  const messageText = message.content.text || "Check out this message"
+  const messageText = message.content || "Check out this message"
   const shareUrl = `${window.location.origin}/message/${message.id}`
   const shareText = customText || messageText
 
