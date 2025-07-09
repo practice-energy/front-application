@@ -22,13 +22,13 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       // Используем custom event для уведомления компонентов о изменении состояния сайдбара
       window.dispatchEvent(
         new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 320 }
-        })
+          detail: { isCollapsed, width: isCollapsed ? 0 : 384 }, // 384px = w-96
+        }),
       )
 
       // Отложенная установка стилей для лучшей синхронизации рендеринга
       const applyStyles = () => {
-        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? "320px" : "0"
+        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? "384px" : "0"
         document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }
 

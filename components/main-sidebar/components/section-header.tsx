@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, GalleryHorizontalEnd } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { SectionHeaderProps } from "../types/sidebar.types"
 
@@ -15,31 +15,20 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
 
-  if (count === 0) return null
-
   return (
     <button
+      onClick={() => toggleSection(sectionKey)}
       className={cn(
-        "flex items-center gap-1 w-full px-3 py-3 group transition-all duration-100 ease-in-out",
-        "hover:bg-gray-100 dark:hover:bg-gray-800 rounded-sm",
+        "w-full flex items-center justify-between px-4 py-2 text-left",
+        "text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide",
+        "hover:text-gray-700 dark:hover:text-gray-300 transition-colors",
         isCollapsed && !isMobile ? "hidden" : "flex",
       )}
-      onClick={(e) => {
-        e.stopPropagation()
-        toggleSection(sectionKey)
-      }}
     >
-      <GalleryHorizontalEnd className="h-4 w-4 ml-3 mb-0.5 gap-1" />
-      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+      <span>
         {title} ({count})
       </span>
-      <ChevronDown
-        className={cn(
-          "w-4 h-4 text-gray-400 dark:text-gray-500 transition-all duration-300 ease-in-out transform",
-          "group-hover:text-gray-600 dark:group-hover:text-gray-300",
-          isVisible ? "rotate-180" : "rotate-0",
-        )}
-      />
+      <ChevronDown className={cn("w-3 h-3 transition-transform duration-200", isVisible ? "rotate-180" : "rotate-0")} />
     </button>
   )
 }
