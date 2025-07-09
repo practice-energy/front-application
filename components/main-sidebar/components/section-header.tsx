@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, GalleryHorizontalEnd } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { SectionHeaderProps } from "../types/sidebar.types"
 
@@ -15,31 +15,24 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
 
-  if (count === 0) return null
+  if (isCollapsed && !isMobile) return null
 
   return (
     <button
-      className={cn(
-        "flex items-center gap-1 w-full px-3 py-3 group transition-all duration-100 ease-in-out",
-        "hover:bg-gray-100 dark:hover:bg-gray-800 rounded-sm",
-        isCollapsed && !isMobile ? "hidden" : "flex",
-      )}
-      onClick={(e) => {
-        e.stopPropagation()
-        toggleSection(sectionKey)
-      }}
+      onClick={() => toggleSection(sectionKey)}
+      className="w-full px-4 py-2 flex items-center justify-between text-left hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
     >
-      <GalleryHorizontalEnd className="h-4 w-4 ml-3 mb-0.5 gap-1" />
-      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-        {title} ({count})
-      </span>
-      <ChevronDown
-        className={cn(
-          "w-4 h-4 text-gray-400 dark:text-gray-500 transition-all duration-300 ease-in-out transform",
-          "group-hover:text-gray-600 dark:group-hover:text-gray-300",
-          isVisible ? "rotate-180" : "rotate-0",
+      <div className="flex items-center gap-2">
+        <ChevronDown
+          className={cn("h-4 w-4 transition-transform text-gray-500 dark:text-gray-400", !isVisible && "-rotate-90")}
+        />
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</span>
+        {count > 0 && (
+          <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+            {count}
+          </span>
         )}
-      />
+      </div>
     </button>
   )
 }
