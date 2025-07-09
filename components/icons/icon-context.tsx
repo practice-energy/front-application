@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { IconProps } from "@/components/ui/icon-types";
+import type { IconProps } from "@/components/icons/icon-types";
 
 export const IconContext = createContext<IconProps>({
     color: "currentColor",

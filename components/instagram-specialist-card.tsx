@@ -10,7 +10,7 @@ import { useLikes } from "@/hooks/use-likes"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import type { Specialist } from "@/types/common"
-import { PentagramIcon } from "@/components/ui/icon-pentagram"
+import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { ShareSpecialistModal } from "@/components/share-specialist-modal"
 
 interface InstagramSpecialistCardProps {

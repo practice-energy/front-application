@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { X, PanelRightClose } from "lucide-react"
+import {X, PanelRightClose, UserSquare, Calendar, CalendarDays} from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslations } from "@/hooks/use-translations"
 import { useRouter } from "next/navigation"
@@ -17,6 +17,7 @@ import { NavigationButtons } from "./components/navigation-buttons"
 import { ProfileMenu } from "./components/profile-menu"
 import { BurgerMenu } from "./components/burger-menu"
 import { MobileMenu } from "./components/mobile-menu"
+import {UserSwitch} from "@/components/icons/icon-user-switch";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -79,6 +80,10 @@ export function Header() {
     setIsMobileMenuOpen(false)
   }
 
+  const handleCalendarClick = () => {
+    router.push("/profile?section=calendar")
+  }
+
   const handleLogout = () => {
     logout()
     setShowBurgerMenu(false)
@@ -134,7 +139,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-background backdrop-blur-lg dark:border-gray-800">
+      <header className="sticky top-0 z-50 h-27 w-full border-b bg-background backdrop-blur-lg dark:border-gray-800">
         <nav className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -164,9 +169,19 @@ export function Header() {
               {isAuthenticated && user?.specialistProfile === null && (
                 <Button
                   onClick={handleBecomeSpecialist}
-                  className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                  className="bg-white dark:bg-gray-800
+    hover:bg-violet-50 dark:hover:bg-violet-700
+    active:bg-violet-600 dark:active:bg-violet-600
+    active:hover:bg-violet-700 dark:hover:active:bg-violet-600
+    text-gray-900 dark:text-white
+    active:text-white dark:active:text-white
+    active:border-violet-600 dark:active:border-violet-600
+    px-3 py-2 h-9 font-medium
+    transition-colors duration-200
+    flex items-center gap-1
+    group border"
                 >
-                  Стать специалистом
+                  Стать мастером
                 </Button>
               )}
 
@@ -174,10 +189,36 @@ export function Header() {
               {isAuthenticated && user?.specialistProfile !== null && (
                 <Button
                   onClick={handleRoleToggle}
-                  className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 font-medium px-3 py-3 h-9 gap-3 transition-colors duration-200 flex w-full rounded-none"
-                >
-                  {role === "specialist" ? "К режиму пользователя" : "К режиму мастера"}
+                  type="button"
+                  size="sm"
+                  className="
+    bg-white dark:bg-gray-800
+    hover:bg-violet-50 dark:hover:bg-violet-700
+    active:bg-violet-600 dark:active:bg-violet-600
+    active:hover:bg-violet-700 dark:hover:active:bg-violet-600
+    text-gray-900 dark:text-white
+    active:text-white dark:active:text-white
+    active:border-violet-600 dark:active:border-violet-600
+    px-3 py-2 h-9 font-medium
+    transition-colors duration-200
+    flex items-center gap-1
+    group border">
+                  <UserSwitch className="h-21 w-21"/>
+                  {role === "specialist" ? "Инициант" : "Мастер"}
                 </Button>
+              )}
+
+              {/* Calendar button for users */}
+              {role === "user" && (
+                  <div className="hidden md:flex items-center space-x-2 ml-4">
+                    <Button
+                        onClick={handleCalendarClick}
+                        className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                    >
+                      <CalendarDays className="h-4 w-4" />
+                      <span className="sr-only">Календарь</span>
+                    </Button>
+                  </div>
               )}
 
               <ProfileMenu
@@ -198,7 +239,7 @@ export function Header() {
                 burgerMenuRef={burgerMenuRef}
               />
 
-              {isAuthenticated && <NotificationSystem />}
+              {/*{isAuthenticated && <NotificationSystem />}*/}
 
               {!isAuthenticated && (
                 <Button

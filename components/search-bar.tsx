@@ -126,16 +126,6 @@ export const SearchBar = React.memo(function SearchBar({
 
     if (!isMobileDevice) return
 
-    // Handle mobile keyboard visibility
-    const handleResize = () => {
-      const viewport = window.visualViewport
-      if (viewport) {
-        const keyboardHeight = window.innerHeight - viewport.height
-        setKeyboardHeight(keyboardHeight)
-        setIsKeyboardVisible(keyboardHeight > 0)
-      }
-    }
-
     const handleFocusIn = () => {
       setTimeout(() => {
         const viewport = window.visualViewport
@@ -154,34 +144,10 @@ export const SearchBar = React.memo(function SearchBar({
       }, 300)
     }
 
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize)
-    }
-
     window.addEventListener("focusin", handleFocusIn)
     window.addEventListener("focusout", handleFocusOut)
-    window.addEventListener("resize", handleResize)
 
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize)
-      }
-      window.removeEventListener("focusin", handleFocusIn)
-      window.removeEventListener("focusout", handleFocusOut)
-      window.removeEventListener("resize", handleResize)
-    }
   }, [isMobileDevice])
-
-  const resizeTextarea = useCallback(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
-    }
-  }, [])
-
-  useEffect(() => {
-    resizeTextarea()
-  }, [message, resizeTextarea])
 
   const handleFileSelect = useCallback((files: FileList | null) => {
     if (!files) return

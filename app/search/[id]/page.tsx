@@ -158,7 +158,7 @@ const MessageItem = React.memo(
                         )}
 
                         {/* Кнопки действий */}
-                        <div className="flex items-center justify-end mt-3">
+                        <div className="flex items-center justify-left mt-3">
                             <div className="flex items-center gap-2 text-xs opacity-60">
                                 {isAi && isAssistant && (
                                     <motion.button
@@ -510,7 +510,7 @@ export default function SearchPage() {
         {/* Search bar at bottom */}
         <div className="fixed bottom-0 left-0 right-0 z-10">
           <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
-            <div className="max-w-4xl mx-auto px-4 pb-6">
+            <div className="pb-6">
               <SearchBar
                 onSearch={handleSearch}
                 showHeading={false}

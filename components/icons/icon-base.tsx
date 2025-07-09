@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { ReactElement } from "react";
-import { IconContext } from "@/components/ui/icon-context";
-import { IconProps, IconWeight } from "@/components/ui/icon-types";
+import { IconContext } from "@/components/icons/icon-context";
+import { IconProps, IconWeight } from "@/components/icons/icon-types";
 
 interface IconBaseProps extends IconProps {
     weights: Map<IconWeight, ReactElement>;

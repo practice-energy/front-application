@@ -176,7 +176,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
         {/* Fixed SearchBar at the bottom of the screen with sidebar sync */}
         <div ref={searchRef} className="fixed bottom-0 left-0 right-0 py-4">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="px-6">
             <SearchBar
               onSearch={handleSearch}
               showHeading={false}

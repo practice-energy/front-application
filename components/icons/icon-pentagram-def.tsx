@@ -1,7 +1,6 @@
 /* GENERATED FILE */
 import * as React from "react";
-import type {Icon, IconWeight} from "@/components/ui/icon-types";
-import IconBase from "@/components/ui/icon-base";
+import type {Icon, IconWeight} from "@/components/icons/icon-types";
 import {ReactElement} from "react";
 
 export default new Map<IconWeight, ReactElement>([

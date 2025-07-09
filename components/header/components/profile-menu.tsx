@@ -25,7 +25,7 @@ export function ProfileMenu({
       size="sm"
       onClick={toggleProfileMenu}
       className={cn(
-        "h-8 w-8 p-0 rounded-sm transition-all duration-200",
+        "h-21 w-20 p-0 rounded-sm transition-all duration-200",
         showProfileMenu
           ? "border-2 border-violet-600"
           : "border-2 border-transparent hover:bg-violet-50 dark:hover:bg-violet-900/20",

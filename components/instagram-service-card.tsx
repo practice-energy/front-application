@@ -11,7 +11,7 @@ import { RubleIcon } from "@/components/ui/ruble-sign"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import type { Service } from "@/types/common"
-import { Pentagram } from "@/components/ui/icon-pentagram"
+import { Pentagram } from "@/components/icons/icon-pentagram"
 
 interface InstagramServiceCardProps {
   service: Service
