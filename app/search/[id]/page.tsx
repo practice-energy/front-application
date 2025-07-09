@@ -7,7 +7,7 @@ import { SearchBar } from "@/components/search-bar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Reply, Copy, Share, MessageSquare, Plus } from "lucide-react"
+import { Copy, Share, MessageSquare, Plus } from "lucide-react"
 import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { useAuth } from "@/hooks/use-auth"
@@ -19,7 +19,7 @@ import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { mockSavedSpecialists, getChatDataById, addMessageToChat } from "@/services/mock-data"
 import { v4 as uuidv4 } from "uuid"
-import {Chat, Message} from "@/types/chats";
+import type { Chat, Message } from "@/types/chats"
 
 interface Service {
   id: string
@@ -31,189 +31,192 @@ interface Service {
 }
 
 const MessageItem = React.memo(
-    ({
-       specialistId,
-       message,
-       onSpecialistClick,
-       onServiceClick,
-       onReply,
-       onReplyClick,
-       onShare,
-       onRegenerate,
-       highlightedMessageId,
-       isAi,
-       footerContent,
-     }: {
-      specialistId: string,
-      message: Message
-      onSpecialistClick: (id: string) => void
-      onServiceClick: (id: string) => void
-      onReply: (message: Message) => void
-      onReplyClick: (messageId: string) => void
-      onShare: (message: Message) => void
-      onRegenerate: (message: Message) => void
-      highlightedMessageId: string | null
-      isAi: boolean
-      footerContent?: string
-    }) => {
-      const router = useRouter()
-      const isUser = message.type === "user"
-      const isAssistant = message.type === "assistant"
-      const isSpecialist = message.type === "specialist"
-      const isHighlighted = highlightedMessageId === message.id
+  ({
+    specialistId,
+    message,
+    onSpecialistClick,
+    onServiceClick,
+    onReply,
+    onReplyClick,
+    onShare,
+    onRegenerate,
+    highlightedMessageId,
+    isAi,
+    footerContent,
+  }: {
+    specialistId: string
+    message: Message
+    onSpecialistClick: (id: string) => void
+    onServiceClick: (id: string) => void
+    onReply: (message: Message) => void
+    onReplyClick: (messageId: string) => void
+    onShare: (message: Message) => void
+    onRegenerate: (message: Message) => void
+    highlightedMessageId: string | null
+    isAi: boolean
+    footerContent?: string
+  }) => {
+    const router = useRouter()
+    const isUser = message.type === "user"
+    const isAssistant = message.type === "assistant"
+    const isSpecialist = message.type === "specialist"
+    const isHighlighted = highlightedMessageId === message.id
 
-      const handleCopyMessage = useCallback(() => {
-        const textToCopy = message.content || "Message with cards"
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          console.log("Message copied to clipboard")
-        })
-      }, [message.content])
+    const handleCopyMessage = useCallback(() => {
+      const textToCopy = message.content || "Message with cards"
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        console.log("Message copied to clipboard")
+      })
+    }, [message.content])
 
-      const handleViewSpecialistProfile = useCallback(() => {
-        if (isAssistant) {
-          return
-        }
+    const handleViewSpecialistProfile = useCallback(() => {
+      if (isAssistant) {
+        return
+      }
 
-        onSpecialistClick(specialistId)
-      }, [isAssistant, router])
+      onSpecialistClick(specialistId)
+    }, [isAssistant, router])
 
-      return (
-          <div
-              id={`message-${message.id}`}
-              className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6 transition-all duration-500 ${
-                  isHighlighted ? "bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-2 -m-2" : ""
-              }`}
-          >
-            <div className={`flex items-start space-x-3 max-w-4xl ${isUser ? "flex-row-reverse space-x-reverse" : ""}`}>
-              {!isUser && (
-                  <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                      onClick={handleViewSpecialistProfile}
-                      aria-label={isAssistant ? "View AI profile" : `View ${message.type} profile`}
-                      title={isAssistant ? "Allura" : isSpecialist ? "Specialist" : "View profile"}
+    return (
+      <div
+        id={`message-${message.id}`}
+        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6 transition-all duration-500 ${
+          isHighlighted ? "bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-2 -m-2" : ""
+        }`}
+      >
+        <div className={`flex items-start space-x-3 max-w-4xl ${isUser ? "flex-row-reverse space-x-reverse" : ""}`}>
+          {!isUser && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              onClick={handleViewSpecialistProfile}
+              aria-label={isAssistant ? "View AI profile" : `View ${message.type} profile`}
+              title={isAssistant ? "Allura" : isSpecialist ? "Specialist" : "View profile"}
+            >
+              <Avatar className="w-8 h-8">
+                <AvatarImage
+                  src={isAssistant ? "/allura-logo.svg" : isSpecialist ? "/placeholder-user.png" : "/placeholder.png"}
+                  className={isAssistant ? "dark:invert dark:brightness-0 dark:filter" : ""}
+                />
+                <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                  {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          )}
+
+          <div className="flex-1 space-y-3 min-w-0">
+            {/* Text content - bubble for users and specialists, plain text for AI */}
+            {message.content && (
+              <div>
+                {isUser || isSpecialist ? (
+                  <div
+                    className={`px-4 py-3 rounded-sm shadow-sm border ${
+                      isUser
+                        ? "bg-violet-600 text-white rounded-tr-md border-violet-600"
+                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
+                    }`}
                   >
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                          src={isAssistant ? "/allura-logo.svg" : isSpecialist ? "/placeholder-user.png" : "/placeholder.png"}
-                          className={isAssistant ? "dark:invert dark:brightness-0 dark:filter" : ""}
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                  </div>
+                ) : (
+                  <div className="text-gray-800 dark:text-gray-100">
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Specialist Cards */}
+            {message.specialists && message.specialists.length > 0 && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {message.specialists.slice(0, 2).map((specialist) => {
+                    const specialistCard = {
+                      id: Number.parseInt(specialist.id),
+                      image: specialist.avatar || "/placeholder.png?height=200&width=200",
+                      name: specialist.name,
+                      location: specialist.location || "Online",
+                      reviews: specialist.reviewCount || 100,
+                      specialties: specialist.specialties || [],
+                      isNew: false,
+                      title: specialist.title || "Specialist",
+                      avatar: specialist.avatar,
+                      reviewCount: specialist.reviewCount || 100,
+                    }
+
+                    return (
+                      <InstagramSpecialistCard
+                        key={specialist.id}
+                        specialist={specialistCard}
+                        onClick={() => onSpecialistClick(specialist.id)}
+                        showActionButtons={true} // Enable action buttons in chat context
                       />
-                      <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                        {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-              )}
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
-              <div className="flex-1 space-y-3 min-w-0">
-                {/* Text content - bubble for users and specialists, plain text for AI */}
-                {message.content && (
-                    <div>
-                      {isUser || isSpecialist ? (
-                          <div
-                              className={`px-4 py-3 rounded-sm shadow-sm border ${
-                                  isUser
-                                      ? "bg-violet-600 text-white rounded-tr-md border-violet-600"
-                                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
-                              }`}
-                          >
-                            <p className="text-sm leading-relaxed">{message.content}</p>
-                          </div>
-                      ) : (
-                          <div className="text-gray-800 dark:text-gray-100">
-                            <p className="text-sm leading-relaxed">{message.content}</p>
-                          </div>
-                      )}
-                    </div>
+            {/* Footer content for AI messages */}
+            {footerContent && isAssistant && !isUser && (
+              <div className="text-gray-800 dark:text-gray-100">
+                <p className="text-sm leading-relaxed">{footerContent}</p>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex items-center justify-right mt-3">
+              <div className="flex items-center gap-2 text-xs opacity-60">
+                {isAi && isAssistant && (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => onRegenerate(message)}
+                    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                    title="Regenerate response"
+                  >
+                    <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                  </motion.button>
                 )}
-
-                {/* Specialist Cards */}
-                {message.specialists && message.specialists.length > 0 && (
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {message.specialists.slice(0, 2).map((specialist) => {
-                          const specialistCard = {
-                            id: Number.parseInt(specialist.id),
-                            image: specialist.avatar || "/placeholder.png?height=200&width=200",
-                            name: specialist.name,
-                            location: specialist.location || "Online",
-                            reviews: specialist.reviewCount || 100,
-                            specialties: specialist.specialties || [],
-                            isNew: false,
-                            title: specialist.title || "Specialist",
-                          }
-
-                          return (
-                              <InstagramSpecialistCard
-                                  key={specialist.id}
-                                  specialist={specialistCard}
-                                  onClick={() => onSpecialistClick(specialist.id)}
-                              />
-                          )
-                        })}
-                      </div>
-                    </div>
-                )}
-
-                {/* Footer content for AI messages */}
-                {footerContent && isAssistant && !isUser && (
-                    <div className="text-gray-800 dark:text-gray-100">
-                      <p className="text-sm leading-relaxed">{footerContent}</p>
-                    </div>
-                )}
-
-                {/* Action buttons */}
-                <div className="flex items-center justify-right mt-3">
-                  <div className="flex items-center gap-2 text-xs opacity-60">
-                    {isAi && isAssistant && (
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => onRegenerate(message)}
-                            className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                            title="Regenerate response"
-                        >
-                          <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                        </motion.button>
-                    )}
-                    {/*<motion.button*/}
-                    {/*    whileHover={{ scale: 1.1 }}*/}
-                    {/*    whileTap={{ scale: 0.95 }}*/}
-                    {/*    onClick={() => onReply(message)}*/}
-                    {/*    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"*/}
-                    {/*    title="Reply to this message"*/}
-                    {/*>*/}
-                    {/*  <Reply className="w-4 h-4 text-gray-600 dark:text-gray-300" />*/}
-                    {/*</motion.button>*/}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => onShare(message)}
-                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                        title="Share message"
-                    >
-                      <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    </motion.button>
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleCopyMessage}
-                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                        title="Copy message"
-                    >
-                      <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    </motion.button>
-                    <span className="text-gray-500 dark:text-gray-400">
+                {/*<motion.button*/}
+                {/*    whileHover={{ scale: 1.1 }}*/}
+                {/*    whileTap={{ scale: 0.95 }}*/}
+                {/*    onClick={() => onReply(message)}*/}
+                {/*    className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"*/}
+                {/*    title="Reply to this message"*/}
+                {/*>*/}
+                {/*  <Reply className="w-4 h-4 text-gray-600 dark:text-gray-300" />*/}
+                {/*</motion.button>*/}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onShare(message)}
+                  className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                  title="Share message"
+                >
+                  <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleCopyMessage}
+                  className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                  title="Copy message"
+                >
+                  <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                </motion.button>
+                <span className="text-gray-500 dark:text-gray-400">
                   {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
-      )
-    },
+        </div>
+      </div>
+    )
+  },
 )
 
 export default function SearchPage() {
@@ -262,9 +265,9 @@ export default function SearchPage() {
     if (currentChat) {
       const chatId = params.id as string
       window.dispatchEvent(
-          new CustomEvent("chatMessagesUpdated", {
-            detail: { chatId, messages: currentChat.messages },
-          }),
+        new CustomEvent("chatMessagesUpdated", {
+          detail: { chatId, messages: currentChat.messages },
+        }),
       )
     }
   }, [currentChat, params.id])
@@ -288,17 +291,17 @@ export default function SearchPage() {
   }, [params.id])
 
   const handleSpecialistClick = useCallback(
-      (specialistId: string) => {
-        router.push(`/specialist/${specialistId}`)
-      },
-      [router],
+    (specialistId: string) => {
+      router.push(`/specialist/${specialistId}`)
+    },
+    [router],
   )
 
   const handleServiceClick = useCallback(
-      (serviceId: string) => {
-        router.push(`/service/${serviceId}`)
-      },
-      [router],
+    (serviceId: string) => {
+      router.push(`/service/${serviceId}`)
+    },
+    [router],
   )
 
   const handleReply = useCallback((message: Message) => {
@@ -315,37 +318,37 @@ export default function SearchPage() {
   }, [])
 
   const handleRegenerate = useCallback(
-      async (message: Message) => {
-        if (!currentChat || message.type !== "assistant") return
+    async (message: Message) => {
+      if (!currentChat || message.type !== "assistant") return
 
-        setIsLoading(true)
+      setIsLoading(true)
 
-        // Remove the old AI message
-        const updatedMessages = currentChat.messages.filter(m => m.id !== message.id)
-        const updatedChat = { ...currentChat, messages: updatedMessages }
-        setCurrentChat(updatedChat)
+      // Remove the old AI message
+      const updatedMessages = currentChat.messages.filter((m) => m.id !== message.id)
+      const updatedChat = { ...currentChat, messages: updatedMessages }
+      setCurrentChat(updatedChat)
 
-        // Simulate new AI response
-        setTimeout(() => {
-          const numSpecialists = 2
-          const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
+      // Simulate new AI response
+      setTimeout(() => {
+        const numSpecialists = 2
+        const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
 
-          const assistantMessage: Message = {
-            id: uuidv4(),
-            type: "assistant",
-            content: `Вот обновленные результаты поиска. Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
-            timestamp: Date.now(),
-            specialists: selectedSpecialists,
-          }
+        const assistantMessage: Message = {
+          id: uuidv4(),
+          type: "assistant",
+          content: `Вот обновленные результаты поиска. Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
+          timestamp: Date.now(),
+          specialists: selectedSpecialists,
+        }
 
-          const finalChat = addMessageToChat(updatedChat, assistantMessage)
-          finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
+        const finalChat = addMessageToChat(updatedChat, assistantMessage)
+        finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
 
-          setCurrentChat(finalChat)
-          setIsLoading(false)
-        }, 1500)
-      },
-      [currentChat]
+        setCurrentChat(finalChat)
+        setIsLoading(false)
+      }, 1500)
+    },
+    [currentChat],
   )
 
   const handleReplyClick = useCallback((messageId: string) => {
@@ -360,60 +363,60 @@ export default function SearchPage() {
   }, [])
 
   const handleSearch = useCallback(
-      async (query: string) => {
-        if (!query.trim() || !currentChat) return
+    async (query: string) => {
+      if (!query.trim() || !currentChat) return
 
-        const now = Date.now()
-        const userMessage: Message = {
-          id: `${now}`,
-          type: "user",
-          content: query,
-          timestamp: now,
+      const now = Date.now()
+      const userMessage: Message = {
+        id: `${now}`,
+        type: "user",
+        content: query,
+        timestamp: now,
+      }
+
+      // Add user message immediately
+      const updatedChatWithUser = addMessageToChat(currentChat, userMessage)
+      setCurrentChat(updatedChatWithUser)
+      setReplyingTo(null)
+      setIsLoading(true)
+
+      // If this is the first message in a new chat, add it to sidebar
+      if (currentChat.messages.length === 0) {
+        // Dispatch event to add chat to sidebar
+        window.dispatchEvent(
+          new CustomEvent("addNewChatToSidebar", {
+            detail: {
+              chat: {
+                ...updatedChatWithUser,
+                title: query.length > 30 ? query.substring(0, 30) + "..." : query,
+              },
+            },
+          }),
+        )
+      }
+
+      // Simulate AI response
+      setTimeout(() => {
+        const numSpecialists = 2
+        const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
+
+        const assistantMessage: Message = {
+          id: uuidv4(),
+          type: "assistant",
+          content: `Вот результаты поиска по запросу "${query}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
+          timestamp: now + 1000,
+          specialists: selectedSpecialists,
         }
 
-        // Add user message immediately
-        const updatedChatWithUser = addMessageToChat(currentChat, userMessage)
-        setCurrentChat(updatedChatWithUser)
-        setReplyingTo(null)
-        setIsLoading(true)
+        const finalChat = addMessageToChat(updatedChatWithUser, assistantMessage)
+        finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
+        finalChat.searchQueries = [...finalChat.searchQueries, query]
 
-        // If this is the first message in a new chat, add it to sidebar
-        if (currentChat.messages.length === 0) {
-          // Dispatch event to add chat to sidebar
-          window.dispatchEvent(
-              new CustomEvent("addNewChatToSidebar", {
-                detail: {
-                  chat: {
-                    ...updatedChatWithUser,
-                    title: query.length > 30 ? query.substring(0, 30) + "..." : query,
-                  },
-                },
-              }),
-          )
-        }
-
-        // Simulate AI response
-        setTimeout(() => {
-          const numSpecialists = 2
-          const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
-
-          const assistantMessage: Message = {
-            id: uuidv4(),
-            type: "assistant",
-            content: `Вот результаты поиска по запросу "${query}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
-            timestamp: now + 1000,
-            specialists: selectedSpecialists,
-          }
-
-          const finalChat = addMessageToChat(updatedChatWithUser, assistantMessage)
-          finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-          finalChat.searchQueries = [...finalChat.searchQueries, query]
-
-          setCurrentChat(finalChat)
-          setIsLoading(false)
-        }, 1500)
-      },
-      [currentChat],
+        setCurrentChat(finalChat)
+        setIsLoading(false)
+      }, 1500)
+    },
+    [currentChat],
   )
 
   const scrollToBottom = useCallback(() => {
@@ -425,41 +428,41 @@ export default function SearchPage() {
   }, [currentChat?.messages, scrollToBottom])
 
   const messageList = useMemo(
-      () =>
-          currentChat?.messages.map((message, index) => (
-              <div key={message.id} className="space-y-4">
-                <MessageItem
-                    specialistId={params.id as string}
-                    message={message}
-                    onSpecialistClick={handleSpecialistClick}
-                    onServiceClick={handleServiceClick}
-                    onReply={handleReply}
-                    onShare={handleShare}
-                    onRegenerate={handleRegenerate}
-                    onReplyClick={handleReplyClick}
-                    highlightedMessageId={highlightedMessageId}
-                    isAi={currentChat.isAi}
-                    footerContent={
-                      // Show footer content only after the last assistant message with specialists
-                      message.type === "assistant" && message.specialists && index === currentChat.messages.length - 1
-                          ? currentChat.footerContent
-                          : undefined
-                    }
-                />
-              </div>
-          )),
-      [
-        currentChat?.messages,
-        currentChat?.isAi,
-        currentChat?.footerContent,
-        handleSpecialistClick,
-        handleServiceClick,
-        handleReply,
-        handleShare,
-        handleRegenerate,
-        handleReplyClick,
-        highlightedMessageId,
-      ],
+    () =>
+      currentChat?.messages.map((message, index) => (
+        <div key={message.id} className="space-y-4">
+          <MessageItem
+            specialistId={params.id as string}
+            message={message}
+            onSpecialistClick={handleSpecialistClick}
+            onServiceClick={handleServiceClick}
+            onReply={handleReply}
+            onShare={handleShare}
+            onRegenerate={handleRegenerate}
+            onReplyClick={handleReplyClick}
+            highlightedMessageId={highlightedMessageId}
+            isAi={currentChat.isAi}
+            footerContent={
+              // Show footer content only after the last assistant message with specialists
+              message.type === "assistant" && message.specialists && index === currentChat.messages.length - 1
+                ? currentChat.footerContent
+                : undefined
+            }
+          />
+        </div>
+      )),
+    [
+      currentChat?.messages,
+      currentChat?.isAi,
+      currentChat?.footerContent,
+      handleSpecialistClick,
+      handleServiceClick,
+      handleReply,
+      handleShare,
+      handleRegenerate,
+      handleReplyClick,
+      highlightedMessageId,
+    ],
   )
 
   const handleNewChat = () => {
@@ -467,79 +470,79 @@ export default function SearchPage() {
   }
 
   return (
-      <div className="flex h-screen flex-col">
-        <div
-            className="flex-1 bg-white dark:bg-gray-900 overflow-hidden relative"
-            style={{
-              transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-            }}
-            data-animating={isAnimating ? "true" : "false"}
-        >
-          <ScrollArea className="h-full relative">
-            {/* New Chat Button under logo */}
-            <div
-                className={cn(
-                    "fixed z-10 transition-all duration-300",
-                    "top-[5.5rem] left-20",
-                    "md:top-40 md:left-20",
-                    isCollapsed ? "left-4" : "left-6",
-                )}
+    <div className="flex h-screen flex-col">
+      <div
+        className="flex-1 bg-white dark:bg-gray-900 overflow-hidden relative"
+        style={{
+          transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+        }}
+        data-animating={isAnimating ? "true" : "false"}
+      >
+        <ScrollArea className="h-full relative">
+          {/* New Chat Button under logo */}
+          <div
+            className={cn(
+              "fixed z-10 transition-all duration-300",
+              "top-[5.5rem] left-20",
+              "md:top-40 md:left-20",
+              isCollapsed ? "left-4" : "left-6",
+            )}
+          >
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleNewChat}
+              className={cn(
+                "flex items-center gap-2 px-3 py-2",
+                "bg-white dark:bg-gray-800",
+                "border border-gray-200 dark:border-gray-700",
+                "rounded-lg shadow-sm hover:shadow-md",
+                "transition-all duration-200",
+                "text-gray-700 dark:text-gray-300",
+                "text-sm md:text-base",
+              )}
+              title="New chat"
+              aria-label="New chat"
             >
-              <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleNewChat}
-                  className={cn(
-                      "flex items-center gap-2 px-3 py-2",
-                      "bg-white dark:bg-gray-800",
-                      "border border-gray-200 dark:border-gray-700",
-                      "rounded-lg shadow-sm hover:shadow-md",
-                      "transition-all duration-200",
-                      "text-gray-700 dark:text-gray-300",
-                      "text-sm md:text-base",
-                  )}
-                  title="New chat"
-                  aria-label="New chat"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <Plus className="w-4 h-4" />
-              </motion.button>
+              <MessageSquare className="w-4 h-4" />
+              <Plus className="w-4 h-4" />
+            </motion.button>
+          </div>
+
+          {/* Messages container */}
+          <div className="flex justify-center px-6 py-4">
+            <div className="max-w-4xl w-full pb-64 pt-20">
+              {currentChat && currentChat.messages.length === 0 && !isLoading && (
+                <div className="text-center py-20">
+                  <div className="text-gray-500 dark:text-gray-400 text-lg mb-4">Начните поиск специалистов</div>
+                  <div className="text-gray-400 dark:text-gray-500 text-sm">Введите ваш запрос в поле поиска ниже</div>
+                </div>
+              )}
+
+              {messageList}
+              <div ref={messagesEndRef} />
             </div>
+          </div>
+        </ScrollArea>
 
-            {/* Messages container */}
-            <div className="flex justify-center px-6 py-4">
-              <div className="max-w-4xl w-full pb-64 pt-20">
-                {currentChat && currentChat.messages.length === 0 && !isLoading && (
-                    <div className="text-center py-20">
-                      <div className="text-gray-500 dark:text-gray-400 text-lg mb-4">Начните поиск специалистов</div>
-                      <div className="text-gray-400 dark:text-gray-500 text-sm">Введите ваш запрос в поле поиска ниже</div>
-                    </div>
-                )}
-
-                {messageList}
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-          </ScrollArea>
-
-          {/* Search bar at bottom */}
-          <div className="fixed bottom-0 left-0 right-0 z-10">
-            <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
-              <div className="max-w-4xl mx-auto px-4 pb-6">
-                <SearchBar
-                    onSearch={handleSearch}
-                    showHeading={false}
-                    dynamicWidth={true}
-                    placeholder={"Найти специалистов..."}
-                    onCancelReply={() => setReplyingTo(null)}
-                />
-              </div>
+        {/* Search bar at bottom */}
+        <div className="fixed bottom-0 left-0 right-0 z-10">
+          <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
+            <div className="max-w-4xl mx-auto px-4 pb-6">
+              <SearchBar
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={true}
+                placeholder={"Найти специалистов..."}
+                onCancelReply={() => setReplyingTo(null)}
+              />
             </div>
           </div>
         </div>
-
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
-        <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
       </div>
+
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
+      <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
+    </div>
   )
 }

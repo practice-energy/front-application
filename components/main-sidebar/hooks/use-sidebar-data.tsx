@@ -1,46 +1,31 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import type { Chat, GroupedChats, SectionVisibility } from "../types/sidebar.types"
+import { useState, useEffect, useCallback } from "react"
+import { mockSidebarChats, groupChatsByTime } from "@/services/mock-data"
+import type { Chat, ChatItem } from "@/types/chats"
+import type { LastReadTimestamps, SectionVisibility } from "../types/sidebar.types"
 
-// Mock data - в реальном приложении это будет приходить из API
-const mockChats: Chat[] = [
-  {
-    id: "1",
-    title: "Снежана Гебельсенидзе",
-    description: "История древнего римского серебряного шмурдяка берет...",
-    avatar: "/placeholder-user.jpg",
-    isAI: false,
-    isAIEnabled: true,
-    status: "waiting",
-    lastMessage: new Date(),
-    lastRead: new Date(Date.now() - 1000 * 60 * 30), // 30 минут назад
-  },
-  {
-    id: "2",
-    title: "AI Assistant",
-    description: "Помощь с кодом и разработкой",
-    avatar: "/allura-logo.svg",
-    isAI: true,
-    isAIEnabled: true,
-    status: "confirmed",
-    lastMessage: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 часа назад
-    lastRead: new Date(Date.now() - 1000 * 60 * 60 * 1), // 1 час назад
-  },
-  {
-    id: "3",
-    title: "Мария Петрова",
-    description: "Обсуждение проекта дизайна интерьера",
-    avatar: "/placeholder-user.jpg",
-    isAI: false,
-    isAIEnabled: false,
-    lastMessage: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 дня назад
-    lastRead: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 дня назад
-  },
-]
+const getLastReadTimestamps = (): LastReadTimestamps => {
+  if (typeof window === "undefined") return {}
+  try {
+    const data = localStorage.getItem("lastReadTimestamps")
+    return data ? JSON.parse(data) : {}
+  } catch {
+    return {}
+  }
+}
+
+const saveLastReadTimestamps = (timestamps: LastReadTimestamps) => {
+  if (typeof window === "undefined") return
+  localStorage.setItem("lastReadTimestamps", JSON.stringify(timestamps))
+}
 
 export function useSidebarData(pathname: string) {
-  const [allChats] = useState<Chat[]>(mockChats)
+  const [chats, setChats] = useState<ChatItem[]>(mockSidebarChats)
+  const [newChats, setNewChats] = useState<Chat[]>([])
+  const [lastReadTimestamps, setLastReadTimestamps] = useState<LastReadTimestamps>(getLastReadTimestamps())
+
+  // Section visibility state - each section maintains its own state
   const [sectionVisibility, setSectionVisibility] = useState<SectionVisibility>({
     today: true,
     last7Days: true,
@@ -49,56 +34,67 @@ export function useSidebarData(pathname: string) {
     search: true,
   })
 
-  const groupedChats = useMemo<GroupedChats>(() => {
-    const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const last7Days = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
-    const last30Days = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
+  // Listen for new chats being added from search pages
+  useEffect(() => {
+    const handleAddNewChat = (event: CustomEvent) => {
+      const { chat } = event.detail
+      setNewChats((prev) => {
+        // Check if chat already exists
+        const exists = prev.some((c) => c.id === chat.id)
+        if (exists) return prev
 
-    return allChats.reduce(
-      (groups, chat) => {
-        const messageDate = new Date(chat.lastMessage)
+        // Add new chat to the beginning of the list
+        return [chat, ...prev]
+      })
+    }
 
-        if (messageDate >= today) {
-          groups.today.push(chat)
-        } else if (messageDate >= last7Days) {
-          groups.last7Days.push(chat)
-        } else if (messageDate >= last30Days) {
-          groups.last30Days.push(chat)
-        } else {
-          groups.older.push(chat)
-        }
+    window.addEventListener("addNewChatToSidebar", handleAddNewChat as EventListener)
 
-        return groups
-      },
-      {
-        today: [] as Chat[],
-        last7Days: [] as Chat[],
-        last30Days: [] as Chat[],
-        older: [] as Chat[],
-      },
-    )
-  }, [allChats])
+    return () => {
+      window.removeEventListener("addNewChatToSidebar", handleAddNewChat as EventListener)
+    }
+  }, [])
 
-  const toggleSection = (sectionKey: keyof SectionVisibility) => {
+  // Convert new chats to ChatItem format for display
+  const convertedNewChats: ChatItem[] = newChats.map((chat) => ({
+    id: chat.id,
+    title: chat.title,
+    description: chat.messages.length > 0 ? chat.messages[0].content : "Новый чат",
+    avatar: chat.isAi ? "/allura-logo.png" : "/placeholder-user.png",
+    status: "waiting" as const,
+    timestamp: chat.createdAt,
+    updatedAt: chat.createdAt,
+    isAIEnabled: chat.isAi,
+    isAI: chat.isAi,
+    isNew: true,
+  }))
+
+  // Combine old and new chats
+  const allChats = [...convertedNewChats, ...chats]
+
+  // Group chats by time period based on updatedAt
+  const groupedChats = groupChatsByTime(allChats)
+
+  const toggleSection = useCallback((section: string) => {
     setSectionVisibility((prev) => ({
       ...prev,
-      [sectionKey]: !prev[sectionKey],
+      [section]: !prev[section],
     }))
-  }
+  }, [])
 
   const updateLastReadTimestamp = (chatId: string) => {
-    // В реальном приложении здесь будет API вызов
-    console.log(`Updating last read timestamp for chat ${chatId}`)
+    const timestamps = { ...lastReadTimestamps, [chatId]: new Date().toISOString() }
+    setLastReadTimestamps(timestamps)
+    saveLastReadTimestamps(timestamps)
   }
 
-  const hasNewMessages = (chat: Chat) => {
-    return chat.lastMessage > chat.lastRead
+  const hasNewMessages = (chat: ChatItem): boolean => {
+    const lastRead = lastReadTimestamps[chat.id]
+    if (!lastRead) return true
+    return chat.timestamp > new Date(lastRead).getTime()
   }
 
-  const isActiveChat = (chatId: string) => {
-    return pathname.includes(chatId)
-  }
+  const isActiveChat = (chatId: string) => pathname === `/search/${chatId}`
 
   return {
     allChats,

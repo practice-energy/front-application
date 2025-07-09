@@ -1,24 +1,28 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import type { Chat } from "../types/sidebar.types"
+import { useState } from "react"
+import type { ChatItem } from "@/types/chats"
 
-export function useSidebarSearch(allChats: Chat[]) {
+export function useSidebarSearch(allChats: ChatItem[]) {
   const [searchQuery, setSearchQuery] = useState("")
-
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return []
-
-    const query = searchQuery.toLowerCase()
-    return allChats.filter(
-      (chat) => chat.title.toLowerCase().includes(query) || chat.description.toLowerCase().includes(query),
-    )
-  }, [allChats, searchQuery])
-
-  const isSearching = searchQuery.trim().length > 0
+  const [searchResults, setSearchResults] = useState<ChatItem[]>([])
+  const [isSearching, setIsSearching] = useState(false)
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
+    if (!query.trim()) {
+      setSearchResults([])
+      setIsSearching(false)
+      return
+    }
+
+    setIsSearching(true)
+    const results = allChats.filter(
+      (chat) =>
+        chat.title.toLowerCase().includes(query.toLowerCase()) ||
+        chat.description.toLowerCase().includes(query.toLowerCase()),
+    )
+    setSearchResults(results)
   }
 
   return {

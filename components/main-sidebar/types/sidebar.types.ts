@@ -4,26 +4,22 @@ export interface Chat {
   title: string
   description: string
   avatar?: string
-  isAI: boolean
-  isAIEnabled: boolean
-  status?: "waiting" | "confirmed" | string
-  lastMessage: Date
-  lastRead: Date
+  isAI?: boolean
+  isAIEnabled?: boolean
+  status?: "waiting" | "confirmed" | "active" | "inactive"
+  lastMessage?: string
+  timestamp?: string
+  unreadCount?: number
 }
 
-export interface GroupedChats {
-  today: Chat[]
-  last7Days: Chat[]
-  last30Days: Chat[]
-  older: Chat[]
-}
-
-export interface SectionVisibility {
-  today: boolean
-  last7Days: boolean
-  last30Days: boolean
-  older: boolean
-  search: boolean
+export interface SearchResult {
+  id: string
+  title: string
+  description: string
+  avatar?: string
+  type: "specialist" | "service" | "chat"
+  rating?: number
+  price?: string
 }
 
 export interface ChatItemProps {
@@ -36,28 +32,37 @@ export interface ChatItemProps {
 }
 
 export interface SearchResultItemProps {
-  chat: Chat
-  query: string
-  onChatClick: (chatId: string) => void
-  isActiveChat: (chatId: string) => boolean
+  result: SearchResult
+  onResultClick: (resultId: string) => void
+  isCollapsed: boolean
+  isMobile: boolean
 }
 
 export interface SectionHeaderProps {
   title: string
-  sectionKey: keyof SectionVisibility
-  count: number
-  sectionVisibility: SectionVisibility
-  toggleSection: (sectionKey: keyof SectionVisibility) => void
+  onAddClick?: () => void
+  addButtonLabel?: string
   isCollapsed: boolean
   isMobile: boolean
 }
 
 export interface SectionContentProps {
-  sectionKey: keyof SectionVisibility
-  sectionVisibility: SectionVisibility
   children: React.ReactNode
+  isCollapsed: boolean
+  isMobile: boolean
 }
 
-export interface StatusBadgeProps {
-  status: string
+export interface User {
+  id: string
+  name: string
+  email: string
+  avatar?: string
+  isSpecialist: boolean
+  hat?: "master" | "user"
+}
+
+export interface SidebarData {
+  chats: Chat[]
+  searchResults: SearchResult[]
+  user: User
 }

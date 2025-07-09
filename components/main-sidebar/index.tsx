@@ -96,7 +96,7 @@ export function MainSidebar() {
         "fixed left-0 top-0 h-full bg-gray-50 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 flex flex-col z-50",
         "backdrop-blur-sm",
         isCollapsed ? "w-0 opacity-0 pointer-events-none" : "opacity-100",
-        !isCollapsed && (isMobile ? "w-full" : "w-96"),
+        !isCollapsed && (isMobile ? "w-full" : "w-80"),
       )}
     >
       <div className={cn("p-4 space-y-3 border-b border-gray-200 dark:border-gray-700")}>
