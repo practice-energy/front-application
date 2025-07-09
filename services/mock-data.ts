@@ -180,7 +180,6 @@ export const mockSidebarChats: ChatItem[] = [
     title: "Елена Иванова",
     description: "Массаж и релаксация",
     avatar: "/placeholder-user.jpg",
-    status: "completed",
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 день назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24,
     isAIEnabled: false,
@@ -213,7 +212,6 @@ export const mockSidebarChats: ChatItem[] = [
     title: "Александр Волков",
     description: "Бизнес консультация",
     avatar: "/placeholder-user.jpg",
-    status: "completed",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 15, // 15 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
     isAIEnabled: false,
@@ -224,7 +222,6 @@ export const mockSidebarChats: ChatItem[] = [
     title: "Мария Федорова",
     description: "Нутрициология",
     avatar: "/placeholder-user.jpg",
-    status: "completed",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 45, // 45 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 45,
     isAIEnabled: true,

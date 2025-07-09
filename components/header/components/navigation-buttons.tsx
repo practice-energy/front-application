@@ -29,6 +29,10 @@ export function NavigationButtons({ isAuthenticated, role, router }: NavigationB
     }
   }
 
+  const handleCalendarClick = () => {
+    router.push("/specialist-dashboard?section=calendar")
+  }
+
   if (!isAuthenticated) return null
 
   return (

@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslations } from "@/hooks/use-translations"
-import {MapPin, Images} from "lucide-react"
+import {MapPin, Images, Share} from "lucide-react"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { AboutSection } from "@/components/about-section"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,9 @@ import ExperienceForm from "@/components/experience-item"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import {ANIMATION_DURATION, ANIMATION_TIMING} from "@/components/main-sidebar/utils/sidebar.utils"
+import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
+import {ShareSpecialistModal} from "@/components/share-specialist-modal";
 
 export default function Overview() {
   const router = useRouter()
@@ -26,11 +29,46 @@ export default function Overview() {
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [isAnimating] = useState(false)
+  const [shareModalOpen, setShareModalOpen] = useState(false)
 
   // State for editable data
   const [savedData, setSavedData] = useState(mockSpecialist)
   const [draftData, setDraftData] = useState(mockSpecialist)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+
+  // Create preview URLs when images change
+  useEffect(() => {
+    const newPreviews: string[] = []
+
+    const createPreviews = async () => {
+      for (const image of draftData.images) {
+        try {
+          if (image instanceof File) {
+            newPreviews.push(URL.createObjectURL(image))
+          } else if (typeof image === 'string') {
+            // Handle case where image is already a URL string
+            newPreviews.push(image)
+          }
+        } catch (error) {
+          console.error('Error creating image preview:', error)
+          newPreviews.push('') // Fallback for failed previews
+        }
+      }
+      setImagePreviews(newPreviews)
+    }
+
+    createPreviews()
+
+    return () => {
+      // Clean up object URLs when component unmounts or images change
+      newPreviews.forEach(preview => {
+        if (preview && !preview.startsWith('http')) {
+          URL.revokeObjectURL(preview)
+        }
+      })
+    }
+  }, [draftData.images])
 
   useEffect(() => {
     if (!isAuthenticated || (user && user.isSpecialist === false)) {
@@ -47,7 +85,7 @@ export default function Overview() {
   const handleInputChange = (field: string, value: any) => {
     setDraftData((prev) => ({ ...prev, [field]: value }));
 
-    // Очищаем конкретную ошибку при изменении поля
+    // Clear specific error when field changes
     setErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[field];
@@ -55,14 +93,23 @@ export default function Overview() {
     });
   }
 
+  const handlePhotoUpload = (files: File[]) => {
+    handleInputChange("images", [...draftData.images, ...files])
+  }
+
+  const removePhoto = (index: number) => {
+    const newImages = [...draftData.images]
+    newImages.splice(index, 1)
+    handleInputChange("images", newImages)
+  }
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    // Валидация только при наличии ошибок
-    if (!draftData.title?.trim()) newErrors.name = "Name is required";
+    if (!draftData.name?.trim()) newErrors.name = "Name is required";
     if (!draftData.title?.trim()) newErrors.title = "Title is required";
+    if (!draftData.location?.trim()) newErrors.location = "Location is required";
 
-    // Обновляем только новые ошибки
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -73,11 +120,28 @@ export default function Overview() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Update saved data to new published state
-      setSavedData(draftData)
+      // Convert File objects to URLs if needed (simulating upload)
+      const uploadedImages = await Promise.all(
+          draftData.images.map(async (img) => {
+            if (img instanceof File) {
+              // In a real app, you would upload the file here
+              // and get back a URL from your server
+              return URL.createObjectURL(img)
+            }
+            return img
+          })
+      )
+
+      const newSavedData = {
+        ...draftData,
+        images: uploadedImages
+      }
+
+      setSavedData(newSavedData)
+      setDraftData(newSavedData)
       setHasChanges(false)
 
-      console.log("Saving profile data:", draftData)
+      console.log("Saving profile data:", newSavedData)
     } catch (error) {
       console.error("Failed to save profile:", error)
     } finally {
@@ -87,9 +151,8 @@ export default function Overview() {
 
   const handleModeToggle = async (mode: "view" | "edit") => {
     if (mode === "view") {
-      // Validate before switching to view mode
       if (!validateForm()) {
-        return // ModeToggleBar will handle the error display
+        return
       }
 
       setIsTransitioning(true)
@@ -98,16 +161,12 @@ export default function Overview() {
         await handlePublish()
       }
 
-      // Small delay for smoother transition
       await new Promise((resolve) => setTimeout(resolve, 300))
       setIsTransitioning(false)
     }
 
     setIsTransitioning(true)
-
     setIsEditMode(mode === "edit")
-
-    // Small delay for smoother transition
     await new Promise((resolve) => setTimeout(resolve, 300))
     setIsTransitioning(false)
   }
@@ -115,197 +174,199 @@ export default function Overview() {
   const currentData = isEditMode ? draftData : savedData
   const hasErrors = Object.keys(errors).length > 0
 
-  // Если данные еще загружаются
   if (isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Loading user data...</div>
-      </div>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-pulse text-muted-foreground">Loading user data...</div>
+        </div>
     )
   }
 
   return (
-    <>
-      <ModeToggleBar
-        isEditMode={isEditMode}
-        onModeToggle={handleModeToggle}
-        hasErrors={hasErrors}
-        errors={errors}
-        hasChanges={hasChanges}
-        isSaving={isSaving}
-      />
+      <>
+        <ModeToggleBar
+            isEditMode={isEditMode}
+            onModeToggle={handleModeToggle}
+            hasErrors={hasErrors}
+            errors={errors}
+            hasChanges={hasChanges}
+            isSaving={isSaving}
+        />
 
-      <AnimatePresence mode="wait">
-        {isTransitioning ? (
-          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-              <Skeleton className="h-[300px] w-full rounded-sm" />
-              <Skeleton className="h-[200px] w-full rounded-sm" />
-              <Skeleton className="h-[250px] w-full rounded-sm" />
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-          >
-            <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-              <div
-                style={{
-                  transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-                }}
-                data-animating={isAnimating ? "true" : "false"}
+        <AnimatePresence mode="wait">
+          {isTransitioning ? (
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+                  <Skeleton className="h-[300px] w-full rounded-sm" />
+                  <Skeleton className="h-[200px] w-full rounded-sm" />
+                  <Skeleton className="h-[250px] w-full rounded-sm" />
+                </div>
+              </motion.div>
+          ) : (
+              <motion.div
+                  key="content"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4 }}
               >
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-                  {/* Instagram-style centered card */}
-                  <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border-gray-200 dark:border-gray-700 overflow-hidden">
-                    {/* Specialist header */}
-                    <div className="p-6 space-y-6">
-                      <div className="flex flex-col gap-6">
-                        {/* Photo Gallery */}
-                        <div className="space-y-3">
-                          {isEditMode ? (
-                            <PhotoUpload
-                              photos={currentData.images || []}
-                              onPhotosChange={(photos) => handleInputChange("images", photos)}
-                              maxPhotos={5}
-                              showTitle={false}
-                            />
-                          ) : (
-                            <div>
-                              {currentData.images?.length > 0 ? (
-                                <SquareImageGallery
-                                  images={currentData.images}
-                                  alt="Profile photos"
-                                  ratioWidth={4}
-                                  ratioHeight={5}
-                                  borderRadius={8}
-                                />
+                <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                  <div
+                      style={{
+                        transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+                      }}
+                      data-animating={isAnimating ? "true" : "false"}
+                  >
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+                      <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div className="p-6 space-y-6">
+                          <div className="flex flex-col gap-6">
+                            <div className="space-y-3">
+                              {isEditMode ? (
+                                  <PhotoUpload
+                                      photos={draftData.images}
+                                      onPhotosChange={handlePhotoUpload}
+                                      maxPhotos={5}
+                                      showTitle={false}
+                                  />
                               ) : (
-                                <div className="h-64 flex flex-col items-center justify-center text-muted-foreground bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                  <Images className="h-12 w-12 mb-3 opacity-50" />
-                                  <p>No photos</p>
-                                </div>
+                                  <div>
+                                    {imagePreviews.length > 0 ? (
+                                        <SquareImageGallery
+                                            images={imagePreviews}
+                                            alt="Profile photos"
+                                            ratioWidth={4}
+                                            ratioHeight={5}
+                                            borderRadius={8}
+                                        />
+                                    ) : (
+                                        <div className="h-64 flex flex-col items-center justify-center text-muted-foreground bg-gray-50 dark:bg-gray-900 rounded-lg">
+                                          <Images className="h-12 w-12 mb-3 opacity-50" />
+                                          <p>No photos</p>
+                                        </div>
+                                    )}
+                                  </div>
                               )}
                             </div>
-                          )}
-                        </div>
 
-                        {/* Profile Info */}
-                        {isEditMode ? (
-                          <div className="space-y-6">
-                            <EnhancedInput
-                              label="Full Name"
-                              value={currentData.name || ""}
-                              onChange={(e) => handleInputChange("name", e.target.value)}
-                              error={errors.name}
-                              required
-                              placeholder="Enter your full name"
-                              showEditIcon
-                            />
+                            {/* Rest of your component remains the same */}
+                            {isEditMode ? (
+                                <div className="space-y-6">
+                                  <EnhancedInput
+                                      label="Full Name"
+                                      value={currentData.name || ""}
+                                      onChange={(e) => handleInputChange("name", e.target.value)}
+                                      error={errors.name}
+                                      required
+                                      placeholder="Enter your full name"
+                                      showEditIcon
+                                  />
 
-                            <EnhancedInput
-                              label="Professional Title"
-                              value={currentData.title || ""}
-                              onChange={(e) => handleInputChange("title", e.target.value)}
-                              error={errors.title}
-                              required
-                              placeholder="e.g., Spiritual Guide & Life Coach"
-                              showEditIcon
-                            />
+                                  <EnhancedInput
+                                      label="Professional Title"
+                                      value={currentData.title || ""}
+                                      onChange={(e) => handleInputChange("title", e.target.value)}
+                                      error={errors.title}
+                                      required
+                                      placeholder="e.g., Spiritual Guide & Life Coach"
+                                      showEditIcon
+                                  />
 
-                            <LocationInput
-                              value={currentData.location || ""}
-                              onChange={(value) => handleInputChange("location", value)}
-                              error={errors.location}
-                              placeholder="Enter your city"
-                            />
-                          </div>
-                        ) : (
-                          <div className="text-left">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                              {currentData.name}
-                            </h1>
-                            <h2 className="text-xl text-gray-700 dark:text-gray-300 mb-4">{currentData.title}</h2>
+                                  <LocationInput
+                                      value={currentData.location || ""}
+                                      onChange={(value) => handleInputChange("location", value)}
+                                      error={errors.location}
+                                      placeholder="Enter your city"
+                                  />
+                                </div>
+                            ) : (
+                                <div className="text-left">
+                                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                                    {currentData.name}
+                                  </h1>
+                                  <h2 className="text-xl text-gray-700 dark:text-gray-300 mb-4">{currentData.title}</h2>
 
-                            <div className="flex items-center space-x-6 mb-4">
-                              <div className="flex items-center">
-                                <MapPin className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-                                <span className="text-gray-600 dark:text-gray-300">{currentData.location}</span>
-                              </div>
-                              <div className="flex items-center">
+                                  <div className="flex items-center space-x-6 mb-4">
+                                    <div className="flex items-center">
+                                      <MapPin className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+                                      <span className="text-gray-600 dark:text-gray-300">{currentData.location}</span>
+                                    </div>
+                                    <div className="flex items-center">
                                 <span className="text-gray-600 dark:text-gray-300">
                                   {currentData.reviewCount} practices
                                 </span>
+                                    </div>
+                                  </div>
+                                </div>
+                            )}
+                          </div>
+
+                          {/* About Section */}
+                          {isEditMode ? (
+                              <div className="space-y-6 border-gray-200 dark:border-gray-700">
+                                <EnhancedInput
+                                    type="textarea"
+                                    label="Bio"
+                                    value={currentData.description || ""}
+                                    onChange={(e) => {
+                                      handleInputChange("fullBio", e.target.value)
+                                      handleInputChange("bio", e.target.value.slice(0, 200))
+                                    }}
+                                    placeholder="Tell about your experience, approach, and philosophy"
+                                    rows={6}
+                                    maxLength={1000}
+                                    showCharCount
+                                    error={errors.bio}
+                                />
+
+                                <div className="space-y-4">
+                                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                    Education
+                                  </h3>
+                                  <ExperienceForm
+                                      items={currentData.education || []}
+                                      onChange={(education: any) => handleInputChange("education", education)}
+                                      showCertificates={true}
+                                  />
+                                </div>
+
+                                <div className="space-y-4">
+                                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                    Experience
+                                  </h3>
+                                  <ExperienceForm
+                                      items={currentData.experience || []}
+                                      onChange={(experience: any) => handleInputChange("experience", experience)}
+                                      showCertificates={false}
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        )}
+                          ) : (
+                              <div className="border-gray-200 dark:border-gray-700">
+                                <AboutSection
+                                    title={`About ${currentData.name || "Specialist"}`}
+                                    description={currentData.description}
+                                    fullDescription={currentData.description}
+                                    education={currentData.education}
+                                    experience={currentData.experience}
+                                    showEducationExperience={true}
+                                />
+                              </div>
+                          )}
+                        </div>
                       </div>
-
-                      {/* About Section */}
-                      {isEditMode ? (
-                        <div className="space-y-6 border-gray-200 dark:border-gray-700">
-                          <EnhancedInput
-                            type="textarea"
-                            label="Bio"
-                            value={currentData.description || ""}
-                            onChange={(e) => {
-                              handleInputChange("fullBio", e.target.value)
-                              handleInputChange("bio", e.target.value.slice(0, 200))
-                            }}
-                            placeholder="Tell about your experience, approach, and philosophy"
-                            rows={6}
-                            maxLength={1000}
-                            showCharCount
-                            error={errors.bio}
-                          />
-
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                              Education
-                            </h3>
-                            <ExperienceForm
-                              items={currentData.education || []}
-                              onChange={(education: any) => handleInputChange("education", education)}
-                              showCertificates={true}
-                            />
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                              Experience
-                            </h3>
-                            <ExperienceForm
-                              items={currentData.experience || []}
-                              onChange={(experience: any) => handleInputChange("experience", experience)}
-                              showCertificates={false}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="border-gray-200 dark:border-gray-700">
-                          <AboutSection
-                            title={`About ${currentData.name || "Specialist"}`}
-                            description={currentData.description}
-                            fullDescription={currentData.description}
-                            education={currentData.education}
-                            experience={currentData.experience}
-                            showEducationExperience={true}
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
-                </div>
-              </div>
-            </main>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+                </main>
+              </motion.div>
+          )}
+        </AnimatePresence>
+
+        <ShareSpecialistModal
+            open={shareModalOpen}
+            onOpenChange={setShareModalOpen}
+            specialist={currentData}
+        />
+      </>
   )
 }
