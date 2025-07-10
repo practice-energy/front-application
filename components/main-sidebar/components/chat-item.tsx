@@ -11,7 +11,8 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
     <div
       className={cn(
-        "relative px-3 py-3 rounded-sm transition-colors cursor-pointer w-full",
+        "relative rounded-sm transition-colors cursor-pointer w-full",
+        isMobile ? "px-2 py-2" : "px-3 py-3",
         isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
         isCollapsed && !isMobile
           ? ""
@@ -21,7 +22,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
       )}
       onClick={() => onChatClick(chat.id)}
     >
-      <div className="flex items-start gap-3 w-full">
+      <div className={cn("flex items-start w-full", isMobile ? "gap-2" : "gap-3")}>
         {/* Profile Image */}
         <div className="flex-shrink-0">
           {chat.isAI ? (
@@ -30,7 +31,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               alt={chat.title}
               width={48}
               height={48}
-              className="w-12 h-12 rounded-lg object-cover"
+              className={cn("rounded-lg object-cover", isMobile ? "w-10 h-10" : "w-12 h-12")}
             />
           ) : (
             <Image
@@ -38,13 +39,18 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               alt={chat.title}
               width={48}
               height={48}
-              className="w-12 h-12 rounded-lg object-cover"
+              className={cn("rounded-lg object-cover", isMobile ? "w-10 h-10" : "w-12 h-12")}
             />
           )}
         </div>
 
         {/* Content */}
-        <div className={cn("flex-1 min-w-0 max-w-full overflow-hidden", isCollapsed && !isMobile ? "hidden" : "block")}>
+        <div
+          className={cn(
+            "flex-1 min-w-0 overflow-hidden",
+            isMobile ? "max-w-[calc(280px-100px)]" : "max-w-[calc(330px-120px)]",
+          )}
+        >
           {/* Header with name and indicators */}
           <div className="flex items-start justify-between mb-1 w-full">
             <div className="flex-1 min-w-0 max-w-[calc(330px-120px)] overflow-hidden">
@@ -77,8 +83,10 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               )}
 
               {/* New message indicator - second line */}
-              {hasUnread ? (<div className="w-3 h-3 bg-violet-500 rounded-sm flex-shrink-0" />) : (
-                  <div className="w-3 h-3 bg-none flex-shrink-0" />
+              {hasUnread ? (
+                <div className="w-3 h-3 bg-violet-500 rounded-sm flex-shrink-0" />
+              ) : (
+                <div className="w-3 h-3 bg-none flex-shrink-0" />
               )}
 
               {/* AI Star Icon - third line */}

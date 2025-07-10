@@ -94,209 +94,416 @@ export function MainSidebar() {
       }}
       className={cn(
         "fixed left-0 top-0 h-full bg-gray-50 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 flex flex-col z-50",
-        "backdrop-blur-sm",
-        isCollapsed ? "w-0 opacity-0 pointer-events-none" : "opacity-100",
-        !isCollapsed && (isMobile ? "w-full" : "w-80"),
+        "backdrop-blur-sm transform-gpu",
+        isCollapsed ? "w-0 opacity-0 pointer-events-none scale-100" : "opacity-100 scale-100",
+        !isCollapsed && (isMobile ? "w-[280px]" : "w-80"),
       )}
     >
-      <div className={cn("p-4 space-y-3 border-gray-200 dark:border-gray-700")}>
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{sidebarTitle}</h2>
+      {isMobile && (
+        <div className="w-full h-full overflow-hidden">
+          <div className={cn("p-4 space-y-3 border-gray-200 dark:border-gray-700")}>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{sidebarTitle}</h2>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className={cn(
-              "h-8 w-8 transition-all duration-300 ease-in-out rounded-sm",
-              "hover:bg-gray-200 dark:hover:bg-gray-700",
-              "transform hover:scale-105 active:scale-95",
-              isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
-            )}
-          >
-            <PanelRightOpen className="h-4 w-4" />
-            <span className="sr-only">Закрыть сайдбар</span>
-          </Button>
-        </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className={cn(
+                  "h-8 w-8 transition-all duration-300 ease-in-out rounded-sm",
+                  "hover:bg-gray-200 dark:hover:bg-gray-700",
+                  "transform hover:scale-105 active:scale-95",
+                  isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
+                )}
+              >
+                <PanelRightOpen className="h-4 w-4" />
+                <span className="sr-only">Закрыть сайдбар</span>
+              </Button>
+            </div>
 
-        <Button
-          onClick={handleNewSearch}
-          variant="ghost"
-          className="w-full justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 h-10 rounded-sm transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="flex items-center">
-            <MessageSquare className="w-4 h-4 mr-3" />
-            <span className="text-sm">{newChatLabel}</span>
-          </div>
-          <Plus className="w-4 h-4" />
-        </Button>
+            <Button
+              onClick={handleNewSearch}
+              variant="ghost"
+              className="w-full justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 h-10 rounded-sm transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <div className="flex items-center">
+                <MessageSquare className="w-4 h-4 mr-3" />
+                <span className="text-sm">{newChatLabel}</span>
+              </div>
+              <Plus className="w-4 h-4" />
+            </Button>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-200" />
-          <Input
-            placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm transition-all duration-200 ease-in-out focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
-          />
-        </div>
-      </div>
-
-      <ScrollArea className="flex-1 relative">
-        <div className="py-2">
-          {isSearching ? (
-            <div>
-              <SectionHeader
-                title="Результаты поиска"
-                sectionKey="search"
-                count={searchResults.length}
-                sectionVisibility={sectionVisibility}
-                toggleSection={toggleSection}
-                isCollapsed={isCollapsed}
-                isMobile={isMobile}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-200" />
+              <Input
+                placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm transition-all duration-200 ease-in-out focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
               />
-              <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
-                <div className="space-y-1 px-2">
-                  {searchResults.length > 0 ? (
-                    searchResults.map((chat) => (
-                      <SearchResultItem
-                        key={chat.id}
-                        chat={chat}
-                        query={searchQuery}
-                        onChatClick={handleChatClick}
-                        isActiveChat={isActiveChat}
+            </div>
+          </div>
+
+          <ScrollArea className="flex-1 relative">
+            <div className="py-2">
+              {isSearching ? (
+                <div>
+                  <SectionHeader
+                    title="Результаты поиска"
+                    sectionKey="search"
+                    count={searchResults.length}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                  />
+                  <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
+                    <div className="space-y-1 px-2">
+                      {searchResults.length > 0 ? (
+                        searchResults.map((chat) => (
+                          <SearchResultItem
+                            key={chat.id}
+                            chat={chat}
+                            query={searchQuery}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                          />
+                        ))
+                      ) : (
+                        <div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                          <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          Ничего не найдено
+                        </div>
+                      )}
+                    </div>
+                  </SectionContent>
+                </div>
+              ) : (
+                <>
+                  {groupedChats.today.length > 0 && (
+                    <div className="mb-2">
+                      <SectionHeader
+                        title="Сегодня"
+                        sectionKey="today"
+                        count={groupedChats.today.length}
+                        sectionVisibility={sectionVisibility}
+                        toggleSection={toggleSection}
+                        isCollapsed={isCollapsed}
+                        isMobile={isMobile}
                       />
-                    ))
-                  ) : (
-                    <div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-                      <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      Ничего не найдено
+                      <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
+                        <div className="space-y-1 px-2">
+                          {groupedChats.today.map((chat) => (
+                            <ChatItem
+                              key={chat.id}
+                              chat={chat}
+                              onChatClick={handleChatClick}
+                              isActiveChat={isActiveChat}
+                              hasNewMessages={hasNewMessages}
+                              isCollapsed={isCollapsed}
+                              isMobile={isMobile}
+                            />
+                          ))}
+                        </div>
+                      </SectionContent>
                     </div>
                   )}
-                </div>
-              </SectionContent>
+
+                  {groupedChats.last7Days.length > 0 && (
+                    <div className="mb-2">
+                      <SectionHeader
+                        title="Последние 7 дней"
+                        sectionKey="last7Days"
+                        count={groupedChats.last7Days.length}
+                        sectionVisibility={sectionVisibility}
+                        toggleSection={toggleSection}
+                        isCollapsed={isCollapsed}
+                        isMobile={isMobile}
+                      />
+                      <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
+                        <div className="space-y-1 px-2">
+                          {groupedChats.last7Days.map((chat) => (
+                            <ChatItem
+                              key={chat.id}
+                              chat={chat}
+                              onChatClick={handleChatClick}
+                              isActiveChat={isActiveChat}
+                              hasNewMessages={hasNewMessages}
+                              isCollapsed={isCollapsed}
+                              isMobile={isMobile}
+                            />
+                          ))}
+                        </div>
+                      </SectionContent>
+                    </div>
+                  )}
+
+                  {groupedChats.last30Days.length > 0 && (
+                    <div className="mb-2">
+                      <SectionHeader
+                        title="Последние 30 дней"
+                        sectionKey="last30Days"
+                        count={groupedChats.last30Days.length}
+                        sectionVisibility={sectionVisibility}
+                        toggleSection={toggleSection}
+                        isCollapsed={isCollapsed}
+                        isMobile={isMobile}
+                      />
+                      <SectionContent sectionKey="last30Days" sectionVisibility={sectionVisibility}>
+                        <div className="space-y-1 px-2">
+                          {groupedChats.last30Days.map((chat) => (
+                            <ChatItem
+                              key={chat.id}
+                              chat={chat}
+                              onChatClick={handleChatClick}
+                              isActiveChat={isActiveChat}
+                              hasNewMessages={hasNewMessages}
+                              isCollapsed={isCollapsed}
+                              isMobile={isMobile}
+                            />
+                          ))}
+                        </div>
+                      </SectionContent>
+                    </div>
+                  )}
+
+                  {groupedChats.older.length > 0 && (
+                    <div className="mb-2">
+                      <SectionHeader
+                        title="Старые"
+                        sectionKey="older"
+                        count={groupedChats.older.length}
+                        sectionVisibility={sectionVisibility}
+                        toggleSection={toggleSection}
+                        isCollapsed={isCollapsed}
+                        isMobile={isMobile}
+                      />
+                      <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
+                        <div className="space-y-1 px-2">
+                          {groupedChats.older.map((chat) => (
+                            <ChatItem
+                              key={chat.id}
+                              chat={chat}
+                              onChatClick={handleChatClick}
+                              isActiveChat={isActiveChat}
+                              hasNewMessages={hasNewMessages}
+                              isCollapsed={isCollapsed}
+                              isMobile={isMobile}
+                            />
+                          ))}
+                        </div>
+                      </SectionContent>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-          ) : (
-            <>
-              {groupedChats.today.length > 0 && (
-                <div className="mb-2">
-                  <SectionHeader
-                    title="Сегодня"
-                    sectionKey="today"
-                    count={groupedChats.today.length}
-                    sectionVisibility={sectionVisibility}
-                    toggleSection={toggleSection}
-                    isCollapsed={isCollapsed}
-                    isMobile={isMobile}
-                  />
-                  <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
-                      {groupedChats.today.map((chat) => (
-                        <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
-                        />
-                      ))}
-                    </div>
-                  </SectionContent>
-                </div>
-              )}
-
-              {groupedChats.last7Days.length > 0 && (
-                <div className="mb-2">
-                  <SectionHeader
-                    title="Последние 7 дней"
-                    sectionKey="last7Days"
-                    count={groupedChats.last7Days.length}
-                    sectionVisibility={sectionVisibility}
-                    toggleSection={toggleSection}
-                    isCollapsed={isCollapsed}
-                    isMobile={isMobile}
-                  />
-                  <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
-                      {groupedChats.last7Days.map((chat) => (
-                        <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
-                        />
-                      ))}
-                    </div>
-                  </SectionContent>
-                </div>
-              )}
-
-              {groupedChats.last30Days.length > 0 && (
-                <div className="mb-2">
-                  <SectionHeader
-                    title="Последние 30 дней"
-                    sectionKey="last30Days"
-                    count={groupedChats.last30Days.length}
-                    sectionVisibility={sectionVisibility}
-                    toggleSection={toggleSection}
-                    isCollapsed={isCollapsed}
-                    isMobile={isMobile}
-                  />
-                  <SectionContent sectionKey="last30Days" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
-                      {groupedChats.last30Days.map((chat) => (
-                        <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
-                        />
-                      ))}
-                    </div>
-                  </SectionContent>
-                </div>
-              )}
-
-              {groupedChats.older.length > 0 && (
-                <div className="mb-2">
-                  <SectionHeader
-                    title="Старые"
-                    sectionKey="older"
-                    count={groupedChats.older.length}
-                    sectionVisibility={sectionVisibility}
-                    toggleSection={toggleSection}
-                    isCollapsed={isCollapsed}
-                    isMobile={isMobile}
-                  />
-                  <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
-                      {groupedChats.older.map((chat) => (
-                        <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
-                        />
-                      ))}
-                    </div>
-                  </SectionContent>
-                </div>
-              )}
-            </>
-          )}
+          </ScrollArea>
         </div>
-      </ScrollArea>
+      )}
+
+      {!isMobile && (
+        <div className={cn("p-4 space-y-3 border-gray-200 dark:border-gray-700")}>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{sidebarTitle}</h2>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className={cn(
+                "h-8 w-8 transition-all duration-300 ease-in-out rounded-sm",
+                "hover:bg-gray-200 dark:hover:bg-gray-700",
+                "transform hover:scale-105 active:scale-95",
+                isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
+              )}
+            >
+              <PanelRightOpen className="h-4 w-4" />
+              <span className="sr-only">Закрыть сайдбар</span>
+            </Button>
+          </div>
+
+          <Button
+            onClick={handleNewSearch}
+            variant="ghost"
+            className="w-full justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 h-10 rounded-sm transition-all duration-200 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <div className="flex items-center">
+              <MessageSquare className="w-4 h-4 mr-3" />
+              <span className="text-sm">{newChatLabel}</span>
+            </div>
+            <Plus className="w-4 h-4" />
+          </Button>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-200" />
+            <Input
+              placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm transition-all duration-200 ease-in-out focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+            />
+          </div>
+        </div>
+      )}
+
+      {!isMobile && (
+        <ScrollArea className="flex-1 relative">
+          <div className="py-2">
+            {isSearching ? (
+              <div>
+                <SectionHeader
+                  title="Результаты поиска"
+                  sectionKey="search"
+                  count={searchResults.length}
+                  sectionVisibility={sectionVisibility}
+                  toggleSection={toggleSection}
+                  isCollapsed={isCollapsed}
+                  isMobile={isMobile}
+                />
+                <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
+                  <div className="space-y-1 px-2">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((chat) => (
+                        <SearchResultItem
+                          key={chat.id}
+                          chat={chat}
+                          query={searchQuery}
+                          onChatClick={handleChatClick}
+                          isActiveChat={isActiveChat}
+                        />
+                      ))
+                    ) : (
+                      <div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                        <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        Ничего не найдено
+                      </div>
+                    )}
+                  </div>
+                </SectionContent>
+              </div>
+            ) : (
+              <>
+                {groupedChats.today.length > 0 && (
+                  <div className="mb-2">
+                    <SectionHeader
+                      title="Сегодня"
+                      sectionKey="today"
+                      count={groupedChats.today.length}
+                      sectionVisibility={sectionVisibility}
+                      toggleSection={toggleSection}
+                      isCollapsed={isCollapsed}
+                      isMobile={isMobile}
+                    />
+                    <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
+                      <div className="space-y-1 px-2">
+                        {groupedChats.today.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                          />
+                        ))}
+                      </div>
+                    </SectionContent>
+                  </div>
+                )}
+
+                {groupedChats.last7Days.length > 0 && (
+                  <div className="mb-2">
+                    <SectionHeader
+                      title="Последние 7 дней"
+                      sectionKey="last7Days"
+                      count={groupedChats.last7Days.length}
+                      sectionVisibility={sectionVisibility}
+                      toggleSection={toggleSection}
+                      isCollapsed={isCollapsed}
+                      isMobile={isMobile}
+                    />
+                    <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
+                      <div className="space-y-1 px-2">
+                        {groupedChats.last7Days.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                          />
+                        ))}
+                      </div>
+                    </SectionContent>
+                  </div>
+                )}
+
+                {groupedChats.last30Days.length > 0 && (
+                  <div className="mb-2">
+                    <SectionHeader
+                      title="Последние 30 дней"
+                      sectionKey="last30Days"
+                      count={groupedChats.last30Days.length}
+                      sectionVisibility={sectionVisibility}
+                      toggleSection={toggleSection}
+                      isCollapsed={isCollapsed}
+                      isMobile={isMobile}
+                    />
+                    <SectionContent sectionKey="last30Days" sectionVisibility={sectionVisibility}>
+                      <div className="space-y-1 px-2">
+                        {groupedChats.last30Days.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                          />
+                        ))}
+                      </div>
+                    </SectionContent>
+                  </div>
+                )}
+
+                {groupedChats.older.length > 0 && (
+                  <div className="mb-2">
+                    <SectionHeader
+                      title="Старые"
+                      sectionKey="older"
+                      count={groupedChats.older.length}
+                      sectionVisibility={sectionVisibility}
+                      toggleSection={toggleSection}
+                      isCollapsed={isCollapsed}
+                      isMobile={isMobile}
+                    />
+                    <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
+                      <div className="space-y-1 px-2">
+                        {groupedChats.older.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                          />
+                        ))}
+                      </div>
+                    </SectionContent>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </ScrollArea>
+      )}
     </div>
   )
 }
