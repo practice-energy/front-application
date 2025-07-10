@@ -138,9 +138,9 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-21 w-full border-b bg-background backdrop-blur-lg dark:border-gray-800">
+      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background backdrop-blur-lg dark:border-gray-800">
         <nav className="container mx-auto px-4">
-          <div className="flex h-21 items-center justify-between">
+          <div className="flex h-24 items-center justify-between">
             <div className="flex items-center space-x-4">
               <Logo onClick={handleLogoClick} />
 
@@ -213,7 +213,7 @@ export function Header() {
                 <div className="hidden md:flex items-center space-x-2 ml-4">
                   <Button
                     onClick={handleCalendarClick}
-                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
+                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-8 font-medium transition-colors duration-200 flex items-center gap-1 border border-gray-200 dark:border-gray-700"
                   >
                     <CalendarDays className="h-4 w-4" />
                     <span className="sr-only">Календарь</span>
