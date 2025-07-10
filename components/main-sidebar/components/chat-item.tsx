@@ -11,7 +11,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
     <div
       className={cn(
-        "relative px-3 py-3 rounded-sm transition-colors cursor-pointer max-w-full w-full",
+        "relative px-3 py-3 rounded-sm transition-colors cursor-pointer w-full",
         isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
         isCollapsed && !isMobile
           ? ""
@@ -21,7 +21,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
       )}
       onClick={() => onChatClick(chat.id)}
     >
-      <div className="flex items-start gap-3 w-full max-w-full">
+      <div className="flex items-start gap-3 w-full">
         {/* Profile Image */}
         <div className="flex-shrink-0">
           {chat.isAI ? (
@@ -59,7 +59,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
             </div>
 
             {/* Right side indicators */}
-            <div className="flex flex-col items-end gap-1 ml-2 flex-shrink-0">
+            <div className="flex flex-col items-end gap-1 ml-4.5 flex-shrink-0">
               {/* Status indicator - first line */}
               {chat.status && (
                 <div className="flex items-center gap-1">
@@ -77,7 +77,9 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               )}
 
               {/* New message indicator - second line */}
-              {hasUnread && <div className="w-3 h-3 bg-violet-500 rounded-sm flex-shrink-0" />}
+              {hasUnread ? (<div className="w-3 h-3 bg-violet-500 rounded-sm flex-shrink-0" />) : (
+                  <div className="w-3 h-3 bg-none flex-shrink-0" />
+              )}
 
               {/* AI Star Icon - third line */}
               {chat.isAIEnabled && (
