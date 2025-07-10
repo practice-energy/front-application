@@ -11,7 +11,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
     <div
       className={cn(
-        "relative px-3 py-3 rounded-sm transition-colors cursor-pointer w-full",
+        "relative px-3 py-3 rounded-sm transition-colors cursor-pointer max-w-full w-full",
         isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
         isCollapsed && !isMobile
           ? ""
@@ -21,7 +21,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
       )}
       onClick={() => onChatClick(chat.id)}
     >
-      <div className="flex items-start gap-3 w-full">
+      <div className="flex items-start gap-3 w-full max-w-full">
         {/* Profile Image */}
         <div className="flex-shrink-0">
           {chat.isAI ? (
@@ -44,14 +44,18 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
         </div>
 
         {/* Content */}
-        <div className={cn("flex-1 min-w-0 overflow-hidden", isCollapsed && !isMobile ? "hidden" : "block")}>
+        <div className={cn("flex-1 min-w-0 max-w-full overflow-hidden", isCollapsed && !isMobile ? "hidden" : "block")}>
           {/* Header with name and indicators */}
           <div className="flex items-start justify-between mb-1 w-full">
-            <div className="flex-1 min-w-0 pr-2 overflow-hidden">
+            <div className="flex-1 min-w-0 max-w-[calc(330px-120px)] overflow-hidden">
               {/* Name */}
-              <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 truncate">{chat.title}</h3>
+              <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 truncate min-w-full">
+                {chat.title}
+              </h3>
               {/* Message preview - теперь прямо под именем */}
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed truncate">{chat.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed truncate w-full">
+                {chat.description}
+              </p>
             </div>
 
             {/* Right side indicators */}
