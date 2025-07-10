@@ -1,142 +1,112 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Calendar, Settings, LogOut, User, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { User, Calendar, Heart, Shield, CreditCard, HelpCircle, LogOut } from "lucide-react"
-import { SwatchIcon } from "@heroicons/react/24/outline"
-import Link from "next/link"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useAuth } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
-import type { ProfileMenuProps } from "../types/header.types"
 
-export function ProfileMenu({
-  isAuthenticated,
-  user,
-  showProfileMenu,
-  toggleProfileMenu,
-  setShowProfileMenu,
-  profileMenuRef,
-  handleLogout,
-  isMobile = false,
-}: ProfileMenuProps) {
-  if (!isAuthenticated) return null
+export function ProfileMenu() {
+  const router = useRouter()
+  const { user, logout } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
 
-  const buttonComponent = (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={toggleProfileMenu}
-      className={cn(
-        "h-8 w-8 p-0 rounded-sm transition-all duration-200",
-        showProfileMenu
-          ? "border-2 border-violet-600"
-          : "border-2 border-transparent hover:bg-violet-50 dark:hover:bg-violet-900/20",
-      )}
-      aria-label="Profile menu"
-    >
-      <div
-        className={cn(
-          "h-8 w-8 rounded-sm flex items-center justify-center",
-          "bg-violet-100 dark:bg-violet-900",
-          showProfileMenu && "bg-violet-200 dark:bg-violet-800",
-        )}
-      >
-        <User className="h-4 w-4 text-violet-600 dark:text-violet-400" />
-      </div>
-    </Button>
-  )
+  const handleProfileClick = () => {
+    router.push("/profile")
+    setIsOpen(false)
+  }
 
-  if (isMobile) {
-    return buttonComponent
+  const handleSpecialistDashboard = () => {
+    router.push("/specialist-dashboard")
+    setIsOpen(false)
+  }
+
+  const handleLogout = () => {
+    logout()
+    setIsOpen(false)
   }
 
   return (
-    <div className="relative" ref={profileMenuRef}>
-      {buttonComponent}
+    <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => router.push("/profile")}
+        className="h-8 px-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <Calendar className="h-4 w-4 mr-2" />
+        <span className="hidden sm:inline">Календарь</span>
+      </Button>
 
-      {showProfileMenu && (
-        <div className="absolute right-0 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-sm shadow-md border border-gray-200 dark:border-gray-700 py-0 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.name || "User"}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className={cn(
+              "h-8 w-8 rounded-md p-0",
+              "hover:bg-gray-100 dark:hover:bg-gray-800",
+              "focus:ring-2 focus:ring-violet-500 focus:ring-offset-2",
+            )}
+          >
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name || "User"} />
+              <AvatarFallback className="bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300">
+                {user?.name?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end" className="w-56">
+          <div className="flex items-center gap-2 p-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name || "User"} />
+              <AvatarFallback className="bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300">
+                {user?.name?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium">{user?.name || "Пользователь"}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || "email@example.com"}</p>
+            </div>
           </div>
 
-          <div>
-            <Link
-              href="/profile?section=overview"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <User className="mr-3 h-4 w-4" />
-              Profile Overview
-            </Link>
+          <DropdownMenuSeparator />
 
-            <Link
-              href="/profile?section=calendar"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <Calendar className="mr-3 h-4 w-4" />
-              Calendar
-            </Link>
+          <DropdownMenuItem onClick={handleProfileClick}>
+            <User className="mr-2 h-4 w-4" />
+            <span>Профиль</span>
+          </DropdownMenuItem>
 
-            <Link
-              href="/profile?section=saved"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <Heart className="mr-3 h-4 w-4" />
-              Saved
-            </Link>
+          {user?.isSpecialist && (
+            <DropdownMenuItem onClick={handleSpecialistDashboard}>
+              <Briefcase className="mr-2 h-4 w-4" />
+              <span>Панель специалиста</span>
+            </DropdownMenuItem>
+          )}
 
-            <Link
-              href="/profile?section=security"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <Shield className="mr-3 h-4 w-4" />
-              Security
-            </Link>
+          <DropdownMenuItem>
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Настройки</span>
+          </DropdownMenuItem>
 
-            <Link
-              href="/profile?section=balance"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <CreditCard className="mr-3 h-4 w-4" />
-              Balance
-            </Link>
+          <DropdownMenuSeparator />
 
-            <Link
-              href="/profile?section=preferences"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <SwatchIcon className="mr-3 h-4 w-4" />
-              Preferences
-            </Link>
-          </div>
-
-          <div className="border-t border-gray-100 dark:border-gray-700 py-2">
-            <Link
-              href="/help"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <HelpCircle className="mr-3 h-4 w-4" />
-              Help / FAQ
-            </Link>
-          </div>
-
-          <div className="border-t border-gray-100 dark:border-gray-700 py-2">
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-            >
-              <LogOut className="mr-3 h-4 w-4" />
-              Logout
-            </button>
-          </div>
-        </div>
-      )}
+          <DropdownMenuItem onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Выйти</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }

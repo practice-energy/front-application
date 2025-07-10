@@ -96,7 +96,7 @@ export function MainSidebar() {
         "fixed left-0 top-0 h-full bg-gray-50 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 flex flex-col z-50",
         "backdrop-blur-sm transform-gpu",
         isCollapsed ? "w-0 opacity-0 pointer-events-none scale-100" : "opacity-100 scale-100",
-        !isCollapsed && (isMobile ? "w-[280px]" : "w-80"),
+        !isCollapsed && (isMobile ? "w-full" : "w-80"),
       )}
     >
       {isMobile && (
