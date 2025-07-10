@@ -13,7 +13,11 @@ interface BookingConfirmationProps {
   isOpen: boolean
   onClose: () => void
   bookingDetails: {
-    specialist: Specialist
+    specialist: {
+      name: string
+      title: string
+      avatar?: string
+    }
     service: Service
     date: string
     time: string

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslations } from "@/hooks/use-translations"
-import {MapPin, Images, Share} from "lucide-react"
+import { MapPin, Images, Share } from "lucide-react"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { AboutSection } from "@/components/about-section"
 import { useRouter } from "next/navigation"
@@ -15,10 +15,9 @@ import { mockSpecialist } from "@/services/mock-data"
 import ExperienceForm from "@/components/experience-item"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
-import {ANIMATION_DURATION, ANIMATION_TIMING} from "@/components/main-sidebar/utils/sidebar.utils"
-import {Button} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
-import {ShareSpecialistModal} from "@/components/share-specialist-modal";
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
+import { ShareSpecialistModal } from "@/components/share-specialist-modal"
+import {Specialist} from "@/types/common";
 
 export default function Overview() {
   const router = useRouter()
@@ -28,120 +27,103 @@ export default function Overview() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
-  const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
-
-  // State for editable data
-  const [savedData, setSavedData] = useState(mockSpecialist)
-  const [draftData, setDraftData] = useState(mockSpecialist)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
-  // Create preview URLs when images change
+  const [savedData, setSavedData] = useState<Specialist>(mockSpecialist)
+  const [draftData, setDraftData] = useState<Specialist>({
+    ...mockSpecialist,
+    photos: []
+  })
+
+  // Загрузка начальных файлов
   useEffect(() => {
-    const newPreviews: string[] = []
-
-    const createPreviews = async () => {
-      for (const image of draftData.images) {
-        try {
-          if (image instanceof File) {
-            newPreviews.push(URL.createObjectURL(image))
-          } else if (typeof image === 'string') {
-            // Handle case where image is already a URL string
-            newPreviews.push(image)
-          }
-        } catch (error) {
-          console.error('Error creating image preview:', error)
-          newPreviews.push('') // Fallback for failed previews
-        }
-      }
-      setImagePreviews(newPreviews)
+    const createFileFromUrl = async (url: string): Promise<File> => {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const filename = url.split('/').pop() || 'image.jpg'
+      return new File([blob], filename, { type: blob.type })
     }
 
-    createPreviews()
-
-    return () => {
-      // Clean up object URLs when component unmounts or images change
-      newPreviews.forEach(preview => {
-        if (preview && !preview.startsWith('http')) {
-          URL.revokeObjectURL(preview)
-        }
-      })
+    const loadInitialFiles = async () => {
+      const files = await Promise.all(
+          mockSpecialist.images.map(url => createFileFromUrl(url))
+      )
+      setDraftData(prev => ({
+        ...prev,
+        imageFiles: files
+      }))
     }
-  }, [draftData.images])
 
+    loadInitialFiles()
+  }, [])
+
+  // Проверка аутентификации
   useEffect(() => {
     if (!isAuthenticated || (user && user.isSpecialist === false)) {
       router.push("/")
     }
   }, [isAuthenticated, user, router])
 
-  // Check for changes between draft and saved data
+  // Проверка изменений
   useEffect(() => {
-    const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
-    setHasChanges(changed)
+    const imagesChanged = JSON.stringify(savedData.images) !==
+        JSON.stringify(draftData.images)
+
+    const filesChanged = (draftData.photos?.length || 0) > 0
+
+    setHasChanges(imagesChanged || filesChanged)
   }, [draftData, savedData])
 
   const handleInputChange = (field: string, value: any) => {
-    setDraftData((prev) => ({ ...prev, [field]: value }));
+    setDraftData(prev => ({ ...prev, [field]: value }))
 
-    // Clear specific error when field changes
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
-  }
-
-  const handlePhotoUpload = (files: File[]) => {
-    handleInputChange("images", [...draftData.images, ...files])
-  }
-
-  const removePhoto = (index: number) => {
-    const newImages = [...draftData.images]
-    newImages.splice(index, 1)
-    handleInputChange("images", newImages)
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      })
+    }
   }
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
-    if (!draftData.name?.trim()) newErrors.name = "Name is required";
-    if (!draftData.title?.trim()) newErrors.title = "Title is required";
-    if (!draftData.location?.trim()) newErrors.location = "Location is required";
+    if (!draftData.name?.trim()) newErrors.name = "Name is required"
+    if (!draftData.title?.trim()) newErrors.title = "Title is required"
+    if (!draftData.location?.trim()) newErrors.location = "Location is required"
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const hasImages = (draftData.images?.length || 0) > 0 ||
+        (draftData.photos?.length || 0) > 0
+    if (!hasImages) newErrors.images = "At least one photo is required"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
   const handlePublish = async () => {
+    if (!validateForm()) return
+
     setIsSaving(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Convert File objects to URLs if needed (simulating upload)
-      const uploadedImages = await Promise.all(
-          draftData.images.map(async (img) => {
-            if (img instanceof File) {
-              // In a real app, you would upload the file here
-              // and get back a URL from your server
-              return URL.createObjectURL(img)
-            }
-            return img
+      // Эмуляция загрузки на сервер
+      const uploadedUrls = await Promise.all(
+          (draftData.photos || []).map(async (file) => {
+            await new Promise(resolve => setTimeout(resolve, 300))
+            return URL.createObjectURL(file)
           })
       )
 
       const newSavedData = {
         ...draftData,
-        images: uploadedImages
+        images: uploadedUrls,
+        imageFiles: undefined
       }
 
       setSavedData(newSavedData)
       setDraftData(newSavedData)
       setHasChanges(false)
-
-      console.log("Saving profile data:", newSavedData)
     } catch (error) {
       console.error("Failed to save profile:", error)
     } finally {
@@ -151,23 +133,17 @@ export default function Overview() {
 
   const handleModeToggle = async (mode: "view" | "edit") => {
     if (mode === "view") {
-      if (!validateForm()) {
-        return
-      }
+      if (!validateForm()) return
 
       setIsTransitioning(true)
-
-      if (hasChanges) {
-        await handlePublish()
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      await handlePublish()
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsTransitioning(false)
     }
 
     setIsTransitioning(true)
     setIsEditMode(mode === "edit")
-    await new Promise((resolve) => setTimeout(resolve, 300))
+    await new Promise(resolve => setTimeout(resolve, 300))
     setIsTransitioning(false)
   }
 
@@ -215,7 +191,7 @@ export default function Overview() {
                       style={{
                         transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
                       }}
-                      data-animating={isAnimating ? "true" : "false"}
+                      data-animating={isTransitioning ? "true" : "false"}
                   >
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
                       <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -224,32 +200,36 @@ export default function Overview() {
                             <div className="space-y-3">
                               {isEditMode ? (
                                   <PhotoUpload
-                                      photos={draftData.images}
-                                      onPhotosChange={handlePhotoUpload}
+                                      photos={draftData.photos || []}
+                                      onPhotosChange={(files) => setDraftData(prev => ({
+                                        ...prev,
+                                        photos: files
+                                      }))}
                                       maxPhotos={5}
                                       showTitle={false}
                                   />
                               ) : (
                                   <div>
-                                    {imagePreviews.length > 0 ? (
+                                    {draftData.photos.length > 0 ? (
                                         <SquareImageGallery
-                                            images={imagePreviews}
+                                            images={savedData.images}
                                             alt="Profile photos"
                                             ratioWidth={4}
                                             ratioHeight={5}
+                                            orientation="vertical"
+                                            thumbnailsPerView={5}
                                             borderRadius={8}
                                         />
                                     ) : (
-                                        <div className="h-64 flex flex-col items-center justify-center text-muted-foreground bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                          <Images className="h-12 w-12 mb-3 opacity-50" />
-                                          <p>No photos</p>
+                                        <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
+                                          <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                                          <p>No photos uploaded yet</p>
                                         </div>
                                     )}
                                   </div>
                               )}
                             </div>
 
-                            {/* Rest of your component remains the same */}
                             {isEditMode ? (
                                 <div className="space-y-6">
                                   <EnhancedInput
@@ -301,22 +281,18 @@ export default function Overview() {
                             )}
                           </div>
 
-                          {/* About Section */}
                           {isEditMode ? (
                               <div className="space-y-6 border-gray-200 dark:border-gray-700">
                                 <EnhancedInput
                                     type="textarea"
                                     label="Bio"
                                     value={currentData.description || ""}
-                                    onChange={(e) => {
-                                      handleInputChange("fullBio", e.target.value)
-                                      handleInputChange("bio", e.target.value.slice(0, 200))
-                                    }}
+                                    onChange={(e) => handleInputChange("description", e.target.value)}
                                     placeholder="Tell about your experience, approach, and philosophy"
                                     rows={6}
                                     maxLength={1000}
                                     showCharCount
-                                    error={errors.bio}
+                                    error={errors.description}
                                 />
 
                                 <div className="space-y-4">
@@ -325,7 +301,7 @@ export default function Overview() {
                                   </h3>
                                   <ExperienceForm
                                       items={currentData.education || []}
-                                      onChange={(education: any) => handleInputChange("education", education)}
+                                      onChange={(education) => handleInputChange("education", education)}
                                       showCertificates={true}
                                   />
                                 </div>
@@ -336,7 +312,7 @@ export default function Overview() {
                                   </h3>
                                   <ExperienceForm
                                       items={currentData.experience || []}
-                                      onChange={(experience: any) => handleInputChange("experience", experience)}
+                                      onChange={(experience) => handleInputChange("experience", experience)}
                                       showCertificates={false}
                                   />
                                 </div>
@@ -346,7 +322,6 @@ export default function Overview() {
                                 <AboutSection
                                     title={`About ${currentData.name || "Specialist"}`}
                                     description={currentData.description}
-                                    fullDescription={currentData.description}
                                     education={currentData.education}
                                     experience={currentData.experience}
                                     showEducationExperience={true}

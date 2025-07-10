@@ -20,7 +20,6 @@ export interface Specialist {
     name: string
     title: string
     avatar: string
-    rating: number
     reviewCount: number
     price: number
     images: string[]

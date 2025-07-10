@@ -177,7 +177,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                 bookingDetails={{
                   specialist: {
                     name: specialist.name,
-                    image: specialist.images[0],
+                    avatar: specialist.images[0],
                     title: specialist.title,
                   },
                   service: selectedService,
