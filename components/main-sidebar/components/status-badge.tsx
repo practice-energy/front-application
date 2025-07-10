@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 
 interface StatusBadgeProps {
-  status: "waiting" | "confirmed" | "active" | "inactive"
+  status: "waiting" | "confirmed"
   className?: string
 }
 
@@ -26,18 +26,6 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         return {
           label: "Активен",
           bgColor: "bg-green-500",
-          textColor: "text-gray-600 dark:text-gray-400",
-        }
-      case "inactive":
-        return {
-          label: "Неактивен",
-          bgColor: "bg-gray-400",
-          textColor: "text-gray-600 dark:text-gray-400",
-        }
-      default:
-        return {
-          label: status,
-          bgColor: "bg-gray-400",
           textColor: "text-gray-600 dark:text-gray-400",
         }
     }

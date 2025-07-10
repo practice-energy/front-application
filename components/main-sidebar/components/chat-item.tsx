@@ -48,7 +48,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
         <div
           className={cn(
             "flex-1 min-w-0 overflow-hidden",
-            isMobile ? "max-w-[calc(280px-100px)]" : "max-w-[calc(330px-120px)]",
+            isMobile ? "max-w-full]" : "max-w-[calc(330px-120px)]",
           )}
         >
           {/* Header with name and indicators */}
