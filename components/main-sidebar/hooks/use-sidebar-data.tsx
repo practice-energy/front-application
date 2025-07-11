@@ -61,7 +61,7 @@ export function useSidebarData(pathname: string) {
     title: chat.title,
     description: chat.messages.length > 0 ? chat.messages[0].content : "Новый чат",
     avatar: chat.isAi ? "/allura-logo.png" : "/placeholder-user.png",
-    status: "waiting" as const,
+    status: null,
     timestamp: chat.createdAt,
     updatedAt: chat.createdAt,
     isAIEnabled: chat.isAi,

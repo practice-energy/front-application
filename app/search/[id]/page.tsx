@@ -105,14 +105,15 @@ const MessageItem = React.memo(
                                     <div
                                         className={`px-4 py-3 gap-3 mb-3 rounded-sm shadow-sm border ${
                                             isUser
-                                                ? "bg-violet-50 rounded-tr-md "
+                                                ? "bg-violet-50 rounded-tr-md"
                                                 : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
                                         }`}
+                                        style={{ wordBreak: "break-word" }} // ← Добавлено здесь
                                     >
                                         <p className="text-sm leading-relaxed">{message.content}</p>
                                     </div>
                                 ) : (
-                                    <div className="text-gray-800 dark:text-gray-100">
+                                    <div className="text-gray-800 dark:text-gray-100" style={{ wordBreak: "break-word" }}> {/* ← И здесь */}
                                         <p className="text-sm leading-relaxed">{message.content}</p>
                                     </div>
                                 )}

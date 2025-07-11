@@ -216,6 +216,7 @@ export const mockSidebarChats: ChatItem[] = [
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
     isAIEnabled: false,
     isAI: false,
+    isMuted: true
   },
   {
     id: uuidv4(),
@@ -225,7 +226,8 @@ export const mockSidebarChats: ChatItem[] = [
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 45, // 45 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 45,
     isAIEnabled: true,
-    isAI: false
+    isAI: false,
+    isMuted: true
   },
   {
     id: chatAI1Id,
@@ -595,8 +597,7 @@ export const groupChatsByTime = (chats: ChatItem[]) => {
   return {
     today: chats.filter((chat) => chat.updatedAt > oneDayAgo),
     last7Days: chats.filter((chat) => chat.updatedAt <= oneDayAgo && chat.updatedAt > sevenDaysAgo),
-    last30Days: chats.filter((chat) => chat.updatedAt <= sevenDaysAgo && chat.updatedAt > thirtyDaysAgo),
-    older: chats.filter((chat) => chat.updatedAt <= thirtyDaysAgo),
+    older: chats.filter((chat) => chat.updatedAt <= sevenDaysAgo),
   }
 }
 

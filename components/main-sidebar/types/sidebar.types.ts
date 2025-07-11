@@ -1,4 +1,8 @@
 import type React from "react"
+import {LucideIcon} from "lucide-react";
+import {Icon} from "@/components/icons/icon-types";
+import {ChatItem} from "@/types/chats";
+
 export interface Chat {
   id: string
   title: string
@@ -6,10 +10,11 @@ export interface Chat {
   avatar?: string
   isAI?: boolean
   isAIEnabled?: boolean
-  status?: "waiting" | "confirmed"
+  status?: "waiting" | "confirmed" | null
   lastMessage?: string
   timestamp?: string
   unreadCount?: number
+  isMuted: boolean
 }
 
 export interface SearchResult {
@@ -23,7 +28,7 @@ export interface SearchResult {
 }
 
 export interface ChatItemProps {
-  chat: Chat
+  chat: ChatItem
   onChatClick: (chatId: string) => void
   isActiveChat: (chatId: string) => boolean
   hasNewMessages: (chat: Chat) => boolean
@@ -44,6 +49,8 @@ export interface SectionHeaderProps {
   addButtonLabel?: string
   isCollapsed: boolean
   isMobile: boolean
+  icon: Icon
+  iconStyle: string
 }
 
 export interface SectionContentProps {

@@ -25,7 +25,7 @@ export function ProfileMenu({
       size="sm"
       onClick={toggleProfileMenu}
       className={cn(
-        "h-8 w-8 p-0 rounded-sm transition-all duration-200",
+        "h-15 w-15 p-0 rounded-sm transition-all duration-200",
         showProfileMenu
           ? "border-2 border-violet-600"
           : "border-2 border-transparent hover:bg-violet-50 dark:hover:bg-violet-900/20",
@@ -34,12 +34,12 @@ export function ProfileMenu({
     >
       <div
         className={cn(
-          "h-8 w-8 rounded-sm flex items-center justify-center",
+          "h-12 w-12 rounded-sm flex items-center justify-center",
           "bg-violet-100 dark:bg-violet-900",
           showProfileMenu && "bg-violet-200 dark:bg-violet-800",
         )}
       >
-        <User className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+        <User className="h-12 w-12 text-violet-600 dark:text-violet-400" />
       </div>
     </Button>
   )

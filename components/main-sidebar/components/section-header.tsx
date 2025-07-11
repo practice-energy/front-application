@@ -12,6 +12,8 @@ export function SectionHeader({
   toggleSection,
   isCollapsed,
   isMobile,
+  icon: Icon = GalleryHorizontalEnd,
+  iconStyle = ""
 }: SectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
 
@@ -29,13 +31,16 @@ export function SectionHeader({
         toggleSection(sectionKey)
       }}
     >
-      <GalleryHorizontalEnd className="h-4 w-4 ml-3 mb-0.5 gap-1" />
+      <Icon className={cn(
+          "h-4 w-4 ml-3 mb-0.5 gap-1",
+          iconStyle,
+      )}/>
       <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
         {title} ({count})
       </span>
       <ChevronDown
         className={cn(
-          "w-4 h-4 text-gray-400 dark:text-gray-500 transition-all duration-300 ease-in-out transform",
+          "w-4 h-4 text-gray-400 dark:text-gray-500 transition-all duration-200 ease-in-out transform",
           "group-hover:text-gray-600 dark:group-hover:text-gray-300",
           isVisible ? "rotate-180" : "rotate-0",
         )}

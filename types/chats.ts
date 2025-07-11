@@ -6,7 +6,7 @@ export interface ChatItem {
     title: string
     description: string
     avatar?: string
-    status?: "waiting" | "confirmed" | null
+    status?: "waiting" | "confirmed"
     timestamp: number
     updatedAt: number
     isAIEnabled?: boolean
