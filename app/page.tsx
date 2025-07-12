@@ -1,7 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { SearchBar } from "@/components/search-bar"
-import { Footer } from "@/components/footer"
 import Image from "next/image"
 
 export default function HomePage() {

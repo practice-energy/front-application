@@ -11,7 +11,7 @@ import { SearchBar } from "@/components/search-bar"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { AboutSection } from "@/components/about-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { getSpecialistById } from "@/services/mock-data"
 import { ShareSpecialistModal } from "@/components/share-specialist-modal"
 import { cn } from "@/lib/utils"
@@ -50,8 +50,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
   // Handle search
   const handleSearch = (query: string, category?: string) => {
-    const searchId = Date.now().toString()
-    router.push(`/search/${searchId}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
+    router.push(`/search/${specialist.id}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
   }
 
   return (
@@ -119,7 +118,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                           <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.location}</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.reviews} practices</span>
+                          <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.reviewCount} practices</span>
                         </div>
                       </div>
                     </div>
@@ -158,7 +157,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
         <div className="fixed bottom-0 left-0 right-0 z-10">
           <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
-            <div className="max-w-4xl mx-auto px-4 pb-6">
+            <div className="pb-6">
               <SearchBar
                   onSearch={handleSearch}
                   showHeading={false}
@@ -178,7 +177,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                 bookingDetails={{
                   specialist: {
                     name: specialist.name,
-                    image: URL.createObjectURL(specialist.images[0]),
+                    avatar: specialist.images[0],
                     title: specialist.title,
                   },
                   service: selectedService,

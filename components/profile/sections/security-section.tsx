@@ -12,7 +12,7 @@ import {useProfileStore} from "@/stores/profile-store";
 
 export function SecuritySection() {
   const { user, stats } = useProfileStore()
-  const [emailVerified] = useState(user.email.verified)
+  const [emailVerified] = useState(user?.email.verified)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   return (

@@ -1,6 +1,6 @@
 "use client"
 
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { cn } from "@/lib/utils"
 import { AlertCircle, Check } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"

@@ -48,6 +48,7 @@ function debounce<T extends (...args: any[]) => any>(func: T, wait: number) {
 }
 
 export function PersonalInfoCard({ data, isEditMode, onInputChange, errors }: PersonalInfoCardProps) {
+  console.log(data)
   const [locationInput, setLocationInput] = useState(data.location)
   const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -160,7 +161,7 @@ export function PersonalInfoCard({ data, isEditMode, onInputChange, errors }: Pe
                 <div>
                   {data.photos.length > 0 ? (
                       <SquareImageGallery
-                          images={data.photos}
+                          images={data.photos.map((f: File) => URL.createObjectURL(f))}
                           alt="Profile photos"
                           ratioWidth={4}
                           ratioHeight={5}

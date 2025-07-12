@@ -25,7 +25,7 @@ interface ProfileData {
 }
 
 export function OverviewSection() {
-  const { user, stats } = useProfileStore()
+  const { user } = useProfileStore()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
@@ -148,7 +148,7 @@ export function OverviewSection() {
     setIsTransitioning(false)
   }
 
-  if (!user || !stats) {
+  if (!user) {
     return (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-pulse text-muted-foreground">Loading...</div>
