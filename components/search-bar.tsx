@@ -2,8 +2,7 @@
 
 import React from "react"
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { ArrowUp, X, FileText, Paperclip } from "lucide-react"
-import { DocumentIcon } from "@heroicons/react/24/outline"
+import { ArrowUp, X, FileText, Paperclip, MessageSquarePlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "@/hooks/use-translations"
 import { useRouter } from "next/navigation"
@@ -12,6 +11,7 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
+import { useMobile } from "@/hooks/use-mobile"
 
 const searchCategories = [
   { key: "cognition", label: "Познание" },
@@ -41,6 +41,7 @@ export const SearchBar = React.memo(function SearchBar({
 }: SearchBarProps) {
   const { t } = useTranslations()
   const router = useRouter()
+  const isMobile = useMobile()
   const [message, setMessage] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -58,6 +59,7 @@ export const SearchBar = React.memo(function SearchBar({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const resizeObserverRef = useRef<ResizeObserver | null>(null)
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   useMemo(
     () =>
       searchCategories.map((category, index) => ({
@@ -146,7 +148,6 @@ export const SearchBar = React.memo(function SearchBar({
 
     window.addEventListener("focusin", handleFocusIn)
     window.addEventListener("focusout", handleFocusOut)
-
   }, [isMobileDevice])
 
   const handleFileSelect = useCallback((files: FileList | null) => {
@@ -223,6 +224,23 @@ export const SearchBar = React.memo(function SearchBar({
     },
     [message, selectedCategory, uploadedFiles, onSearch, router],
   )
+
+  const handleNewChat = useCallback(() => {
+    const searchId = uuidv4()
+
+    window.dispatchEvent(
+      new CustomEvent("newChatCreated", {
+        detail: {
+          chatId: searchId,
+          title: "New Chat",
+          query: "",
+          files: [],
+        },
+      }),
+    )
+
+    router.push(`/search/${searchId}`)
+  }, [router])
 
   const preventEmoji = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Prevent emoji input
@@ -317,6 +335,167 @@ export const SearchBar = React.memo(function SearchBar({
   const canSubmit = message.trim() || uploadedFiles.length > 0
   const hasContent = message.trim().length > 0 || isFocused
 
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <div
+        ref={containerRef}
+        className={cn("px-4 py-4 transition-all duration-300", isMobileDevice && isKeyboardVisible && "!px-2 !py-2")}
+        style={dynamicStyles}
+        data-animating={isAnimating ? "true" : "false"}
+      >
+        <div className="flex items-center gap-3">
+          {/* Main search input container */}
+          <div className="flex-1 border rounded-lg">
+            {uploadedFiles.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2 p-3">
+                {uploadedFiles.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 bg-violet-600/20 text-white rounded-lg px-3 py-2 text-sm"
+                  >
+                    <FileText className="w-4 h-4 text-white" />
+                    <span className="truncate max-w-32">{file.name}</span>
+                    <button
+                      onClick={() => removeFile(index)}
+                      className="text-white hover:text-red-300 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div
+              className={`relative backdrop-blur-sm p-3 transition-all duration-300 flex items-center gap-2 rounded-lg
+                ${
+                  isDragOver
+                    ? "border-violet-400 bg-violet-50/30"
+                    : hasContent
+                      ? "bg-white/20 border-white/30"
+                      : "bg-white/10 border-white/20 hover:border-white/30"
+                }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <form onSubmit={handleSubmit} className="w-full">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                    <Image
+                      src="/allura-logo.svg"
+                      alt="Alura Logo"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                      priority
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <textarea
+                      ref={textareaRef}
+                      value={message}
+                      onChange={handleMessageChange}
+                      onKeyDown={handleKeyDown}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      placeholder={placeholder}
+                      className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 resize-none overflow-hidden min-h-[24px] max-h-[120px] text-gray-900 dark:text-white"
+                      rows={1}
+                      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex items-center gap-2">
+                    {/* File Upload Button */}
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={openFileDialog}
+                      className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white px-2 py-1 h-8 transition-colors duration-200 flex items-center gap-1 border"
+                    >
+                      <Paperclip className="w-4 h-4" />
+                    </Button>
+
+                    {/* Practice Button */}
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={toggleMenu}
+                      className={`px-3 py-1 h-8 font-medium transition-colors duration-200 flex items-center gap-1 ${
+                        isMenuOpen
+                          ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                          : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                      }`}
+                    >
+                      <Image
+                        src="/practice-logo.svg"
+                        alt="Settings"
+                        width={14}
+                        height={14}
+                        className={`${isMenuOpen ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                      />
+                      <span className="text-sm">Практис</span>
+                    </Button>
+                  </div>
+
+                  {/* Send Button */}
+                  <Button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className={`h-8 w-8 p-0 ${
+                      canSubmit
+                        ? "bg-violet-600 hover:bg-violet-700 text-white"
+                        : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
+                    }`}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </Button>
+                </div>
+              </form>
+
+              {isDragOver && (
+                <div className="absolute inset-0 bg-violet-100/50 rounded-lg flex items-center justify-center pointer-events-none">
+                  <div className="text-violet-600 text-center">
+                    <FileText className="w-8 h-8 mx-auto mb-2" />
+                    <p className="text-sm font-medium">Перетащите файлы сюда</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*,text/*,.pdf,.doc,.docx"
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
+          </div>
+
+          {/* New Chat Button - Mobile only */}
+          <Button
+            onClick={handleNewChat}
+            className="h-12 w-12 p-0 bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border rounded-lg flex-shrink-0"
+          >
+            <MessageSquarePlus className="w-5 h-5" />
+          </Button>
+        </div>
+
+        <style jsx global>{`
+          textarea::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+      </div>
+    )
+  }
+
+  // Desktop layout (unchanged)
   return (
     <div
       ref={containerRef}
@@ -353,7 +532,7 @@ export const SearchBar = React.memo(function SearchBar({
                 isDragOver
                   ? "border-violet-400 bg-violet-50/30"
                   : hasContent
-                    ? "bg-white/20 border-white/30" // Меньше прозрачности при наличии контента
+                    ? "bg-white/20 border-white/30"
                     : "bg-white/10 border-white/20 hover:border-white/30"
               }`}
           onDragOver={handleDragOver}
@@ -395,19 +574,7 @@ export const SearchBar = React.memo(function SearchBar({
                   type="button"
                   size="sm"
                   onClick={openFileDialog}
-                  className="
-    bg-white dark:bg-gray-800
-    hover:bg-violet-50 dark:hover:bg-violet-700
-    active:bg-violet-600 dark:active:bg-violet-600
-    active:hover:bg-violet-700 dark:hover:active:bg-violet-600
-    text-gray-900 dark:text-white
-    active:text-white dark:active:text-white
-    active:border-violet-600 dark:active:border-violet-600
-    px-3 py-2 h-9 font-medium
-    transition-colors duration-200
-    flex items-center gap-1
-    group border
-                                    "
+                  className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
                 >
                   <Paperclip className="w-4 h-4" />
                 </Button>
@@ -417,23 +584,11 @@ export const SearchBar = React.memo(function SearchBar({
                   type="button"
                   size="sm"
                   onClick={toggleMenu}
-                  className={`
-    bg-white dark:bg-gray-800
-    hover:bg-violet-50 dark:hover:bg-violet-700
-    active:bg-violet-600 dark:active:bg-violet-600
-    active:hover:bg-violet-700 dark:hover:active:bg-violet-600
-    text-gray-900 dark:text-white
-    active:text-white dark:active:text-white
-    active:border-violet-600 dark:active:border-violet-600
-    px-3 py-2 h-9 font-medium
-    transition-colors duration-200
-    flex items-center gap-1
-    group
-                                     ${
-                                       isMenuOpen
-                                         ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                                         : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
-                                     }`}
+                  className={`bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                    isMenuOpen
+                      ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                      : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                  }`}
                 >
                   <Image
                     src="/practice-logo.svg"
@@ -482,10 +637,10 @@ export const SearchBar = React.memo(function SearchBar({
       </div>
 
       <style jsx global>{`
-                textarea::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
+        textarea::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 })
