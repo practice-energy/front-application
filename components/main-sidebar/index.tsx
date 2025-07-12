@@ -136,6 +136,11 @@ export function MainSidebar() {
         </div>
       </div>
 
+      {/* Исчезающий градиент под поиском */}
+      <div className="relative">
+        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900 pointer-events-none z-10" />
+      </div>
+
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className="flex-1 h-[calc(100%-180px)] py-3">
         <div className="py-3">
