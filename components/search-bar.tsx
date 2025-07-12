@@ -11,7 +11,7 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
-import { useMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const searchCategories = [
   { key: "cognition", label: "Познание" },
@@ -41,7 +41,7 @@ export const SearchBar = React.memo(function SearchBar({
 }: SearchBarProps) {
   const { t } = useTranslations()
   const router = useRouter()
-  const isMobile = useMobile()
+  const isMobile = useIsMobile()
   const [message, setMessage] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
