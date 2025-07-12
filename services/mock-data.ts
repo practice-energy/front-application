@@ -161,18 +161,18 @@ export const mockSidebarChats: ChatItem[] = [
     status: "waiting",
     timestamp: Date.now() - 1000 * 60 * 30, // 30 минут назад
     updatedAt: Date.now() - 1000 * 60 * 30,
-    isAIEnabled: true,
+    mode: "ai",
     isAI: false,
   },
   {
     id: chatSpecialist2Id, // Соответствует chat-specialist-2 в mockChatData
     title: "Михаил Сидоров",
-    description: "Коучинг сессия",
+    description: "Коучинг сессия по астрофизической квантовой психофизиологии",
     avatar: "/placeholder-user.jpg",
     status: "confirmed",
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 часа назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 2,
-    isAIEnabled: false,
+    mode: "ai",
     isAI: false,
   },
   {
@@ -182,7 +182,7 @@ export const mockSidebarChats: ChatItem[] = [
     avatar: "/placeholder-user.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 день назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24,
-    isAIEnabled: false,
+    mode: "none",
     isAI: false,
   },
   {
@@ -193,7 +193,7 @@ export const mockSidebarChats: ChatItem[] = [
     status: "waiting",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 дня назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
-    isAIEnabled: true,
+    mode: "none",
     isAI: false,
   },
   {
@@ -204,7 +204,7 @@ export const mockSidebarChats: ChatItem[] = [
     status: "confirmed",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 7, // 7 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
-    isAIEnabled: false,
+    mode: "none",
     isAI: false,
   },
   {
@@ -214,9 +214,8 @@ export const mockSidebarChats: ChatItem[] = [
     avatar: "/placeholder-user.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 15, // 15 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
-    isAIEnabled: false,
+    mode: "none",
     isAI: false,
-    isMuted: true
   },
   {
     id: uuidv4(),
@@ -225,9 +224,8 @@ export const mockSidebarChats: ChatItem[] = [
     avatar: "/placeholder-user.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 45, // 45 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 45,
-    isAIEnabled: true,
+    mode: "ai",
     isAI: false,
-    isMuted: true
   },
   {
     id: chatAI1Id,
@@ -235,7 +233,7 @@ export const mockSidebarChats: ChatItem[] = [
     description: "Поиск себя",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 41,
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 41,
-    isAIEnabled: true,
+    mode: "ai",
     isAI: true
   },
 ]

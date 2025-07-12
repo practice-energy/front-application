@@ -76,7 +76,7 @@ export function InstagramSpecialistCard({
 
   return (
     <>
-      <div className="flex items-start gap-3 w-full max-w-md mx-auto">
+      <div className="flex items-start gap-[24px] w-full max-w-md mx-auto">
         {/* Карточка специалиста */}
         <div className="w-full min-w-[240px] max-w-sm relative">
           <div

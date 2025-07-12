@@ -82,7 +82,6 @@ export function MainSidebar() {
 
   // Определяем тип контента в зависимости от роли пользователя
   const isSpecialist = user?.isSpecialist || false
-  const sidebarTitle = isSpecialist ? "Клиенты" : "Чаты"
   const newChatLabel = isSpecialist ? "Новый клиент" : "Новый чат"
 
   return (
@@ -94,19 +93,20 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full md:w-[416px] bg-gray-50 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 flex flex-col z-50",
+        "fixed left-0 top-0 h-full w-full md:w-80 bg-gray-50  border-gray-300 flex flex-col z-50 border-r",
         "backdrop-blur-sm",
+         // "md-[416px]"
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
     >
       {/* Общий контент для всех устройств */}
-      <div className="p-4 space-y-3 border-gray-200 dark:border-gray-700">
+      <div className="relative p-3 space-y-3">
         <div className="flex items-center justify-end">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="h-8 w-8 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-700"
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="h-8 w-8 rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700"
           >
             <PanelRightOpen className="h-4 w-4" />
             <span className="sr-only">Закрыть сайдбар</span>
@@ -114,9 +114,9 @@ export function MainSidebar() {
         </div>
 
         <Button
-          onClick={handleNewSearch}
-          variant="ghost"
-          className="w-full justify-between text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 h-10 rounded-sm"
+            onClick={handleNewSearch}
+            variant="ghost"
+            className="w-full justify-between hover:bg-violet-100 h-10 rounded-sm"
         >
           <div className="flex items-center">
             <MessageSquare className="w-4 h-4 mr-3" />
@@ -128,17 +128,17 @@ export function MainSidebar() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
           <Input
-            placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+              placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
           />
         </div>
       </div>
 
       {/* Область скролла - общая для всех устройств */}
-      <ScrollArea className="flex-1 h-[calc(100%-180px)]">
-        <div className="py-2">
+      <ScrollArea className="flex-1 h-[calc(100%-180px)] py-3">
+        <div className="py-3">
           {isSearching ? (
             <div>
               <SectionHeader
@@ -151,7 +151,7 @@ export function MainSidebar() {
                 isMobile={isMobile}
               />
               <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
-                <div className="space-y-1 px-2">
+                <div className="space-y-3 px-2">
                   {searchResults.length > 0 ? (
                     searchResults.map((chat) => (
                       <SearchResultItem
@@ -174,7 +174,7 @@ export function MainSidebar() {
           ) : (
             <>
               {groupedChats.today.length > 0 && (
-                <div className="mb-2">
+                <div>
                   <SectionHeader
                     title="Активные сегодня"
                     sectionKey="today"
@@ -187,7 +187,7 @@ export function MainSidebar() {
                     iconStyle={"text-violet-600"}
                   />
                   <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-1">
+                    <div className="space-y-3 px-3">
                       {groupedChats.today.map((chat) => (
                         <ChatItem
                           key={chat.id}
@@ -205,7 +205,7 @@ export function MainSidebar() {
               )}
 
               {groupedChats.last7Days.length > 0 && (
-                <div className="mb-2">
+                <div>
                   <SectionHeader
                     title="Прошлые 7 дней"
                     sectionKey="last7Days"
@@ -216,7 +216,7 @@ export function MainSidebar() {
                     isMobile={isMobile}
                   />
                   <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
+                    <div className="space-y-3 px-3">
                       {groupedChats.last7Days.map((chat) => (
                         <ChatItem
                           key={chat.id}
@@ -234,7 +234,7 @@ export function MainSidebar() {
               )}
 
               {groupedChats.older.length > 0 && (
-                <div className="mb-2">
+                <div>
                   <SectionHeader
                     title="Архив опыта"
                     sectionKey="older"
@@ -246,7 +246,7 @@ export function MainSidebar() {
                     icon={LucideArchive}
                   />
                   <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-1 px-2">
+                    <div className="space-y-3 px-3">
                       {groupedChats.older.map((chat) => (
                         <ChatItem
                           key={chat.id}

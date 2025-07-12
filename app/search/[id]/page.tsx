@@ -103,7 +103,7 @@ const MessageItem = React.memo(
                             <div>
                                 {isUser || isSpecialist ? (
                                     <div
-                                        className={`px-4 py-3 gap-3 mb-3 rounded-sm shadow-sm border ${
+                                        className={`px-3 py-3 gap-3 rounded-sm shadow-sm border ${
                                             isUser
                                                 ? "bg-violet-50 rounded-tr-md"
                                                 : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
@@ -123,7 +123,7 @@ const MessageItem = React.memo(
                         {/* Карточки специалистов */}
                         {message.specialists && message.specialists.length > 0 && (
                             <div className="mt-3 space-y-3">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {message.specialists.slice(0, 2).map((specialist) => {
                                         const specialistCard = {
                                             id: specialist.id,

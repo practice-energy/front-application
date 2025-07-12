@@ -9,7 +9,7 @@ export interface ChatItem {
     status?: "waiting" | "confirmed"
     timestamp: number
     updatedAt: number
-    isAIEnabled?: boolean
+    mode: "mute" | "ai" | "none"
     isAI: boolean
 }
 

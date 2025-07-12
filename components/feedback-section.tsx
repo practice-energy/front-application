@@ -167,7 +167,7 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
             {topFeedbacks.map((feedback, index) => (
                 <div
                     key={`top-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm p-4"
+                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
                 >
                   <div className="flex items-center mb-3">
                     <img
@@ -206,7 +206,7 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
             {bottomFeedbacks.map((feedback, index) => (
                 <div
                     key={`bottom-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm p-4"
+                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
                 >
                   <div className="flex items-center mb-3">
                     <img

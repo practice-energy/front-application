@@ -138,27 +138,27 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background backdrop-blur-lg dark:border-gray-800">
+      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background backdrop-blur-lg">
         <nav className="container mx-auto px-4">
           <div className="flex h-24 items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Logo onClick={handleLogoClick} />
-
               {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
               {shouldShowSidebar && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleOpenSidebar}
-                  className={cn(
-                    "h-8 w-8 transition-all duration-300 ease-in-out rounded-sm",
-                    !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
-                  )}
-                >
-                  <PanelRightClose className="h-4 w-4" />
-                  <span className="sr-only">Открыть сайдбар</span>
-                </Button>
+                  <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleOpenSidebar}
+                      className={cn(
+                          "transition-all duration-300 ease-in-out rounded-sm",
+                          !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
+                      )}
+                  >
+                    <PanelRightClose className="h-15 w-15" />
+                    <span className="sr-only">Открыть сайдбар</span>
+                  </Button>
               )}
+
+              <Logo onClick={handleLogoClick} />
 
               <NavigationButtons isAuthenticated={isAuthenticated} role={role} router={router} />
             </div>

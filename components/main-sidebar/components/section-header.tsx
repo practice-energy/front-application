@@ -22,8 +22,8 @@ export function SectionHeader({
   return (
     <button
       className={cn(
-        "flex items-center gap-1 w-full px-3 py-3 group transition-all duration-100 ease-in-out",
-        "hover:bg-gray-100 dark:hover:bg-gray-800 rounded-sm",
+        "flex items-center w-full px-3 py-3 group transition-all duration-100 ease-in-out gap-3",
+        "hover:bg-violet-50 rounded-sm",
         isCollapsed && !isMobile ? "hidden" : "flex",
       )}
       onClick={(e) => {
@@ -32,15 +32,15 @@ export function SectionHeader({
       }}
     >
       <Icon className={cn(
-          "h-4 w-4 ml-3 mb-0.5 gap-1",
+          "h-4 w-4 ml-3 mb-0.5 gap-3",
           iconStyle,
       )}/>
-      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+      <span className="text-xs font-medium uppercase tracking-wider px-1.5">
         {title} ({count})
       </span>
       <ChevronDown
         className={cn(
-          "w-4 h-4 text-gray-400 dark:text-gray-500 transition-all duration-200 ease-in-out transform",
+          "w-4 h-4 text-gray-400 transition-all duration-200 ease-in-out transform",
           "group-hover:text-gray-600 dark:group-hover:text-gray-300",
           isVisible ? "rotate-180" : "rotate-0",
         )}
