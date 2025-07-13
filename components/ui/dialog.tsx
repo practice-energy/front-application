@@ -33,30 +33,25 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const [sidebarOffset, setSidebarOffset] = React.useState(0)
+  const [style, setStyle] = React.useState<React.CSSProperties>({})
 
-  React.useEffect(() => {
-    // Get current body margin to account for sidebar
-    const updateOffset = () => {
-      const bodyMargin = window.getComputedStyle(document.body).marginLeft
-      setSidebarOffset(Number.parseInt(bodyMargin) || 0)
-    }
+  React.useLayoutEffect(() => {
+    // When the dialog opens, Radix applies scroll lock which can add padding to the body
+    // to compensate for the scrollbar. We need to account for this and the sidebar margin.
+    const bodyStyle = window.getComputedStyle(document.body)
+    const sidebarWidth = Number.parseInt(bodyStyle.marginLeft, 10) || 0
+    const scrollbarCompensation = Number.parseInt(bodyStyle.paddingRight, 10) || 0
 
-    updateOffset()
+    // The dialog is centered in the viewport by default. We need to adjust its position
+    // to be centered in the main content area.
+    // The main content area's center is shifted by (sidebarWidth - scrollbarCompensation) / 2
+    const offset = (sidebarWidth - scrollbarCompensation) / 2
 
-    // Listen for sidebar toggle events
-    const handleSidebarToggle = (event: CustomEvent) => {
-      setSidebarOffset(event.detail.isCollapsed ? 0 : event.detail.width)
-    }
-
-    window.addEventListener("sidebarToggle", handleSidebarToggle as EventListener)
-    window.addEventListener("resize", updateOffset)
-
-    return () => {
-      window.removeEventListener("sidebarToggle", handleSidebarToggle as EventListener)
-      window.removeEventListener("resize", updateOffset)
-    }
-  }, [])
+    // We apply the offset via translateX to avoid conflicts with Tailwind's `left-1/2`
+    setStyle({
+      transform: `translate(-50%, -50%) translateX(${offset}px)`,
+    })
+  }, []) // Run only when the dialog mounts to set initial position
 
   return (
     <DialogPortal>
@@ -64,14 +59,10 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-border dark:bg-background dark:shadow-lg",
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-border dark:bg-background dark:shadow-lg",
           className,
         )}
-        style={{
-          left: `calc(50% + ${sidebarOffset / 2}px)`,
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
+        style={style} // Apply the calculated style
         {...props}
       >
         {children}
