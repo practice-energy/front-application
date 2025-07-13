@@ -61,7 +61,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                 />
             ) : (
                 <Image
-                    src={chat.avatar || "/placeholder.png"}
+                    src={chat.avatar || "/placeholder.jpg"}
                     alt={chat.title}
                     width={71}
                     height={71}

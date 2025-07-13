@@ -1,7 +1,6 @@
 import type React from "react"
 import {LucideIcon} from "lucide-react";
 import {Icon} from "@/components/icons/icon-types";
-import {ChatItem} from "@/types/chats";
 
 export interface Chat {
   id: string
@@ -28,7 +27,7 @@ export interface SearchResult {
 }
 
 export interface ChatItemProps {
-  chat: ChatItem
+  chat: Chat
   onChatClick: (chatId: string) => void
   isActiveChat: (chatId: string) => boolean
   hasNewMessages: (chat: Chat) => boolean

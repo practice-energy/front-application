@@ -35,7 +35,7 @@ export function MessageList({
           onShare={onShare}
           onRegenerate={onRegenerate}
           highlightedMessageId={highlightedMessageId}
-          isAi={chat.isAi}
+          isAI={chat.isAI}
           footerContent={
             message.type === "assistant" && message.specialists && index === chat.messages.length - 1
               ? chat.footerContent

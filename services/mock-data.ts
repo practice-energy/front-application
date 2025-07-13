@@ -414,7 +414,7 @@ export const mockChatData: Chat[] = [
       },
     ],
     searchQueries: ["астролог", "консультация"],
-    isAi: true,
+    isAI: true,
     hasNew: false,
     createdAt: Date.now() - 1000 * 60 * 30,
     footerContent: "Выберите подходящего специалиста или уточните ваши предпочтения.",
@@ -454,7 +454,7 @@ export const mockChatData: Chat[] = [
       },
     ],
     searchQueries: ["натальная карта", "астрология"],
-    isAi: false,
+    isAI: false,
     hasNew: true,
     createdAt: Date.now() - 1000 * 60 * 120,
   },
@@ -479,8 +479,7 @@ export const mockChatData: Chat[] = [
         specialists: [mockSpecialists[1]],
       },
     ],
-    searchQueries: ["лайф-коуч", "цели"],
-    isAi: true,
+    isAI: true,
     hasNew: false,
     createdAt: Date.now() - 1000 * 60 * 60 * 25,
     footerContent: "Хотите узнать больше о любом из этих специалистов?",
@@ -525,8 +524,7 @@ export const mockChatData: Chat[] = [
         timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 45,
       },
     ],
-    searchQueries: ["бизнес-коучинг", "планирование"],
-    isAi: false,
+    isAI: false,
     hasNew: false,
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
   },
@@ -821,7 +819,7 @@ export const getChatDataById = (id: string): Chat | undefined => {
 }
 
 export const findChatBySpecialistId = (specialistId: string): Chat | undefined => {
-  return mockChatData.find((chat) => chat.specialistId === specialistId && !chat.serviceId)
+  return mockChatData.find((chat) => chat.specialistId === specialistId)
 }
 
 export const findChatByServiceId = (serviceId: string): Chat | undefined => {
@@ -849,10 +847,9 @@ export const addMessageToChat = (chat: Chat, message: Omit<Message, "id">): Chat
   const sidebarChatIndex = mockSidebarChats.findIndex((c) => c.id === chat.id)
   if (sidebarChatIndex !== -1) {
     mockSidebarChats[sidebarChatIndex].description =
-        message.content.substring(0, 50) + (message.content.length > 50 ? "..." : "")
+        message.content
     mockSidebarChats[sidebarChatIndex].updatedAt = message.timestamp
   }
-
 
   return {
     ...chat,

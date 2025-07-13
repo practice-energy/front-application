@@ -51,6 +51,7 @@ export interface Service {
         id: string
         name: string
         title: string
+        avatar: string
     }
     tags: string[]
     reviews: Review[]

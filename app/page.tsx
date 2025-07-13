@@ -10,8 +10,7 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleSearch = (query: string, title = "Аллюра", files: File[] = [], isPractice?: boolean) => {
-    const searchId = uuidv4()
-
+    const newChatId = uuidv4()
     const userMessage: Message = {
       id: uuidv4(),
       type: "user",
@@ -21,14 +20,15 @@ export default function HomePage() {
     }
 
     const newChat: Chat = {
-      id: searchId,
+      id: newChatId,
       title: "Аллюра",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       messages: [userMessage],
-      searchQueries: [query],
-      isAi: false,
+      isAI: true,
       hasNew: true,
       createdAt: Date.now(),
+      isMuted: false,
+      description: query,
     }
 
     window.dispatchEvent(
@@ -36,14 +36,14 @@ export default function HomePage() {
           detail: {
             chat: {
               ...newChat,
-              description: query,
               isPractice: isPractice,
             },
           },
         }),
     )
 
-    router.push(`/search/${searchId}`)
+    mockChatData.push(newChat)
+    router.push(`/search/${newChatId}`)
   }
 
   return (

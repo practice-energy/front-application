@@ -41,25 +41,24 @@ export default function SearchPage() {
         title: "Новый чат",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         messages: [],
-        searchQueries: [],
-        isAi: true,
-        hasNew: false,
+        isAI: true,
         createdAt: Date.now(),
+        isMuted: false,
       }
       setCurrentChat(newChat)
     }
   }, [params.id])
 
-  useEffect(() => {
-    if (currentChat) {
-      const chatId = params.id as string
-      window.dispatchEvent(
-        new CustomEvent("chatMessagesUpdated", {
-          detail: { chatId, messages: currentChat.messages },
-        }),
-      )
-    }
-  }, [currentChat, params.id])
+  // useEffect(() => {
+  //   if (currentChat) {
+  //     const chatId = params.id as string
+  //     window.dispatchEvent(
+  //       new CustomEvent("chatMessagesUpdated", {
+  //         detail: { chatId, messages: currentChat.messages },
+  //       }),
+  //     )
+  //   }
+  // }, [currentChat, params.id])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -122,7 +121,7 @@ export default function SearchPage() {
 
       const now = Date.now()
       const userMessage: Message = {
-        id: `${now}`,
+        id: uuidv4(),
         type: "user",
         content: query,
         timestamp: now,
@@ -132,6 +131,8 @@ export default function SearchPage() {
       const updatedChatWithUser = addMessageToChat(currentChat, userMessage)
       setCurrentChat(updatedChatWithUser)
       setIsLoading(true)
+
+      console.log("msg len ", currentChat.messages.length)
 
       if (currentChat.messages.length === 0) {
         window.dispatchEvent(
@@ -161,7 +162,6 @@ export default function SearchPage() {
         }
         const finalChat = addMessageToChat(updatedChatWithUser, assistantMessage)
         finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-        finalChat.searchQueries = [...finalChat.searchQueries, query]
         setCurrentChat(finalChat)
         setIsLoading(false)
       }, 1500)

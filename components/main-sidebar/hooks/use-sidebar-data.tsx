@@ -42,6 +42,9 @@ export function useSidebarData(pathname: string) {
         const exists = prev.some((c) => c.id === chat.id)
         if (exists) return prev
 
+        console.log(chat)
+        console.log(prev)
+
         // Add new chat to the beginning of the list
         return [chat, ...prev]
       })
@@ -59,12 +62,12 @@ export function useSidebarData(pathname: string) {
     id: chat.id,
     title: chat.title,
     description: chat.messages?.length > 0 ? chat.messages[0].content : "Новый чат",
-    avatar: chat.isAi ? "/allura-logo.png" : "/placeholder-user.png",
+    avatar: chat.isAI ? "/allura-logo.png" : chat.avatar,
     status: null,
     timestamp: chat.createdAt,
     updatedAt: chat.createdAt,
-    isAIEnabled: chat.isAi,
-    isAI: chat.isAi,
+    isAIEnabled: chat.isAIEnabled,
+    isAI: chat.isAI,
     isNew: true,
     mode: undefined
   }))

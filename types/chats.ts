@@ -11,4 +11,21 @@ export interface Message {
   replyTo?: string
 }
 
-export type Chat = {}
+export type Chat = {
+  id: string
+  title: string
+  description: string
+  specialistId?: string
+  serviceId?: string
+  avatar?: string
+  isAI?: boolean
+  isAIEnabled?: boolean
+  status?: "waiting" | "confirmed" | null
+  lastMessage?: string
+  timestamp?: string
+  unreadCount?: number
+  isMuted: boolean
+  messages: Message[]
+  createdAt: number,
+  hasNew?: boolean
+}

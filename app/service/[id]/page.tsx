@@ -46,8 +46,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   // Handle search
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
-    if (!query.trim() && files.length === 0) return
-
     const existingChat = findChatBySpecialistId(specialist.id)
 
     if (existingChat) {
@@ -60,7 +58,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         services: [service],
       }
       addMessageToChat(existingChat, userMessage)
-      window.dispatchEvent(new CustomEvent("chatUpdated", { detail: { chatId: existingChat.id } }))
+      // window.dispatchEvent(new CustomEvent("chatUpdated", { detail: { chatId: existingChat.id } }))
       router.push(`/search/${existingChat.id}`)
     } else {
       const newChatId = uuidv4()
@@ -76,12 +74,12 @@ export default function ServicePage({ params }: { params: { id: string } }) {
       const newChat: Chat = {
         id: newChatId,
         title: specialist.name,
+        avatar: specialist.avatar,
         specialistId: specialist.id,
         serviceId: service.id,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         messages: [userMessage],
-        searchQueries: [query],
-        isAi: false,
+        isAI: false,
         hasNew: true,
         createdAt: Date.now(),
       }

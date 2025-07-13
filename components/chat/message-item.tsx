@@ -12,6 +12,7 @@ import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/chats"
 import type { Service } from "@/types/common"
+import {getSpecialistById} from "@/services/mock-data";
 
 interface MessageItemProps {
   specialistId: string
@@ -21,7 +22,7 @@ interface MessageItemProps {
   onShare: (message: Message) => void
   onRegenerate: (message: Message) => void
   highlightedMessageId: string | null
-  isAi: boolean
+  isAI: boolean
   footerContent?: string
 }
 
@@ -34,7 +35,7 @@ export const MessageItem = React.memo(
     onShare,
     onRegenerate,
     highlightedMessageId,
-    isAi,
+    isAI,
     footerContent,
   }: MessageItemProps) => {
     const router = useRouter()
@@ -57,6 +58,8 @@ export const MessageItem = React.memo(
       onSpecialistClick(specialistId)
     }, [isAssistant, router, specialistId, onSpecialistClick])
 
+    const specialist = getSpecialistById(specialistId)
+
     return (
       <div
         id={`message-${message.id}`}
@@ -68,14 +71,14 @@ export const MessageItem = React.memo(
           {!isUser && (
             <Button
               size="sm"
-              className="w-16 h-16 p-3 transition-colors mb-1.5 border-none hover:bg-transparent"
+              className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent"
               onClick={handleViewSpecialistProfile}
-              aria-label={isAssistant ? "View AI profile" : `View ${message.type} profile`}
-              title={isAssistant ? "Allura" : isSpecialist ? "Specialist" : "View profile"}
+              aria-label={isAssistant ? "" : `View ${message.type} profile`}
+              title={isAssistant ? "Allura" :  "View profile"}
             >
               <Avatar className="w-16 h-16">
                 <AvatarImage
-                  src={isAssistant ? "/allura-logo.svg" : isSpecialist ? "/placeholder-user.png" : "/placeholder.png"}
+                  src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.png"}
                   className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter" : "hover:bg-gray-100")}
                 />
                 <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
@@ -85,15 +88,16 @@ export const MessageItem = React.memo(
             </Button>
           )}
 
-          <div className="flex-1 space-y-3 min-w-0 w-full">
+          <div className="flex-1 min-w-0 w-full">
             {message.content && (
               <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
                 <div
-                  className={`px-3 py-3 gap-3 rounded-sm shadow-sm border ${
+                  className={cn(`rounded-sm py-3 border ${
                     isUser
-                      ? "bg-violet-50 rounded-tr-md"
-                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date border-gray-200 dark:border-gray-700"
-                  }`}
+                      ? "bg-violet-50 shadow-sm px-3 py-3 gap-3 "
+                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-sm px-3 gap-3"
+                  }`,  isAssistant && "border-none shadow-none px-0 ")
+                }
                   style={{ wordBreak: "break-word" }}
                 >
                   <p className="text-sm leading-relaxed">{message.content}</p>
@@ -102,7 +106,7 @@ export const MessageItem = React.memo(
             )}
 
             {message.files && message.files.length > 0 && (
-              <div className={cn("mt-2 space-y-2 inline-flex flex-col", isUser ? "items-end" : "items-start")}>
+              <div className={cn("mt-2 space-y-2 inline-flex flex-col w-min", isUser ? "items-end" : "items-start")}>
                 {message.files.map((file, index) => (
                   <a
                     key={index}
@@ -153,18 +157,18 @@ export const MessageItem = React.memo(
 
           {footerContent && isAssistant && !isUser && (
             <div className="mt-3 text-gray-800 dark:text-gray-100">
-              <p className="text-sm leading-relaxed">{footerContent}</p>
+              <p className="text-sm leading-relaxed mt-1.5">{footerContent}</p>
             </div>
           )}
 
           <div className="flex items-center mt-3 w-full">
             <div className="flex-1">
-              <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-              </span>
+              {/*<span className="text-gray-500 dark:text-gray-400 text-xs">*/}
+              {/*  {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}*/}
+              {/*</span>*/}
             </div>
             <div className="flex gap-2 text-xs opacity-60 items-end">
-              {isAi && isAssistant && (
+              {isAI && isAssistant && (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}

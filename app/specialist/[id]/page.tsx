@@ -80,11 +80,11 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         id: newChatId,
         title: specialist.name,
         specialistId: specialist.id,
+        avatar: specialist.avatar || "placeholder.jpg",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         messages: [userMessage],
-        searchQueries: [query],
-        isAi: false,
-        hasNew: true,
+        isAI: false,
+        hasNew: false,
         createdAt: Date.now(),
       }
 
@@ -93,7 +93,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
           detail: {
             chat: {
               ...newChat,
-              description: query.length > 30 ? query.substring(0, 30) + "..." : query,
+              description: query,
               isPractice: isPractice,
             },
           },
