@@ -1,34 +1,33 @@
-import {v4 as uuidv4} from "uuid"
-import {Booking} from "@/types/booking";
-import {User} from "@/types/user"
-import {ProfileStats} from "@/types/profile-stats";
-import {CalendarEvent} from "@/types/calendar-event";
-import {Review, Service, Specialist} from "@/types/common";
-import {Chat, ChatItem, Message, SearchResult} from "@/types/chats";
+import { v4 as uuidv4 } from "uuid"
+import type { Booking } from "@/types/booking"
+import type { User } from "@/types/user"
+import type { CalendarEvent } from "@/types/calendar-event"
+import type { Review, Service, Specialist } from "@/types/common"
+import type { Chat, ChatItem, Message, SearchResult } from "@/types/chats"
 
 // Generate UUIDs for all chat and specialist IDs first
-const chatAI1Id = uuidv4();
-const chatSpecialist1Id = uuidv4();
-const chatAI2Id = uuidv4();
-const chatSpecialist2Id = uuidv4();
+const chatAI1Id = uuidv4()
+const chatSpecialist1Id = uuidv4()
+const chatAI2Id = uuidv4()
+const chatSpecialist2Id = uuidv4()
 
-const specialist1Id = uuidv4();
-const specialist2Id = uuidv4();
+const specialist1Id = uuidv4()
+const specialist2Id = uuidv4()
 
-const service1Id = uuidv4();
-const service2Id = uuidv4();
+const service1Id = uuidv4()
+const service2Id = uuidv4()
 
-function createMockFile(name: string, type: string = 'image/svg+xml'): File {
+function createMockFile(name: string, type = "image/svg+xml"): File {
   // Упрощенный SVG с текстом
   const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" fill="none"><rect width="1200" height="1200" fill="#EAEAEA" rx="3"/><g opacity=".5"><g opacity=".5"><path fill="#FAFAFA" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/></g><path stroke="url(#a)" stroke-width="2.418" d="M0-1.209h553.581" transform="scale(1 -1) rotate(45 1163.11 91.165)"/><path stroke="url(#b)" stroke-width="2.418" d="M404.846 598.671h391.726"/><path stroke="url(#c)" stroke-width="2.418" d="M599.5 795.742V404.017"/><path stroke="url(#d)" stroke-width="2.418" d="m795.717 796.597-391.441-391.44"/><path fill="#fff" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/><g clip-path="url(#e)"><path fill="#666" fill-rule="evenodd" d="M616.426 586.58h-31.434v16.176l3.553-3.554.531-.531h9.068l.074-.074 8.463-8.463h2.565l7.18 7.181V586.58Zm-15.715 14.654 3.698 3.699 1.283 1.282-2.565 2.565-1.282-1.283-5.2-5.199h-6.066l-5.514 5.514-.073.073v2.876a2.418 2.418 0 0 0 2.418 2.418h26.598a2.418 2.418 0 0 0 2.418-2.418v-8.317l-8.463-8.463-7.181 7.181-.071.072Zm-19.347 5.442v4.085a6.045 6.045 0 0 0 6.046 6.045h26.598a6.044 6.044 0 0 0 6.045-6.045v-7.108l1.356-1.355-1.282-1.283-.074-.073v-17.989h-38.689v23.43l-.146.146.146.147Z" clip-rule="evenodd"/></g><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/></g><defs><linearGradient id="a" x1="554.061" x2="-.48" y1=".083" y2=".087" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="b" x1="796.912" x2="404.507" y1="599.963" y2="599.965" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="c" x1="600.792" x2="600.794" y1="403.677" y2="796.082" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="d" x1="404.85" x2="796.972" y1="403.903" y2="796.02" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><clipPath id="e"><path fill="#fff" d="M581.364 580.535h38.689v38.689h-38.689z"/></clipPath></defs></svg>`;
+  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" fill="none"><rect width="1200" height="1200" fill="#EAEAEA" rx="3"/><g opacity=".5"><g opacity=".5"><path fill="#FAFAFA" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 736.5c-75.454 0-136.621-61.167-136.621-136.62 0-75.454 61.167-136.621 136.621-136.621 75.453 0 136.62 61.167 136.62 136.621 0 75.453-61.167 136.62-136.62 136.62Z"/></g><path stroke="url(#a)" stroke-width="2.418" d="M0-1.209h553.581" transform="scale(1 -1) rotate(45 1163.11 91.165)"/><path stroke="url(#b)" stroke-width="2.418" d="M404.846 598.671h391.726"/><path stroke="url(#c)" stroke-width="2.418" d="M599.5 795.742V404.017"/><path stroke="url(#d)" stroke-width="2.418" d="m795.717 796.597-391.441-391.44"/><path fill="#fff" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/><g clip-path="url(#e)"><path fill="#666" fill-rule="evenodd" d="M616.426 586.58h-31.434v16.176l3.553-3.554.531-.531h9.068l.074-.074 8.463-8.463h2.565l7.18 7.181V586.58Zm-15.715 14.654 3.698 3.699 1.283 1.282-2.565 2.565-1.282-1.283-5.2-5.199h-6.066l-5.514 5.514-.073.073v2.876a2.418 2.418 0 0 0 2.418 2.418h26.598a2.418 2.418 0 0 0 2.418-2.418v-8.317l-8.463-8.463-7.181 7.181-.071.072Zm-19.347 5.442v4.085a6.045 6.045 0 0 0 6.046 6.045h26.598a6.044 6.044 0 0 0 6.045-6.045v-7.108l1.356-1.355-1.282-1.283-.074-.073v-17.989h-38.689v23.43l-.146.146.147Z" clip-rule="evenodd"/></g><path stroke="#C9C9C9" stroke-width="2.418" d="M600.709 656.704c-31.384 0-56.825-25.441-56.825-56.824 0-31.384 25.441-56.825 56.825-56.825 31.383 0 56.824 25.441 56.824 56.825 0 31.383-25.441 56.824-56.824 56.824Z"/></g><defs><linearGradient id="a" x1="554.061" x2="-.48" y1=".083" y2=".087" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="b" x1="796.912" x2="404.507" y1="599.963" y2="599.965" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="c" x1="600.792" x2="600.794" y1="403.677" y2="796.082" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><linearGradient id="d" x1="404.85" x2="796.972" y1="403.903" y2="796.02" gradientUnits="userSpaceOnUse"><stop stop-color="#C9C9C9" stop-opacity="0"/><stop offset=".208" stop-color="#C9C9C9"/><stop offset=".792" stop-color="#C9C9C9"/><stop offset="1" stop-color="#C9C9C9" stop-opacity="0"/></linearGradient><clipPath id="e"><path fill="#fff" d="M581.364 580.535h38.689v38.689h-38.689z"/></clipPath></defs></svg>`
 
-  const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+  const blob = new Blob([svgContent], { type: "image/svg+xml" })
 
   return new File([blob], name, {
-    type: 'image/svg+xml',
-    lastModified: Date.now()
-  });
+    type: "image/svg+xml",
+    lastModified: Date.now(),
+  })
 }
 
 // Использование
@@ -38,7 +37,7 @@ export const mockImages = [
   createMockFile("session.svg"),
   createMockFile("session.svg"),
   createMockFile("session.svg"),
-];
+]
 
 // Mock User Data
 export const mockUser: User = {
@@ -56,7 +55,8 @@ export const mockUser: User = {
   tier: "Pro",
   isSpecialist: false,
   bio: "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation.",
-  fullBio: "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation. I believe that everyone has the power to create positive change in their lives, and my role is to provide the tools, insights, and support needed to unlock that potential. Through personalized astrology readings, I help clients understand their unique cosmic blueprint and how planetary influences affect their daily lives. My life coaching sessions focus on practical goal-setting, overcoming limiting beliefs, and developing sustainable habits that lead to lasting transformation. I also offer meditation guidance to help clients develop mindfulness practices that support their overall well-being and spiritual growth.",
+  fullBio:
+    "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation. I believe that everyone has the power to create positive change in their lives, and my role is to provide the tools, insights, and support needed to unlock that potential. Through personalized astrology readings, I help clients understand their unique cosmic blueprint and how planetary influences affect their daily lives. My life coaching sessions focus on practical goal-setting, overcoming limiting beliefs, and developing sustainable habits that lead to lasting transformation. I also offer meditation guidance to help clients develop mindfulness practices that support their overall well-being and spiritual growth.",
   education: [
     {
       description: "Certified Life Coach, International Coach Federation",
@@ -66,7 +66,7 @@ export const mockUser: User = {
         type: "application/pdf",
         lastModified: Date.now(),
         // В реальном приложении здесь будет File объект или ссылка на файл
-      } as unknown as File // Приведение типа для мока
+      } as unknown as File, // Приведение типа для мока
     },
     {
       description: "Master's in Psychology, Stanford University",
@@ -75,12 +75,12 @@ export const mockUser: User = {
         size: 3456789,
         type: "image/jpeg",
         lastModified: Date.now(),
-      } as unknown as File
+      } as unknown as File,
     },
     {
       description: "Yoga Instructor Certification",
-      certificate: null // Пример отсутствующего сертификата
-    }
+      certificate: null, // Пример отсутствующего сертификата
+    },
   ],
   experience: [
     {
@@ -90,9 +90,9 @@ export const mockUser: User = {
     {
       description: "Spiritual Guide at Wellness Collective (2010-2015)",
       certificate: null,
-    }
+    },
   ],
-  hat: "adept"
+  hat: "adept",
 }
 
 // Mock Calendar Events
@@ -234,7 +234,7 @@ export const mockSidebarChats: ChatItem[] = [
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 41,
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 41,
     mode: "ai",
-    isAI: true
+    isAI: true,
   },
 ]
 
@@ -245,12 +245,12 @@ export const mockSpecialists: Specialist[] = [
     name: "Анна Петрова",
     title: "Астролог и таролог",
     avatar: "/placeholder-user.jpg",
-    images: ["/placeholder.jpg","/placeholder.jpg"],
+    images: ["/placeholder.jpg", "/placeholder.jpg"],
     reviewCount: 127,
     price: 3500,
     location: "Москва",
     description:
-        "Профессиональный астролог с 10-летним опытом. Помогу разобраться в жизненных вопросах через призму астрологии.",
+      "Профессиональный астролог с 10-летним опытом. Помогу разобраться в жизненных вопросах через призму астрологии.",
     specialties: ["Натальная астрология", "Таро", "Нумерология"],
     languages: ["Русский", "Английский"],
     education: [
@@ -283,20 +283,20 @@ export const mockSpecialists: Specialist[] = [
         price: 5000,
         duration: "1.5 часа",
         category: "Астрология",
-        images: ["/placeholder.jpg",],
+        images: ["/placeholder.jpg"],
         includes: [
           "Подробный разбор планет в знаках",
           "Анализ аспектов",
           "Рекомендации по развитию",
-          "Запись консультации"
+          "Запись консультации",
         ],
         specialist: {
           id: specialist1Id,
           name: "Анна Петрова",
-          title: "Астролог и таролог"
+          title: "Астролог и таролог",
         },
         tags: ["натальная карта", "астрология", "индивидуальная консультация"],
-        reviews: []
+        reviews: [],
       },
       {
         id: uuidv4(),
@@ -305,19 +305,15 @@ export const mockSpecialists: Specialist[] = [
         price: 3000,
         duration: "1 час",
         category: "Таро",
-        images: ["/placeholder.jpg",],
-        includes: [
-          "Ответы на 3 ключевых вопроса",
-          "Разбор текущей ситуации",
-          "Рекомендации на ближайший месяц"
-        ],
+        images: ["/placeholder.jpg"],
+        includes: ["Ответы на 3 ключевых вопроса", "Разбор текущей ситуации", "Рекомендации на ближайший месяц"],
         specialist: {
           id: specialist1Id,
           name: "Анна Петрова",
-          title: "Астролог и таролог"
+          title: "Астролог и таролог",
         },
         tags: ["таро", "гадание", "предсказание"],
-        reviews: []
+        reviews: [],
       },
       {
         id: uuidv4(),
@@ -326,20 +322,20 @@ export const mockSpecialists: Specialist[] = [
         price: 6000,
         duration: "1.5 часа",
         category: "Коучинг",
-        images: ["/placeholder.jpg",],
+        images: ["/placeholder.jpg"],
         includes: [
           "Анализ текущей ситуации",
           "Определение сильных сторон",
           "Разработка плана развития",
-          "Дополнительные материалы"
+          "Дополнительные материалы",
         ],
         specialist: {
           id: specialist2Id,
           name: "Михаил Сидоров",
-          title: "Лайф-коуч и бизнес-тренер"
+          title: "Лайф-коуч и бизнес-тренер",
         },
         tags: ["карьера", "коучинг", "профессиональное развитие"],
-        reviews: []
+        reviews: [],
       },
       {
         id: uuidv4(),
@@ -353,16 +349,16 @@ export const mockSpecialists: Specialist[] = [
           "Первичная диагностика",
           "5 индивидуальных сессий",
           "Промежуточные задания",
-          "Поддержка между сессиями"
+          "Поддержка между сессиями",
         ],
         specialist: {
           id: specialist2Id,
           name: "Михаил Сидоров",
-          title: "Лайф-коуч и бизнес-тренер"
+          title: "Лайф-коуч и бизнес-тренер",
         },
         tags: ["пакет", "коучинг", "личное развитие"],
-        reviews: []
-      }
+        reviews: [],
+      },
     ],
   },
   {
@@ -370,12 +366,12 @@ export const mockSpecialists: Specialist[] = [
     name: "Михаил Сидоров",
     title: "Лайф-коуч и бизнес-тренер",
     avatar: "/placeholder-user.jpg",
-    images: ["/placeholder.jpg","/placeholder.jpg","/placeholder.jpg"],
+    images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
     reviewCount: 89,
     price: 5000,
     location: "Санкт-Петербург",
     description:
-        "Помогаю людям достигать целей и раскрывать потенциал. Специализируюсь на карьерном росте и личностном развитии.",
+      "Помогаю людям достигать целей и раскрывать потенциал. Специализируюсь на карьерном росте и личностном развитии.",
     specialties: ["Лайф-коучинг", "Бизнес-коучинг", "Карьерное консультирование"],
     languages: ["Русский", "Английский", "Немецкий"],
     education: [
@@ -388,7 +384,7 @@ export const mockSpecialists: Specialist[] = [
     reviews: [],
     availability: [],
     services: [],
-  }
+  },
 ]
 
 // Новые моки для чатов (обновлены ID)
@@ -443,7 +439,7 @@ export const mockChatData: Chat[] = [
         id: uuidv4(),
         type: "specialist",
         content:
-            "Добрый день! Спасибо за интерес к моим услугам. Да, я провожу консультации по натальным картам. Когда вам удобно?",
+          "Добрый день! Спасибо за интерес к моим услугам. Да, я провожу консультации по натальным картам. Когда вам удобно?",
         timestamp: Date.now() - 1000 * 60 * 60,
       },
       {
@@ -501,7 +497,7 @@ export const mockChatData: Chat[] = [
         id: uuidv4(),
         type: "specialist",
         content:
-            "Привет! Отлично, что решили заняться развитием. Расскажите, какие у вас сейчас основные вызовы в бизнесе?",
+          "Привет! Отлично, что решили заняться развитием. Расскажите, какие у вас сейчас основные вызовы в бизнесе?",
         timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 15,
       },
       {
@@ -520,7 +516,7 @@ export const mockChatData: Chat[] = [
         id: uuidv4(),
         type: "specialist",
         content:
-            "Да, это частая проблема. Предлагаю начать с аудита ваших текущих процессов. Можем назначить сессию на следующей неделе?",
+          "Да, это частая проблема. Предлагаю начать с аудита ваших текущих процессов. Можем назначить сессию на следующей неделе?",
         timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 45,
       },
     ],
@@ -532,46 +528,46 @@ export const mockChatData: Chat[] = [
 
 export const mockReviews: Review[] = [
   {
-    id: '1',
-    author: 'Алексей Петров',
-    avatar: '/avatars/1.jpg',
-    comment: 'Отличный сервис! Быстро и качественно выполнили работу. Рекомендую!',
-    date: '2023-05-15',
-    verified: true
+    id: "1",
+    author: "Алексей Петров",
+    avatar: "/avatars/1.jpg",
+    comment: "Отличный сервис! Быстро и качественно выполнили работу. Рекомендую!",
+    date: "2023-05-15",
+    verified: true,
   },
   {
-    id: '2',
-    author: 'Мария Иванова',
-    avatar: '/avatars/2.jpg',
-    comment: 'Осталась довольна результатом. Специалисты вежливые и профессиональные.',
-    date: '2023-06-22',
-    verified: true
+    id: "2",
+    author: "Мария Иванова",
+    avatar: "/avatars/2.jpg",
+    comment: "Осталась довольна результатом. Специалисты вежливые и профессиональные.",
+    date: "2023-06-22",
+    verified: true,
   },
   {
-    id: '3',
-    author: 'Дмитрий Смирнов',
-    avatar: '/avatars/3.jpg',
-    comment: 'Цены немного выше среднего, но качество того стоит.',
-    date: '2023-07-10',
-    verified: false
+    id: "3",
+    author: "Дмитрий Смирнов",
+    avatar: "/avatars/3.jpg",
+    comment: "Цены немного выше среднего, но качество того стоит.",
+    date: "2023-07-10",
+    verified: false,
   },
   {
-    id: '4',
-    author: 'Елена Кузнецова',
-    avatar: '/avatars/4.jpg',
-    comment: 'Были небольшие задержки по срокам, но в итоге всё сделали хорошо.',
-    date: '2023-08-05',
-    verified: true
+    id: "4",
+    author: "Елена Кузнецова",
+    avatar: "/avatars/4.jpg",
+    comment: "Были небольшие задержки по срокам, но в итоге всё сделали хорошо.",
+    date: "2023-08-05",
+    verified: true,
   },
   {
-    id: '5',
-    author: 'Анонимный пользователь',
-    avatar: '',
-    comment: 'Не понравилось отношение сотрудников. Результат средний.',
-    date: '2023-09-12',
-    verified: false
-  }
-];
+    id: "5",
+    author: "Анонимный пользователь",
+    avatar: "",
+    comment: "Не понравилось отношение сотрудников. Результат средний.",
+    date: "2023-09-12",
+    verified: false,
+  },
+]
 
 // Mock данные для услуг (обновлены ID)
 export const mockServices: Service[] = [
@@ -586,7 +582,7 @@ export const mockServices: Service[] = [
     specialist: mockSpecialists[0],
     tags: ["астрология", "натальная карта", "личность"],
     reviews: mockReviews,
-    includes: ["Wipes", "Pencils", "Markers"]
+    includes: ["Wipes", "Pencils", "Markers"],
   },
   {
     id: service2Id,
@@ -599,7 +595,7 @@ export const mockServices: Service[] = [
     specialist: mockSpecialists[0],
     tags: ["коучинг", "цели", "развитие"],
     reviews: mockReviews,
-    includes: ["Wipes", "Pencils", "Markers"]
+    includes: ["Wipes", "Pencils", "Markers"],
   },
   {
     id: uuidv4(),
@@ -613,15 +609,15 @@ export const mockServices: Service[] = [
       "Подробный разбор планет в знаках",
       "Анализ аспектов",
       "Рекомендации по развитию",
-      "Запись консультации"
+      "Запись консультации",
     ],
     specialist: {
       id: specialist1Id,
       name: "Анна Петрова",
-      title: "Астролог и таролог"
+      title: "Астролог и таролог",
     },
     tags: ["натальная карта", "астрология", "индивидуальная консультация"],
-    reviews: []
+    reviews: [],
   },
   {
     id: uuidv4(),
@@ -631,18 +627,14 @@ export const mockServices: Service[] = [
     duration: "1 час",
     category: "Таро",
     images: ["/taro-service1.jpg"],
-    includes: [
-      "Ответы на 3 ключевых вопроса",
-      "Разбор текущей ситуации",
-      "Рекомендации на ближайший месяц"
-    ],
+    includes: ["Ответы на 3 ключевых вопроса", "Разбор текущей ситуации", "Рекомендации на ближайший месяц"],
     specialist: {
       id: specialist1Id,
       name: "Анна Петрова",
-      title: "Астролог и таролог"
+      title: "Астролог и таролог",
     },
     tags: ["таро", "гадание", "предсказание"],
-    reviews: []
+    reviews: [],
   },
   {
     id: uuidv4(),
@@ -656,15 +648,15 @@ export const mockServices: Service[] = [
       "Анализ текущей ситуации",
       "Определение сильных сторон",
       "Разработка плана развития",
-      "Дополнительные материалы"
+      "Дополнительные материалы",
     ],
     specialist: {
       id: specialist2Id,
       name: "Михаил Сидоров",
-      title: "Лайф-коуч и бизнес-тренер"
+      title: "Лайф-коуч и бизнес-тренер",
     },
     tags: ["карьера", "коучинг", "профессиональное развитие"],
-    reviews: []
+    reviews: [],
   },
   {
     id: uuidv4(),
@@ -674,20 +666,15 @@ export const mockServices: Service[] = [
     duration: "5 сессий по 1 часу",
     category: "Коучинг",
     images: ["/coaching-package.jpg"],
-    includes: [
-      "Первичная диагностика",
-      "5 индивидуальных сессий",
-      "Промежуточные задания",
-      "Поддержка между сессиями"
-    ],
+    includes: ["Первичная диагностика", "5 индивидуальных сессий", "Промежуточные задания", "Поддержка между сессиями"],
     specialist: {
       id: specialist2Id,
       name: "Михаил Сидоров",
-      title: "Лайф-коуч и бизнес-тренер"
+      title: "Лайф-коуч и бизнес-тренер",
     },
     tags: ["пакет", "коучинг", "личное развитие"],
-    reviews: []
-  }
+    reviews: [],
+  },
 ]
 
 const fallbackMeetings: Booking[] = [
@@ -781,7 +768,7 @@ export const formatTimestamp = (timestamp: number): string => {
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
   if (minutes < 1) {
-    return 'сейчас'
+    return "сейчас"
   } else if (minutes < 60) {
     return `${minutes} мин`
   } else if (hours < 24) {
@@ -815,7 +802,9 @@ export const getChatById = (id: string): ChatItem | undefined => {
 
 // Новые helper функции для работы с чатами
 export const getChatDataById = (id: string): Chat | undefined => {
-  return mockChatData.find((chat) => chat.id === id)
+  const chat = mockChatData.find((chat) => chat.id === id)
+  // Возвращаем глубокую копию, чтобы избежать проблем с мутацией состояния
+  return chat ? JSON.parse(JSON.stringify(chat)) : undefined
 }
 
 export const findChatBySpecialistId = (specialistId: string): Chat | undefined => {
@@ -846,8 +835,7 @@ export const addMessageToChat = (chat: Chat, message: Omit<Message, "id">): Chat
   // Also update the sidebar chat item
   const sidebarChatIndex = mockSidebarChats.findIndex((c) => c.id === chat.id)
   if (sidebarChatIndex !== -1) {
-    mockSidebarChats[sidebarChatIndex].description =
-        message.content
+    mockSidebarChats[sidebarChatIndex].description = message.content
     mockSidebarChats[sidebarChatIndex].updatedAt = message.timestamp
   }
 
