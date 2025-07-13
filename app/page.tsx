@@ -32,14 +32,14 @@ export default function HomePage() {
     }
 
     window.dispatchEvent(
-        new CustomEvent("addNewChatToSidebar", {
-          detail: {
-            chat: {
-              ...newChat,
-              isPractice: isPractice,
-            },
+      new CustomEvent("addNewChatToSidebar", {
+        detail: {
+          chat: {
+            ...newChat,
+            isPractice: isPractice,
           },
-        }),
+        },
+      }),
     )
 
     mockChatData.push(newChat)
