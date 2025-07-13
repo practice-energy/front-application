@@ -62,6 +62,6 @@ export interface Review {
     author: string
     avatar: string
     comment: string
-    date: string
+    date: number
     verified: boolean
 }

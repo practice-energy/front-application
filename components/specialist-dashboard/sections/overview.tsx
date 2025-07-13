@@ -16,7 +16,7 @@ import ExperienceForm from "@/components/experience-item"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import { ShareSpecialistModal } from "@/components/share-specialist-modal"
+import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import {Specialist} from "@/types/common";
 
 export default function Overview() {

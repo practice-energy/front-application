@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
-import { ShareSpecialistModal } from "@/components/share-specialist-modal"
+import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 
 interface InstagramSpecialistCardProps {
   specialist: Specialist

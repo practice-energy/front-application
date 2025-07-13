@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Shield, Key, Mail, AlertTriangle, CheckCircle } from "lucide-react"
-import { DeleteAccountModal } from "@/components/profile/delete-account-modal"
+import { DeleteAccountModal } from "@/components/modals/delete-account-modal"
 import {useProfileStore} from "@/stores/profile-store";
 
 export function SecuritySection() {

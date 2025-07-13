@@ -532,7 +532,7 @@ export const mockReviews: Review[] = [
     author: "Алексей Петров",
     avatar: "/avatars/1.jpg",
     comment: "Отличный сервис! Быстро и качественно выполнили работу. Рекомендую!",
-    date: "2023-05-15",
+    date: Date.now() - 1000 * 60 * 60 * 24 * 3,
     verified: true,
   },
   {
@@ -540,7 +540,7 @@ export const mockReviews: Review[] = [
     author: "Мария Иванова",
     avatar: "/avatars/2.jpg",
     comment: "Осталась довольна результатом. Специалисты вежливые и профессиональные.",
-    date: "2023-06-22",
+    date: Date.now() - 1000 * 60 * 60 * 24 * 3,
     verified: true,
   },
   {
@@ -548,7 +548,7 @@ export const mockReviews: Review[] = [
     author: "Дмитрий Смирнов",
     avatar: "/avatars/3.jpg",
     comment: "Цены немного выше среднего, но качество того стоит.",
-    date: "2023-07-10",
+    date: Date.now() - 1000 * 60 * 60 * 24 * 3,
     verified: false,
   },
   {
@@ -556,7 +556,7 @@ export const mockReviews: Review[] = [
     author: "Елена Кузнецова",
     avatar: "/avatars/4.jpg",
     comment: "Были небольшие задержки по срокам, но в итоге всё сделали хорошо.",
-    date: "2023-08-05",
+    date: Date.now() - 1000 * 60 * 60 * 24 * 3,
     verified: true,
   },
   {
@@ -564,7 +564,7 @@ export const mockReviews: Review[] = [
     author: "Анонимный пользователь",
     avatar: "",
     comment: "Не понравилось отношение сотрудников. Результат средний.",
-    date: "2023-09-12",
+    date: Date.now() - 1000 * 60 * 60 * 24 * 3,
     verified: false,
   },
 ]

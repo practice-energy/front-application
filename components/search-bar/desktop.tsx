@@ -267,7 +267,7 @@ export const DesktopSearchBar = React.memo(function DesktopSearchBar({
   return (
     <div
       ref={containerRef}
-      className="px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300"
+      className="px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 z-50"
       style={dynamicStyles}
       data-animating={isAnimating ? "true" : "false"}
     >

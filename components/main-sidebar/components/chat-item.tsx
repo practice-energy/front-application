@@ -85,7 +85,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                           className={cn(
                               "w-3 h-3 rounded-sm flex-shrink-0",
                               chat.status === "waiting" && "bg-pink-500",
-                              chat.status === "confirmed" && "bg-green-500",
+                              chat.status === "confirmed" && "bg-green-300",
                           )}
                       />
                     </>

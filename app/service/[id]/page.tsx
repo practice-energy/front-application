@@ -18,7 +18,7 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { mockServices, findChatBySpecialistId, addMessageToChat, mockChatData } from "@/services/mock-data"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
-import { ShareServiceModal } from "@/components/share-service-modal"
+import { ShareServiceModal } from "@/components/modals/share-service-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { Badge } from "@/components/ui/badge"
@@ -192,7 +192,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                   />
 
                   {/* Client Feedback Section */}
-                  <FeedbackSection feedbacks={service.reviews} title="Client Feedback" />
+                  <FeedbackSection feedbacks={service.reviews}/>
 
                   {/* Booking Section */}
                   <div ref={bookingRef} id="booking" className="pt-4">

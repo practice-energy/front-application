@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import {Review} from "@/types/common";
+import { Review } from "@/types/common"
 
 interface FeedbackSectionProps {
   feedbacks: Review[]
@@ -11,22 +11,35 @@ interface FeedbackSectionProps {
 }
 
 export function FeedbackSection({ feedbacks, title = "Client Feedback", className = "" }: FeedbackSectionProps) {
-  // Состояния для верхней строки (четные индексы)
+  // States for top row (even indexes)
   const [isTopAutoScrollPaused, setIsTopAutoScrollPaused] = useState(false)
   const topScrollRef = useRef<HTMLDivElement>(null)
 
-  // Состояния для нижней строки (нечетные индексы)
+  // States for bottom row (odd indexes)
   const [isBottomAutoScrollPaused, setIsBottomAutoScrollPaused] = useState(false)
   const bottomScrollRef = useRef<HTMLDivElement>(null)
 
-  // Создаем утроенный массив для бесконечной прокрутки
+  // Format date to "day monthName" (e.g. "12 January")
+  const formatDate = (timestamp: number): string => {
+    const date = new Date(timestamp)
+    const day = date.getDate()
+    const monthNames = [
+     'Января', 'Февраля', 'Марта', 'Апреля', 'Мая',
+      'Июня', 'Июля', 'Августа', 'Сентября', 'Октября',
+      'Ноября', 'Декабря'
+    ]
+    const monthName = monthNames[date.getMonth()]
+    return `${day} ${monthName}`
+  }
+
+  // Create tripled array for infinite scrolling
   const loopedFeedbacks = [...feedbacks, ...feedbacks, ...feedbacks]
 
-  // Разделяем на две строки
-  const topFeedbacks = loopedFeedbacks.filter((_, index) => index % 2 === 0) // Четные - верхняя строка
-  const bottomFeedbacks = loopedFeedbacks.filter((_, index) => index % 2 === 1) // Нечетные - нижняя строка
+  // Split into two rows
+  const topFeedbacks = loopedFeedbacks.filter((_, index) => index % 2 === 0)
+  const bottomFeedbacks = loopedFeedbacks.filter((_, index) => index % 2 === 1)
 
-  // Автоскролл для верхней строки (движение влево)
+  // Auto-scroll for top row (left movement)
   useEffect(() => {
     const scrollContainer = topScrollRef.current
     if (!scrollContainer || isTopAutoScrollPaused) return
@@ -49,15 +62,13 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
     return () => clearInterval(interval)
   }, [isTopAutoScrollPaused, feedbacks.length])
 
-  // Автоскролл для нижней строки (движение вправо)
+  // Auto-scroll for bottom row (right movement)
   useEffect(() => {
     const scrollContainer = bottomScrollRef.current
     if (!scrollContainer || isBottomAutoScrollPaused) return
 
     const cardWidth = 320 + 16
     const maxScroll = cardWidth * feedbacks.length
-
-    // Начинаем с середины массива для плавного старта
     let scrollPosition = maxScroll
 
     const autoScroll = () => {
@@ -73,21 +84,20 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
     const scrollSpeed = 0.5
     const interval = setInterval(autoScroll, 16)
 
-    // Инициализация позиции скролла
+    // Initialize scroll position
     scrollContainer.scrollLeft = maxScroll
 
     return () => clearInterval(interval)
   }, [isBottomAutoScrollPaused, feedbacks.length])
 
-  // Общая логика обработки свайпа
   return (
       <div className={className}>
         <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">{title}</h3>
 
-        {/* Верхняя строка (четные индексы) */}
-        <div className="relative mb-8">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
+        {/* Top row (even indexes) */}
+        <div className="relative mb-3">
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
 
           <div
               ref={topScrollRef}
@@ -97,9 +107,9 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
             {topFeedbacks.map((feedback, index) => (
                 <div
                     key={`top-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
+                    className="flex-shrink-0 w-80 bg-violet-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
                 >
-                  <div className="flex items-center mb-3">
+                  <div className="flex items-center mb-3 p-1">
                     <img
                         src={feedback.avatar || "/placeholder.svg"}
                         alt={feedback.author}
@@ -107,21 +117,23 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</h5>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">{feedback.date}</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">
+                      {formatDate(feedback.date)}
+                    </span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.comment}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed px-1">{feedback.comment}</p>
                 </div>
             ))}
           </div>
         </div>
 
-        {/* Нижняя строка (нечетные индексы) */}
+        {/* Bottom row (odd indexes) */}
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
 
           <div
               ref={bottomScrollRef}
@@ -130,10 +142,10 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
           >
             {bottomFeedbacks.map((feedback, index) => (
                 <div
-                    key={`bottom-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
+                    key={`top-${feedback.id}-${index}`}
+                    className="flex-shrink-0 w-80 bg-violet-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
                 >
-                  <div className="flex items-center mb-3">
+                  <div className="flex items-center mb-3 p-1">
                     <img
                         src={feedback.avatar || "/placeholder.svg"}
                         alt={feedback.author}
@@ -141,12 +153,14 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h5 className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</h5>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">{feedback.date}</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">
+                      {formatDate(feedback.date)}
+                    </span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feedback.comment}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed px-1">{feedback.comment}</p>
                 </div>
             ))}
           </div>
