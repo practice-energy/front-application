@@ -29,12 +29,14 @@ export default function SearchPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
+  const [initialResponseGenerated, setInitialResponseGenerated] = useState(false)
 
   useEffect(() => {
     const chatId = params.id as string
     const existingChat = getChatDataById(chatId)
     if (existingChat) {
       setCurrentChat(existingChat)
+      setInitialResponseGenerated(false) // Reset flag on new chat
     } else {
       const newChat: Chat = {
         id: chatId,
@@ -42,12 +44,50 @@ export default function SearchPage() {
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         messages: [],
         isAI: true,
+        hasNew: false,
         createdAt: Date.now(),
         isMuted: false,
       }
       setCurrentChat(newChat)
     }
   }, [params.id])
+
+  useEffect(() => {
+    if (
+      currentChat &&
+      !initialResponseGenerated &&
+      currentChat.messages.length === 1 &&
+      currentChat.messages[0].type === "user"
+    ) {
+      setInitialResponseGenerated(true) // Prevent this from running again for this chat
+      setIsLoading(true)
+      const userMessage = currentChat.messages[0]
+
+      const timer = setTimeout(() => {
+        const numSpecialists = 2
+        const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
+
+        const assistantMessage: Message = {
+          id: uuidv4(),
+          type: "assistant",
+          content: `Вот результаты поиска по запросу "${userMessage.content}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
+          timestamp: Date.now(),
+          specialists: selectedSpecialists,
+        }
+
+        setCurrentChat((prevChat) => {
+          if (!prevChat) return null
+          const finalChat = addMessageToChat(prevChat, assistantMessage)
+          finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
+          return finalChat
+        })
+
+        setIsLoading(false)
+      }, 1500)
+
+      return () => clearTimeout(timer) // Cleanup to prevent memory leaks
+    }
+  }, [currentChat, initialResponseGenerated])
 
   // useEffect(() => {
   //   if (currentChat) {
@@ -128,18 +168,20 @@ export default function SearchPage() {
         files: files,
       }
 
-      const updatedChatWithUser = addMessageToChat(currentChat, userMessage)
-      setCurrentChat(updatedChatWithUser)
+      let updatedChatWithUser: Chat | null = null
+      setCurrentChat((prevChat) => {
+        if (!prevChat) return null
+        updatedChatWithUser = addMessageToChat(prevChat, userMessage)
+        return updatedChatWithUser
+      })
       setIsLoading(true)
-
-      console.log("msg len ", currentChat.messages.length)
 
       if (currentChat.messages.length === 0) {
         window.dispatchEvent(
           new CustomEvent("addNewChatToSidebar", {
             detail: {
               chat: {
-                ...updatedChatWithUser,
+                ...(updatedChatWithUser as Chat),
                 title: title,
                 description: query,
                 files: files,
@@ -153,6 +195,7 @@ export default function SearchPage() {
       setTimeout(() => {
         const numSpecialists = 2
         const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
+
         const assistantMessage: Message = {
           id: uuidv4(),
           type: "assistant",
@@ -160,9 +203,14 @@ export default function SearchPage() {
           timestamp: now + 1000,
           specialists: selectedSpecialists,
         }
-        const finalChat = addMessageToChat(updatedChatWithUser, assistantMessage)
-        finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-        setCurrentChat(finalChat)
+
+        setCurrentChat((prevChat) => {
+          if (!prevChat) return null
+          const finalChat = addMessageToChat(prevChat, assistantMessage)
+          finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
+          return finalChat
+        })
+
         setIsLoading(false)
       }, 1500)
     },
