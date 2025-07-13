@@ -11,7 +11,7 @@ import { RubleIcon } from "@/components/ui/ruble-sign"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import type { Service } from "@/types/common"
-import { Pentagram } from "@/components/icons/icon-pentagram"
+import {Pentagram, PentagramIcon} from "@/components/icons/icon-pentagram"
 
 interface InstagramServiceCardProps {
   service: Service
@@ -129,30 +129,26 @@ export function InstagramServiceCard({
 
             {/* Star Button - only show when not in chat context */}
             {!showActionButtons && (
-              <Button
-                type="button"
-                size="sm"
-                onClick={handleLikeClick}
-                className={`
-                  rounded-sm h-9 w-9 flex items-center justify-center border transition-colors duration-200
-                  ${
-                    liked
-                      ? "bg-violet-600 border-violet-600 hover:bg-violet-500"
-                      : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-violet-50 dark:hover:bg-violet-700"
-                  }
-                  active:bg-violet-600 dark:active:bg-violet-600
-                  active:text-white dark:active:text-white
-                  active:border-violet-600 dark:active:border-violet-600
-                  text-black dark:text-white
-                  focus:outline-none
-                `}
-              >
-                <Pentagram
-                  size={20}
-                  weight={liked ? "fill" : "regular"}
-                  className={cn(liked ? "text-white" : "text-gray-600 dark:text-gray-400")}
-                />
-              </Button>
+                <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleLikeClick}
+                    className={`
+                rounded-sm h-9 w-9 flex items-center justify-center border transition-colors duration-200
+                ${
+                        liked
+                            ? "bg-violet-600 border-violet-600 hover:bg-violet-500"
+                            : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-violet-50 dark:hover:bg-violet-700"
+                    }
+                active:bg-violet-600 dark:active:bg-violet-600
+                active:text-white dark:active:text-white
+                active:border-violet-600 dark:active:border-violet-600
+                text-black dark:text-white
+                focus:outline-none
+              `}
+                >
+                  <PentagramIcon size={20} className={cn(liked ? "text-white" : "text-gray-600 dark:text-gray-400")} />
+                </Button>
             )}
           </div>
 

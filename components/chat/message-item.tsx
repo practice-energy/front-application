@@ -138,21 +138,21 @@ export const MessageItem = React.memo(
               </div>
             )}
 
-            {message.services && message.services.length > 0 && (
-              <div className="mt-3 space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {message.services.map((service: Service) => (
-                    <InstagramServiceCard
-                      key={service.id}
-                      service={service}
-                      onClick={() => onServiceClick(service.id)}
-                      showActionButtons={true}
-                      specialistId={service.specialist.id}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+              {message.services && message.services.length > 0 && (
+                  <div className="mt-3 space-y-3 flex justify-end justify-items-end"> {/* Основной контейнер с выравниванием вправо */}
+                      <div className="grid grid-cols-1 gap-6"> {/* Сетка карточек */}
+                          {message.services.map((service: Service) => (
+                              <InstagramServiceCard
+                                  key={service.id}
+                                  service={service}
+                                  onClick={() => onServiceClick(service.id)}
+                                  showActionButtons={false}
+                                  specialistId={service.specialist.id}
+                              />
+                          ))}
+                      </div>
+                  </div>
+              )}
           </div>
 
           {footerContent && isAssistant && !isUser && (
