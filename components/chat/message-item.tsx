@@ -71,7 +71,7 @@ export const MessageItem = React.memo(
           {!isUser && (
             <Button
               size="sm"
-              className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent"
+              className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent active:bg-none"
               onClick={handleViewSpecialistProfile}
               aria-label={isAssistant ? "" : `View ${message.type} profile`}
               title={isAssistant ? "Allura" :  "View profile"}

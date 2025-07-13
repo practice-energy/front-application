@@ -28,4 +28,5 @@ export type Chat = {
   messages: Message[]
   createdAt: number,
   hasNew?: boolean
+  footerContent: string
 }
