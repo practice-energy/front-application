@@ -114,27 +114,27 @@ export default function SearchPage() {
 
   const handleRegenerate = useCallback(
     async (message: Message) => {
-      if (!currentChat || message.type !== "assistant") return
+      setCurrentChat((prevChat) => {
+        if (!prevChat || message.type !== "assistant") return prevChat
 
-      // Remove the assistant message to be regenerated
-      const updatedMessages = currentChat.messages.filter((m) => m.id !== message.id)
+        // Remove the assistant message to be regenerated
+        const updatedMessages = prevChat.messages.filter((m) => m.id !== message.id)
 
-      // The last message is now a user message. We want the useEffect to re-run for it.
-      // To do that, we clear the lastHandledMessageId ref before updating the state.
-      lastHandledMessageId.current = null
+        // The last message is now a user message. We want the useEffect to re-run for it.
+        // To do that, we clear the lastHandledMessageId ref before updating the state.
+        lastHandledMessageId.current = null
 
-      const updatedChat = { ...currentChat, messages: updatedMessages }
-      setCurrentChat(updatedChat)
+        const updatedChat = { ...prevChat, messages: updatedMessages }
+        return updatedChat
+      })
     },
-    [currentChat],
+    [], // No dependencies needed, making the function stable
   )
 
   // handleSearch now only adds the user's message. The useEffect handles the response.
   const handleSearch = useCallback(
     async (query: string, title = "Аллюра", files: File[] = [], isPractice = false) => {
       if ((!query || !query.trim()) && (!files || files.length === 0)) return
-
-      const isNewChat = !currentChat || currentChat.messages.length === 0
 
       const now = Date.now()
       const userMessage: Message = {
@@ -146,6 +146,8 @@ export default function SearchPage() {
       }
 
       setCurrentChat((prevChat) => {
+        const isNewChat = !prevChat || prevChat.messages.length === 0
+
         const chatToUpdate = prevChat ?? {
           id: params.id as string,
           title: "Новый чат",
@@ -175,7 +177,7 @@ export default function SearchPage() {
         return updatedChat
       })
     },
-    [params.id, currentChat],
+    [params.id], // Dependency on currentChat is removed
   )
 
   return (
