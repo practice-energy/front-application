@@ -89,7 +89,7 @@ export const MessageItem = React.memo(
                     </Button>
                 )}
                 {/* Время снаружи справа, выровнено по низу аватарки */}
-              {!isUser &&(<span className="text-gray-500 dark:text-gray-400 text-xs ml-3 mb-1">
+              {!isUser &&(<span className="text-gray-500 dark:text-gray-400 text-xs ml-3 mb-1.5">
     {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
   </span>)}
             </div>
