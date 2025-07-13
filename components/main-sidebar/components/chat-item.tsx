@@ -94,35 +94,39 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
             </div>
 
             {/* Row 2: Description (multi-line) and New Message Indicator */}
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 mb-1">
+            <div className="flex items-start">  {/* Убрано justify-between */}
+              {/* Описание - занимает всё доступное пространство */}
+              <div className="flex-1 min-w-0 overflow-hidden">  {/* Добавлен overflow-hidden */}
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 mb-1 w-full">
                   {chat.description}
                 </p>
               </div>
-              <div className="flex-1 min-w-0 flex flex-col items-end">
-              <div className="flex ml-2 flex-shrink-0 pt-1">
-                <div className={cn(
-                "w-3 h-3  rounded-sm bg-none",
-                  hasUnread && "bg-violet-600"
-                  )}/>
-              </div>
 
-              <div className="ml-2 pt-1">
-                <button
-                  onClick={handleToggleClick}
-                  className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors"
-                >
-                  {toggleState === "mute" && <MessageSquareOff className="w-3 h-3  text-red-600" />}
-                  {toggleState === "ai" &&
-                    <img
-                        src="/allura-logo.svg"
-                        alt="AI"
-                        className="text-violet-600 flex-shrink-0 bg-none  w-3 h-3"
-                    />}
-                  {toggleState === "none" && <div className="w-3 h-3 bg-white rounded-sm" />}
-                </button>
-              </div>
+              {/* Правый блок (иконки) - не сжимает описание */}
+              <div className="flex-shrink-0 ml-2">  {/* flex-shrink-0 + ml-2 для отступа */}
+                <div className="flex flex-col items-end gap-1">  {/* Вертикальное выравнивание */}
+                  {/* Индикатор непрочитанного */}
+                  <div className={cn(
+                      "w-3 h-3 rounded-sm bg-none",
+                      hasUnread && "bg-violet-600"
+                  )} />
+
+                  {/* Кнопка */}
+                  <button
+                      onClick={handleToggleClick}
+                      className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors"
+                  >
+                    {toggleState === "mute" && <MessageSquareOff className="w-3 h-3 text-red-600" />}
+                    {toggleState === "ai" && (
+                        <img
+                            src="/allura-logo.svg"
+                            alt="AI"
+                            className="text-violet-600 flex-shrink-0 bg-none w-3 h-3"
+                        />
+                    )}
+                    {toggleState === "none" && <div className="w-3 h-3 bg-white rounded-sm" />}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
