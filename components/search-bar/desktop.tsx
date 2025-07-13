@@ -296,7 +296,7 @@ export const DesktopSearchBar = React.memo(function DesktopSearchBar({
           <div
             className={`relative border rounded-sm backdrop-blur-sm 
               p-2.5 sm:p-3.5 transition-all duration-300 flex 
-              items-center gap-2 animate-in fade-in duration-300
+              items-center gap-2 animate-in fade-in
               ${
                 isDragOver
                   ? "border-violet-400 bg-violet-50/30"
