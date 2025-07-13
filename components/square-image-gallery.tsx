@@ -161,7 +161,7 @@ export function SquareImageGallery({
                     />
 
                     {/* Image counter */}
-                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
+                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-sm text-xs">
                         {selectedIndex + 1} / {images.length}
                     </div>
 

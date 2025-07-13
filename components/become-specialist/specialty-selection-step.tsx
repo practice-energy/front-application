@@ -59,7 +59,7 @@ export function SpecialtySelectionStep({
     <div className="space-y-6">
       <div className="text-center space-y-3">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300">
-          Select Your Specialties
+
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto transition-colors duration-300">
           Choose the areas where you can help others

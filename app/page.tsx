@@ -9,7 +9,7 @@ import { mockChatData } from "@/services/mock-data"
 export default function HomePage() {
   const router = useRouter()
 
-  const handleSearch = (query: string, title = "Аллюра", files: File[] = []) => {
+  const handleSearch = (query: string, title = "Аллюра", files: File[] = [], isPractice?: boolean) => {
     const searchId = uuidv4()
 
     const userMessage: Message = {
@@ -22,33 +22,25 @@ export default function HomePage() {
 
     const newChat: Chat = {
       id: searchId,
-      title: query.substring(0, 30) || "Новый чат",
+      title: "Аллюра",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       messages: [userMessage],
       searchQueries: [query],
-      isAi: true, // Main page search starts an AI chat
-      hasNew: false,
+      isAi: false,
+      hasNew: true,
       createdAt: Date.now(),
     }
 
-    // Add to mock data
-    mockChatData.push(newChat)
-
-    // Dispatch event to update sidebar
     window.dispatchEvent(
-      new CustomEvent("addNewChatToSidebar", {
-        detail: {
-          chat: {
-            id: newChat.id,
-            title: newChat.title,
-            description: query.substring(0, 50) + (query.length > 50 ? "..." : ""),
-            timestamp: newChat.createdAt,
-            updatedAt: newChat.createdAt,
-            mode: "ai",
-            isAI: true,
+        new CustomEvent("addNewChatToSidebar", {
+          detail: {
+            chat: {
+              ...newChat,
+              description: query,
+              isPractice: isPractice,
+            },
           },
-        },
-      }),
+        }),
     )
 
     router.push(`/search/${searchId}`)

@@ -224,7 +224,6 @@ export default function BecomeSpecialistPage() {
                   (step === 1 && formData.specialties.length === 0) ||
                   (step === 2 && !formData.title.trim())
                 }
-                className="ml-auto bg-violet-600 dark:bg-violet-400"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">

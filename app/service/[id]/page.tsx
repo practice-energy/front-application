@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Clock, Share } from "lucide-react"
+import {Clock, PersonStanding, Share, SquareUserIcon, Video} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/auth-modal"
@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { ShareSpecialistModal } from "@/components/share-specialist-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
+import {Badge} from "@/components/ui/badge";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -87,7 +88,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
           detail: {
             chat: {
               ...newChat,
-              description: query.length > 30 ? query.substring(0, 30) + "..." : query,
+              description: query,
               isPractice: isPractice,
             },
           },
@@ -102,23 +103,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   return (
     <>
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="absolute top-4 right-4 z-20">
-          <Button
-            variant="outline"
-            size="sm"
-            className={cn(
-              "text-gray-600 dark:text-white",
-              "hover:bg-gray-100 dark:hover:bg-gray-700",
-              "shadow-md hover:shadow-lg",
-              "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80",
-            )}
-            onClick={() => setShareModalOpen(true)}
-          >
-            <Share className="h-4 w-4 mr-2" />
-            Поделиться
-          </Button>
-        </div>
-
         <div
           className="flex-1 bg-white dark:bg-gray-900 overflow-hidden relative pb-[144px]"
           style={{
@@ -126,9 +110,27 @@ export default function ServicePage({ params }: { params: { id: string } }) {
           }}
           data-animating={isAnimating ? "true" : "false"}
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-            {/* Back button */}
-            <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
+            <div className="flex items-center justify-between gap-4">
+              {/* Back button */}
+              <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
+
+              {/* Share button positioned absolutely in the header area */}
+              <div className="items-end">
+                <Button
+                    size="sm"
+                    className={cn(
+                        "text-gray-600 dark:text-white",
+                        "shadow-md hover:shadow-lg",
+                        "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
+                    )}
+                    onClick={() => setShareModalOpen(true)}
+                >
+                  <Share className="h-4 w-4 mr-2" />
+                  Поделиться
+                </Button>
+              </div>
+            </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
               {/* Service header below the gallery */}
@@ -151,11 +153,25 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                     <span className="text-gray-700 dark:text-gray-300">{service.duration}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center [&>svg]:h-[1em] [&>svg]:w-[1em]">
-                      <span className="text font-bold text-violet-600 dark:text-violet-400">{service.price}</span>
-                      <RubleIcon size={18} bold={true} className="text-violet-700 dark:text-violet-400" />
+                    <div className="text-lg font-bold transition-colors duration-300">
+                        {service.price}
+                      <RubleIcon size={18} bold={true} className="mb-0.5" />
                     </div>
-                    <span className="text-sm text-muted-foreground">Video</span>
+                    {service.format &&(
+                      <Badge
+                        variant="outline"
+                        className="flex items-center gap-1 bg-violet-50 text-violet-600 text-base border border-violet-600"
+                    >
+                      service.format === "video" && (<div>
+                        <Video/>
+                        <span className="text-sm">Видео</span>
+                      </div>)
+                        service.format === "in-person" && (<div>
+                        <SquareUserIcon/>
+                        <span className="text-sm">Лично</span>
+                      </div>)
+                      </Badge>
+                    )}
                   </div>
                 </div>
 

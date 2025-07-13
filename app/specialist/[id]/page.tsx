@@ -116,25 +116,25 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
           data-animating={isAnimating ? "true" : "false"}
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-            {/* Back button */}
-            <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
+            <div className="flex items-center justify-between gap-4">
+              {/* Back button */}
+              <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
 
-            {/* Share button positioned absolutely in the header area */}
-            <div className="absolute top-4 right-4 z-20">
+              {/* Share button positioned absolutely in the header area */}
+              <div className="items-end">
               <Button
-                variant="outline"
-                size="sm"
-                className={cn(
-                  "text-gray-600 dark:text-white",
-                  "hover:bg-gray-100 dark:hover:bg-gray-700",
-                  "shadow-md hover:shadow-lg",
-                  "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80",
-                )}
-                onClick={() => setShareModalOpen(true)}
+                  size="sm"
+                  className={cn(
+                      "text-gray-600 dark:text-white",
+                      "shadow-md hover:shadow-lg",
+                      "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
+                  )}
+                  onClick={() => setShareModalOpen(true)}
               >
                 <Share className="h-4 w-4 mr-2" />
                 Поделиться
               </Button>
+              </div>
             </div>
 
             {/* Instagram-style centered card - Made wider with max-w-4xl */}
@@ -156,7 +156,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                   ) : (
                     <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
                       <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No photos provided yet</p>
+                      <p>Еще нет фото</p>
                     </div>
                   )}
 
@@ -173,7 +173,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                       <div className="flex items-center">
                         {/* Review count text */}
                         <span className="text-gray-600 dark:text-gray-300 text-sm">
-                          {specialist.reviewCount} practices
+                          {specialist.reviewCount} практик
                         </span>
                       </div>
                     </div>
