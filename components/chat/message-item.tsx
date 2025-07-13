@@ -68,25 +68,31 @@ export const MessageItem = React.memo(
         }`}
       >
         <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-4xl w-full`}>
-          {!isUser && (
-            <Button
-              size="sm"
-              className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent active:bg-none"
-              onClick={handleViewSpecialistProfile}
-              aria-label={isAssistant ? "" : `View ${message.type} profile`}
-              title={isAssistant ? "Allura" :  "View profile"}
-            >
-              <Avatar className="w-16 h-16">
-                <AvatarImage
-                  src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.png"}
-                  className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter" : "hover:bg-gray-100")}
-                />
-                <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                  {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          )}
+          <div className="flex items-end">  {/* Добавляем items-end для выравнивания по нижнему краю */}
+                {!isUser && (
+                    <Button
+                        size="sm"
+                        className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent active:bg-none relative"
+                        onClick={handleViewSpecialistProfile}
+                        aria-label={isAssistant ? "" : `View ${message.type} profile`}
+                        title={isAssistant ? "Allura" : "View profile"}
+                    >
+                        <Avatar className="w-16 h-16">
+                            <AvatarImage
+                                src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.png"}
+                                className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter" : "hover:bg-gray-100")}
+                            />
+                            <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                                {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
+                            </AvatarFallback>
+                        </Avatar>
+                    </Button>
+                )}
+                {/* Время снаружи справа, выровнено по низу аватарки */}
+              {!isUser &&(<span className="text-gray-500 dark:text-gray-400 text-xs ml-3 mb-1">
+    {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+  </span>)}
+            </div>
 
           <div className="flex-1 min-w-0 w-full">
             {message.content && (
@@ -105,23 +111,29 @@ export const MessageItem = React.memo(
               </div>
             )}
 
-            {message.files && message.files.length > 0 && (
-              <div className={cn("mt-2 space-y-2 inline-flex flex-col w-min", isUser ? "items-end" : "items-start")}>
-                {message.files.map((file, index) => (
-                  <a
-                    key={index}
-                    href={URL.createObjectURL(file)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download={file.name}
-                    className="inline-flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded"
-                  >
-                    <Paperclip className="w-4 h-4 text-gray-600 dark:text-gray-300 flex-shrink-0" />
-                    <span className="text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
-                  </a>
-                ))}
-              </div>
-            )}
+              {message.files && message.files.length > 0 && (
+                  <div className={cn(
+                      "mt-2 space-y-2",
+                      isUser ? "flex flex-col items-end" : "inline-flex flex-col items-start"
+                  )}>
+                      {message.files.map((file, index) => (
+                          <a
+                              key={index}
+                              href={URL.createObjectURL(file)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download={file.name}
+                              className={cn(
+                                  "inline-flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-sm",
+                                  isUser ? "justify-end" : "justify-start"
+                              )}
+                          >
+                              <Paperclip className="w-4 h-4 text-gray-600 dark:text-gray-300 flex-shrink-0" />
+                              <span className="text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
+                          </a>
+                      ))}
+                  </div>
+              )}
 
             {message.specialists && message.specialists.length > 0 && (
               <div className="mt-3 space-y-3">
@@ -161,44 +173,44 @@ export const MessageItem = React.memo(
             </div>
           )}
 
-          <div className="flex items-center mt-3 w-full">
-            <div className="flex-1">
-              {/*<span className="text-gray-500 dark:text-gray-400 text-xs">*/}
-              {/*  {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}*/}
-              {/*</span>*/}
+           {isAssistant && !isUser && (<div className="border-t border-gray-200 dark:border-gray-700 mt-3 w-full"></div>)}
+
+            <div className="flex items-center mt-3 w-full">
+                <div className={cn(
+                    "flex gap-2 text-xs opacity-60 ml-auto", // Добавлен ml-auto для выравнивания вправо
+                    isUser ? "justify-end" : "justify-start" // Опционально: если нужно разное выравнивание для пользователя/ассистента
+                )}>
+                    {isAI && isAssistant && (
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => onRegenerate(message)}
+                            className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                            title="Regenerate response"
+                        >
+                            <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                        </motion.button>
+                    )}
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => onShare(message)}
+                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Share message"
+                    >
+                        <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCopyMessage}
+                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Copy message"
+                    >
+                        <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    </motion.button>
+                </div>
             </div>
-            <div className="flex gap-2 text-xs opacity-60 items-end">
-              {isAI && isAssistant && (
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => onRegenerate(message)}
-                  className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  title="Regenerate response"
-                >
-                  <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </motion.button>
-              )}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onShare(message)}
-                className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                title="Share message"
-              >
-                <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleCopyMessage}
-                className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                title="Copy message"
-              >
-                <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-              </motion.button>
-            </div>
-          </div>
         </div>
       </div>
     )
