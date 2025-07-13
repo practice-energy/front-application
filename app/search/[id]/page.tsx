@@ -29,14 +29,13 @@ export default function SearchPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
-  const initialResponseHandled = useRef(false)
+  const lastHandledMessageId = useRef<string | null>(null)
 
   useEffect(() => {
     const chatId = params.id as string
     const existingChat = getChatDataById(chatId)
     if (existingChat) {
       setCurrentChat(existingChat)
-      initialResponseHandled.current = existingChat.messages.length > 1
     } else {
       const newChat: Chat = {
         id: chatId,
@@ -48,20 +47,8 @@ export default function SearchPage() {
         isMuted: false,
       }
       setCurrentChat(newChat)
-      initialResponseHandled.current = true
     }
   }, [params.id])
-
-  // useEffect(() => {
-  //   if (currentChat) {
-  //     const chatId = params.id as string
-  //     window.dispatchEvent(
-  //       new CustomEvent("chatMessagesUpdated", {
-  //         detail: { chatId, messages: currentChat.messages },
-  //       }),
-  //     )
-  //   }
-  // }, [currentChat, params.id])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -71,17 +58,17 @@ export default function SearchPage() {
     scrollToBottom()
   }, [currentChat?.messages, scrollToBottom])
 
+  // This useEffect is now the single source of truth for generating assistant responses.
   useEffect(() => {
-    if (
-      currentChat &&
-      currentChat.messages.length === 1 &&
-      currentChat.messages[0].type === "user" &&
-      !initialResponseHandled.current
-    ) {
-      initialResponseHandled.current = true
-      setIsLoading(true)
+    if (!currentChat || currentChat.messages.length === 0) {
+      return
+    }
 
-      const userMessage = currentChat.messages[0]
+    const lastMessage = currentChat.messages[currentChat.messages.length - 1]
+
+    if (lastMessage.type === "user" && lastHandledMessageId.current !== lastMessage.id) {
+      lastHandledMessageId.current = lastMessage.id
+      setIsLoading(true)
 
       setTimeout(() => {
         const numSpecialists = 2
@@ -89,7 +76,7 @@ export default function SearchPage() {
         const assistantMessage: Message = {
           id: uuidv4(),
           type: "assistant",
-          content: `Вот результаты поиска по запросу "${userMessage.content}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
+          content: `Вот результаты поиска по запросу "${lastMessage.content}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
           timestamp: Date.now(),
           specialists: selectedSpecialists,
         }
@@ -128,34 +115,26 @@ export default function SearchPage() {
   const handleRegenerate = useCallback(
     async (message: Message) => {
       if (!currentChat || message.type !== "assistant") return
-      setIsLoading(true)
+
+      // Remove the assistant message to be regenerated
       const updatedMessages = currentChat.messages.filter((m) => m.id !== message.id)
+
+      // The last message is now a user message. We want the useEffect to re-run for it.
+      // To do that, we clear the lastHandledMessageId ref before updating the state.
+      lastHandledMessageId.current = null
+
       const updatedChat = { ...currentChat, messages: updatedMessages }
       setCurrentChat(updatedChat)
-
-      setTimeout(() => {
-        const numSpecialists = 2
-        const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
-        const assistantMessage: Message = {
-          id: uuidv4(),
-          type: "assistant",
-          content: `Вот обновленные результаты поиска. Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
-          timestamp: Date.now(),
-          specialists: selectedSpecialists,
-        }
-        const finalChat = addMessageToChat(updatedChat, assistantMessage)
-        finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-        setCurrentChat(finalChat)
-        setIsLoading(false)
-      }, 1500)
     },
     [currentChat],
   )
 
+  // handleSearch now only adds the user's message. The useEffect handles the response.
   const handleSearch = useCallback(
     async (query: string, title = "Аллюра", files: File[] = [], isPractice = false) => {
       if ((!query || !query.trim()) && (!files || files.length === 0)) return
-      if (!currentChat) return
+
+      const isNewChat = !currentChat || currentChat.messages.length === 0
 
       const now = Date.now()
       const userMessage: Message = {
@@ -166,45 +145,37 @@ export default function SearchPage() {
         files: files,
       }
 
-      const updatedChatWithUser = addMessageToChat(currentChat, userMessage)
-      setCurrentChat(updatedChatWithUser)
-      setIsLoading(true)
-
-      console.log("msg len ", currentChat.messages.length)
-
-      if (currentChat.messages.length === 0) {
-        window.dispatchEvent(
-          new CustomEvent("addNewChatToSidebar", {
-            detail: {
-              chat: {
-                ...updatedChatWithUser,
-                title: title,
-                description: query,
-                files: files,
-                isPractice: isPractice,
-              },
-            },
-          }),
-        )
-      }
-
-      setTimeout(() => {
-        const numSpecialists = 2
-        const selectedSpecialists = mockSavedSpecialists.slice(0, numSpecialists)
-        const assistantMessage: Message = {
-          id: uuidv4(),
-          type: "assistant",
-          content: `Вот результаты поиска по запросу "${query}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
-          timestamp: now + 1000,
-          specialists: selectedSpecialists,
+      setCurrentChat((prevChat) => {
+        const chatToUpdate = prevChat ?? {
+          id: params.id as string,
+          title: "Новый чат",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          messages: [],
+          isAI: true,
+          createdAt: Date.now(),
+          isMuted: false,
         }
-        const finalChat = addMessageToChat(updatedChatWithUser, assistantMessage)
-        finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-        setCurrentChat(finalChat)
-        setIsLoading(false)
-      }, 1500)
+        const updatedChat = addMessageToChat(chatToUpdate, userMessage)
+
+        if (isNewChat) {
+          window.dispatchEvent(
+            new CustomEvent("addNewChatToSidebar", {
+              detail: {
+                chat: {
+                  ...updatedChat,
+                  title: title,
+                  description: query,
+                  files: files,
+                  isPractice: isPractice,
+                },
+              },
+            }),
+          )
+        }
+        return updatedChat
+      })
     },
-    [currentChat],
+    [params.id, currentChat],
   )
 
   return (
@@ -225,6 +196,7 @@ export default function SearchPage() {
               ) : (
                 <MessageList
                   chat={currentChat}
+                  isLoading={isLoading}
                   highlightedMessageId={highlightedMessageId}
                   onSpecialistClick={handleSpecialistClick}
                   onServiceClick={handleServiceClick}

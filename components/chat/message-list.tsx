@@ -12,6 +12,7 @@ interface MessageListProps {
   onShare: (message: Message) => void
   onRegenerate: (message: Message) => void
   specialistId: string
+  isLoading: boolean
 }
 
 export function MessageList({
@@ -22,6 +23,7 @@ export function MessageList({
   onShare,
   onRegenerate,
   specialistId,
+  isLoading,
 }: MessageListProps) {
   const messageList = useMemo(
     () =>
@@ -46,5 +48,19 @@ export function MessageList({
     [chat, specialistId, highlightedMessageId, onSpecialistClick, onServiceClick, onShare, onRegenerate],
   )
 
-  return <>{messageList}</>
+  return (
+    <>
+      {messageList}
+      {isLoading && (
+        <div className="flex items-start gap-4 p-4 animate-pulse">
+          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+          <div className="space-y-2 flex-1">
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+          </div>
+        </div>
+      )}
+    </>
+  )
 }
