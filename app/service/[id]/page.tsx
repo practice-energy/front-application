@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import {Clock, PersonStanding, Share, SquareUserIcon, Video} from "lucide-react"
+import { Clock, Share, SquareUserIcon, Video } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/auth-modal"
@@ -18,10 +18,10 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { mockServices, findChatBySpecialistId, addMessageToChat, mockChatData } from "@/services/mock-data"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
-import { ShareSpecialistModal } from "@/components/share-specialist-modal"
+import { ShareServiceModal } from "@/components/share-service-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import {Badge} from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -51,11 +51,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
     const existingChat = findChatBySpecialistId(specialist.id)
 
     if (existingChat) {
-      const userMessage: Omit<Message, "id"> = {
+      const userMessage: Message = {
+        id: uuidv4(),
         type: "user",
         content: query,
         timestamp: Date.now(),
         files: files,
+        services: [service],
       }
       addMessageToChat(existingChat, userMessage)
       window.dispatchEvent(new CustomEvent("chatUpdated", { detail: { chatId: existingChat.id } }))
@@ -68,6 +70,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         content: query,
         timestamp: Date.now(),
         files: files,
+        services: [service],
       }
 
       const newChat: Chat = {
@@ -118,13 +121,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
               {/* Share button positioned absolutely in the header area */}
               <div className="items-end">
                 <Button
-                    size="sm"
-                    className={cn(
-                        "text-gray-600 dark:text-white",
-                        "shadow-md hover:shadow-lg",
-                        "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
-                    )}
-                    onClick={() => setShareModalOpen(true)}
+                  size="sm"
+                  className={cn(
+                    "text-gray-600 dark:text-white",
+                    "shadow-md hover:shadow-lg",
+                    "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
+                  )}
+                  onClick={() => setShareModalOpen(true)}
                 >
                   <Share className="h-4 w-4 mr-2" />
                   Поделиться
@@ -154,22 +157,26 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-lg font-bold transition-colors duration-300">
-                        {service.price}
+                      {service.price}
                       <RubleIcon size={18} bold={true} className="mb-0.5" />
                     </div>
-                    {service.format &&(
+                    {service.format && (
                       <Badge
                         variant="outline"
                         className="flex items-center gap-1 bg-violet-50 text-violet-600 text-base border border-violet-600"
-                    >
-                      service.format === "video" && (<div>
-                        <Video/>
-                        <span className="text-sm">Видео</span>
-                      </div>)
-                        service.format === "in-person" && (<div>
-                        <SquareUserIcon/>
-                        <span className="text-sm">Лично</span>
-                      </div>)
+                      >
+                        {service.format === "video" && (
+                          <>
+                            <Video className="w-4 h-4" />
+                            <span className="text-sm">Видео</span>
+                          </>
+                        )}
+                        {service.format === "in-person" && (
+                          <>
+                            <SquareUserIcon className="w-4 h-4" />
+                            <span className="text-sm">Лично</span>
+                          </>
+                        )}
                       </Badge>
                     )}
                   </div>
@@ -243,15 +250,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         />
       )}
 
-      <ShareSpecialistModal
-        isOpen={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-        specialist={{
-          id,
-          name: specialist.name,
-          title: specialist.title,
-        }}
-      />
+      <ShareServiceModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} service={service} />
     </>
   )
 }
