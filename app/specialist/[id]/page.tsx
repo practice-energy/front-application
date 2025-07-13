@@ -211,7 +211,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         </div>
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-10">
+      <div className="fixed bottom-0 left-0 right-0 z-50">
         <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
           <div className="pb-6">
             <SearchBar

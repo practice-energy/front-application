@@ -103,13 +103,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-[144px] relative">
         <div
-          className="flex-1 bg-white dark:bg-gray-900 overflow-hidden relative pb-[144px]"
-          style={{
-            transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-          }}
-          data-animating={isAnimating ? "true" : "false"}
+            className="flex-1 overflow-hidden"
+            style={{
+              transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+            }}
+            data-animating={isAnimating ? "true" : "false"}
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
             <div className="flex items-center justify-between gap-4">
@@ -133,7 +133,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
               {/* Service header below the gallery */}
               <div className="p-6 space-y-6">
                 <div className="flex flex-col gap-4">
@@ -220,7 +220,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Fixed SearchBar at the bottom of the screen with sidebar sync */}
-        <div ref={searchRef} className="fixed bottom-0 left-0 right-0 py-4">
+        <div ref={searchRef} className="fixed bottom-0 left-0 right-0">
           <div className="px-6">
             <SearchBar
               onSearch={handleSearch}
