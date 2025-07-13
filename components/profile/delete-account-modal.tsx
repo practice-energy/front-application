@@ -1,9 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { AlertTriangle, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { AlertTriangle } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
 
 interface DeleteAccountModalProps {
   isOpen: boolean
@@ -20,18 +22,34 @@ interface DeleteAccountModalProps {
 }
 
 export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps) {
-  const [password, setPassword] = useState("")
+  const [confirmText, setConfirmText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
+  const { logout } = useAuth()
+  const router = useRouter()
 
   const handleDelete = async () => {
-    if (!password.trim()) return
+    if (confirmText !== "УДАЛИТЬ") return
 
     setIsDeleting(true)
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      // Handle account deletion logic here
-      console.log("Account deleted")
+
+      // Clear all storage
+      localStorage.clear()
+      sessionStorage.clear()
+
+      // Clear cookies
+      document.cookie.split(";").forEach((c) => {
+        const eqPos = c.indexOf("=")
+        const name = eqPos > -1 ? c.substr(0, eqPos) : c
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/"
+      })
+
+      // Logout and redirect
+      logout()
+      router.push("/")
+
       onClose()
     } catch (error) {
       console.error("Failed to delete account:", error)
@@ -40,72 +58,60 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
     }
   }
 
-  const handleCancel = () => {
-    setPassword("")
-    onClose()
+  const handleClose = () => {
+    if (!isDeleting) {
+      setConfirmText("")
+      onClose()
+    }
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleCancel}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-red-600">
-            <AlertTriangle className="h-5 w-5" />
-            Confirm Account Deletion
-          </DialogTitle>
-          <DialogDescription className="text-left space-y-2">
-            <p>
-              This action cannot be undone. This will permanently delete your account and remove all your data from our
-              servers.
-            </p>
-            <p className="font-medium text-gray-900 dark:text-gray-100">You will lose access to:</p>
-            <ul className="list-disc list-inside text-sm space-y-1 ml-4">
-              <li>All your bookings and appointments</li>
-              <li>Saved specialists and preferences</li>
-              <li>Chat history and messages</li>
-              <li>Account balance and transaction history</li>
-            </ul>
-          </DialogDescription>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+              <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+            </div>
+            <div>
+              <DialogTitle className="text-left">Удалить аккаунт</DialogTitle>
+              <DialogDescription className="text-left">Это действие нельзя отменить</DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="password-confirm" className="text-sm font-medium">
-              Enter your password to confirm deletion:
+          <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4">
+            <h4 className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Что будет удалено:</h4>
+            <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+              <li>• Ваш профиль и все личные данные</li>
+              <li>• История бронирований</li>
+              <li>• Сохраненные специалисты</li>
+              <li>• Все настройки и предпочтения</li>
+            </ul>
+          </div>
+
+          <div>
+            <Label htmlFor="confirm-delete" className="text-sm font-medium">
+              Для подтверждения введите <span className="font-bold">УДАЛИТЬ</span>
             </Label>
             <Input
-              id="password-confirm"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full"
+              id="confirm-delete"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="Введите УДАЛИТЬ"
+              className="mt-2"
               disabled={isDeleting}
             />
           </div>
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={handleCancel} disabled={isDeleting}>
-            Cancel
+          <Button variant="outline" onClick={handleClose} disabled={isDeleting}>
+            Отмена
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={!password.trim() || isDeleting}
-            className="gap-2"
-          >
-            {isDeleting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                Deleting...
-              </>
-            ) : (
-              <>
-                <Trash2 className="h-4 w-4" />
-                Delete Account
-              </>
-            )}
+          <Button variant="destructive" onClick={handleDelete} disabled={confirmText !== "УДАЛИТЬ" || isDeleting}>
+            {isDeleting ? "Удаление..." : "Удалить аккаунт"}
           </Button>
         </DialogFooter>
       </DialogContent>

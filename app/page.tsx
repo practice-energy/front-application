@@ -1,34 +1,81 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { SearchBar } from "@/components/search-bar"
-import { Footer } from "@/components/footer"
+import { SearchBar } from "@/components/search-bar/index"
 import Image from "next/image"
+import { v4 as uuidv4 } from "uuid"
+import type { Chat, Message } from "@/types/chats"
+import { mockChatData } from "@/services/mock-data"
 
 export default function HomePage() {
   const router = useRouter()
 
-  const handleSearch = (query: string, category?: string) => {
-    const searchId = Date.now().toString()
-    router.push(`/search/${searchId}?q=${encodeURIComponent(query)}${category ? `&category=${category}` : ""}`)
+  const handleSearch = (query: string, title = "Аллюра", files: File[] = []) => {
+    const searchId = uuidv4()
+
+    const userMessage: Message = {
+      id: uuidv4(),
+      type: "user",
+      content: query,
+      timestamp: Date.now(),
+      files: files,
+    }
+
+    const newChat: Chat = {
+      id: searchId,
+      title: query.substring(0, 30) || "Новый чат",
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      messages: [userMessage],
+      searchQueries: [query],
+      isAi: true, // Main page search starts an AI chat
+      hasNew: false,
+      createdAt: Date.now(),
+    }
+
+    // Add to mock data
+    mockChatData.push(newChat)
+
+    // Dispatch event to update sidebar
+    window.dispatchEvent(
+      new CustomEvent("addNewChatToSidebar", {
+        detail: {
+          chat: {
+            id: newChat.id,
+            title: newChat.title,
+            description: query.substring(0, 50) + (query.length > 50 ? "..." : ""),
+            timestamp: newChat.createdAt,
+            updatedAt: newChat.createdAt,
+            mode: "ai",
+            isAI: true,
+          },
+        },
+      }),
+    )
+
+    router.push(`/search/${searchId}`)
   }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 flex flex-col">
-      {/* Content Area */}
-      <main className="flex-grow pb-8 sm:pb-[18px] lg:pb-[20px]">
-        {/* Logo Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow relative flex flex-col justify-end pb-80">
+        {/* Общий контейнер для логотипа и поиска */}
+        <div className="relative px-4 sm:px-6 lg:px-8">
+          {/* Увеличенный логотип с отступом снизу */}
           <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-16">
-              <Image src="/practice-logo.svg" alt="Practice Logo" width={120} height={120} className="mx-auto mb-6" priority />
-            </div>
+            <Image
+              src="/practice-logo.svg"
+              alt="Practice Logo"
+              width={180} // Увеличено с 120 до 180
+              height={180} // Увеличено с 120 до 180
+              className="mx-auto"
+              priority
+            />
           </div>
-        </section>
 
-        {/* Search Bar Section */}
-        <section className="px-4 sm:px-6 lg:px-8">
-          <SearchBar onSearch={handleSearch} showHeading={false} />
-        </section>
+          {/* Контейнер для поиска - теперь ниже логотипа */}
+          <div className="max-w-4xl mx-auto mb-24">
+            <SearchBar onSearch={handleSearch} showHeading={true} chatTitle="Аллюра" />
+          </div>
+        </div>
       </main>
     </div>
   )

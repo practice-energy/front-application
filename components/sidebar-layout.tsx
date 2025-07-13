@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useAuth } from "@/hooks/use-auth"
-import { Header } from "@/components/header"
-import { MainSidebar } from "@/components/main-sidebar"
+import { Header } from "@/components/header/index"
+import { MainSidebar } from "@/components/main-sidebar/index"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { useEffect } from "react"
 
@@ -22,13 +22,14 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       // Используем custom event для уведомления компонентов о изменении состояния сайдбара
       window.dispatchEvent(
         new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 320 }
-        })
+          detail: { isCollapsed, width: isCollapsed ? 0 : 384 },
+        }),
       )
 
       // Отложенная установка стилей для лучшей синхронизации рендеринга
       const applyStyles = () => {
-        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? "320px" : "0"
+        const sidebarWidth = window.innerWidth < 768 ? "0" : "384px"
+        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
         document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }
 
