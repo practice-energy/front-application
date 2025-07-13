@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface SquareImageGalleryProps {
-    images: File[]
+    images: string[]
     alt: string
     ratioWidth: number
     ratioHeight: number
@@ -117,7 +117,7 @@ export function SquareImageGallery({
                     }}
                 >
                     <img
-                        src={URL.createObjectURL(images[0]) || "/placeholder.svg"}
+                        src={images[0] || "/placeholder.svg"}
                         alt={alt}
                         className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
                         onClick={() => onImageClick?.(0)}
@@ -153,7 +153,7 @@ export function SquareImageGallery({
             >
                 <div className="relative w-full h-full" style={{ borderRadius: `${borderRadius}px`}}>
                     <img
-                        src={URL.createObjectURL(images[selectedIndex]) || "/placeholder.svg"}
+                        src={images[selectedIndex] || "/placeholder.svg"}
                         alt={`${alt} - Image ${selectedIndex + 1}`}
                         className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
                         onClick={() => onImageClick?.(selectedIndex)}
@@ -161,7 +161,7 @@ export function SquareImageGallery({
                     />
 
                     {/* Image counter */}
-                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
+                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-sm text-xs">
                         {selectedIndex + 1} / {images.length}
                     </div>
 

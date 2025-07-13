@@ -99,7 +99,7 @@ export function AboutSection({
 
               {/* Fade overlay when collapsed */}
               {shouldShowToggle && !showFullDescription && (
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
               )}
             </div>
 

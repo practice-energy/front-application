@@ -4,7 +4,6 @@ import type { Booking } from "@/types/booking"
 export const mockBookings: Booking[] = [
   {
     id: "1",
-    serviceId: "service-1",
     specialist: {
       id: "spec-1",
       name: "Dr. Sarah Johnson",
@@ -23,7 +22,6 @@ export const mockBookings: Booking[] = [
   },
   {
     id: "2",
-    serviceId: "service-2",
     specialist: {
       id: "spec-2",
       name: "Dr. Michael Chen",
@@ -42,7 +40,6 @@ export const mockBookings: Booking[] = [
   },
   {
     id: "3",
-    serviceId: "service-3",
     specialist: {
       id: "spec-3",
       name: "Dr. Emily Rodriguez",
@@ -61,7 +58,6 @@ export const mockBookings: Booking[] = [
   },
   {
     id: "4",
-    serviceId: "service-4",
     specialist: {
       id: "spec-4",
       name: "Dr. James Wilson",
@@ -80,7 +76,6 @@ export const mockBookings: Booking[] = [
   },
   {
     id: "5",
-    serviceId: "service-5",
     specialist: {
       id: "spec-5",
       name: "Dr. Lisa Thompson",

@@ -1,6 +1,10 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { ProfileSection, User, ProfileStats, SavedSpecialist, CalendarEvent, SortOption } from "@/types/profile"
+import type { ProfileSection } from "@/types/profile"
+import { User } from "@/types/user"
+import { ProfileStats } from "@/types/profile-stats"
+import {Specialist} from "@/types/common";
+import {CalendarEvent} from "@/types/calendar-event";
 
 interface ProfileState {
   // UI State
@@ -11,11 +15,10 @@ interface ProfileState {
   // User Data
   user: User | null
   stats: ProfileStats | null
-  savedSpecialists: SavedSpecialist[]
+  savedSpecialists: Specialist[]
   calendarEvents: CalendarEvent[]
 
   // UI Controls
-  sortOption: SortOption
   isLoading: boolean
 
   // Actions
@@ -24,9 +27,8 @@ interface ProfileState {
   setIsMobile: (mobile: boolean) => void
   setUser: (user: User) => void
   setStats: (stats: ProfileStats) => void
-  setSavedSpecialists: (specialists: SavedSpecialist[]) => void
+  setSavedSpecialists: (specialists: Specialist[]) => void
   setCalendarEvents: (events: CalendarEvent[]) => void
-  setSortOption: (option: SortOption) => void
   setLoading: (loading: boolean) => void
 
   // Data Actions
@@ -47,7 +49,6 @@ export const useProfileStore = create<ProfileState>()(
       stats: null,
       savedSpecialists: [],
       calendarEvents: [],
-      sortOption: "recent",
       isLoading: false,
 
       // Actions
@@ -58,7 +59,6 @@ export const useProfileStore = create<ProfileState>()(
       setStats: (stats) => set({ stats }),
       setSavedSpecialists: (specialists) => set({ savedSpecialists: specialists }),
       setCalendarEvents: (events) => set({ calendarEvents: events }),
-      setSortOption: (option) => set({ sortOption: option }),
       setLoading: (loading) => set({ isLoading: loading }),
 
       // Data Actions
@@ -87,7 +87,6 @@ export const useProfileStore = create<ProfileState>()(
       partialize: (state) => ({
         activeSection: state.activeSection,
         sidebarCollapsed: state.sidebarCollapsed,
-        sortOption: state.sortOption,
       }),
     },
   ),

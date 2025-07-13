@@ -118,7 +118,7 @@ export function ProfilePhotoModal({ isOpen, onClose }: ProfilePhotoModalProps) {
           {/* Current/Preview Photo */}
           <div className="flex justify-center">
             <Avatar className="h-32 w-32">
-              <AvatarImage src={selectedImage || user?.photo_url || "/placeholder.svg"} />
+              <AvatarImage src={selectedImage || user?.images[0] || "/placeholder.svg"} />
               <AvatarFallback className="text-2xl">
                 {user?.first_name?.[0]}
                 {user?.last_name?.[0]}
