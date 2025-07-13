@@ -104,7 +104,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
 
               {/* Правый блок (иконки) - не сжимает описание */}
               <div className="flex-shrink-0 ml-2">  {/* flex-shrink-0 + ml-2 для отступа */}
-                <div className="flex flex-col items-end gap-1">  {/* Вертикальное выравнивание */}
+                <div className="flex flex-col items-end gap-1 py-1.5">  {/* Вертикальное выравнивание */}
                   {/* Индикатор непрочитанного */}
                   <div className={cn(
                       "w-3 h-3 rounded-sm bg-none",
@@ -114,7 +114,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                   {/* Кнопка */}
                   <button
                       onClick={handleToggleClick}
-                      className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors"
+                      className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors mt-1.5"
                   >
                     {toggleState === "mute" && <MessageSquareOff className="w-3 h-3 text-red-600" />}
                     {toggleState === "ai" && (
