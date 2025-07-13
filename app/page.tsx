@@ -29,6 +29,7 @@ export default function HomePage() {
       createdAt: Date.now(),
       isMuted: false,
       description: query,
+      footerContent: ""
     }
 
     window.dispatchEvent(
