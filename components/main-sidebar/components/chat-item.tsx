@@ -124,7 +124,9 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                             className="text-violet-600 flex-shrink-0 bg-none w-3 h-3"
                         />
                     )}
-                    {toggleState === "none" && <div className="w-3 h-3 bg-white rounded-sm" />}
+                    {/*{toggleState === "none" && */}
+                        <div className="w-3 h-3 bg-none rounded-sm" />
+                  {/*}*/}
                   </button>
                 </div>
               </div>

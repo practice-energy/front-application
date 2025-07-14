@@ -296,7 +296,7 @@ export const DesktopSearchBar = React.memo(function DesktopSearchBar({
                     alt="Alura Logo"
                     width={20}
                     height={20}
-                    className="w-5 h-5 mb-1.5"
+                    className="w-4 h-4 mb-1.5"
                     priority
                   />
                 </div>
