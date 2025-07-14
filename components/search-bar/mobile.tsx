@@ -29,69 +29,10 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   const [isDragOver, setIsDragOver] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [isPractice, setIsPractice] = useState(false)
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-  const [viewportHeight, setViewportHeight] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  // Detect mobile devices and initialize viewport
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
-    
-    const handleResize = () => {
-      const visualViewport = window.visualViewport
-      const currentHeight = visualViewport?.height || window.innerHeight
-      const screenHeight = window.screen.height
-      
-      setViewportHeight(currentHeight)
-      
-      // Calculate keyboard height more reliably
-      const calculatedKeyboardHeight = Math.max(0, screenHeight - currentHeight)
-      setKeyboardHeight(calculatedKeyboardHeight)
-      setIsKeyboardVisible(calculatedKeyboardHeight > 100)
-    }
-
-    // Initial setup with delay to ensure values are correct
-    const timer = setTimeout(handleResize, 100)
-
-    // Listen for viewport changes
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize)
-    } else {
-      window.addEventListener('resize', handleResize)
-    }
-
-    // iOS specific handling
-    const handleFocusIn = () => {
-      setTimeout(handleResize, 300)
-    }
-
-    const handleFocusOut = () => {
-      setTimeout(() => {
-        setIsKeyboardVisible(false)
-        setKeyboardHeight(0)
-        handleResize()
-      }, 300)
-    }
-
-    document.addEventListener('focusin', handleFocusIn)
-    document.addEventListener('focusout', handleFocusOut)
-
-    return () => {
-      clearTimeout(timer)
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize)
-      } else {
-        window.removeEventListener('resize', handleResize)
-      }
-      document.removeEventListener('focusin', handleFocusIn)
-      document.removeEventListener('focusout', handleFocusOut)
-    }
-  }, [])
 
   // Auto-resize textarea
   useEffect(() => {
@@ -238,50 +179,42 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
       <div
         ref={containerRef}
         className={cn(
-          "fixed left-0 right-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out",
-          isKeyboardVisible ? "shadow-lg" : "shadow-sm",
+          "fixed left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out shadow-sm",
         )}
-        style={{
-          bottom: isMobile && !isKeyboardVisible ? "0" : "auto",
-          top: isMobile && isKeyboardVisible ? `${viewportHeight}px` : "auto",
-          transform: isKeyboardVisible ? `translateY(-${keyboardHeight}px)` : "none",
-        }}
       >
         {/* Action buttons */}
-        {isKeyboardVisible && (
-          <div className="px-4 py-2">
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                size="sm"
-                onClick={openFileDialog}
-                className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
-              >
-                <Paperclip className="w-4 h-4" />
-              </Button>
+        <div className="px-4 py-2">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              onClick={openFileDialog}
+              className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+            >
+              <Paperclip className="w-4 h-4" />
+            </Button>
 
-              <Button
-                type="button"
-                size="sm"
-                onClick={togglePractice}
-                className={`px-3 py-2 h-9 font-medium ${
-                  isPractice
-                    ? "bg-violet-600 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                }`}
-              >
-                <Image
-                  src="/practice-logo.svg"
-                  alt="Settings"
-                  width={14}
-                  height={14}
-                  className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-                />
-                <span>Практис</span>
-              </Button>
-            </div>
+            <Button
+              type="button"
+              size="sm"
+              onClick={togglePractice}
+              className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                isPractice
+                  ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                  : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+              }`}
+            >
+              <Image
+                src="/practice-logo.svg"
+                alt="Settings"
+                width={14}
+                height={14}
+                className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+              />
+              <span>Практис</span>
+            </Button>
           </div>
-        )}
+        </div>
 
         {/* File uploads display */}
         {uploadedFiles.length > 0 && (
@@ -294,10 +227,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                 >
                   <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300" />
                   <span className="truncate max-w-24">{file.name}</span>
-                  <button
-                    onClick={() => removeFile(index)}
-                    className="text-gray-500 hover:text-red-500"
-                  >
+                  <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-500">
                     <X className="w-3 h-3" />
                   </button>
                 </div>
@@ -376,15 +306,14 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
               </div>
             </div>
 
-            {!isKeyboardVisible && (
-              <Button
-                onClick={handleNewChat}
-                variant="outline"
-                className="h-14 w-14 rounded-sm bg-transparent"
-              >
-                <MessageSquarePlus className="w-full h-full" />
-              </Button>
-            )}
+            {/* New Chat Button */}
+            <Button
+              onClick={handleNewChat}
+              variant="outline"
+              className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
+            >
+              <MessageSquarePlus className="w-full h-full" />
+            </Button>
           </div>
         </div>
 
@@ -398,8 +327,8 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         />
       </div>
 
-      {/* Safe area spacer */}
-      {!isKeyboardVisible && <div className="h-20" />}
+      {/* Safe area spacer to prevent content overlap */}
+      <div className="h-20" />
     </>
   )
 })
