@@ -36,7 +36,7 @@ export function SectionHeader({
           iconStyle,
       )}/>
       <span className="text-xs font-medium uppercase tracking-wider px-1.5">
-        {title} ({count})
+        {title}
       </span>
       <ChevronDown
         className={cn(

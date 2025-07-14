@@ -94,26 +94,6 @@ export const DesktopSearchBar = React.memo(function DesktopSearchBar({
       }, ANIMATION_DURATION)
     }
 
-    const observeSidebar = () => {
-      const sidebar = document.querySelector("[data-sidebar]") as HTMLElement
-      if (!sidebar) return
-
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect()
-      }
-
-      resizeObserverRef.current = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const width = entry.contentRect.width
-          setSidebarWidth(width)
-        }
-      })
-
-      resizeObserverRef.current.observe(sidebar)
-      setSidebarWidth(sidebar.offsetWidth)
-    }
-
-    observeSidebar()
     window.addEventListener("sidebarToggle", handleSidebarToggle as EventListener)
 
     return () => {
@@ -267,8 +247,8 @@ export const DesktopSearchBar = React.memo(function DesktopSearchBar({
   return (
     <div
       ref={containerRef}
-      className="px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 z-50"
-      style={dynamicStyles}
+      className="px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 z-100"
+      // style={dynamicStyles}
       data-animating={isAnimating ? "true" : "false"}
     >
       <div className="max-w-4xl mx-auto">

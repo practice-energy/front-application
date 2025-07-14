@@ -139,12 +139,9 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
             {/* Instagram-style centered card - Made wider with max-w-4xl */}
             <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
-              {/* Specialist header with improved photo gallery layout */}
-              <div className="p-6 space-y-6">
-                <div className="flex flex-col gap-4">
-                  {/* Photo Gallery - Using the updated component */}
-                  {specialist.images.length > 0 ? (
-                    <SquareImageGallery
+              {/* Photo Gallery - Using the updated component */}
+              {specialist.images.length > 0 ? (
+                  <SquareImageGallery
                       images={specialist.images}
                       alt="Profile photos"
                       ratioWidth={4}
@@ -152,14 +149,17 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                       orientation="vertical"
                       thumbnailsPerView={5}
                       borderRadius={8}
-                    />
-                  ) : (
-                    <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
-                      <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>Еще нет фото</p>
-                    </div>
-                  )}
+                  />
+              ) : (
+                  <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
+                    <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Еще нет фото</p>
+                  </div>
+              )}
 
+              {/* Specialist header with improved photo gallery layout */}
+              <div className="p-6 space-y-6">
+                <div className="flex flex-col gap-4">
                   <div className="text-left">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{specialist.name}</h1>
                     <h2 className="text-lg text-gray-700 dark:text-gray-300 mb-3">{specialist.title}</h2>
