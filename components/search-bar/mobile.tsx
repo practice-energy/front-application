@@ -318,7 +318,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
           </div>
         </div>
 
-        {isFocused && ()}
         <input
           ref={fileInputRef}
           type="file"
