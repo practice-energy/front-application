@@ -182,40 +182,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
           "fixed left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out shadow-sm",
         )}
       >
-        {/* Action buttons */}
-        {isFocused && (<div className="px-4 py-2">
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              size="sm"
-              onClick={openFileDialog}
-              className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
-            >
-              <Paperclip className="w-4 h-4" />
-            </Button>
-
-            <Button
-              type="button"
-              size="sm"
-              onClick={togglePractice}
-              className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
-                isPractice
-                  ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                  : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
-              }`}
-            >
-              <Image
-                src="/practice-logo.svg"
-                alt="Settings"
-                width={14}
-                height={14}
-                className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-              />
-              <span>Практис</span>
-            </Button>
-          </div>
-        </div>)}
-
         {/* File uploads display */}
         {uploadedFiles.length > 0 && (
           <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
@@ -281,17 +247,53 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                         }}
                       />
                     </div>
-                    <Button
-                      type="submit"
-                      disabled={!canSubmit}
-                      className={`h-8 w-8 p-0 ${
-                        canSubmit
-                          ? "bg-violet-600 hover:bg-violet-700 text-white"
-                          : "bg-violet-200 dark:bg-violet-700 cursor-not-allowed"
-                      }`}
-                    >
-                      <ArrowUp className="w-4 h-4" />
-                    </Button>
+
+                    <div className="flex items-center justify-between mt-1">
+                      {/* Action buttons */}
+                      {isFocused && (<div className="px-4 py-2">
+                        <div className="flex items-center gap-2">
+                          <Button
+                              type="button"
+                              size="sm"
+                              onClick={openFileDialog}
+                              className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+                          >
+                            <Paperclip className="w-4 h-4" />
+                          </Button>
+
+                          <Button
+                              type="button"
+                              size="sm"
+                              onClick={togglePractice}
+                              className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                                  isPractice
+                                      ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                                      : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                              }`}
+                          >
+                            <Image
+                                src="/practice-logo.svg"
+                                alt="Settings"
+                                width={14}
+                                height={14}
+                                className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                            />
+                            <span>Практис</span>
+                          </Button>
+                        </div>
+                      </div>)}
+                      <Button
+                          type="submit"
+                          disabled={!canSubmit}
+                          className={`h-8 w-8 p-0 ${
+                              canSubmit
+                                  ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                  : "bg-violet-200 dark:bg-violet-700 cursor-not-allowed"
+                          }`}
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </form>
 
@@ -307,13 +309,13 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
             </div>
 
             {/* New Chat Button */}
-            {isFocused && (
+            {!isFocused && (
             <Button
                 onClick={handleNewChat}
                 variant="outline"
-                className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
+                className="h-14 w-14 mt-0.5 rounded-sm flex-shrink-0 bg-transparent border-gray-200"
             >
-              <MessageSquarePlus className="w-full h-full" />
+              <MessageSquarePlus className="w-14 h-14" />
             </Button>)}
           </div>
         </div>
