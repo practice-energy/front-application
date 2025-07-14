@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
   Search,
@@ -9,7 +9,10 @@ import {
   Activity,
   LucideArchive,
   SparklesIcon,
-  CalendarDays
+  CalendarDays,
+  User,
+  Heart,
+  Crown,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,8 +28,7 @@ import { SectionHeader } from "./components/section-header"
 import { SectionContent } from "./components/section-content"
 import { ChatItem } from "./components/chat-item"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
-import {Card} from "@/components/ui/card";
-import {useProfileStore} from "@/stores/profile-store";
+import { useProfileStore } from "@/stores/profile-store"
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -97,9 +99,41 @@ export function MainSidebar() {
     }
 
     if (user?.hat === "adept") {
-      setUser({...user, hat: "master"})
+      setUser({ ...user, hat: "master" })
     } else {
-      setUser({...user, hat: "adept"})
+      setUser({ ...user, hat: "adept" })
+    }
+  }
+
+  const handleProfileClick = () => {
+    router.push("/profile")
+    if (isMobile) {
+      toggleSidebar()
+    }
+  }
+
+  const handleCalendarClick = () => {
+    router.push("/profile?section=calendar")
+    if (isMobile) {
+      toggleSidebar()
+    }
+  }
+
+  const handleSavedClick = () => {
+    router.push("/profile?section=saved")
+    if (isMobile) {
+      toggleSidebar()
+    }
+  }
+
+  const handleSpecialistClick = () => {
+    if (!user?.isSpecialist) {
+      router.push("/become-specialist")
+    } else {
+      setHat()
+    }
+    if (isMobile) {
+      toggleSidebar()
     }
   }
 
@@ -107,6 +141,11 @@ export function MainSidebar() {
   const isSpecialist = user?.isSpecialist || false
   const newChatLabel = isSpecialist ? "Новый клиент" : "Новый чат"
   const hat = user?.hat || "adept"
+
+  const getSpecialistButtonText = () => {
+    if (!isSpecialist) return "Стать мастером"
+    return hat === "adept" ? "Мастер" : "Инициант"
+  }
 
   return (
     <div
@@ -119,79 +158,105 @@ export function MainSidebar() {
       className={cn(
         "fixed left-0 top-0 h-full w-full md:w-96 border-gray-300 flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
-          isMobile ? "bg-white" : "bg-gray-50"
+        isMobile ? "bg-white" : "bg-gray-50",
       )}
     >
-      {isMobile ? (<>
-        <div className="relative py-3 space-y-3 mt-3 gap-3">
-          <div className="flex flex-row items-center w-full px-3 pl-6 gap-4.5">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
-              <Input
+      {isMobile ? (
+        <>
+          <div className="relative py-3 space-y-3 mt-3 gap-3">
+            <div className="flex flex-row items-center w-full px-3 pl-6 gap-4.5">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
+                <Input
                   placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
-              />
+                />
+              </div>
+              <button onClick={toggleSidebar} className="rounded-sm pl-3">
+                <PanelRightOpen width={24} height={24} />
+                <span className="sr-only">Закрыть сайдбар</span>
+              </button>
             </div>
-            <button
-                onClick={toggleSidebar}
-                className="rounded-sm pl-3"
-            >
-              <PanelRightOpen width={24} height={24} />
-              <span className="sr-only">Закрыть сайдбар</span>
-            </button>
-          </div>
-          <div className="flex flex-row items-center w-full px-6 gap-3">
-            {/*Make buttons here*/}
-          </div>
-        </div>
-      </>) : (<>
-        <div className="relative p-3 space-y-3">
-          <div className="flex items-center justify-end">
-            <button
-                onClick={toggleSidebar}
-                className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3"
-            >
-              <PanelRightOpen width={24} height={24} />
-              <span className="sr-only">Закрыть сайдбар</span>
-            </button>
-          </div>
+            <div className="flex flex-row items-center w-full px-6 gap-3">
+              <button
+                onClick={handleProfileClick}
+                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <User className="w-6 h-6 mb-1" />
+                <span className="text-xs">Профиль</span>
+              </button>
 
-          <Button
+              <button
+                onClick={handleCalendarClick}
+                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <CalendarDays className="w-6 h-6 mb-1" />
+                <span className="text-xs">Календарь</span>
+              </button>
+
+              <button
+                onClick={handleSavedClick}
+                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Heart className="w-6 h-6 mb-1" />
+                <span className="text-xs">Избранное</span>
+              </button>
+
+              <button
+                onClick={handleSpecialistClick}
+                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Crown className="w-6 h-6 mb-1" />
+                <span className="text-xs text-center leading-tight">{getSpecialistButtonText()}</span>
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="relative p-3 space-y-3">
+            <div className="flex items-center justify-end">
+              <button onClick={toggleSidebar} className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3">
+                <PanelRightOpen width={24} height={24} />
+                <span className="sr-only">Закрыть сайдбар</span>
+              </button>
+            </div>
+
+            <Button
               onClick={handleNewSearch}
               variant="ghost"
               className="w-full justify-between hover:bg-violet-100 h-10 rounded-sm"
-          >
-            <div className="flex items-center">
-              <MessageSquare className="w-4 h-4 mr-3" />
-              <span className="text-sm">{newChatLabel}</span>
-            </div>
-            <Plus className="w-4 h-4" />
-          </Button>
+            >
+              <div className="flex items-center">
+                <MessageSquare className="w-4 h-4 mr-3" />
+                <span className="text-sm">{newChatLabel}</span>
+              </div>
+              <Plus className="w-4 h-4" />
+            </Button>
 
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
-            <Input
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
+              <Input
                 placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
-            />
+              />
+            </div>
           </div>
-        </div>
-      </>)}
+        </>
+      )}
 
       {/* Область скролла - общая для всех устройств */}
-      <ScrollArea className={cn(
-          "flex-1 h-[calc(100%-180px)] relative",
-      )}
-      >
+      <ScrollArea className={cn("flex-1 h-[calc(100%-180px)] relative")}>
         {/* Исчезающий градиент сверху */}
-        <div className={cn(
+        <div
+          className={cn(
             "sticky top-0 left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
-            isMobile ? "from-white via-white/80 to-transparent" : "from-gray-50 via-gray-50/80 to-transparent"
-        )}
+            isMobile ? "from-white via-white/80 to-transparent" : "from-gray-50 via-gray-50/80 to-transparent",
+          )}
         />
 
         <div>
@@ -211,13 +276,13 @@ export function MainSidebar() {
                   {searchResults.length > 0 ? (
                     searchResults.map((chat) => (
                       <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
+                        key={chat.id}
+                        chat={chat}
+                        onChatClick={handleChatClick}
+                        isActiveChat={isActiveChat}
+                        hasNewMessages={hasNewMessages}
+                        isCollapsed={isCollapsed}
+                        isMobile={isMobile}
                       />
                     ))
                   ) : (
@@ -327,12 +392,9 @@ export function MainSidebar() {
         <div className="h-12" />
 
         <div className="p-3">
-          <Button
-              variant="outline"
-              className="w-full hover:bg-violet-100 rounded-sm px-6 h-12"
-          >
+          <Button variant="outline" className="w-full hover:bg-violet-100 rounded-sm px-6 h-12 bg-transparent">
             <div className="items-center flex flex-row gap-3">
-              <SparklesIcon/>
+              <SparklesIcon />
               <p className="text-base font-medium text-center w-full">Позолоти ручку</p>
             </div>
           </Button>
