@@ -24,7 +24,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
     const { t } = useTranslations()
     const router = useRouter()
     const [message, setMessage] = useState("")
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [isDragOver, setIsDragOver] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
