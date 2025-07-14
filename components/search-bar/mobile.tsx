@@ -32,47 +32,42 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   const [keyboardHeight, setKeyboardHeight] = useState(0)
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const [viewportHeight, setViewportHeight] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Detect keyboard visibility and handle viewport changes
+  // Detect mobile devices and initialize viewport
   useEffect(() => {
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
+    
     const handleResize = () => {
-      if (window.visualViewport) {
-        const currentHeight = window.visualViewport.height
-        const fullHeight = window.screen.height
-        const calculatedKeyboardHeight = fullHeight - currentHeight
-
-        setViewportHeight(currentHeight)
-        setKeyboardHeight(calculatedKeyboardHeight)
-        setIsKeyboardVisible(calculatedKeyboardHeight > 100) // Threshold for keyboard detection
-      } else {
-        // Fallback for browsers without visualViewport support
-        const currentHeight = window.innerHeight
-        const initialHeight = window.screen.height
-        const calculatedKeyboardHeight = Math.max(0, initialHeight - currentHeight)
-
-        setViewportHeight(currentHeight)
-        setKeyboardHeight(calculatedKeyboardHeight)
-        setIsKeyboardVisible(calculatedKeyboardHeight > 100)
-      }
+      const visualViewport = window.visualViewport
+      const currentHeight = visualViewport?.height || window.innerHeight
+      const screenHeight = window.screen.height
+      
+      setViewportHeight(currentHeight)
+      
+      // Calculate keyboard height more reliably
+      const calculatedKeyboardHeight = Math.max(0, screenHeight - currentHeight)
+      setKeyboardHeight(calculatedKeyboardHeight)
+      setIsKeyboardVisible(calculatedKeyboardHeight > 100)
     }
 
-    // Initial setup
-    handleResize()
+    // Initial setup with delay to ensure values are correct
+    const timer = setTimeout(handleResize, 100)
 
     // Listen for viewport changes
     if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize)
+      window.visualViewport.addEventListener('resize', handleResize)
     } else {
-      window.addEventListener("resize", handleResize)
+      window.addEventListener('resize', handleResize)
     }
 
     // iOS specific handling
     const handleFocusIn = () => {
-      setTimeout(handleResize, 300) // Delay to ensure keyboard is fully shown
+      setTimeout(handleResize, 300)
     }
 
     const handleFocusOut = () => {
@@ -83,17 +78,18 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
       }, 300)
     }
 
-    document.addEventListener("focusin", handleFocusIn)
-    document.addEventListener("focusout", handleFocusOut)
+    document.addEventListener('focusin', handleFocusIn)
+    document.addEventListener('focusout', handleFocusOut)
 
     return () => {
+      clearTimeout(timer)
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize)
+        window.visualViewport.removeEventListener('resize', handleResize)
       } else {
-        window.removeEventListener("resize", handleResize)
+        window.removeEventListener('resize', handleResize)
       }
-      document.removeEventListener("focusin", handleFocusIn)
-      document.removeEventListener("focusout", handleFocusOut)
+      document.removeEventListener('focusin', handleFocusIn)
+      document.removeEventListener('focusout', handleFocusOut)
     }
   }, [])
 
@@ -104,19 +100,12 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
 
     const adjustHeight = () => {
       textarea.style.height = "auto"
-
       const lineHeight = 24
       const maxLines = 5
       const maxHeight = lineHeight * maxLines
-
       const newHeight = Math.min(textarea.scrollHeight, maxHeight)
       textarea.style.height = `${newHeight}px`
-
-      if (textarea.scrollHeight > maxHeight) {
-        textarea.style.overflowY = "auto"
-      } else {
-        textarea.style.overflowY = "hidden"
-      }
+      textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden"
     }
 
     adjustHeight()
@@ -124,7 +113,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
 
   const handleFileSelect = useCallback((files: FileList | null) => {
     if (!files) return
-
     const newFiles = Array.from(files).slice(0, 5)
     setUploadedFiles((prev) => [...prev, ...newFiles].slice(0, 5))
   }, [])
@@ -172,7 +160,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         setIsPractice(false)
       } else {
         const searchId = uuidv4()
-
         window.dispatchEvent(
           new CustomEvent("newChatCreated", {
             detail: {
@@ -183,21 +170,14 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
             },
           }),
         )
-
-        const queryParams = new URLSearchParams({
-          q: trimmedMessage,
-          ...(selectedCategory && { category: selectedCategory }),
-        }).toString()
-
-        router.push(`/search/${searchId}?${queryParams}`)
+        router.push(`/search/${searchId}?q=${encodeURIComponent(trimmedMessage)}`)
       }
     },
-    [message, selectedCategory, uploadedFiles, onSearch, router, chatTitle, isPractice],
+    [message, uploadedFiles, onSearch, router, chatTitle, isPractice],
   )
 
   const handleNewChat = useCallback(() => {
     const searchId = uuidv4()
-
     window.dispatchEvent(
       new CustomEvent("newChatCreated", {
         detail: {
@@ -208,24 +188,20 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         },
       }),
     )
-
     router.push(`/search/${searchId}`)
   }, [router, chatTitle])
 
   const preventEmoji = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const emojiRegex =
       /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u
-
     if (emojiRegex.test(e.key)) {
       e.preventDefault()
-      return false
     }
   }, [])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       preventEmoji(e)
-
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault()
         handleSubmit(e)
@@ -266,33 +242,32 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
           isKeyboardVisible ? "shadow-lg" : "shadow-sm",
         )}
         style={{
-          bottom: "0px",
-          transform: isKeyboardVisible ? `translateY(-${keyboardHeight}px)` : "translateY(0px)",
+          bottom: isMobile && !isKeyboardVisible ? "0" : "auto",
+          top: isMobile && isKeyboardVisible ? `${viewportHeight}px` : "auto",
+          transform: isKeyboardVisible ? `translateY(-${keyboardHeight}px)` : "none",
         }}
       >
-        {/* Action buttons - only visible when keyboard is open */}
+        {/* Action buttons */}
         {isKeyboardVisible && (
           <div className="px-4 py-2">
             <div className="flex items-center gap-2">
-              {/* File Upload Button */}
               <Button
                 type="button"
                 size="sm"
                 onClick={openFileDialog}
-                className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+                className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
               >
                 <Paperclip className="w-4 h-4" />
               </Button>
 
-              {/* Settings/Practice Button */}
               <Button
                 type="button"
                 size="sm"
                 onClick={togglePractice}
-                className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                className={`px-3 py-2 h-9 font-medium ${
                   isPractice
-                    ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                    : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                    ? "bg-violet-600 text-white"
+                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 }`}
               >
                 <Image
@@ -315,13 +290,13 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
               {uploadedFiles.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border border-gray-200 dark:border-gray-600"
+                  className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border"
                 >
                   <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300" />
-                  <span className="truncate max-w-24 text-gray-800 dark:text-gray-200">{file.name}</span>
+                  <span className="truncate max-w-24">{file.name}</span>
                   <button
                     onClick={() => removeFile(index)}
-                    className="text-gray-500 hover:text-red-500 transition-colors"
+                    className="text-gray-500 hover:text-red-500"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -334,15 +309,14 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         {/* Main input area */}
         <div className="px-4 py-3 bg-white dark:bg-gray-900">
           <div className="flex items-end gap-3">
-            {/* Input container */}
             <div className="flex-1">
               <div
-                className={`relative p-3 transition-all duration-200 rounded-sm border ${
+                className={`relative p-3 rounded-sm border ${
                   isDragOver
                     ? "border-violet-400 bg-violet-50/30 dark:bg-violet-900/30"
                     : hasContent
-                      ? "bg-white/20 border-gray-200"
-                      : "bg-white/10 border-gray-200 hover:border-white/30"
+                      ? "border-gray-200"
+                      : "border-gray-200 hover:border-white/30"
                 }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -369,24 +343,21 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         placeholder={placeholder}
-                        className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden bg-none leading-6"
+                        className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-6"
                         rows={1}
                         style={{
-                          scrollbarWidth: "thin",
-                          msOverflowStyle: "auto",
                           minHeight: "24px",
                           maxHeight: "120px",
                         }}
                       />
                     </div>
-                    {/* Send Button - inline with input */}
                     <Button
                       type="submit"
                       disabled={!canSubmit}
-                      className={`h-8 w-8 p-0 flex-shrink-0 ${
+                      className={`h-8 w-8 p-0 ${
                         canSubmit
-                          ? "bg-violet-600 hover:bg-violet-700 text-white"
-                          : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
+                          ? "bg-violet-600 hover:bg-violet-700"
+                          : "bg-violet-200 dark:bg-violet-700 cursor-not-allowed"
                       }`}
                     >
                       <ArrowUp className="w-4 h-4" />
@@ -405,12 +376,11 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
               </div>
             </div>
 
-            {/* New Chat Button - only visible when keyboard is NOT open */}
             {!isKeyboardVisible && (
               <Button
                 onClick={handleNewChat}
                 variant="outline"
-                className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
+                className="h-14 w-14 rounded-sm bg-transparent"
               >
                 <MessageSquarePlus className="w-full h-full" />
               </Button>
@@ -428,39 +398,8 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         />
       </div>
 
-      {/* Safe area spacer to prevent content overlap - only when keyboard is NOT visible */}
+      {/* Safe area spacer */}
       {!isKeyboardVisible && <div className="h-20" />}
-
-      <style jsx global>{`
-          textarea::-webkit-scrollbar {
-            width: 4px;
-          }
-          textarea::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          textarea::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.5);
-            border-radius: 2px;
-          }
-          textarea::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.7);
-          }
-
-          /* Prevent zoom on iOS */
-          @media screen and (-webkit-min-device-pixel-ratio: 0) {
-            input[type="text"],
-            input[type="email"],
-            input[type="password"],
-            textarea {
-              font-size: 16px !important;
-            }
-          }
-
-          /* Ensure proper viewport handling */
-          body {
-            overflow-x: hidden;
-          }
-        `}</style>
     </>
   )
 })
