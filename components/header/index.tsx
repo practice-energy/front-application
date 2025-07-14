@@ -28,8 +28,6 @@ export function Header() {
   const { isCollapsed, toggleSidebar } = useSidebar()
 
   const {
-    isLanguageSwitching,
-    setIsLanguageSwitching,
     showBurgerMenu,
     setShowBurgerMenu,
     showProfileMenu,
@@ -38,6 +36,8 @@ export function Header() {
     setRole,
     burgerMenuRef,
     profileMenuRef,
+    hat,
+    setHat
   } = useHeaderState(user)
 
   const shouldShowSidebar = useMemo(() => {
@@ -175,7 +175,7 @@ export function Header() {
               )}
 
               {/* Calendar button for users */}
-              {isAuthenticated && role === "user" && (
+              {isAuthenticated && hat === "adept" && (
                 <div className="hidden md:flex items-center space-x-3">
                   <Button onClick={handleCalendarClick}>
                     <CalendarDays className="h-10 w-10 bold" />
@@ -197,13 +197,16 @@ export function Header() {
                 isSpecialist={isSpecialist}
               />
 
-              <BurgerMenu
-                isAuthenticated={isAuthenticated}
-                showBurgerMenu={showBurgerMenu}
-                toggleBurgerMenu={toggleBurgerMenu}
-                setShowBurgerMenu={setShowBurgerMenu}
-                burgerMenuRef={burgerMenuRef}
-              />
+              {hat === "master" ? (
+                  <BurgerMenu
+                  isAuthenticated={isAuthenticated}
+                  showBurgerMenu={showBurgerMenu}
+                  toggleBurgerMenu={toggleBurgerMenu}
+                  setShowBurgerMenu={setShowBurgerMenu}
+                  burgerMenuRef={burgerMenuRef}
+                  />
+              ) : (<div className="h-8 w-8 p-0 "/>)
+              }
 
               {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Log in / Register</Button>}
             </div>

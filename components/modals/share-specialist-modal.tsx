@@ -76,18 +76,8 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
             <div className="fixed inset-0 bg-black/80 transition-opacity" onClick={onClose} />
 
             {/* Modal container */}
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <div className="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-gray-200 dark:border-gray-700">
-                    {/* Close button */}
-                    <button
-                        type="button"
-                        className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
-                        onClick={onClose}
-                    >
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close</span>
-                    </button>
-
+            <div className="flex min-h-full items-center justify-center p-3 text-center">
+                <div className="relative transform overflow-hidden rounded-sm bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-gray-200 dark:border-gray-700">
                     {/* Modal content */}
                     <div className="p-6">
                         {/* Header */}
@@ -99,12 +89,12 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
 
                         <div className="space-y-6">
                             {/* Specialist Preview */}
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="flex items-center gap-3 p-3 bg-violet-50 dark:bg-gray-700 rounded-sm">
                                 {specialist.image && (
                                     <img
                                         src={specialist.image}
                                         alt={specialist.name}
-                                        className="w-12 h-12 rounded-full object-cover"
+                                        className="w-12 h-12 rounded-sm object-cover"
                                     />
                                 )}
                                 <div>

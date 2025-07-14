@@ -24,9 +24,9 @@ export type Chat = {
   lastMessage?: string
   timestamp?: string
   unreadCount?: number
-  isMuted: boolean
+  isMuted?: boolean
   messages: Message[]
   createdAt: number,
   hasNew?: boolean
-  footerContent: string
+  footerContent?: string
 }

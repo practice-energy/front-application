@@ -56,7 +56,6 @@ export default function ServiceEditPage({ params }: { params: { id: string } }) 
       description: "",
       price: 0,
       duration: "60 мин",
-      category: "",
       images: [],
       includes: [],
       specialist: mockServices[0].specialist,
@@ -355,15 +354,6 @@ export default function ServiceEditPage({ params }: { params: { id: string } }) 
                     {errors.duration && <p className="text-red-500 text-sm mt-1">{errors.duration}</p>}
                   </div>
                 </div>
-
-                {/* Category */}
-                <EnhancedInput
-                  label="Категория"
-                  value={draftData.category}
-                  onChange={(e) => handleInputChange("category", e.target.value)}
-                  disabled={!isEditMode}
-                  placeholder="Выберите категорию"
-                />
               </div>
 
               {/* Description and Includes */}

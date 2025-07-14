@@ -270,7 +270,7 @@ export const mockSpecialists: Specialist[] = [
         author: "Мария К.",
         avatar: "/placeholder.jpg",
         comment: "Анна очень точно описала мою ситуацию и дала полезные рекомендации. Рекомендую!",
-        date: "2024-01-15",
+        date: Date.now() - 1000 * 60 * 60 * 24 * 41,
         verified: true,
       },
     ],
@@ -280,9 +280,9 @@ export const mockSpecialists: Specialist[] = [
         id: uuidv4(),
         title: "Натальная карта",
         description: "Полный анализ натальной карты с разбором основных аспектов и домов",
+        format: "in-person",
         price: 5000,
         duration: "1.5 часа",
-        category: "Астрология",
         images: ["/placeholder.jpg"],
         includes: [
           "Подробный разбор планет в знаках",
@@ -294,6 +294,7 @@ export const mockSpecialists: Specialist[] = [
           id: specialist1Id,
           name: "Анна Петрова",
           title: "Астролог и таролог",
+          avatar: "placeholder.svg",
         },
         tags: ["натальная карта", "астрология", "индивидуальная консультация"],
         reviews: [],
@@ -302,15 +303,16 @@ export const mockSpecialists: Specialist[] = [
         id: uuidv4(),
         title: "Гадание на Таро",
         description: "Ответы на вопросы с помощью карт Таро с детальным толкованием",
+        format: "in-person",
         price: 3000,
         duration: "1 час",
-        category: "Таро",
         images: ["/placeholder.jpg"],
         includes: ["Ответы на 3 ключевых вопроса", "Разбор текущей ситуации", "Рекомендации на ближайший месяц"],
         specialist: {
           id: specialist1Id,
           name: "Анна Петрова",
           title: "Астролог и таролог",
+          avatar: "placeholder.svg",
         },
         tags: ["таро", "гадание", "предсказание"],
         reviews: [],
@@ -319,9 +321,9 @@ export const mockSpecialists: Specialist[] = [
         id: uuidv4(),
         title: "Карьерный коучинг",
         description: "Индивидуальная сессия по поиску профессионального пути",
+        format: "in-person",
         price: 6000,
         duration: "1.5 часа",
-        category: "Коучинг",
         images: ["/placeholder.jpg"],
         includes: [
           "Анализ текущей ситуации",
@@ -333,6 +335,7 @@ export const mockSpecialists: Specialist[] = [
           id: specialist2Id,
           name: "Михаил Сидоров",
           title: "Лайф-коуч и бизнес-тренер",
+          avatar: "placeholder.svg",
         },
         tags: ["карьера", "коучинг", "профессиональное развитие"],
         reviews: [],
@@ -340,10 +343,10 @@ export const mockSpecialists: Specialist[] = [
       {
         id: uuidv4(),
         title: "Пакет из 5 коуч-сессий",
+        format: "in-person",
         description: "Комплексная работа над достижением целей с сопровождением",
         price: 25000,
         duration: "5 сессий по 1 часу",
-        category: "Коучинг",
         images: ["/placeholder.jpg"],
         includes: [
           "Первичная диагностика",
@@ -355,6 +358,7 @@ export const mockSpecialists: Specialist[] = [
           id: specialist2Id,
           name: "Михаил Сидоров",
           title: "Лайф-коуч и бизнес-тренер",
+          avatar: "placeholder.svg",
         },
         tags: ["пакет", "коучинг", "личное развитие"],
         reviews: [],
@@ -393,6 +397,7 @@ export const mockChatData: Chat[] = [
   {
     id: chatAI1Id,
     title: "Поиск астролога",
+    description: "Привет а че там сегодня звезды говорят, Гендальф?",
     timestamp: "14:30",
     messages: [
       {
@@ -409,7 +414,6 @@ export const mockChatData: Chat[] = [
         specialists: [mockSpecialists[0]],
       },
     ],
-    searchQueries: ["астролог", "консультация"],
     isAI: true,
     hasNew: false,
     createdAt: Date.now() - 1000 * 60 * 30,
@@ -421,6 +425,7 @@ export const mockChatData: Chat[] = [
     id: chatSpecialist1Id,
     title: "Анна Петрова",
     timestamp: "12:15",
+    description: "Здравствуйте! А можно вас в баню заказать?",
     messages: [
       {
         id: uuidv4(),
@@ -449,7 +454,6 @@ export const mockChatData: Chat[] = [
         timestamp: Date.now() - 1000 * 60 * 30,
       },
     ],
-    searchQueries: ["натальная карта", "астрология"],
     isAI: false,
     hasNew: true,
     createdAt: Date.now() - 1000 * 60 * 120,
@@ -460,6 +464,7 @@ export const mockChatData: Chat[] = [
     id: chatAI2Id,
     title: "Поиск коуча",
     timestamp: "вчера",
+    description: "Хотите узнать больше о любом из этих специалистов?",
     messages: [
       {
         id: uuidv4(),
@@ -486,6 +491,7 @@ export const mockChatData: Chat[] = [
     id: chatSpecialist2Id,
     title: "Михаил Сидоров",
     timestamp: "10:45",
+    description: "Анальные боли",
     messages: [
       {
         id: uuidv4(),
@@ -577,12 +583,12 @@ export const mockServices: Service[] = [
     description: "Подробный разбор натальной карты с рекомендациями",
     price: 3500,
     duration: "90 минут",
-    category: "Астрология",
     images: ["/placeholder.jpg"],
     specialist: mockSpecialists[0],
     tags: ["астрология", "натальная карта", "личность"],
     reviews: mockReviews,
     includes: ["Wipes", "Pencils", "Markers"],
+    format: "video",
   },
   {
     id: service2Id,
@@ -590,12 +596,12 @@ export const mockServices: Service[] = [
     description: "Индивидуальная коучинг сессия для достижения целей",
     price: 5000,
     duration: "90 минут",
-    category: "Коучинг",
     images: ["/placeholder.jpg"],
     specialist: mockSpecialists[0],
     tags: ["коучинг", "цели", "развитие"],
     reviews: mockReviews,
     includes: ["Wipes", "Pencils", "Markers"],
+    format: "video",
   },
   {
     id: uuidv4(),
@@ -603,7 +609,6 @@ export const mockServices: Service[] = [
     description: "Полный анализ натальной карты с разбором основных аспектов и домов",
     price: 5000,
     duration: "1.5 часа",
-    category: "Астрология",
     images: ["/astrology-service1.jpg", "/astrology-service2.jpg"],
     includes: [
       "Подробный разбор планет в знаках",
@@ -615,9 +620,11 @@ export const mockServices: Service[] = [
       id: specialist1Id,
       name: "Анна Петрова",
       title: "Астролог и таролог",
+      avatar: "placeholder.svg"
     },
     tags: ["натальная карта", "астрология", "индивидуальная консультация"],
     reviews: [],
+    format: "video",
   },
   {
     id: uuidv4(),
@@ -625,16 +632,17 @@ export const mockServices: Service[] = [
     description: "Ответы на вопросы с помощью карт Таро с детальным толкованием",
     price: 3000,
     duration: "1 час",
-    category: "Таро",
     images: ["/taro-service1.jpg"],
     includes: ["Ответы на 3 ключевых вопроса", "Разбор текущей ситуации", "Рекомендации на ближайший месяц"],
     specialist: {
       id: specialist1Id,
       name: "Анна Петрова",
       title: "Астролог и таролог",
+      avatar: "placeholder.svg"
     },
     tags: ["таро", "гадание", "предсказание"],
     reviews: [],
+    format: "in-person",
   },
   {
     id: uuidv4(),
@@ -642,7 +650,6 @@ export const mockServices: Service[] = [
     description: "Индивидуальная сессия по поиску профессионального пути",
     price: 6000,
     duration: "1.5 часа",
-    category: "Коучинг",
     images: ["/coaching-service1.jpg", "/coaching-service2.jpg"],
     includes: [
       "Анализ текущей ситуации",
@@ -654,9 +661,11 @@ export const mockServices: Service[] = [
       id: specialist2Id,
       name: "Михаил Сидоров",
       title: "Лайф-коуч и бизнес-тренер",
+      avatar: "placeholder.svg"
     },
     tags: ["карьера", "коучинг", "профессиональное развитие"],
     reviews: [],
+    format: "video",
   },
   {
     id: uuidv4(),
@@ -664,16 +673,17 @@ export const mockServices: Service[] = [
     description: "Комплексная работа над достижением целей с сопровождением",
     price: 25000,
     duration: "5 сессий по 1 часу",
-    category: "Коучинг",
     images: ["/coaching-package.jpg"],
     includes: ["Первичная диагностика", "5 индивидуальных сессий", "Промежуточные задания", "Поддержка между сессиями"],
     specialist: {
       id: specialist2Id,
       name: "Михаил Сидоров",
       title: "Лайф-коуч и бизнес-тренер",
+      avatar: "placeholder.svg"
     },
     tags: ["пакет", "коучинг", "личное развитие"],
     reviews: [],
+    format: "video",
   },
 ]
 

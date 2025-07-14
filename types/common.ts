@@ -38,13 +38,10 @@ export interface Service {
     id: string
     title: string
     format: "video" | "in-person"
-    status: "upcoming" | "completed" | "cancelled"
-    requiresConfirmation: boolean
     location?: string
     description: string
     price: number
     duration: string
-    category: string
     images: string[]
     includes: string[]
     specialist: {

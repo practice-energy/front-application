@@ -8,6 +8,7 @@ export function useHeaderState(user: User | null) {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [role, setRole] = useState<"user" | "specialist">(user?.isSpecialist ? "specialist" : "user")
+  const [hat, setHat] = useState<"adept" | "master" | "superviser">("adept")
 
   const burgerMenuRef = useRef<HTMLDivElement>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
@@ -23,5 +24,7 @@ export function useHeaderState(user: User | null) {
     setRole,
     burgerMenuRef,
     profileMenuRef,
+    hat,
+    setHat,
   }
 }
