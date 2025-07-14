@@ -6,7 +6,7 @@ import {X, PanelRightClose, CalendarDays, PanelRightOpen} from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useTranslations } from "@/hooks/use-translations"
 import { useRouter, usePathname } from "next/navigation"
-import { AuthModal } from "@/components/auth-modal"
+import { AuthModal } from "@/components/modals/auth-modal"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
 
@@ -208,8 +208,9 @@ export function Header() {
               ) : (<div className="h-8 w-8 p-0 "/>)
               }
 
-              {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Log in / Register</Button>}
             </div>
+
+            {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
 
             {/* Mobile hamburger menu button */}
             <div className="md:hidden">

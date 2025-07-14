@@ -276,24 +276,24 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
 
                 <div
                     ref={modalRef}
-                    className="relative bg-white rounded-lg shadow-md w-full max-w-md mx-4 max-h-[90vh] overflow-hidden"
+                    className="relative bg-white rounded-sm shadow-md w-full max-w-md mx-4 max-h-[90vh] overflow-hidden"
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="login-modal-title"
                 >
                     <button
                         onClick={onClose}
-                        className="absolute right-6 top-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+                        className="absolute right-6 top-6 p-2 rounded-sm hover:bg-gray-100 transition-colors z-10"
                         aria-label="Close modal"
                     >
                         <X className="h-5 w-5 text-gray-600"/>
                     </button>
 
                     {showSuccess && (
-                        <div className="absolute inset-0 bg-white rounded-lg flex items-center justify-center z-20">
+                        <div className="absolute inset-0 bg-white rounded-sm flex items-center justify-center z-20">
                             <div className="text-center">
                                 <div
-                                    className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    className="w-16 h-16 bg-green-100 rounded-sm flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
                                          viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -333,7 +333,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => setFormData((prev) => ({...prev, email: e.target.value}))}
-                                        className={`pl-12 py-3 rounded-lg ${errors.email ? "border-red-500" : "border-gray-100"}`}
+                                        className={`pl-12 py-3 rounded-sm ${errors.email ? "border-red-500" : "border-gray-100"}`}
                                         placeholder="Enter your email"
                                         aria-invalid={!!errors.email}
                                         onKeyDown={(e) => {
@@ -364,7 +364,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                         type={showPassword ? "text" : "password"}
                                         value={formData.password}
                                         onChange={(e) => setFormData((prev) => ({...prev, password: e.target.value}))}
-                                        className={`pl-12 pr-12 py-3 rounded-lg ${errors.password ? "border-red-500" : "border-gray-100"}`}
+                                        className={`pl-12 pr-12 py-3 rounded-sm ${errors.password ? "border-red-500" : "border-gray-100"}`}
                                         placeholder="Enter your password"
                                         aria-invalid={!!errors.password}
                                         onKeyDown={(e) => {
@@ -393,7 +393,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <Button
                                 type="submit"
                                 disabled={isLoading || !formData.email || !formData.password}
-                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium"
+                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
                             >
                                 {isLoading ? "Signing in..." : "Sign in"}
                             </Button>
@@ -403,7 +403,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                 variant="outline"
                                 onClick={handleGoogleAuth}
                                 disabled={isLoading}
-                                className="w-full border-gray-100 py-3 rounded-lg font-medium"
+                                className="w-full border-gray-100 py-3 rounded-sm font-medium"
                             >
                                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                                     <path
@@ -446,24 +446,24 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
 
             <div
                 ref={modalRef}
-                className="relative bg-white rounded-lg shadow-md w-full max-w-md mx-4 max-h-[90vh] overflow-hidden"
+                className="relative bg-white rounded-sm shadow-md w-full max-w-md mx-4 max-h-[90vh] overflow-hidden"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="auth-modal-title"
             >
                 <button
                     onClick={onClose}
-                    className="absolute right-6 top-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+                    className="absolute right-6 top-6 p-2 rounded-sm hover:bg-gray-100 transition-colors z-10"
                     aria-label="Close modal"
                 >
                     <X className="h-5 w-5 text-gray-600"/>
                 </button>
 
                 {showSuccess && (
-                    <div className="absolute inset-0 bg-white rounded-lg flex items-center justify-center z-20">
+                    <div className="absolute inset-0 bg-white rounded-sm flex items-center justify-center z-20">
                         <div className="text-center">
                             <div
-                                className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                className="w-16 h-16 bg-green-100 rounded-sm flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
                                      viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -497,7 +497,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <div className="space-y-4 mb-8">
                                 <Button
                                     onClick={handleEmailContinue}
-                                    className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium"
+                                    className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
                                 >
                                     Continue with Email
                                 </Button>
@@ -506,7 +506,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                     onClick={handleGoogleAuth}
                                     variant="outline"
                                     disabled={isLoading}
-                                    className="w-full border-gray-100 py-3 rounded-lg font-medium"
+                                    className="w-full border-gray-100 py-3 rounded-sm font-medium"
                                 >
                                     <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                                         <path
@@ -557,7 +557,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => setFormData((prev) => ({...prev, email: e.target.value}))}
-                                        className={`pl-12 py-3 rounded-lg ${errors.email ? "border-red-500" : "border-gray-100"}`}
+                                        className={`pl-12 py-3 rounded-sm ${errors.email ? "border-red-500" : "border-gray-100"}`}
                                         placeholder="Enter your email"
                                         aria-invalid={!!errors.email}
                                         onKeyDown={(e) => {
@@ -584,7 +584,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <Button
                                 onClick={nextStep}
                                 disabled={!formData.email || !validateEmail(formData.email)}
-                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium disabled:bg-gray-100 disabled:text-gray-400"
+                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
                             >
                                 Continue
                             </Button>
@@ -609,7 +609,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                         type={showPassword ? "text" : "password"}
                                         value={formData.password}
                                         onChange={(e) => setFormData((prev) => ({...prev, password: e.target.value}))}
-                                        className={`pl-12 pr-12 py-3 rounded-lg ${errors.password ? "border-red-500" : "border-gray-100"}`}
+                                        className={`pl-12 pr-12 py-3 rounded-sm ${errors.password ? "border-red-500" : "border-gray-100"}`}
                                         placeholder="Create a password"
                                         aria-invalid={!!errors.password}
                                         onKeyDown={(e) => {
@@ -635,9 +635,9 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                             <span>Password strength</span>
                                             <span className="capitalize font-medium">{passwordStrength}</span>
                                         </div>
-                                        <div className="w-full bg-gray-100 rounded-full h-2">
+                                        <div className="w-full bg-gray-100 rounded-sm h-2">
                                             <div
-                                                className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()} ${getPasswordStrengthWidth()}`}
+                                                className={`h-2 rounded-sm transition-all duration-300 ${getPasswordStrengthColor()} ${getPasswordStrengthWidth()}`}
                                                 role="progressbar"
                                                 aria-valuenow={passwordStrength === "weak" ? 33 : passwordStrength === "medium" ? 66 : 100}
                                                 aria-valuemin={0}
@@ -659,7 +659,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                 <Button
                                     onClick={prevStep}
                                     variant="outline"
-                                    className="flex-1 border-gray-100 py-3 rounded-lg font-medium"
+                                    className="flex-1 border-gray-100 py-3 rounded-sm font-medium"
                                 >
                                     Back
                                 </Button>
@@ -695,7 +695,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                                 ...prev,
                                                 firstName: e.target.value
                                             }))}
-                                            className={`py-3 rounded-lg ${errors.firstName ? "border-red-500" : "border-gray-100"}`}
+                                            className={`py-3 rounded-sm ${errors.firstName ? "border-red-500" : "border-gray-100"}`}
                                             placeholder="First name"
                                             aria-invalid={!!errors.firstName}
                                             onKeyDown={(e) => {
@@ -724,7 +724,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                                 ...prev,
                                                 lastName: e.target.value
                                             }))}
-                                            className={`py-3 rounded-lg ${errors.lastName ? "border-red-500" : "border-gray-100"}`}
+                                            className={`py-3 rounded-sm ${errors.lastName ? "border-red-500" : "border-gray-100"}`}
                                             placeholder="Last name"
                                             aria-invalid={!!errors.lastName}
                                             onKeyDown={(e) => {
@@ -763,7 +763,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                                 type="button"
                                                 variant="outline"
                                                 onClick={() => fileInputRef.current?.click()}
-                                                className="border-gray-100 rounded-lg"
+                                                className="border-gray-100 rounded-sm"
                                             >
                                                 <Upload className="w-4 h-4 mr-2"/>
                                                 Upload photo
@@ -786,14 +786,14 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                 <Button
                                     onClick={prevStep}
                                     variant="outline"
-                                    className="flex-1 border-gray-100 py-3 rounded-lg font-medium"
+                                    className="flex-1 border-gray-100 py-3 rounded-sm font-medium"
                                 >
                                     Back
                                 </Button>
                                 <Button
                                     onClick={nextStep}
                                     disabled={isLoading || !formData.firstName.trim() || !formData.lastName.trim()}
-                                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium disabled:bg-gray-100 disabled:text-gray-400"
+                                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
                                 >
                                     {isLoading ? "Creating account..." : "Finish"}
                                 </Button>
