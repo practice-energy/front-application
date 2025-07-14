@@ -1,7 +1,6 @@
 {
   "name": "practice",
   "version": "0.1.0",
-  "packageManager": "pnpm@10.11.0",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -57,12 +56,12 @@
     "immer": "latest",
     "input-otp": "latest",
     "lucide-react": "^0.454.0",
-    "next": "15.3.3",
+    "next": "15.2.4",
     "next-themes": "latest",
     "pnpm": "^10.13.1",
-    "react": "^18",
+    "react": "^19",
     "react-day-picker": "latest",
-    "react-dom": "^18",
+    "react-dom": "^19",
     "react-hook-form": "latest",
     "react-i18next": "latest",
     "react-resizable-panels": "latest",
@@ -78,12 +77,13 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.11.0"
 }

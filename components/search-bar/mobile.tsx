@@ -17,10 +17,10 @@ interface MobileSearchBarProps {
 }
 
 export const MobileSearchBar = React.memo(function MobileSearchBar({
-                                                                     onSearch,
-                                                                     placeholder = "Поиск пути",
-                                                                     chatTitle = "Аллюра",
-                                                                   }: MobileSearchBarProps) {
+  onSearch,
+  placeholder = "Поиск пути",
+  chatTitle = "Аллюра",
+}: MobileSearchBarProps) {
   const { t } = useTranslations()
   const router = useRouter()
   const [message, setMessage] = useState("")
@@ -43,19 +43,20 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
       if (window.visualViewport) {
         const currentHeight = window.visualViewport.height
         const fullHeight = window.screen.height
-        const keyboardHeight = fullHeight - currentHeight
+        const calculatedKeyboardHeight = fullHeight - currentHeight
 
         setViewportHeight(currentHeight)
-        setKeyboardHeight(keyboardHeight)
-        setIsKeyboardVisible(keyboardHeight > 100) // Threshold for keyboard detection
+        setKeyboardHeight(calculatedKeyboardHeight)
+        setIsKeyboardVisible(calculatedKeyboardHeight > 100) // Threshold for keyboard detection
       } else {
         // Fallback for browsers without visualViewport support
         const currentHeight = window.innerHeight
-        const keyboardHeight = Math.max(0, 600 - currentHeight) // Approximate detection
+        const initialHeight = window.screen.height
+        const calculatedKeyboardHeight = Math.max(0, initialHeight - currentHeight)
 
         setViewportHeight(currentHeight)
-        setKeyboardHeight(keyboardHeight)
-        setIsKeyboardVisible(keyboardHeight > 100)
+        setKeyboardHeight(calculatedKeyboardHeight)
+        setIsKeyboardVisible(calculatedKeyboardHeight > 100)
       }
     }
 
@@ -78,6 +79,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
       setTimeout(() => {
         setIsKeyboardVisible(false)
         setKeyboardHeight(0)
+        handleResize()
       }, 300)
     }
 
@@ -128,10 +130,10 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   }, [])
 
   const handleFileInputChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleFileSelect(e.target.files)
-      },
-      [handleFileSelect],
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleFileSelect(e.target.files)
+    },
+    [handleFileSelect],
   )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -145,12 +147,12 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   }, [])
 
   const handleDrop = useCallback(
-      (e: React.DragEvent) => {
-        e.preventDefault()
-        setIsDragOver(false)
-        handleFileSelect(e.dataTransfer.files)
-      },
-      [handleFileSelect],
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragOver(false)
+      handleFileSelect(e.dataTransfer.files)
+    },
+    [handleFileSelect],
   )
 
   const removeFile = useCallback((index: number) => {
@@ -158,53 +160,53 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   }, [])
 
   const handleSubmit = useCallback(
-      (e: React.FormEvent) => {
-        e.preventDefault()
-        const trimmedMessage = message.trim()
-        if (!trimmedMessage && uploadedFiles.length === 0) return
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      const trimmedMessage = message.trim()
+      if (!trimmedMessage && uploadedFiles.length === 0) return
 
-        if (onSearch) {
-          onSearch(trimmedMessage, chatTitle, uploadedFiles, isPractice)
-          setMessage("")
-          setUploadedFiles([])
-          setIsPractice(false)
-        } else {
-          const searchId = uuidv4()
+      if (onSearch) {
+        onSearch(trimmedMessage, chatTitle, uploadedFiles, isPractice)
+        setMessage("")
+        setUploadedFiles([])
+        setIsPractice(false)
+      } else {
+        const searchId = uuidv4()
 
-          window.dispatchEvent(
-              new CustomEvent("newChatCreated", {
-                detail: {
-                  chatId: searchId,
-                  title: chatTitle,
-                  query: trimmedMessage,
-                  files: uploadedFiles,
-                },
-              }),
-          )
+        window.dispatchEvent(
+          new CustomEvent("newChatCreated", {
+            detail: {
+              chatId: searchId,
+              title: chatTitle,
+              query: trimmedMessage,
+              files: uploadedFiles,
+            },
+          }),
+        )
 
-          const queryParams = new URLSearchParams({
-            q: trimmedMessage,
-            ...(selectedCategory && { category: selectedCategory }),
-          }).toString()
+        const queryParams = new URLSearchParams({
+          q: trimmedMessage,
+          ...(selectedCategory && { category: selectedCategory }),
+        }).toString()
 
-          router.push(`/search/${searchId}?${queryParams}`)
-        }
-      },
-      [message, selectedCategory, uploadedFiles, onSearch, router, chatTitle, isPractice],
+        router.push(`/search/${searchId}?${queryParams}`)
+      }
+    },
+    [message, selectedCategory, uploadedFiles, onSearch, router, chatTitle, isPractice],
   )
 
   const handleNewChat = useCallback(() => {
     const searchId = uuidv4()
 
     window.dispatchEvent(
-        new CustomEvent("newChatCreated", {
-          detail: {
-            chatId: searchId,
-            title: chatTitle,
-            query: "",
-            files: [],
-          },
-        }),
+      new CustomEvent("newChatCreated", {
+        detail: {
+          chatId: searchId,
+          title: chatTitle,
+          query: "",
+          files: [],
+        },
+      }),
     )
 
     router.push(`/search/${searchId}`)
@@ -212,7 +214,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
 
   const preventEmoji = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const emojiRegex =
-        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u
+      /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u
 
     if (emojiRegex.test(e.key)) {
       e.preventDefault()
@@ -221,15 +223,15 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   }, [])
 
   const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        preventEmoji(e)
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      preventEmoji(e)
 
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault()
-          handleSubmit(e)
-        }
-      },
-      [preventEmoji, handleSubmit],
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()
+        handleSubmit(e)
+      }
+    },
+    [preventEmoji, handleSubmit],
   )
 
   const handleMessageChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -256,184 +258,180 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
   const hasContent = message.trim().length > 0 || isFocused
 
   return (
-      <>
-        <div
-            ref={containerRef}
-            className={cn(
-                "fixed left-0 right-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out",
-                isKeyboardVisible ? "shadow-lg" : "shadow-sm"
-            )}
-            style={{
-              bottom: isKeyboardVisible ? `${keyboardHeight}px` : "0px",
-            }}
-        >
-          {/* Action buttons - only visible when keyboard is open */}
-          {isKeyboardVisible && (
-              <div className="px-4 py-2">
-                <div className="flex items-center gap-2">
-                  {/* File Upload Button */}
-                  <Button
-                      type="button"
-                      size="sm"
-                      onClick={openFileDialog}
-                      className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                  </Button>
+    <>
+      <div
+        ref={containerRef}
+        className={cn(
+          "fixed left-0 right-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out",
+          isKeyboardVisible ? "shadow-lg" : "shadow-sm",
+        )}
+        style={{
+          bottom: "0px",
+          transform: isKeyboardVisible ? `translateY(-${keyboardHeight}px)` : "translateY(0px)",
+        }}
+      >
+        {/* Action buttons - only visible when keyboard is open */}
+        {isKeyboardVisible && (
+          <div className="px-4 py-2">
+            <div className="flex items-center gap-2">
+              {/* File Upload Button */}
+              <Button
+                type="button"
+                size="sm"
+                onClick={openFileDialog}
+                className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+              >
+                <Paperclip className="w-4 h-4" />
+              </Button>
 
-                  {/* Settings/Practice Button */}
-                  <Button
-                      type="button"
-                      size="sm"
-                      onClick={togglePractice}
-                      className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
-                          isPractice
-                              ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                              : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
-                      }`}
-                  >
-                    <Image
-                        src="/practice-logo.svg"
-                        alt="Settings"
-                        width={14}
-                        height={14}
-                        className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-                    />
-                    <span>Практис</span>
-                  </Button>
-                </div>
-              </div>
-          )}
-
-          {/* File uploads display */}
-          {uploadedFiles.length > 0 && (
-              <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                <div className="flex flex-wrap gap-2">
-                  {uploadedFiles.map((file, index) => (
-                      <div
-                          key={index}
-                          className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border border-gray-200 dark:border-gray-600"
-                      >
-                        <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300" />
-                        <span className="truncate max-w-24 text-gray-800 dark:text-gray-200">{file.name}</span>
-                        <button
-                            onClick={() => removeFile(index)}
-                            className="text-gray-500 hover:text-red-500 transition-colors"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                  ))}
-                </div>
-              </div>
-          )}
-
-          {/* Main input area */}
-          <div className="px-4 py-3 bg-white dark:bg-gray-900">
-            <div className="flex items-end gap-3">
-              {/* Input container */}
-              <div className="flex-1">
-                <div
-                    className={`relative p-3 transition-all duration-200 rounded-sm border ${
-                        isDragOver
-                            ? "border-violet-400 bg-violet-50/30 dark:bg-violet-900/30"
-                            : hasContent
-                                ? "bg-white/20 border-gray-200"
-                                : "bg-white/10 border-gray-200 hover:border-white/30"
-                    }`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                >
-                  <form onSubmit={handleSubmit} className="w-full">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                        <Image
-                            src="/allura-logo.svg"
-                            alt="Alura Logo"
-                            width={20}
-                            height={20}
-                            className="w-5 h-5"
-                            priority
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                      <textarea
-                          ref={textareaRef}
-                          value={message}
-                          onChange={handleMessageChange}
-                          onKeyDown={handleKeyDown}
-                          onFocus={handleFocus}
-                          onBlur={handleBlur}
-                          placeholder={placeholder}
-                          className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden bg-none leading-6"
-                          rows={1}
-                          style={{
-                            scrollbarWidth: "thin",
-                            msOverflowStyle: "auto",
-                            minHeight: "24px",
-                            maxHeight: "120px",
-                          }}
-                      />
-                      </div>
-                      {/* Send Button - inline with input */}
-                      <Button
-                          type="submit"
-                          disabled={!canSubmit}
-                          className={`h-8 w-8 p-0 flex-shrink-0 ${
-                              canSubmit
-                                  ? "bg-violet-600 hover:bg-violet-700 text-white"
-                                  : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
-                          }`}
-                      >
-                        <ArrowUp className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </form>
-
-                  {isDragOver && (
-                      <div className="absolute inset-0 bg-violet-100/50 dark:bg-violet-900/50 rounded-lg flex items-center justify-center pointer-events-none">
-                        <div className="text-violet-600 dark:text-violet-400 text-center">
-                          <FileText className="w-6 h-6 mx-auto mb-1" />
-                          <p className="text-xs font-medium">Перетащите файлы</p>
-                        </div>
-                      </div>
-                  )}
-                </div>
-              </div>
-
-              {/* New Chat Button - only visible when keyboard is NOT open */}
-              {!isKeyboardVisible && (
-                  <Button
-                      onClick={handleNewChat}
-                      variant="outline"
-                      className="h-14 w-14 rounded-sm flex-shrink-0"
-                  >
-                    <MessageSquarePlus className="w-full h-full" />
-                  </Button>
-              )}
+              {/* Settings/Practice Button */}
+              <Button
+                type="button"
+                size="sm"
+                onClick={togglePractice}
+                className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                  isPractice
+                    ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                    : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                }`}
+              >
+                <Image
+                  src="/practice-logo.svg"
+                  alt="Settings"
+                  width={14}
+                  height={14}
+                  className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                />
+                <span>Практис</span>
+              </Button>
             </div>
           </div>
+        )}
 
-          <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept="image/*,text/*,.pdf,.doc,.docx"
-              onChange={handleFileInputChange}
-              className="hidden"
-          />
+        {/* File uploads display */}
+        {uploadedFiles.length > 0 && (
+          <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <div className="flex flex-wrap gap-2">
+              {uploadedFiles.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border border-gray-200 dark:border-gray-600"
+                >
+                  <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300" />
+                  <span className="truncate max-w-24 text-gray-800 dark:text-gray-200">{file.name}</span>
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="text-gray-500 hover:text-red-500 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Main input area */}
+        <div className="px-4 py-3 bg-white dark:bg-gray-900">
+          <div className="flex items-end gap-3">
+            {/* Input container */}
+            <div className="flex-1">
+              <div
+                className={`relative p-3 transition-all duration-200 rounded-sm border ${
+                  isDragOver
+                    ? "border-violet-400 bg-violet-50/30 dark:bg-violet-900/30"
+                    : hasContent
+                      ? "bg-white/20 border-gray-200"
+                      : "bg-white/10 border-gray-200 hover:border-white/30"
+                }`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <form onSubmit={handleSubmit} className="w-full">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                      <Image
+                        src="/allura-logo.svg"
+                        alt="Alura Logo"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5"
+                        priority
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <textarea
+                        ref={textareaRef}
+                        value={message}
+                        onChange={handleMessageChange}
+                        onKeyDown={handleKeyDown}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        placeholder={placeholder}
+                        className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden bg-none leading-6"
+                        rows={1}
+                        style={{
+                          scrollbarWidth: "thin",
+                          msOverflowStyle: "auto",
+                          minHeight: "24px",
+                          maxHeight: "120px",
+                        }}
+                      />
+                    </div>
+                    {/* Send Button - inline with input */}
+                    <Button
+                      type="submit"
+                      disabled={!canSubmit}
+                      className={`h-8 w-8 p-0 flex-shrink-0 ${
+                        canSubmit
+                          ? "bg-violet-600 hover:bg-violet-700 text-white"
+                          : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
+                      }`}
+                    >
+                      <ArrowUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </form>
+
+                {isDragOver && (
+                  <div className="absolute inset-0 bg-violet-100/50 dark:bg-violet-900/50 rounded-lg flex items-center justify-center pointer-events-none">
+                    <div className="text-violet-600 dark:text-violet-400 text-center">
+                      <FileText className="w-6 h-6 mx-auto mb-1" />
+                      <p className="text-xs font-medium">Перетащите файлы</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* New Chat Button - only visible when keyboard is NOT open */}
+            {!isKeyboardVisible && (
+              <Button
+                onClick={handleNewChat}
+                variant="outline"
+                className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
+              >
+                <MessageSquarePlus className="w-full h-full" />
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Safe area spacer to prevent content overlap */}
-        <div
-            className="h-16"
-            style={{
-              height: isKeyboardVisible ? "0px" : "80px",
-            }}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="image/*,text/*,.pdf,.doc,.docx"
+          onChange={handleFileInputChange}
+          className="hidden"
         />
+      </div>
 
-        <style jsx global>{`
+      {/* Safe area spacer to prevent content overlap - only when keyboard is NOT visible */}
+      {!isKeyboardVisible && <div className="h-20" />}
+
+      <style jsx global>{`
           textarea::-webkit-scrollbar {
             width: 4px;
           }
@@ -463,6 +461,6 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
             overflow-x: hidden;
           }
         `}</style>
-      </>
+    </>
   )
 })
