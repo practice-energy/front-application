@@ -1,7 +1,7 @@
 "use client"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Search, Plus, MessageSquare, PanelRightOpen, Activity, LucideArchive } from "lucide-react"
+import {Search, Plus, MessageSquare, PanelRightOpen, Activity, LucideArchive, SparklesIcon} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -92,8 +92,9 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full md:w-96 bg-gray-50  border-gray-300 flex flex-col z-50 border-r backdrop-blur-sm",
+        "fixed left-0 top-0 h-full w-full md:w-96 border-gray-300 flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
+          isMobile ? "bg-white" : "bg-gray-50"
       )}
     >
       {/* Общий контент для всех устройств */}
@@ -132,9 +133,16 @@ export function MainSidebar() {
       </div>
 
       {/* Область скролла - общая для всех устройств */}
-      <ScrollArea className="flex-1 h-[calc(100%-180px)] relative">
+      <ScrollArea className={cn(
+          "flex-1 h-[calc(100%-180px)] relative",
+      )}
+      >
         {/* Исчезающий градиент сверху */}
-        <div className="sticky top-0 left-0 right-0 h-3 bg-gradient-to-b from-gray-50 via-gray-50/80 to-transparent pointer-events-none z-10" />
+        <div className={cn(
+            "sticky top-0 left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
+            isMobile ? "from-white via-white/80 to-transparent" : "from-gray-50 via-gray-50/80 to-transparent"
+        )}
+        />
 
         <div>
           {isSearching ? (
@@ -265,6 +273,22 @@ export function MainSidebar() {
             </>
           )}
         </div>
+
+        <div className="h-12" />
+
+        <div className="p-3">
+          <Button
+              variant="outline"
+              className="w-full hover:bg-violet-100 rounded-sm px-6 h-12"
+          >
+            <div className="items-center flex flex-row gap-3">
+              <SparklesIcon/>
+              <p className="text-base font-medium text-center w-full">Позолоти ручку</p>
+            </div>
+          </Button>
+        </div>
+
+        <div className="h-12" />
       </ScrollArea>
     </div>
   )

@@ -60,7 +60,6 @@ export default function HomePage() {
               width={180} // Увеличено с 120 до 180
               height={180} // Увеличено с 120 до 180
               className="mx-auto"
-              priority
             />
           </div>
 

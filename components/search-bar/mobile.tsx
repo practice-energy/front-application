@@ -204,10 +204,10 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
 
           {/* Main input area */}
           <div className="px-4 py-3 bg-white dark:bg-gray-900">
-            <div className="flex items-end gap-3">
+            <div className="flex flex-row items-end gap-3">
               <div className="flex-1">
                 <div
-                    className={`relative p-3 rounded-sm border ${
+                    className={`relative px-3 py-3 rounded-sm border ${
                         isDragOver
                             ? "border-violet-400 bg-violet-50/30 dark:bg-violet-900/30"
                             : hasContent
@@ -290,9 +290,9 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                           <>
                             {/* Send Button */}
                             <Button
-                                type="submit rounded-sm"
+                                type="submit"
                                 disabled={!canSubmit}
-                                className={`h-9 w-9 p-0 ${
+                                className={`h-9 w-9 p-0 border-none ${
                                     canSubmit
                                         ? "bg-violet-600 hover:bg-violet-700 text-white"
                                         : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
@@ -321,9 +321,10 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                   <Button
                       onClick={handleNewChat}
                       variant="outline"
-                      className="h-14 w-14 mt-0.5 rounded-sm flex-shrink-0 bg-transparent border-gray-200"
+                      size="lg"
+                      className="h-14 w-14 mt-0.5 p-1 rounded-sm flex-shrink-0 bg-transparent border-gray-200 [&_svg]:size-4.5"
                   >
-                    <MessageSquarePlus className="w-14 h-14" />
+                    <MessageSquarePlus className="w-6 h-6" />
                   </Button>
               )}
             </div>
