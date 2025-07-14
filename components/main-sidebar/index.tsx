@@ -29,6 +29,8 @@ import { SectionContent } from "./components/section-content"
 import { ChatItem } from "./components/chat-item"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
 import { useProfileStore } from "@/stores/profile-store"
+import {Pentagram} from "@/components/icons/icon-pentagram";
+import {UserSwitch} from "@/components/icons/icon-user-switch";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -179,37 +181,37 @@ export function MainSidebar() {
                 <span className="sr-only">Закрыть сайдбар</span>
               </button>
             </div>
-            <div className="flex flex-row items-center w-full px-6 gap-3">
+            <div className="flex flex-row items-center justify-center w-full gap-6 pl-6 pr-3">
               <button
-                onClick={handleProfileClick}
-                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+                  onClick={handleCalendarClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
-                <User className="w-6 h-6 mb-1" />
-                <span className="text-xs">Профиль</span>
+                <div className="absolute top-1/4 transform -translate-y-1/4">
+                  <CalendarDays className="w-12 h-12 text-gray-700" />
+                </div>
+                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">Календарь</span>
               </button>
 
               <button
-                onClick={handleCalendarClick}
-                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+                  onClick={handleSavedClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
-                <CalendarDays className="w-6 h-6 mb-1" />
-                <span className="text-xs">Календарь</span>
+                <div className="absolute top-1/4 transform -translate-y-1/4">
+                  <Pentagram className="w-12 h-12 mt-1 text-gray-700" />
+                </div>
+                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">Избранное</span>
               </button>
 
               <button
-                onClick={handleSavedClick}
-                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
+                  onClick={handleSpecialistClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
-                <Heart className="w-6 h-6 mb-1" />
-                <span className="text-xs">Избранное</span>
-              </button>
-
-              <button
-                onClick={handleSpecialistClick}
-                className="flex flex-col items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <Crown className="w-6 h-6 mb-1" />
-                <span className="text-xs text-center leading-tight">{getSpecialistButtonText()}</span>
+                <div className="absolute top-1/4 transform -translate-y-1/4">
+                  <UserSwitch className="w-9 h-9  text-gray-700" />
+                </div>
+                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] leading-tight">
+      {getSpecialistButtonText()}
+    </span>
               </button>
             </div>
           </div>

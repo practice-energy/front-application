@@ -17,6 +17,7 @@ export interface User {
     id: string;
     first_name: string;
     last_name: string;
+    avatar: string;
     email: Email;
     images: File[];
     created_at: string; // or Date if you'll convert it
