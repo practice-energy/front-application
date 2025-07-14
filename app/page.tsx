@@ -65,9 +65,7 @@ export default function HomePage() {
           </div>
 
           {/* Контейнер для поиска - теперь ниже логотипа */}
-          <div className="max-w-4xl mx-auto mb-24">
             <SearchBar onSearch={handleSearch} showHeading={true} chatTitle="Аллюра" />
-          </div>
         </div>
       </main>
     </div>

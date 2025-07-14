@@ -26,5 +26,7 @@ export const SearchBar = React.memo(function SearchBar(props: SearchBarProps) {
     return <MobileSearchBar onSearch={props.onSearch} placeholder={props.placeholder} chatTitle={props.chatTitle} />
   }
 
-  return <DesktopSearchBar {...props} />
+  return <div className="max-w-4xl mx-auto mb-24">
+    <DesktopSearchBar {...props} />
+  </div>
 })
