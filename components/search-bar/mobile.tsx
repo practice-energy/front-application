@@ -183,7 +183,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         )}
       >
         {/* Action buttons */}
-        <div className="px-4 py-2">
+        {isFocused && (<div className="px-4 py-2">
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -214,7 +214,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
               <span>Практис</span>
             </Button>
           </div>
-        </div>
+        </div>)}
 
         {/* File uploads display */}
         {uploadedFiles.length > 0 && (
@@ -286,7 +286,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                       disabled={!canSubmit}
                       className={`h-8 w-8 p-0 ${
                         canSubmit
-                          ? "bg-violet-600 hover:bg-violet-700"
+                          ? "bg-violet-600 hover:bg-violet-700 text-white"
                           : "bg-violet-200 dark:bg-violet-700 cursor-not-allowed"
                       }`}
                     >
@@ -307,16 +307,18 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
             </div>
 
             {/* New Chat Button */}
+            {isFocused && (
             <Button
-              onClick={handleNewChat}
-              variant="outline"
-              className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
+                onClick={handleNewChat}
+                variant="outline"
+                className="h-14 w-14 rounded-sm flex-shrink-0 bg-transparent"
             >
               <MessageSquarePlus className="w-full h-full" />
-            </Button>
+            </Button>)}
           </div>
         </div>
 
+        {isFocused && ()}
         <input
           ref={fileInputRef}
           type="file"
