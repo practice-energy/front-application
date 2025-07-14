@@ -22,7 +22,6 @@ export function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [authMode, setAuthMode] = useState<"login" | "signup">("login")
   const { isAuthenticated, user, logout } = useAuth()
-  const { language, changeLanguage } = useTranslations()
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()

@@ -1,7 +1,16 @@
 "use client"
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import {Search, Plus, MessageSquare, PanelRightOpen, Activity, LucideArchive, SparklesIcon} from "lucide-react"
+import {
+  Search,
+  Plus,
+  MessageSquare,
+  PanelRightOpen,
+  Activity,
+  LucideArchive,
+  SparklesIcon,
+  CalendarDays
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -16,6 +25,8 @@ import { SectionHeader } from "./components/section-header"
 import { SectionContent } from "./components/section-content"
 import { ChatItem } from "./components/chat-item"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
+import {Card} from "@/components/ui/card";
+import {useProfileStore} from "@/stores/profile-store";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -41,7 +52,8 @@ export function MainSidebar() {
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const { user } = useAuth()
+  const { logout } = useAuth()
+  const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
 
   const {
@@ -79,9 +91,22 @@ export function MainSidebar() {
     }
   }
 
+  const setHat = () => {
+    if (user === null) {
+      logout()
+    }
+
+    if (user?.hat === "adept") {
+      setUser({...user, hat: "master"})
+    } else {
+      setUser({...user, hat: "adept"})
+    }
+  }
+
   // Определяем тип контента в зависимости от роли пользователя
   const isSpecialist = user?.isSpecialist || false
   const newChatLabel = isSpecialist ? "Новый клиент" : "Новый чат"
+  const hat = user?.hat || "adept"
 
   return (
     <div
@@ -97,40 +122,65 @@ export function MainSidebar() {
           isMobile ? "bg-white" : "bg-gray-50"
       )}
     >
-      {/* Общий контент для всех устройств */}
-      <div className="relative p-3 space-y-3">
-        <div className="flex items-center justify-end">
-          <button
-              onClick={toggleSidebar}
-              className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3"
-          >
-            <PanelRightOpen width={24} height={24} />
-            <span className="sr-only">Закрыть сайдбар</span>
-          </button>
-        </div>
-
-        <Button
-          onClick={handleNewSearch}
-          variant="ghost"
-          className="w-full justify-between hover:bg-violet-100 h-10 rounded-sm"
-        >
-          <div className="flex items-center">
-            <MessageSquare className="w-4 h-4 mr-3" />
-            <span className="text-sm">{newChatLabel}</span>
+      {isMobile ? (<>
+        <div className="relative py-3 space-y-3 mt-3 gap-3">
+          <div className="flex flex-row items-center w-full px-3 pl-6 gap-4.5">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
+              <Input
+                  placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
+              />
+            </div>
+            <button
+                onClick={toggleSidebar}
+                className="rounded-sm pl-3"
+            >
+              <PanelRightOpen width={24} height={24} />
+              <span className="sr-only">Закрыть сайдбар</span>
+            </button>
           </div>
-          <Plus className="w-4 h-4" />
-        </Button>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
-          <Input
-            placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
-          />
+          <div className="flex flex-row items-center w-full px-6 gap-3">
+            {/*Make buttons here*/}
+          </div>
         </div>
-      </div>
+      </>) : (<>
+        <div className="relative p-3 space-y-3">
+          <div className="flex items-center justify-end">
+            <button
+                onClick={toggleSidebar}
+                className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3"
+            >
+              <PanelRightOpen width={24} height={24} />
+              <span className="sr-only">Закрыть сайдбар</span>
+            </button>
+          </div>
+
+          <Button
+              onClick={handleNewSearch}
+              variant="ghost"
+              className="w-full justify-between hover:bg-violet-100 h-10 rounded-sm"
+          >
+            <div className="flex items-center">
+              <MessageSquare className="w-4 h-4 mr-3" />
+              <span className="text-sm">{newChatLabel}</span>
+            </div>
+            <Plus className="w-4 h-4" />
+          </Button>
+
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
+            <Input
+                placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
+            />
+          </div>
+        </div>
+      </>)}
 
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className={cn(

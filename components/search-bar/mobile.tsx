@@ -179,7 +179,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
         <div
             ref={containerRef}
             className={cn(
-                "fixed left-0 right-0 bottom-0 z-50 bg-white dark:bg-gray-900 transition-all duration-300 ease-out shadow-sm",
+                "fixed left-0 right-0 bottom-0 z-50 bg-none dark:bg-gray-900 transition-all duration-300 ease-out shadow-sm",
             )}
         >
           {/* File uploads display */}
@@ -252,7 +252,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                     {/* Action buttons row - moved below textarea */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {isFocused && (
+                        {/*{isFocused && (*/}
                             <>
                               <Button
                                   type="button"
@@ -283,7 +283,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                                 <span>Практис</span>
                               </Button>
                             </>
-                        )}
+                        {/*)}*/}
                       </div>
 
                       {isFocused && (
