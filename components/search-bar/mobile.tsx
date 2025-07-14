@@ -163,13 +163,21 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
     setIsFocused(false)
   }, [])
 
-  const togglePractice = useCallback(() => {
-    setIsPractice((prev) => !prev)
-  }, [])
+  const openFileDialog = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInputRef.current?.click();
+        // Сохраняем фокус на textarea
+        textareaRef.current?.focus();
+  }, []);
 
-  const openFileDialog = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
+  const togglePractice = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsPractice((prev) => !prev);
+        // Сохраняем фокус на textarea
+        textareaRef.current?.focus();
+  }, []);
 
   const canSubmit = message.trim() || uploadedFiles.length > 0
   const hasContent = message.trim().length > 0 || isFocused
@@ -252,38 +260,38 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                     {/* Action buttons row - moved below textarea */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {/*{isFocused && (*/}
+                        {isFocused && (
                             <>
-                              <Button
-                                  type="button"
-                                  size="sm"
-                                  onClick={openFileDialog}
-                                  className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
-                              >
-                                <Paperclip className="w-4 h-4" />
-                              </Button>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={(e) => openFileDialog(e)}
+                                    className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+                                >
+                                    <Paperclip className="w-4 h-4" />
+                                </Button>
 
-                              <Button
-                                  type="button"
-                                  size="sm"
-                                  onClick={togglePractice}
-                                  className={`px-3 py-2 h-9 font-medium rounded-sm transition-colors duration-200 flex items-center gap-1 group ${
-                                      isPractice
-                                          ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                                          : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
-                                  }`}
-                              >
-                                <Image
-                                    src="/practice-logo.svg"
-                                    alt="Settings"
-                                    width={14}
-                                    height={14}
-                                    className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-                                />
-                                <span>Практис</span>
-                              </Button>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={(e) => togglePractice(e)}
+                                    className={`px-3 py-2 h-9 font-medium rounded-sm transition-colors duration-200 flex items-center gap-1 group ${
+                                        isPractice
+                                            ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
+                                            : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                                    }`}
+                                >
+                                    <Image
+                                        src="/practice-logo.svg"
+                                        alt="Settings"
+                                        width={14}
+                                        height={14}
+                                        className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                                    />
+                                    <span>Практис</span>
+                                </Button>
                             </>
-                        {/*)}*/}
+                        )}
                       </div>
 
                       {isFocused && (
