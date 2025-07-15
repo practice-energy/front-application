@@ -185,10 +185,27 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
     const openFileDialog = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        fileInputRef.current?.click()
+
+        // Создаем временный input элемент специально для мобильных устройств
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.multiple = true
+        input.accept = 'image/*,text/*,.pdf,.doc,.docx'
+
+        // Обработчик изменения для временного input
+        input.onchange = (e: Event) => {
+            const files = (e.target as HTMLInputElement).files
+            if (files) {
+                handleFileSelect(files)
+            }
+        }
+
+        // Запускаем клик на временном input
+        input.click()
+
         setSoftFocus(true)
         textareaRef.current?.focus()
-    }, [])
+    }, [handleFileSelect])
 
     const handleFileInputClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
@@ -264,6 +281,7 @@ export const MobileSearchBar = React.memo(function MobileSearchBar({
                           placeholder={placeholder}
                           className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-6"
                           rows={1}
+                          inputmode="text"
                           style={{
                               minHeight: "24px",
                               maxHeight: "120px",
