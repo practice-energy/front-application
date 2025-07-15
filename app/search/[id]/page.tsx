@@ -20,8 +20,6 @@ import {useIsMobile} from "@/hooks/use-mobile";
 export default function SearchPage() {
   const params = useParams()
   const router = useRouter()
-  const { isAuthenticated } = useAuth()
-  const { isCollapsed } = useSidebar()
   const [currentChat, setCurrentChat] = useState<Chat | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -47,6 +45,7 @@ export default function SearchPage() {
         isAI: true,
         createdAt: Date.now(),
         isMuted: false,
+        description: "",
       }
       setCurrentChat(newChat)
     }
@@ -158,6 +157,7 @@ export default function SearchPage() {
           isAI: true,
           createdAt: Date.now(),
           isMuted: false,
+          description: "",
         }
         const updatedChat = addMessageToChat(chatToUpdate, userMessage)
 

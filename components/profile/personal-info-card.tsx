@@ -162,7 +162,6 @@ export function PersonalInfoCard({ data, isEditMode, onInputChange, errors }: Pe
                         ratioWidth={4}
                         ratioHeight={5}
                         orientation="vertical"
-                        thumbnailsPerView={5}
                         borderRadius={8}
                     />
                 ) : (

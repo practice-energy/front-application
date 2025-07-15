@@ -17,10 +17,10 @@ interface MobileSearchBarProps {
 }
 
 export const MobileMufi = React.memo(function MobileSearchBar({
-                                                                       onSearch,
-                                                                       placeholder = "Поиск пути",
-                                                                       chatTitle = "Аллюра",
-                                                                   }: MobileSearchBarProps) {
+                                                                  onSearch,
+                                                                  placeholder = "Поиск пути",
+                                                                  chatTitle = "Аллюра",
+                                                              }: MobileSearchBarProps) {
     const { t } = useTranslations()
     const router = useRouter()
     const [message, setMessage] = useState("")
@@ -186,13 +186,11 @@ export const MobileMufi = React.memo(function MobileSearchBar({
         e.preventDefault()
         e.stopPropagation()
 
-        // Создаем временный input элемент специально для мобильных устройств
         const input = document.createElement('input')
         input.type = 'file'
         input.multiple = true
         input.accept = 'image/*,text/*,.pdf,.doc,.docx'
 
-        // Обработчик изменения для временного input
         input.onchange = (e: Event) => {
             const files = (e.target as HTMLInputElement).files
             if (files) {
@@ -200,7 +198,6 @@ export const MobileMufi = React.memo(function MobileSearchBar({
             }
         }
 
-        // Запускаем клик на временном input
         input.click()
 
         setSoftFocus(true)
@@ -225,16 +222,19 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                 )}
             >
                 {uploadedFiles.length > 0 && (
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 transition-all duration-300 ease-in-out">
                         <div className="flex flex-wrap gap-2">
                             {uploadedFiles.map((file, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border"
+                                    className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 text-xs border transition-all duration-200 ease-in-out"
                                 >
-                                    <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300" />
+                                    <FileText className="w-3 h-3 text-gray-600 dark:text-gray-300 transition-colors duration-200" />
                                     <span className="truncate max-w-24">{file.name}</span>
-                                    <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-500">
+                                    <button
+                                        onClick={() => removeFile(index)}
+                                        className="text-gray-500 transition-colors duration-200"
+                                    >
                                         <X className="w-3 h-3" />
                                     </button>
                                 </div>
@@ -243,34 +243,34 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                     </div>
                 )}
 
-                <div className="px-4 py-3 bg-white dark:bg-gray-900">
-                    <div className="flex flex-row items-end gap-3">
-                        <div className="flex-1">
+                <div className="px-4 py-3 bg-white dark:bg-gray-900 transition-all duration-300 ease-in-out">
+                    <div className="flex flex-row items-end gap-3 transition-all duration-300 ease-in-out">
+                        <div className="flex-1 transition-all duration-300 ease-in-out">
                             <div
-                                className={`relative px-3 py-3 rounded-sm border ${
+                                className={`relative px-3 py-3 rounded-sm border transition-all duration-300 ease-in-out ${
                                     isDragOver
                                         ? "border-violet-400 bg-violet-50/30 dark:bg-violet-900/30"
                                         : hasContent
-                                            ? "border-gray-200"
-                                            : "border-gray-200 hover:border-white/30"
+                                            ? "border-gray-200 dark:border-gray-600"
+                                            : "border-gray-200 dark:border-gray-700"
                                 }`}
                                 onDragOver={handleDragOver}
                                 onDragLeave={handleDragLeave}
                                 onDrop={handleDrop}
                             >
-                                <form onSubmit={handleSubmit} className="w-full">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mb-1.5">
+                                <form onSubmit={handleSubmit} className="w-full transition-all duration-300 ease-in-out">
+                                    <div className="flex items-center gap-2.5 transition-all duration-300 ease-in-out">
+                                        <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mb-1.5 transition-all duration-300 ease-in-out">
                                             <Image
                                                 src="/allura-logo.svg"
                                                 alt="Alura Logo"
                                                 width={20}
                                                 height={20}
-                                                className="w-4 h-4"
+                                                className="w-4 h-4 transition-all duration-300 ease-in-out"
                                                 priority
                                             />
                                         </div>
-                                        <div className="flex-1 min-w-0">
+                                        <div className="flex-1 min-w-0 transition-all duration-300 ease-in-out">
                       <textarea
                           ref={textareaRef}
                           value={message}
@@ -279,7 +279,7 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                           onFocus={handleFocus}
                           onBlur={handleBlur}
                           placeholder={placeholder}
-                          className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-6"
+                          className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-6 transition-all duration-300 ease-in-out"
                           rows={1}
                           inputmode="text"
                           style={{
@@ -290,82 +290,92 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                                         </div>
                                     </div>
 
-                                    <div className="mobile-search-actions flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            {isActuallyFocused && (
-                                                <>
-                                                    <Button
-                                                        type="button"
-                                                        size="sm"
-                                                        onMouseDown={(e) => e.preventDefault()}
-                                                        onClick={openFileDialog}
-                                                        className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
-                                                    >
-                                                        <Paperclip className="w-4 h-4" />
-                                                    </Button>
+                                    <div className="mobile-search-actions flex items-center justify-between transition-all duration-300 ease-in-out">
+                                        <div className="flex items-center gap-2 transition-all duration-300 ease-in-out">
+                                            <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                                                isActuallyFocused ? "opacity-100 max-w-full" : "opacity-0 max-w-0"
+                                            }`}>
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                    onClick={openFileDialog}
+                                                    className="rounded-sm bg-white dark:bg-gray-800 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-all duration-300 ease-in-out flex items-center gap-1 group border"
+                                                >
+                                                    <Paperclip className="w-4 h-4 transition-transform duration-300 ease-in-out" />
+                                                </Button>
+                                            </div>
 
-                                                    <Button
-                                                        type="button"
-                                                        size="sm"
-                                                        onMouseDown={(e) => e.preventDefault()}
-                                                        onClick={togglePractice}
-                                                        className={`px-3 py-2 h-9 font-medium rounded-sm transition-colors duration-200 flex items-center gap-1 group ${
-                                                            isPractice
-                                                                ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                                                                : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                                            <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                                                isActuallyFocused ? "opacity-100 max-w-full" : "opacity-0 max-w-0"
+                                            }`}>
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                    onClick={togglePractice}
+                                                    className={`px-3 py-2 h-9 font-medium rounded-sm transition-all duration-300 ease-in-out flex items-center gap-1 group border ${
+                                                        isPractice
+                                                            ? "bg-violet-600 text-white border-violet-600 "
+                                                            : "bg-white dark:bg-gray-800text-gray-900 dark:text-white border-gray-200 dark:border-gray-600"
+                                                    }`}
+                                                >
+                                                    <Image
+                                                        src="/practice-logo.svg"
+                                                        alt="Settings"
+                                                        width={14}
+                                                        height={14}
+                                                        className={`mr-2 transition-all duration-300 ease-in-out ${
+                                                            isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"
                                                         }`}
-                                                    >
-                                                        <Image
-                                                            src="/practice-logo.svg"
-                                                            alt="Settings"
-                                                            width={14}
-                                                            height={14}
-                                                            className={`mr-2 ${isPractice ? "filter brightness-0 invert text-white" : "dark:filter dark:brightness-0 dark:invert"}`}
-                                                        />
-                                                        <span>Практис</span>
-                                                    </Button>
-                                                </>
-                                            )}
+                                                    />
+                                                    <span>Практис</span>
+                                                </Button>
+                                            </div>
                                         </div>
 
-                                        {isActuallyFocused && (
+                                        <div className={`transition-all duration-300 ease-in-out ${
+                                            isActuallyFocused ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                                        }`}>
                                             <Button
                                                 type="submit"
                                                 disabled={!canSubmit}
                                                 onMouseDown={(e) => e.preventDefault()}
-                                                className={`h-9 w-9 p-0 border-none ${
+                                                className={`h-9 w-9 p-0 border-none transition-all duration-300 ease-in-out ${
                                                     canSubmit
                                                         ? "bg-violet-600 hover:bg-violet-700 text-white"
                                                         : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
                                                 }`}
                                             >
-                                                <ArrowUp className="w-4 h-4" />
+                                                <ArrowUp className="w-4 h-4 transition-transform duration-300 ease-in-out group-hover:scale-110" />
                                             </Button>
-                                        )}
+                                        </div>
                                     </div>
                                 </form>
 
                                 {isDragOver && (
-                                    <div className="absolute inset-0 bg-violet-100/50 dark:bg-violet-900/50 rounded-lg flex items-center justify-center pointer-events-none">
-                                        <div className="text-violet-600 dark:text-violet-400 text-center">
-                                            <FileText className="w-6 h-6 mx-auto mb-1" />
-                                            <p className="text-xs font-medium">Перетащите файлы</p>
+                                    <div className="absolute inset-0 bg-violet-100/50 dark:bg-violet-900/50 rounded-lg flex items-center justify-center pointer-events-none transition-all duration-300 ease-in-out">
+                                        <div className="text-violet-600 dark:text-violet-400 text-center transition-all duration-300 ease-in-out">
+                                            <FileText className="w-6 h-6 mx-auto mb-1 transition-all duration-300 ease-in-out" />
+                                            <p className="text-xs font-medium transition-all duration-300 ease-in-out">Перетащите файлы</p>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {!isActuallyFocused && (
+                        <div className={`transition-all duration-300 ease-in-out ${
+                            !isActuallyFocused ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"
+                        }`}>
                             <Button
                                 onClick={handleNewChat}
                                 variant="outline"
                                 size="lg"
-                                className="h-14 w-14 mt-0.5 p-1 rounded-sm flex-shrink-0 bg-transparent border-gray-200 [&_svg]:size-4.5"
+                                className="h-14 w-14 mt-0.5 p-1 rounded-sm flex-shrink-0 bg-transparent border-gray-200 [&_svg]:size-4.5 transition-all duration-300 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800"
                             >
-                                <MessageSquarePlus className="w-6 h-6" />
+                                <MessageSquarePlus className="w-6 h-6 transition-transform duration-300 ease-in-out group-hover:scale-110" />
                             </Button>
-                        )}
+                        </div>
                     </div>
                 </div>
 
@@ -380,7 +390,7 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                 />
             </div>
 
-            <div className="h-20" />
+            <div className="h-20 transition-all duration-300 ease-in-out" />
         </>
     )
 })

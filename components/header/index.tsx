@@ -139,7 +139,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background backdrop-blur-lg">
+      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
             <div className="flex items-center space-x-6 gap-1.5">

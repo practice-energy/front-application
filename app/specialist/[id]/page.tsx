@@ -86,6 +86,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         isAI: false,
         hasNew: false,
         createdAt: Date.now(),
+        description: "",
       }
 
       window.dispatchEvent(
@@ -147,7 +148,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                       ratioWidth={4}
                       ratioHeight={5}
                       orientation="vertical"
-                      thumbnailsPerView={5}
                   />
               ) : (
                   <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
