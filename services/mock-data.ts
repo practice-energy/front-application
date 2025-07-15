@@ -3,7 +3,7 @@ import type { Booking } from "@/types/booking"
 import type { User } from "@/types/user"
 import type { CalendarEvent } from "@/types/calendar-event"
 import type { Review, Service, Specialist } from "@/types/common"
-import type { Chat, ChatItem, Message, SearchResult } from "@/types/chats"
+import type { Chat, ChatItem, Message } from "@/types/chats"
 
 // Generate UUIDs for all chat and specialist IDs first
 const chatAI1Id = uuidv4()
@@ -244,7 +244,7 @@ export const mockSpecialists: Specialist[] = [
     id: specialist1Id,
     name: "Анна Петрова",
     title: "Астролог и таролог",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     images: ["/placeholder.jpg", "/placeholder.jpg"],
     reviewCount: 127,
     price: 3500,
@@ -744,17 +744,6 @@ const fallbackMeetings: Booking[] = [
   },
 ]
 
-// Mock данные для результатов поиска (обновлены ID)
-export const mockSearchResults: SearchResult[] = [
-  {
-    id: uuidv4(),
-    query: "астрология",
-    specialists: [mockSpecialists[0]],
-    services: [mockServices[0]],
-    timestamp: Date.now(),
-  },
-]
-
 // Функции для группировки чатов по времени (остаются без изменений)
 export const groupChatsByTime = (chats: ChatItem[]) => {
   const now = Date.now()
@@ -800,10 +789,6 @@ export const getSpecialistById = (id: string): Specialist | undefined => {
 
 export const getServiceById = (id: string): Service | undefined => {
   return mockServices.find((service) => service.id === id)
-}
-
-export const getSearchResultsById = (id: string): SearchResult | undefined => {
-  return mockSearchResults.find((result) => result.id === id)
 }
 
 export const getChatById = (id: string): ChatItem | undefined => {
