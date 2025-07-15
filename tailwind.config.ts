@@ -10,6 +10,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'allura-pattern': "url('/allura-logo.svg')",
+      },
+      backgroundSize: {
+        'allura-tile': '20px 20px', // размер одного тайла
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -85,6 +91,24 @@ const config: Config = {
           "border-light": "#475569",
           accent: "#8b5cf6",
           "accent-hover": "#7c3aed",
+        },
+        button: {
+          DEFAULT: "#ffffff",
+          hover: "#f5f3ff",
+          active: "#8b5cf6",
+          text: "#0f172a",
+          "text-active": "#ffffff",
+          border: "#e5e7eb",
+          "border-active": "#8b5cf6",
+          dark: {
+            DEFAULT: "#374151",
+            hover: "#7c3aed",
+            active: "#8b5cf6",
+            text: "#ffffff",
+            "text-active": "#ffffff",
+            border: "#4b5563",
+            "border-active": "#8b5cf6",
+          },
         },
       },
       borderRadius: {

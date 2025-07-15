@@ -1,6 +1,6 @@
 "use client"
 
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { cn } from "@/lib/utils"
 import { AlertCircle, Check } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
@@ -44,7 +44,7 @@ export function ModeToggleBar({
 
   return (
     <div
-      className={cn("absolute top-20 right-12 z-10", "transition-all duration-300 ease-in-out")}
+      className={cn("absolute top-25 right-12 z-10", "transition-all duration-300 ease-in-out")}
       style={{
         transition: `margin-left ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}, background-color 200ms ease`,
       }}

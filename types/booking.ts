@@ -1,6 +1,5 @@
 export interface Booking {
   id: string
-  serviceId: string
   specialist: {
     id: string
     name: string
@@ -16,6 +15,7 @@ export interface Booking {
   format: "video" | "in-person"
   status: "upcoming" | "completed" | "cancelled"
   requiresConfirmation: boolean
+  location?: string
 }
 
 export type BookingStatus = "upcoming" | "completed" | "cancelled"

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
-import { AuthModal } from "@/components/auth-modal"
+import { AuthModal } from "@/components/modals/auth-modal"
 import { ArrowRight, Check, Award } from "lucide-react"
 import { useTranslations } from "@/hooks/use-translations"
 import { SpecialtySelectionStep } from "@/components/become-specialist/specialty-selection-step"
@@ -224,7 +224,6 @@ export default function BecomeSpecialistPage() {
                   (step === 1 && formData.specialties.length === 0) ||
                   (step === 2 && !formData.title.trim())
                 }
-                className="ml-auto bg-violet-600 dark:bg-violet-400"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">
