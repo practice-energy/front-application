@@ -143,12 +143,11 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
               {specialist.images.length > 0 ? (
                   <SquareImageGallery
                       images={specialist.images}
-                      alt="Profile photos"
+                      alt={specialist.name}
                       ratioWidth={4}
                       ratioHeight={5}
                       orientation="vertical"
                       thumbnailsPerView={5}
-                      borderRadius={8}
                   />
               ) : (
                   <div className="text-center py-12 text-muted-foreground dark:text-gray-400">

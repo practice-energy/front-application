@@ -12,7 +12,6 @@ interface SquareImageGalleryProps {
     orientation?: "vertical" | "horizontal"
     thumbnailsPosition?: "start" | "end"
     thumbnailGap?: number
-    thumbnailsPerView?: number
     borderRadius?: number
     onImageClick?: (index: number) => void
     className?: string
@@ -25,7 +24,6 @@ export function SquareImageGallery({
                                        ratioHeight = 1,
                                        orientation = "vertical",
                                        thumbnailGap = 8,
-                                       thumbnailsPerView = 5,
                                        borderRadius = 2,
                                        onImageClick,
                                        className = ""
@@ -84,11 +82,11 @@ export function SquareImageGallery({
                     className="bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
                     style={{
                         aspectRatio: `${ratioWidth}/${ratioHeight}`,
-                        borderRadius: `${borderRadius}px`
+                        // borderRadius: `${borderRadius}px`
                     }}
                 >
                     <div className="text-center">
-                        <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 mx-auto mb-4 flex items-center justify-center">
                             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"
@@ -113,7 +111,7 @@ export function SquareImageGallery({
                     className="overflow-hidden bg-gray-100 dark:bg-gray-800"
                     style={{
                         aspectRatio: `${ratioWidth}/${ratioHeight}`,
-                        borderRadius: `${borderRadius}px`
+                        // borderRadius: `${borderRadius}px`
                     }}
                 >
                     <img
@@ -132,7 +130,7 @@ export function SquareImageGallery({
     // Aspect ratio styles
     const aspectStyle = {
         aspectRatio: `${ratioWidth}/${ratioHeight}`,
-        borderRadius: `${borderRadius}px`
+        // borderRadius: `${borderRadius}px`
     }
 
     return (
@@ -151,17 +149,20 @@ export function SquareImageGallery({
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
             >
-                <div className="relative w-full h-full" style={{ borderRadius: `${borderRadius}px`}}>
+                <div
+                    className="relative w-full h-full"
+                     // style={{ borderRadius: `${borderRadius}px`}}
+                >
                     <img
                         src={images[selectedIndex] || "/placeholder.svg"}
                         alt={`${alt} - Image ${selectedIndex + 1}`}
-                        className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
+                        className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity rounded-b-none"
                         onClick={() => onImageClick?.(selectedIndex)}
-                        style={{ borderRadius: `${borderRadius}px` }}
+                        // style={{ borderRadius: `${borderRadius}px` }}
                     />
 
                     {/* Image counter */}
-                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-sm text-xs">
+                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 text-xs">
                         {selectedIndex + 1} / {images.length}
                     </div>
 
@@ -171,7 +172,7 @@ export function SquareImageGallery({
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="bg-black/20 hover:bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="bg-black/20 hover:bg-black/40 text-white hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(-1);
@@ -183,7 +184,7 @@ export function SquareImageGallery({
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="bg-black/20 hover:bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="bg-black/20 hover:bg-black/40 text-white hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(1);

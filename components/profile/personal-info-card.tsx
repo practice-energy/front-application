@@ -140,15 +140,10 @@ export function PersonalInfoCard({ data, isEditMode, onInputChange, errors }: Pe
 
   return (
       <Card className="shadow-sm border-border bg-card dark:bg-gray-800 dark:border-gray-700">
-        <CardHeader className="pb-6">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-lg text-foreground dark:text-gray-100">Personal Information</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Photos Section */}
-          <div className="space-y-3">
-            {isEditMode ? (
+        {/* Photos Section */}
+        <div className="space-y-3">
+          {isEditMode ? (
+              <div className="space-y-6 p-6">
                 <PhotoUpload
                     photos={data.photos}
                     onPhotosChange={(photos) => onInputChange("photos", photos)}
@@ -157,28 +152,30 @@ export function PersonalInfoCard({ data, isEditMode, onInputChange, errors }: Pe
                     description="Add photos to showcase your practice"
                     showTitle={false}
                 />
-            ) : (
-                <div>
-                  {data.photos.length > 0 ? (
-                      <SquareImageGallery
-                          images={data.photos.map((f: File) => URL.createObjectURL(f))}
-                          alt="Profile photos"
-                          ratioWidth={4}
-                          ratioHeight={5}
-                          orientation="vertical"
-                          thumbnailsPerView={5}
-                          borderRadius={8}
-                      />
-                  ) : (
-                      <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
-                        <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>No photos uploaded yet</p>
-                      </div>
-                  )}
-                </div>
-            )}
-          </div>
+              </div>
+          ) : (
+              <div className="pb-6">
+                {data.photos.length > 0 ? (
+                    <SquareImageGallery
+                        images={data.photos.map((f: File) => URL.createObjectURL(f))}
+                        alt="Profile photos"
+                        ratioWidth={4}
+                        ratioHeight={5}
+                        orientation="vertical"
+                        thumbnailsPerView={5}
+                        borderRadius={8}
+                    />
+                ) : (
+                    <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
+                      <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No photos uploaded yet</p>
+                    </div>
+                )}
+              </div>
+          )}
+        </div>
 
+        <CardContent className="space-y-6">
           {/* Name Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">

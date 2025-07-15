@@ -73,6 +73,7 @@ export const MessageItem = React.memo(
                     <Button
                         size="sm"
                         className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent active:bg-none relative"
+                        variant="outline"
                         onClick={handleViewSpecialistProfile}
                         aria-label={isAssistant ? "" : `View ${message.type} profile`}
                         title={isAssistant ? "Allura" : "View profile"}
@@ -80,7 +81,7 @@ export const MessageItem = React.memo(
                         <Avatar className="w-16 h-16">
                             <AvatarImage
                                 src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.png"}
-                                className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter" : "hover:bg-gray-100")}
+                                className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter active:bg-none" : "hover:bg-gray-100")}
                             />
                             <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                                 {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Clock, Share, SquareUserIcon, Video } from "lucide-react"
+import {Clock, Images, Share, SquareUserIcon, Video} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/modals/auth-modal"
@@ -134,19 +134,24 @@ export default function ServicePage({ params }: { params: { id: string } }) {
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
+              {/* Photo Gallery at the very top */}
+              {service.images.length > 0 ? (
+                  <SquareImageGallery
+                      images={service.images}
+                      alt={service.title}
+                      ratioHeight={1}
+                      ratioWidth={1}
+                      borderRadius={0}
+                  />
+              ) : (
+                  <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
+                    <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Еще нет фото</p>
+                  </div>
+              )}
+
               {/* Service header below the gallery */}
               <div className="p-6 space-y-6">
-                <div className="flex flex-col gap-4">
-                  {/* Photo Gallery at the very top */}
-                  <SquareImageGallery
-                    images={service.images}
-                    alt={specialist.name}
-                    ratioHeight={1}
-                    ratioWidth={1}
-                    borderRadius={8}
-                  />
-                </div>
-
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">{service.title}</h1>
                 <div className="flex items-center space-x-4 mb-6">
                   <div className="flex items-center">

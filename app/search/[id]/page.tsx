@@ -194,7 +194,7 @@ export default function SearchPage() {
         <ScrollArea className="h-full relative">
           {!isMobile && (<ChatNewButton />)}
           <div className="flex justify-center px-6 py-4">
-            <div className="max-w-4xl w-full pb-64 pt-20">
+            <div className="max-w-6xl w-full pb-64 pt-20">
               {currentChat && currentChat.messages.length === 0 && !isLoading ? (
                 <ChatEmptyState />
               ) : (

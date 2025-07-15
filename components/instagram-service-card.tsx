@@ -113,7 +113,7 @@ export function InstagramServiceCard({
           {showLikeAnimation && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="bg-violet-600 rounded-sm p-2">
-                <Pentagram size={64} weight="fill" className="text-white animate-ping" />
+                <Pentagram size={72} weight="fill" className="text-white animate-ping" />
               </div>
             </div>
           )}
