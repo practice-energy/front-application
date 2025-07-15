@@ -10,6 +10,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'allura-pattern': "url('/allura-logo.svg')",
+      },
+      backgroundSize: {
+        'allura-tile': '20px 20px', // размер одного тайла
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

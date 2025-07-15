@@ -9,7 +9,7 @@ import { AuthModal } from "@/components/modals/auth-modal"
 import { BookingConfirmation } from "@/components/booking-confirmation"
 import { useTranslations } from "@/hooks/use-translations"
 import { AirbnbCalendar } from "@/components/airbnb-calendar"
-import { SearchBar } from "@/components/search-bar/index"
+import { Mufi } from "@/components/mufi/index"
 import { AboutSection } from "@/components/about-section"
 import { FeedbackSection } from "@/components/feedback-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
@@ -227,7 +227,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         {/* Fixed SearchBar at the bottom of the screen with sidebar sync */}
         <div ref={searchRef} className="fixed bottom-0 left-0 right-0">
           <div className="px-6">
-            <SearchBar
+            <Mufi
               onSearch={handleSearch}
               showHeading={false}
               dynamicWidth={true}

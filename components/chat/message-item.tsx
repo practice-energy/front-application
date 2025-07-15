@@ -99,10 +99,10 @@ export const MessageItem = React.memo(
             {message.content && (
               <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
                 <div
-                  className={cn(`rounded-sm py-3 border ${
+                  className={cn(`rounded-sm py-3 ${
                     isUser
-                      ? "bg-violet-50 shadow-sm px-3 py-3 gap-3 "
-                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-sm px-3 gap-3"
+                      ? "bg-violet-50 shadow-md px-3 py-3 gap-3 "
+                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-md px-3 gap-3"
                   }`,  isAssistant && "border-none shadow-none px-0 ")
                 }
                   style={{ wordBreak: "break-word" }}

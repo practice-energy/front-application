@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { BookingConfirmation } from "@/components/booking-confirmation"
 import { useTranslations } from "@/hooks/use-translations"
-import { SearchBar } from "@/components/search-bar/index"
+import { Mufi } from "@/components/mufi/index"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { AboutSection } from "@/components/about-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
@@ -213,7 +213,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
           <div className="pb-6">
-            <SearchBar
+            <Mufi
               onSearch={handleSearch}
               showHeading={false}
               dynamicWidth={true}

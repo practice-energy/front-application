@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
   Search,
@@ -158,9 +158,8 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full md:w-96 border-gray-300 flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
+        "fixed left-0 top-0 h-full w-full md:w-96 bg-white shadow-sm flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
-        isMobile ? "bg-white" : "bg-gray-50",
       )}
     >
       {isMobile ? (
@@ -170,7 +169,7 @@ export function MainSidebar() {
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
                 <Input
-                  placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                  placeholder={"Поиск в чатах"}
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
@@ -218,7 +217,7 @@ export function MainSidebar() {
         </>
       ) : (
         <>
-          <div className="relative p-3 space-y-3">
+          <div className="relative p-3 space-y-3 mt-6">
             <div className="flex items-center justify-end">
               <button onClick={toggleSidebar} className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3">
                 <PanelRightOpen width={24} height={24} />
@@ -257,13 +256,13 @@ export function MainSidebar() {
         <div
           className={cn(
             "sticky top-0 left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
-            isMobile ? "from-white via-white/80 to-transparent" : "from-gray-50 via-gray-50/80 to-transparent",
+             "from-white via-white/80 to-transparent",
           )}
         />
 
         <div>
           {isSearching ? (
-            <div>
+            <div className="px-3">
               <SectionHeader
                 title="Результаты поиска"
                 sectionKey="search"
@@ -274,7 +273,7 @@ export function MainSidebar() {
                 isMobile={isMobile}
               />
               <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
-                <div className="space-y-3 px-2">
+                <div className="px-2">
                   {searchResults.length > 0 ? (
                     searchResults.map((chat) => (
                       <ChatItem
@@ -312,7 +311,7 @@ export function MainSidebar() {
                     iconStyle={"text-violet-600"}
                   />
                   <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-3 px-3">
+                    <div className="px-3">
                       {groupedChats.today.map((chat) => (
                         <ChatItem
                           key={chat.id}
@@ -341,7 +340,7 @@ export function MainSidebar() {
                     isMobile={isMobile}
                   />
                   <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-3 px-3">
+                    <div className="px-3">
                       {groupedChats.last7Days.map((chat) => (
                         <ChatItem
                           key={chat.id}
@@ -371,7 +370,7 @@ export function MainSidebar() {
                     icon={LucideArchive}
                   />
                   <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
-                    <div className="space-y-3 px-3">
+                    <div className="px-3">
                       {groupedChats.older.map((chat) => (
                         <ChatItem
                           key={chat.id}
@@ -393,17 +392,25 @@ export function MainSidebar() {
 
         <div className="h-12" />
 
-        <div className="p-3">
-          <Button variant="outline" className="w-full hover:bg-violet-100 rounded-sm px-6 h-12 bg-transparent">
-            <div className="items-center flex flex-row gap-3">
-              <SparklesIcon />
-              <p className="text-base font-medium text-center w-full">Позолоти ручку</p>
-            </div>
-          </Button>
-        </div>
-
-        <div className="h-12" />
+        {/* Исчезающий градиент снизу */}
+        <div
+            className={cn(
+                "sticky bottom-0 left-0 right-0 h-3 bg-gradient-to-t to-transparent pointer-events-none z-10",
+                "from-white via-white/80 to-transparent",
+            )}
+        />
       </ScrollArea>
+
+      <div className="p-3">
+        <Button variant="outline" className="w-full hover:bg-violet-100 rounded-sm px-6 h-12 bg-transparent">
+          <div className="items-center flex flex-row gap-3">
+            <SparklesIcon />
+            <p className="text-base font-medium text-center w-full">Позолоти ручку</p>
+          </div>
+        </Button>
+      </div>
+
+      <div className="h-6" />
     </div>
   )
 }

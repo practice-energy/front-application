@@ -50,6 +50,10 @@ export interface SectionHeaderProps {
   isMobile: boolean
   icon: Icon
   iconStyle: string
+  sectionKey: string
+  sectionVisibility: boolean
+  toggleSection: boolean
+  count: number
 }
 
 export interface SectionContentProps {

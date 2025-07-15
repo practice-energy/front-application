@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { SearchBar } from "@/components/search-bar/index"
+import { Mufi } from "@/components/mufi/index"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { useAuth } from "@/hooks/use-auth"
@@ -217,7 +217,7 @@ export default function SearchPage() {
         <div className="fixed bottom-0 left-0 right-0 z-10">
           <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
             <div className="pb-6">
-              <SearchBar
+              <Mufi
                 onSearch={handleSearch}
                 showHeading={false}
                 dynamicWidth={true}

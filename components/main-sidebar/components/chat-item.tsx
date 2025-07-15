@@ -35,12 +35,12 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
       <div
           className={cn(
               "relative rounded-sm transition-colors cursor-pointer w-full",
-              isMobile ? "px-2 py-2" : "px-3 py-0.5",
+              isMobile ? "px-2 py-2" : "pr-3 pl-0 py-0.5",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
               isCollapsed && !isMobile
                   ? ""
                   : isActive
-                      ? "bg-violet-50 dark:bg-violet-900/20 shadow-sm"
+                      ? "bg-white shadow-md"
                       : "hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:shadow-sm",
           )}
           onClick={() => onChatClick(chat.id)}
@@ -49,7 +49,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           {/* Profile Image - spans all three rows */}
           <div className={cn(
               "flex-shrink-0 flex items-center",
-              isMobile ? "h-[81px]" : "h-[81px]" // Высота аватара под три строки
+              "h-[81px] pl-1.5" // Высота аватара под три строки
           )}>
             {chat.isAI ? (
                 <Image
@@ -61,7 +61,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                 />
             ) : (
                 <Image
-                    src={chat.avatar || "/placeholder.jpg"}
+                    src={chat.avatar || "/placeholder.svg"}
                     alt={chat.title}
                     width={71}
                     height={71}
@@ -83,7 +83,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                   </span>
                       <div
                           className={cn(
-                              "w-3 h-3 rounded-sm flex-shrink-0",
+                              "w-4 h-4 rounded-sm flex-shrink-0",
                               chat.status === "waiting" && "bg-pink-500",
                               chat.status === "confirmed" && "bg-green-300",
                           )}
@@ -107,7 +107,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                 <div className="flex flex-col items-end gap-1 py-1.5">  {/* Вертикальное выравнивание */}
                   {/* Индикатор непрочитанного */}
                   <div className={cn(
-                      "w-3 h-3 rounded-sm bg-none",
+                      "w-4 h-4 rounded-sm bg-none",
                       hasUnread && "bg-violet-600"
                   )} />
 
@@ -116,12 +116,12 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                       onClick={handleToggleClick}
                       className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors mt-1.5"
                   >
-                    {toggleState === "mute" && <MessageSquareOff className="w-3 h-3 text-red-600" />}
+                    {toggleState === "mute" && <MessageSquareOff className="w-4 h-4 text-red-600" />}
                     {toggleState === "ai" && (
                         <img
                             src="/allura-logo.svg"
                             alt="AI"
-                            className="text-violet-600 flex-shrink-0 bg-none w-3 h-3"
+                            className="text-violet-600 flex-shrink-0 bg-none w-4 h-4"
                         />
                     )}
                     {/*{toggleState === "none" && */}

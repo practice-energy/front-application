@@ -96,8 +96,8 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
 
         {/* Top row (even indexes) */}
         <div className="relative mb-3">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-9 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-9 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
 
           <div
               ref={topScrollRef}
@@ -107,7 +107,7 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
             {topFeedbacks.map((feedback, index) => (
                 <div
                     key={`top-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-violet-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
+                    className="flex-shrink-0 w-80 bg-white shadow-md rounded-sm py-3 px-1"
                 >
                   <div className="flex items-center mb-3 p-1">
                     <img
@@ -124,7 +124,7 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed px-1">{feedback.comment}</p>
+                  <p className="text-sm leading-relaxed px-1">{feedback.comment}</p>
                 </div>
             ))}
           </div>
@@ -132,18 +132,18 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
 
         {/* Bottom row (odd indexes) */}
         <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-9 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-9 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
 
           <div
               ref={bottomScrollRef}
-              className="flex space-x-4 overflow-x-hidden pb-4 scroll-smooth"
+              className="flex space-x-4 overflow-x-hidden pb-1 scroll-smooth"
               style={{ scrollBehavior: "smooth" }}
           >
             {bottomFeedbacks.map((feedback, index) => (
                 <div
                     key={`top-${feedback.id}-${index}`}
-                    className="flex-shrink-0 w-80 bg-violet-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-sm py-3 px-1"
+                    className="flex-shrink-0 w-80 bg-white  shadow-md rounded-sm py-3 px-1"
                 >
                   <div className="flex items-center mb-3 p-1">
                     <img
@@ -153,14 +153,14 @@ export function FeedbackSection({ feedbacks, title = "Client Feedback", classNam
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900 dark:text-gray-100 truncate">{feedback.author}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">
+                        <span className="font-medium text-gray-900  truncate">{feedback.author}</span>
+                        <span className="text-sm text-gray-500  flex-shrink-0 ml-2">
                       {formatDate(feedback.date)}
                     </span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed px-1">{feedback.comment}</p>
+                  <p className="text-sm leading-relaxed px-1">{feedback.comment}</p>
                 </div>
             ))}
           </div>

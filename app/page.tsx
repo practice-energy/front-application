@@ -1,10 +1,11 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { SearchBar } from "@/components/search-bar/index"
+import { Mufi } from "@/components/mufi/index"
 import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { mockChatData } from "@/services/mock-data"
+import { MonoprintBackground } from "@/components/monoprint-bg"
 
 export default function HomePage() {
   const router = useRouter()
@@ -64,7 +65,7 @@ export default function HomePage() {
           </div>
 
           {/* Контейнер для поиска - теперь ниже логотипа */}
-            <SearchBar onSearch={handleSearch} showHeading={true} chatTitle="Аллюра" />
+            <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Аллюра" />
         </div>
       </main>
     </div>

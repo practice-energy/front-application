@@ -16,7 +16,7 @@ interface MobileSearchBarProps {
     chatTitle?: string
 }
 
-export const MobileSearchBar = React.memo(function MobileSearchBar({
+export const MobileMufi = React.memo(function MobileSearchBar({
                                                                        onSearch,
                                                                        placeholder = "Поиск пути",
                                                                        chatTitle = "Аллюра",

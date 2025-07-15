@@ -26,7 +26,7 @@ interface DesktopSearchBarProps {
   chatTitle?: string
 }
 
-export const DesktopSearchBar = React.memo(function DesktopSearchBar({
+export const DesktopMufi = React.memo(function DesktopSearchBar({
   onSearch,
   showHeading = true,
   dynamicWidth = false,

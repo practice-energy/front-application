@@ -2,8 +2,8 @@
 
 import React from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { DesktopSearchBar } from "./desktop"
-import { MobileSearchBar } from "./mobile"
+import { DesktopMufi } from "./desktop"
+import { MobileMufi } from "./mobile"
 
 interface SearchBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -19,14 +19,14 @@ interface SearchBarProps {
   chatTitle?: string
 }
 
-export const SearchBar = React.memo(function SearchBar(props: SearchBarProps) {
+export const Mufi = React.memo(function SearchBar(props: SearchBarProps) {
   const isMobile = useIsMobile()
 
   if (isMobile) {
-    return <MobileSearchBar onSearch={props.onSearch} placeholder={props.placeholder} chatTitle={props.chatTitle} />
+    return <MobileMufi onSearch={props.onSearch} placeholder={props.placeholder} chatTitle={props.chatTitle} />
   }
 
   return <div className="max-w-4xl mx-auto mb-6">
-    <DesktopSearchBar {...props} />
+    <DesktopMufi {...props} />
   </div>
 })
