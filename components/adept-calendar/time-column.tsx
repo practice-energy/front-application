@@ -21,7 +21,7 @@ export function TimeColumn({ slotHeight }: TimeColumnProps) {
       {hours.map((hour) => (
         <div
           key={hour}
-          className="flex items-center justify-center text-xs text-gray-500 border-b border-gray-100"
+          className="flex items-center justify-center bg-white text-xs text-gray-500 border-b border-gray-100"
           style={{ height: `${slotHeight}px` }}
         >
           {formatTime(hour)}

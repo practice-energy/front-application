@@ -10,7 +10,7 @@ interface CalendarSidebarProps {
 
 export function CalendarSidebar({ selectedDate, onDateSelect, timezone = "GMT+3" }: CalendarSidebarProps) {
   return (
-    <div className="w-80 h-120 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-80 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-hidden sticky top-0">
       <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} />
 
       <div className="mt-12 bottom-0">

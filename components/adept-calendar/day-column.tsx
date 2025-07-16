@@ -55,12 +55,12 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
   return (
     <div className="flex-1 min-w-0">
       {/* Sticky day header */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-20">
+      <div className="sticky top-0 bg-white border-b border-r border-gray-200 p-3 text-center z-20">
         <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
 
       {/* Time slots */}
-      <div className="relative">
+      <div className="relative bg-white border-r">
         {hours.map((hour) => {
           const booking = getBookingForHour(hour)
           const isContinuation = isBookingContinuation(hour)
@@ -70,7 +70,7 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
               {!isContinuation && <TimeSlot hour={hour} slotHeight={slotHeight} />}
 
               {booking && (
-                <div className="absolute inset-x-2 inset-y-1 z-10">
+                <div className="absolute z-10 h-full">
                   <BookingCard booking={booking} slotHeight={slotHeight} />
                 </div>
               )}

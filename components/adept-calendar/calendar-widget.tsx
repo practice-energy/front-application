@@ -128,7 +128,7 @@ export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetPro
             key={index}
             onClick={() => onDateSelect(day.fullDate)}
             className={`
-              aspect-square text-sm rounded-sm transition-colors hover:bg-gray-100
+              aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
               ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
               ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
               ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
