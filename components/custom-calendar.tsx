@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface CustomCalendarProps {
   selected?: Date
@@ -9,8 +10,7 @@ interface CustomCalendarProps {
   className?: string
 }
 
-const DAYS_OF_WEEK = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-const MONTHS = [
+const MONTHS_RU = [
   "Январь",
   "Февраль",
   "Март",
@@ -25,29 +25,29 @@ const MONTHS = [
   "Декабрь",
 ]
 
-export function CustomCalendar({ selected, onSelect, className = "" }: CustomCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date())
+const DAYS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+
+export function CustomCalendar({ selected, onSelect, className }: CustomCalendarProps) {
+  const [currentMonth, setCurrentMonth] = useState(selected || new Date())
   const today = new Date()
 
-  const year = currentDate.getFullYear()
-  const month = currentDate.getMonth()
+  const year = currentMonth.getFullYear()
+  const month = currentMonth.getMonth()
 
-  // Get first day of the month and adjust for Monday start (0 = Monday, 6 = Sunday)
+  // Get first day of month and adjust for Monday start (0 = Monday, 6 = Sunday)
   const firstDayOfMonth = new Date(year, month, 1)
-  const firstDayWeekday = (firstDayOfMonth.getDay() + 6) % 7 // Convert Sunday=0 to Monday=0
+  const firstDayWeekday = (firstDayOfMonth.getDay() + 6) % 7 // Convert to Monday = 0
 
-  // Get last day of the month
-  const lastDayOfMonth = new Date(year, month + 1, 0)
-  const daysInMonth = lastDayOfMonth.getDate()
+  // Get days in current month
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-  // Get previous month's last days
-  const prevMonth = new Date(year, month - 1, 0)
-  const daysInPrevMonth = prevMonth.getDate()
+  // Get days in previous month
+  const daysInPrevMonth = new Date(year, month, 0).getDate()
 
-  // Generate calendar days (6 weeks = 42 days)
+  // Calculate calendar grid (6 weeks = 42 days)
   const calendarDays = []
 
-  // Previous month's days
+  // Previous month days
   for (let i = firstDayWeekday - 1; i >= 0; i--) {
     calendarDays.push({
       day: daysInPrevMonth - i,
@@ -56,7 +56,7 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
     })
   }
 
-  // Current month's days
+  // Current month days
   for (let day = 1; day <= daysInMonth; day++) {
     calendarDays.push({
       day,
@@ -65,9 +65,9 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
     })
   }
 
-  // Next month's days to fill 6 weeks (42 days total)
-  const remainingDays = 42 - calendarDays.length
-  for (let day = 1; day <= remainingDays; day++) {
+  // Next month days to fill 42 slots (6 weeks)
+  const remainingSlots = 42 - calendarDays.length
+  for (let day = 1; day <= remainingSlots; day++) {
     calendarDays.push({
       day,
       isCurrentMonth: false,
@@ -76,11 +76,11 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
   }
 
   const handlePrevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1))
+    setCurrentMonth(new Date(year, month - 1, 1))
   }
 
   const handleNextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1))
+    setCurrentMonth(new Date(year, month + 1, 1))
   }
 
   const handleDateClick = (date: Date) => {
@@ -96,12 +96,12 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
   }
 
   return (
-    <div className={`bg-white ${className}`}>
+    <div className={cn("bg-white", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">
-          {MONTHS[month]} {year}
-        </h2>
+        <div className="text-lg font-semibold">
+          {MONTHS_RU[month]} {year}
+        </div>
         <div className="flex items-center gap-1">
           <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
             <ChevronLeft className="h-4 w-4" />
@@ -112,10 +112,10 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
         </div>
       </div>
 
-      {/* Days of week header */}
-      <div className="grid grid-cols-7 gap-0 mb-2">
-        {DAYS_OF_WEEK.map((day) => (
-          <div key={day} className="p-2 text-center text-sm font-medium text-gray-600">
+      {/* Days of week */}
+      <div className="grid grid-cols-7 mb-2">
+        {DAYS_RU.map((day) => (
+          <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
             {day}
           </div>
         ))}
@@ -125,21 +125,20 @@ export function CustomCalendar({ selected, onSelect, className = "" }: CustomCal
       <div className="grid grid-cols-7 gap-0">
         {calendarDays.map((calendarDay, index) => {
           const { day, isCurrentMonth, date } = calendarDay
-          const todayClass = isToday(date) && isCurrentMonth ? "text-violet-600" : ""
-          const selectedClass = isSelected(date) ? "bg-violet-600 text-white" : ""
-          const currentMonthClass = isCurrentMonth ? "text-gray-900" : "text-gray-400"
 
           return (
             <button
               key={index}
               onClick={() => handleDateClick(date)}
-              className={`
-                aspect-square p-2 text-sm font-medium transition-colors hover:bg-gray-100 
-                ${selectedClass} 
-                ${selectedClass ? "" : todayClass} 
-                ${selectedClass ? "" : currentMonthClass}
-                ${selectedClass ? "hover:bg-violet-700" : ""}
-              `}
+              className={cn(
+                "aspect-square flex items-center justify-center text-sm transition-colors hover:bg-gray-50",
+                {
+                  "text-gray-400": !isCurrentMonth,
+                  "text-gray-900": isCurrentMonth,
+                  "text-violet-600 font-semibold": isToday(date) && isCurrentMonth,
+                  "bg-violet-600 text-white hover:bg-violet-600": isSelected(date),
+                },
+              )}
             >
               {day}
             </button>

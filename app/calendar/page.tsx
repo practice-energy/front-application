@@ -37,13 +37,23 @@ const getBookingAtTime = (hour: number, bookings: Booking[]) => {
   })
 }
 
+const isBookingContinuation = (hour: number, bookings: Booking[]) => {
+  return bookings.some((booking) => {
+    const bookingHour = new Date(booking.date).getHours()
+    return hour > bookingHour && hour < bookingHour + booking.slots
+  })
+}
+
 const BookingCard = ({ booking }: { booking: Booking }) => {
   const formatIcon = booking.format === "video" ? Video : MapPin
   const FormatIcon = formatIcon
 
   return (
-    <div className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-3 flex items-center gap-3 transition-colors cursor-pointer group">
-      <Avatar className="h-8 w-8">
+    <div
+      className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-3 flex items-center gap-3 transition-colors cursor-pointer group w-full"
+      style={{ height: `${booking.slots * 60 - 8}px` }} // 60px per slot minus gap
+    >
+      <Avatar className="h-8 w-8 flex-shrink-0">
         <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
         <AvatarFallback>{booking.specialist.name.charAt(0)}</AvatarFallback>
       </Avatar>
@@ -53,9 +63,10 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
           {booking.service.name}
         </div>
         <div className="text-violet-200 group-hover:text-violet-500 text-xs">{booking.specialist.name}</div>
+        <div className="text-violet-200 group-hover:text-violet-500 text-xs mt-1">{booking.duration} мин</div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col items-end gap-1 flex-shrink-0">
         <Badge
           variant="secondary"
           className="bg-white/20 text-white group-hover:bg-violet-100 group-hover:text-violet-600 text-xs"
@@ -74,11 +85,17 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
   )
 }
 
-const TimeSlot = ({ hour, booking }: { hour: number; booking?: Booking }) => {
+const TimeSlot = ({ hour, booking, isHidden }: { hour: number; booking?: Booking; isHidden?: boolean }) => {
+  if (isHidden) {
+    return null // Don't render slots that are part of multi-hour bookings
+  }
+
   return (
-    <div className="flex border-b border-gray-100">
-      <div className="w-16 py-4 px-2 text-xs text-gray-500 border-r border-gray-100">{formatTime(hour)}</div>
-      <div className="flex-1 p-2">{booking && <BookingCard booking={booking} />}</div>
+    <div className="flex border-b border-gray-100" style={{ minHeight: "60px" }}>
+      <div className="w-16 py-4 px-2 text-xs text-gray-500 border-r border-gray-100 flex-shrink-0">
+        {formatTime(hour)}
+      </div>
+      <div className="flex-1 p-2 relative">{booking && <BookingCard booking={booking} />}</div>
     </div>
   )
 }
@@ -88,13 +105,15 @@ const DayColumn = ({ date, bookings }: { date: Date; bookings: Booking[] }) => {
 
   return (
     <div className="flex-1 min-w-0">
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-10">
         <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
       <div>
         {HOURS.map((hour) => {
           const booking = getBookingAtTime(hour, dayBookings)
-          return <TimeSlot key={hour} hour={hour} booking={booking} />
+          const isContinuation = isBookingContinuation(hour, dayBookings)
+
+          return <TimeSlot key={hour} hour={hour} booking={booking} isHidden={isContinuation} />
         })}
       </div>
     </div>
