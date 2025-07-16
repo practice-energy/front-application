@@ -10,11 +10,11 @@ interface CalendarSidebarProps {
 
 export function CalendarSidebar({ selectedDate, onDateSelect, timezone = "GMT+3" }: CalendarSidebarProps) {
   return (
-    <div className="w-80 border-r border-gray-200 flex flex-col">
+    <div className="w-80 border-r bg-white border-gray-200 flex flex-col pl-3">
       {/* Calendar at the top */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="">
         <div className="w-full aspect-square">
-          <CalendarWidget selected={selectedDate} onSelect={onDateSelect} className="w-full h-full" />
+          <CalendarWidget selected={selectedDate} onSelect={onDateSelect} className="w-full" />
         </div>
       </div>
 

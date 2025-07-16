@@ -71,7 +71,7 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
         <button
           key={`prev-${date.getDate()}`}
           onClick={() => handleDateClick(date)}
-          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-gray-50 transition-colors"
+          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 transition-colors rounded-sm"
         >
           {date.getDate()}
         </button>,
@@ -88,10 +88,10 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
         <button
           key={day}
           onClick={() => handleDateClick(date)}
-          className={cn("w-full h-full flex items-center justify-center text-sm transition-colors hover:bg-gray-50", {
+          className={cn("w-full h-full flex items-center justify-center text-sm transition-colors hover:bg-violet-50 rounded-sm", {
             "text-gray-900": !isCurrentDay && !isSelectedDay,
             "text-violet-600 font-medium": isCurrentDay && !isSelectedDay,
-            "bg-violet-600 text-white font-medium rounded-md": isSelectedDay,
+            "bg-violet-600 text-white font-medium hover:bg-violet-700": isSelectedDay,
           })}
         >
           {day}
@@ -107,7 +107,14 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
         <button
           key={`next-${day}`}
           onClick={() => handleDateClick(date)}
-          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-gray-50 transition-colors"
+          className={cn(
+              "w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 rounded-sm transition-colors",
+              {
+                "": !isToday(date) && !isSelected(date),
+                "text-violet-600 font-medium": isToday(date) && !isSelected(date),
+                "bg-violet-600 text-white font-medium hover:bg-violet-700": isSelected(date),
+              }
+          )}
         >
           {day}
         </button>,
@@ -121,14 +128,14 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
     <div className={cn("bg-white", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">
+        <h2 className="p-3 text-lg font-semibold">
           {MONTHS_RU[month]} {year}
         </h2>
-        <div className="flex items-center gap-1">
-          <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
+        <div className="flex items-center gap-1 pr-3">
+          <button onClick={handlePrevMonth} className="p-1 hover:bg-violet-50 rounded-sm transition-colors">
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 rounded transition-colors">
+          <button onClick={handleNextMonth} className="p-1 hover:bg-violet-50 rounded-sm transition-colors">
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
