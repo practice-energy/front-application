@@ -1,9 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Video, MapPin } from "lucide-react"
+import { Video, MapPin, Clock, CheckCircle } from "lucide-react"
 import type { Booking } from "@/types/booking"
+import { BookingDetailsModal } from "./booking-details-modal"
 
 interface BookingCardProps {
   booking: Booking
@@ -11,42 +13,81 @@ interface BookingCardProps {
 }
 
 export function BookingCard({ booking, slotHeight }: BookingCardProps) {
-  const formatIcon = booking.format === "video" ? Video : MapPin
-  const FormatIcon = formatIcon
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const FormatIcon = booking.format === "video" ? Video : MapPin
+
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case "confirmed":
+        return "bg-green-100 text-green-800"
+      case "waiting":
+        return "bg-yellow-100 text-yellow-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case "confirmed":
+        return <CheckCircle className="h-3 w-3" />
+      case "waiting":
+        return <Clock className="h-3 w-3" />
+      default:
+        return null
+    }
+  }
 
   return (
-    <div
-      className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-2 flex flex-col gap-2 transition-colors cursor-pointer group w-full"
-      style={{ height: `${booking.slots * slotHeight - 4}px` }}
-    >
-      <div className="flex items-center gap-2">
-        <Avatar className="h-6 w-6 flex-shrink-0">
-          <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
-          <AvatarFallback className="text-xs">{booking.specialist.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1 min-w-0">
-          <div className="text-white group-hover:text-violet-600 font-medium text-xs truncate">
-            {booking.service.name}
+    <>
+      <div
+        className="bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors w-full shadow-sm"
+        style={{ height: `${booking.slots * slotHeight - 4}px` }}
+        onClick={() => setIsModalOpen(true)}
+      >
+        <div className="flex items-start gap-3 h-full">
+          <Avatar className="h-10 w-10 flex-shrink-0">
+            <AvatarImage src={booking.specialist.photo || "/placeholder-user.jpg"} alt={booking.specialist.name} />
+            <AvatarFallback className="text-sm">{booking.specialist.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+
+          <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
+            <div className="flex-1">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-medium text-gray-900 truncate">{booking.service.name}</h4>
+                  <p className="text-xs text-gray-500 mt-1">{booking.specialist.name}</p>
+                </div>
+
+                {booking.status && (
+                  <Badge
+                    variant="secondary"
+                    className={`ml-2 text-xs px-2 py-1 flex items-center gap-1 ${getStatusColor(booking.status)}`}
+                  >
+                    {getStatusIcon(booking.status)}
+                    {booking.status === "confirmed" ? "Подтверждено" : "Ожидание"}
+                  </Badge>
+                )}
+              </div>
+
+              {booking.slots > 1 && booking.service.description && (
+                <p className="text-xs text-gray-400 mt-2 line-clamp-2">{booking.service.description}</p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between mt-2">
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <FormatIcon className="h-3 w-3" />
+                {booking.format === "video" ? "Видео" : "Очно"}
+              </div>
+
+              <div className="text-xs text-gray-400">{booking.duration} мин</div>
+            </div>
           </div>
-          <div className="text-violet-200 group-hover:text-violet-500 text-xs">{booking.specialist.name}</div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Badge
-          variant="secondary"
-          className="bg-white/20 text-white group-hover:bg-violet-100 group-hover:text-violet-600 text-xs px-1 py-0"
-        >
-          <FormatIcon className="h-3 w-3 mr-1" />
-          {booking.format === "video" ? "Видео" : "Очно"}
-        </Badge>
-        {booking.paymentStatus === "paid" && (
-          <div className="text-xs text-violet-200 group-hover:text-violet-500">100%</div>
-        )}
-        {booking.paymentStatus === "pending" && (
-          <div className="text-xs text-violet-200 group-hover:text-violet-500">0%</div>
-        )}
-      </div>
-    </div>
+      <BookingDetailsModal booking={booking} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   )
 }

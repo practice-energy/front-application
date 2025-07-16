@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
+import { CalendarWidget } from "./calendar-widget"
 
 interface CalendarSidebarProps {
   selectedDate: Date
@@ -10,17 +10,11 @@ interface CalendarSidebarProps {
 
 export function CalendarSidebar({ selectedDate, onDateSelect, timezone = "GMT+3" }: CalendarSidebarProps) {
   return (
-    <div className="w-80 border-r bg-white border-gray-200 flex flex-col pl-3">
-      {/* Calendar at the top */}
-      <div className="">
-        <div className="w-full aspect-square">
-          <CalendarWidget selected={selectedDate} onSelect={onDateSelect} className="w-full" />
-        </div>
-      </div>
+    <div className="w-80 flex-shrink-0 bg-gray-50 border-r border-gray-200 p-4 flex flex-col">
+      <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} />
 
-      {/* Timezone at the bottom */}
-      <div className="mt-auto p-6">
-        <div className="text-xs text-gray-500">{timezone}</div>
+      <div className="mt-auto pt-4 border-t border-gray-200">
+        <div className="text-sm text-gray-500 text-center">{timezone}</div>
       </div>
     </div>
   )

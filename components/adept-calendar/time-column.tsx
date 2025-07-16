@@ -4,29 +4,28 @@ interface TimeColumnProps {
   slotHeight: number
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
-
-const formatTime = (hour: number) => {
-  return `${hour.toString().padStart(2, "0")}:00`
-}
-
 export function TimeColumn({ slotHeight }: TimeColumnProps) {
+  const hours = Array.from({ length: 24 }, (_, i) => i)
+
+  const formatTime = (hour: number) => {
+    return `${hour.toString().padStart(2, "0")}:00`
+  }
+
   return (
-    <div className="w-16 flex-shrink-0 border-r border-gray-200 bg-white">
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-10">
-        <div className="text-sm font-medium text-transparent">Time</div>
-      </div>
-      <div>
-        {HOURS.map((hour) => (
-          <div
-            key={hour}
-            className="border-b border-gray-100 px-2 py-4 text-xs text-gray-500 text-right"
-            style={{ height: `${slotHeight}px` }}
-          >
-            {formatTime(hour)}
-          </div>
-        ))}
-      </div>
+    <div className="w-16 flex-shrink-0 border-r border-gray-200">
+      {/* Empty header space to align with day columns */}
+      <div className="h-[57px] border-b border-gray-200" />
+
+      {/* Time labels */}
+      {hours.map((hour) => (
+        <div
+          key={hour}
+          className="flex items-center justify-center text-xs text-gray-500 border-b border-gray-100"
+          style={{ height: `${slotHeight}px` }}
+        >
+          {formatTime(hour)}
+        </div>
+      ))}
     </div>
   )
 }

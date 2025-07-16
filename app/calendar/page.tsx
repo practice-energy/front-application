@@ -1,8 +1,12 @@
 "use client"
 
-import {mockBookings} from "@/services/mock-bookings"
-import {AdeptCalendar} from "@/components/adept-calendar"
+import { AdeptCalendar } from "@/components/adept-calendar"
+import { mockBookings } from "@/services/mock-bookings"
 
 export default function CalendarPage() {
-  return <AdeptCalendar bookings={mockBookings} timezone="GMT+3" />
+  return (
+    <div className="h-screen">
+      <AdeptCalendar bookings={mockBookings} timezone="GMT+3" />
+    </div>
+  )
 }
