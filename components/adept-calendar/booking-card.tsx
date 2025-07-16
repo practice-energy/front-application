@@ -22,16 +22,21 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-start gap-3 h-full">
-          <Image
-            src={
-              // booking.specialist.photo ||
-              "/placeholder.jpg" || "/placeholder.svg"
-            }
-            alt={booking.specialist.name}
-            width={74}
-            height={74}
-            className={cn("rounded-sm object-cover bg-white flex-shrink-0")}
-          />
+          <div className="flex-shrink-0">
+            <Image
+              src={booking.specialist.photo || "/placeholder.jpg"}
+              alt={booking.specialist.name}
+              width={74}
+              height={74}
+              className={cn("rounded-sm object-cover bg-white")}
+            />
+            {/* Service description under photo */}
+            {booking.service.description && (
+              <div className="mt-1 w-[74px]">
+                <p className="text-xs text-gray-500 line-clamp-2 leading-tight">{booking.service.description}</p>
+              </div>
+            )}
+          </div>
 
           {/* Two columns layout */}
           <div className="flex-1 min-w-0 flex flex-col">
@@ -61,17 +66,6 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
                 </p>
               </div>
             </div>
-
-            {/* Row 3: Service description for multi-slot bookings */}
-            {booking.slots > 1 && booking.service.description && (
-              <div className="flex items-start mt-2">
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-3 w-full">
-                    {booking.service.description}
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
