@@ -22,10 +22,10 @@ export interface Booking {
   specialist: Specialist
   date: string
   duration: number
-  slots: number
+  slots: number // количество часовых слотов (1 слот = 1 час)
   format: "video" | "in-person"
-  status: "upcoming" | "confirmed" | "completed" | "cancelled"
-  paymentStatus: "pending" | "paid" | "refunded"
+  status: "confirmed" | "pending" | "cancelled" | "completed"
+  paymentStatus: "paid" | "pending" | "failed"
   clientId: string
   notes?: string
   createdAt: Date

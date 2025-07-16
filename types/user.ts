@@ -5,8 +5,7 @@ export interface User {
   avatar?: string
   phone?: string
   timezone: string
-  role: "client" | "specialist" | "admin"
-  isVerified: boolean
+  role: "client" | "specialist" // Updated role options
   createdAt: Date
   updatedAt: Date
 }

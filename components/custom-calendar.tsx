@@ -40,7 +40,6 @@ export function CustomCalendar({ selected, onSelect, className }: CustomCalendar
   const daysInMonth = lastDayOfMonth.getDate()
 
   const prevMonth = new Date(year, month - 1, 0)
-  const nextMonth = new Date(year, month + 1, 1)
 
   const handlePrevMonth = () => {
     setCurrentMonth(new Date(year, month - 1, 1))
@@ -72,7 +71,7 @@ export function CustomCalendar({ selected, onSelect, className }: CustomCalendar
         <button
           key={`prev-${date.getDate()}`}
           onClick={() => handleDateClick(date)}
-          className="w-full h-full flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
+          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-gray-50 transition-colors"
         >
           {date.getDate()}
         </button>,
@@ -89,11 +88,11 @@ export function CustomCalendar({ selected, onSelect, className }: CustomCalendar
         <button
           key={day}
           onClick={() => handleDateClick(date)}
-          className={cn(
-            "w-full h-full flex items-center justify-center transition-colors hover:bg-gray-50",
-            isCurrentDay && !isSelectedDay && "text-violet-600 font-medium",
-            isSelectedDay && "bg-violet-600 text-white font-medium",
-          )}
+          className={cn("w-full h-full flex items-center justify-center text-sm transition-colors hover:bg-gray-50", {
+            "text-gray-900": !isCurrentDay && !isSelectedDay,
+            "text-violet-600 font-medium": isCurrentDay && !isSelectedDay,
+            "bg-violet-600 text-white font-medium rounded-md": isSelectedDay,
+          })}
         >
           {day}
         </button>,
@@ -108,7 +107,7 @@ export function CustomCalendar({ selected, onSelect, className }: CustomCalendar
         <button
           key={`next-${day}`}
           onClick={() => handleDateClick(date)}
-          className="w-full h-full flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors"
+          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-gray-50 transition-colors"
         >
           {day}
         </button>,
@@ -136,22 +135,18 @@ export function CustomCalendar({ selected, onSelect, className }: CustomCalendar
       </div>
 
       {/* Days of week */}
-      <div className="grid grid-cols-7 mb-2">
+      <div className="grid grid-cols-7 mb-3">
         {DAYS_RU.map((day) => (
-          <div key={day} className="h-8 flex items-center justify-center text-sm text-gray-500 font-medium">
+          <div key={day} className="h-8 flex items-center justify-center text-sm text-gray-500 font-normal">
             {day}
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-0" style={{ height: "calc(100% - 80px)" }}>
+      <div className="grid grid-cols-7 gap-1">
         {renderCalendarDays().map((day, index) => (
-          <div
-            key={index}
-            className="border-r border-b border-gray-100 last:border-r-0"
-            style={{ height: "calc(100% / 6)" }}
-          >
+          <div key={index} className="aspect-square">
             {day}
           </div>
         ))}

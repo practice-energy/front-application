@@ -147,21 +147,26 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  const today = new Date()
-  const tomorrow = new Date(today)
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  const dayAfterTomorrow = new Date(today)
-  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2)
+  // Calculate display dates: selected day + 2 following days
+  const getDisplayDates = (baseDate: Date) => {
+    const dates = []
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(baseDate)
+      date.setDate(baseDate.getDate() + i)
+      dates.push(date)
+    }
+    return dates
+  }
 
-  const displayDates = [selectedDate, tomorrow, dayAfterTomorrow]
+  const displayDates = getDisplayDates(selectedDate)
 
-  // Scroll to 7 AM on mount
+  // Scroll to 7 AM on mount and when date changes
   useEffect(() => {
     if (scrollAreaRef.current) {
       const scrollTo = 7 * SLOT_HEIGHT // 7 AM
       scrollAreaRef.current.scrollTop = scrollTo
     }
-  }, [])
+  }, [selectedDate])
 
   return (
     <div className="h-screen flex">
