@@ -20,7 +20,7 @@ export interface Booking {
   id: string
   service: Service
   specialist: Specialist
-  date: Date // Changed back to Date object for easier handling
+  date: Date
   duration: number
   slots: number // количество часовых слотов (1 слот = 1 час)
   format: "video" | "in-person"

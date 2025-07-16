@@ -1,12 +1,9 @@
 "use client"
-
-import { useState, useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Video, MapPin } from "lucide-react"
 import { mockBookings } from "@/services/mock-bookings"
-import { CustomCalendar } from "@/components/custom-calendar"
+import { AdeptCalendar } from "@/components/adept-calendar"
 import type { Booking } from "@/types/booking"
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -148,58 +145,5 @@ const TimeColumn = () => {
 }
 
 export default function CalendarPage() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-
-  // Calculate display dates: selected day + 2 following days
-  const getDisplayDates = (baseDate: Date) => {
-    const dates = []
-    for (let i = 0; i < 3; i++) {
-      const date = new Date(baseDate)
-      date.setDate(baseDate.getDate() + i)
-      dates.push(date)
-    }
-    return dates
-  }
-
-  const displayDates = getDisplayDates(selectedDate)
-
-  // Scroll to 7 AM on mount and when date changes
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      const scrollTo = 7 * SLOT_HEIGHT // 7 AM
-      scrollAreaRef.current.scrollTop = scrollTo
-    }
-  }, [selectedDate])
-
-  return (
-    <div className="h-screen flex">
-      {/* Left Calendar Section */}
-      <div className="w-80 border-r border-gray-200 flex flex-col">
-        {/* Calendar at the top */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="w-full aspect-square">
-            <CustomCalendar selected={selectedDate} onSelect={setSelectedDate} className="w-full h-full" />
-          </div>
-        </div>
-
-        {/* Timezone at the bottom */}
-        <div className="mt-auto p-6">
-          <div className="text-xs text-gray-500">GMT+3</div>
-        </div>
-      </div>
-
-      {/* Right Schedule Section */}
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="flex">
-            <TimeColumn />
-            {displayDates.map((date, index) => (
-              <DayColumn key={date.toISOString()} date={date} bookings={mockBookings} />
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
-    </div>
-  )
+  return <AdeptCalendar bookings={mockBookings} timezone="GMT+3" />
 }

@@ -9,6 +9,11 @@ export interface User {
   isVerified: boolean
   createdAt: Date
   updatedAt: Date
+  preferences?: {
+    language: string
+    notifications: boolean
+    theme: "light" | "dark"
+  }
 }
 
 export interface UserProfile extends User {
@@ -21,6 +26,11 @@ export interface UserProfile extends User {
   experience?: number
   education?: string[]
   certifications?: string[]
+  socialLinks?: {
+    instagram?: string
+    telegram?: string
+    website?: string
+  }
 }
 
 export interface UserStats {
