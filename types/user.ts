@@ -1,6 +1,6 @@
 export interface User {
   id: string
-  email?: string
+  email: string
   name: string
   avatar?: string
   phone?: string
@@ -14,8 +14,6 @@ export interface User {
     notifications: boolean
     theme: "light" | "dark"
   }
-  photo?: string
-  specialization?: string
 }
 
 export interface UserProfile extends User {
