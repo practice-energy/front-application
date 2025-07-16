@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { TimeColumn } from "./time-column"
 import { DayColumn } from "./day-column"
 import type { Booking } from "@/types/booking"
@@ -10,8 +9,6 @@ interface ScheduleViewProps {
   selectedDate: Date
   bookings: Booking[]
 }
-
-const SLOT_HEIGHT = 93
 
 export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
@@ -32,20 +29,38 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   // Scroll to 7 AM on mount and when date changes
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = 7 * SLOT_HEIGHT
+      const scrollTo = 7 * 60 // 7 AM * 60px slot height
+      scrollAreaRef.current.scrollTop = scrollTo
     }
   }, [selectedDate])
 
   return (
-    <div className="flex-1 h-full overflow-hidden">
-      <ScrollArea className="h-full" ref={scrollAreaRef}>
-        <div className="flex">
-          <TimeColumn slotHeight={SLOT_HEIGHT} />
-          {displayDates.map((date) => (
-            <DayColumn key={date.toISOString()} date={date} bookings={bookings} slotHeight={SLOT_HEIGHT} />
-          ))}
-        </div>
-      </ScrollArea>
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
+      {/* Header with day names */}
+      <div className="flex border-b bg-white sticky top-0 z-10">
+        <div className="w-16 border-r"></div>
+        {displayDates.map((date, index) => (
+          <div key={index} className="flex-1 p-2 text-center border-r">
+            <div className="font-medium">{date.toLocaleDateString("ru-RU", { weekday: "short" })}</div>
+            <div className="text-sm text-gray-500">{date.getDate()}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Scrollable schedule content */}
+      <div ref={scrollAreaRef} className="flex-1 flex overflow-y-auto">
+        <TimeColumn />
+        {displayDates.map((date, index) => (
+          <DayColumn
+            key={index}
+            date={date}
+            bookings={bookings.filter((booking) => {
+              const bookingDate = new Date(booking.startTime)
+              return bookingDate.toDateString() === date.toDateString()
+            })}
+          />
+        ))}
+      </div>
     </div>
   )
 }

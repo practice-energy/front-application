@@ -5,7 +5,7 @@ import { mockBookings } from "@/services/mock-bookings"
 
 export default function CalendarPage() {
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-[calc(100vh-64px)] overflow-hidden">
       <AdeptCalendar bookings={mockBookings} timezone="GMT+3" />
     </div>
   )

@@ -1,37 +1,37 @@
 export interface Service {
   id: string
   name: string
-  description: string
+  description?: string
   price: number
-  duration: number
-  category: string
+  duration: number // in minutes
+  category?: string
 }
 
-export interface Specialist {
+export interface User {
   id: string
   name: string
+  email?: string
+  phone?: string
   photo?: string
-  rating: number
-  reviewsCount: number
-  specialties: string[]
+  specialization?: string
 }
 
 export interface Booking {
   id: string
+  startTime: string
+  endTime: string
   service: Service
-  specialist: Specialist
-  date: Date
-  duration: number
-  slots: number // количество часовых слотов (1 слот = 1 час)
-  format: "video" | "in-person"
+  specialist: User
+  client?: User
+  format: string // "Онлайн" | "Офлайн" | etc.
   status?: "waiting" | "confirmed"
-  paymentStatus: "paid" | "pending" | "failed"
-  clientId: string
+  paymentStatus?: "paid" | "pending" | "failed"
+  clientId?: string
   notes?: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type BookingStatus = "upcoming" | "confirmed" | "completed" | "cancelled"
-export type BookingFormat = "video" | "in-person"
+export type BookingFormat = "Онлайн" | "Офлайн"
 export type ViewMode = "calendar" | "list"

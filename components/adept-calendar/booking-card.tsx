@@ -1,66 +1,101 @@
 "use client"
 
-import React, { useState } from "react"
-import type { Booking } from "@/types/booking"
+import { useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Clock, CheckCircle } from "lucide-react"
 import { BookingDetailsModal } from "./booking-details-modal"
-import {cn} from "@/lib/utils";
-import Image from "next/image"
+import type { Booking } from "@/types/booking"
 
 interface BookingCardProps {
   booking: Booking
-  slotHeight: number
 }
 
-export function BookingCard({ booking, slotHeight }: BookingCardProps) {
+export function BookingCard({ booking }: BookingCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const startTime = new Date(booking.startTime)
+  const endTime = new Date(booking.endTime)
+  const duration = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60) // hours
+  const isMultiSlot = duration > 1
+
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case "confirmed":
+        return "bg-green-100 text-green-800"
+      case "waiting":
+        return "bg-yellow-100 text-yellow-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case "confirmed":
+        return <CheckCircle className="w-3 h-3" />
+      case "waiting":
+        return <Clock className="w-3 h-3" />
+      default:
+        return null
+    }
+  }
 
   return (
     <>
       <div
-        className="bg-white rounded-sm p-1.5 cursor-pointer hover:bg-violet-50 transition-colors w-full shadow-sm h-full"
-        style={{ height: `${booking.slots * slotHeight - 4}px` }}
+        className="absolute inset-x-1 inset-y-1 bg-white rounded-lg border shadow-sm p-2 cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => setIsModalOpen(true)}
       >
-        <div className="flex items-start gap-3 h-full">
-          <Image
-              src={
-            // booking.specialist.photo ||
-                  "/placeholder.jpg"}
-              alt={booking.specialist.name}
-              width={74}
-              height={74}
-              className={cn("rounded-sm object-cover bg-white")}
-          />
+        <div className="flex items-start gap-2 h-full">
+          {/* Avatar */}
+          <Avatar className="w-8 h-8 flex-shrink-0">
+            <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
+            <AvatarFallback>
+              {booking.specialist.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
 
-          {/* Two columns layout */}
-          <div className="flex-1 min-w-0 flex flex-col">
-            {/* Row 1: Title and Status */}
-            <div className="flex items-center justify-between mt-1.5">
-              <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 truncate flex-1">{booking.service.name}</h3>
-              <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-                {booking.status && (
-                    <div
-                        className={cn(
-                            "w-4 h-4 rounded-sm flex-shrink-0",
-                            booking.status === "waiting" && "bg-pink-500",
-                            booking.status === "confirmed" && "bg-green-300",
-                        )}
-                    />
-                )}
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{booking.service.name}</p>
+                <p className="text-xs text-gray-500 truncate">{booking.specialist.name}</p>
               </div>
+
+              {/* Status badge */}
+              {booking.status && (
+                <Badge
+                  variant="secondary"
+                  className={`ml-2 flex items-center gap-1 text-xs ${getStatusColor(booking.status)}`}
+                >
+                  {getStatusIcon(booking.status)}
+                  {booking.status === "confirmed" ? "Подтв." : "Ожид."}
+                </Badge>
+              )}
             </div>
 
-            {/* Row 2: Description (multi-line) and New Message Indicator */}
-            <div className="flex items-start">  {/* Убрано justify-between */}
-              {/* Описание - занимает всё доступное пространство */}
-              <div className="flex-1 min-w-0 overflow-hidden">  {/* Добавлен overflow-hidden */}
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 mb-1 w-full">
-                  {booking.specialist.name}
-                </p>
-              </div>
-              </div>
+            {/* Time and format info */}
+            <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+              <span>
+                {startTime.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+                {" - "}
+                {endTime.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+              </span>
+              <span>•</span>
+              <span>{booking.format}</span>
             </div>
+
+            {/* Description for multi-slot bookings */}
+            {isMultiSlot && booking.service.description && (
+              <p className="mt-1 text-xs text-gray-600 line-clamp-2">{booking.service.description}</p>
+            )}
           </div>
+        </div>
       </div>
 
       <BookingDetailsModal booking={booking} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

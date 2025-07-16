@@ -1,15 +1,20 @@
 "use client"
 
+import { BookingCard } from "./booking-card"
+import type { Booking } from "@/types/booking"
+
 interface TimeSlotProps {
   hour: number
-  slotHeight: number
+  date: Date
+  bookings: Booking[]
 }
 
-export function TimeSlot({ hour, slotHeight }: TimeSlotProps) {
+export function TimeSlot({ hour, date, bookings }: TimeSlotProps) {
   return (
-    <div
-      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-      style={{ height: `${slotHeight}px` }}
-    />
+    <div className="h-[60px] border-b relative">
+      {bookings.map((booking) => (
+        <BookingCard key={booking.id} booking={booking} />
+      ))}
+    </div>
   )
 }
