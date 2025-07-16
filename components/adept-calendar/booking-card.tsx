@@ -1,9 +1,9 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Video, MapPin } from "lucide-react"
-import type { Booking } from "@/types/booking"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
+import {Badge} from "@/components/ui/badge"
+import {MapPin, Video} from "lucide-react"
+import type {Booking} from "@/types/booking"
 
 interface BookingCardProps {
   booking: Booking
@@ -11,8 +11,7 @@ interface BookingCardProps {
 }
 
 export function BookingCard({ booking, slotHeight }: BookingCardProps) {
-  const formatIcon = booking.format === "video" ? Video : MapPin
-  const FormatIcon = formatIcon
+  const FormatIcon = booking.format === "video" ? Video : MapPin
 
   return (
     <div

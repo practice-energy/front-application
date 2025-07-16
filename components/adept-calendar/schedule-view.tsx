@@ -11,7 +11,7 @@ interface ScheduleViewProps {
   bookings: Booking[]
 }
 
-const SLOT_HEIGHT = 60 // pixels per hour slot
+const SLOT_HEIGHT = 90 // pixels per hour slot
 
 export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)

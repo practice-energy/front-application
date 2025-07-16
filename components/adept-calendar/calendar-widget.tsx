@@ -65,16 +65,16 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
     const days = []
 
     // Previous month days
-    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-      const date = new Date(year, month - 1, prevMonth.getDate() - i)
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const date = new Date(year, month, -i)
       days.push(
-        <button
-          key={`prev-${date.getDate()}`}
-          onClick={() => handleDateClick(date)}
-          className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 transition-colors rounded-sm"
-        >
-          {date.getDate()}
-        </button>,
+          <button
+              key={`prev-${date.getDate()}`}
+              onClick={() => handleDateClick(date)}
+              className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 transition-colors rounded-sm"
+          >
+            {date.getDate()}
+          </button>,
       )
     }
 
