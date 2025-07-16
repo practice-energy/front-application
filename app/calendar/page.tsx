@@ -42,27 +42,32 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
   const FormatIcon = formatIcon
 
   return (
-    <div className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-3 flex items-center gap-3 transition-colors cursor-pointer">
+    <div className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-3 flex items-center gap-3 transition-colors cursor-pointer group">
       <Avatar className="h-8 w-8">
         <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
         <AvatarFallback>{booking.specialist.name.charAt(0)}</AvatarFallback>
       </Avatar>
 
       <div className="flex-1 min-w-0">
-        <div className="text-white hover:text-violet-600 font-medium text-sm truncate">{booking.service.name}</div>
-        <div className="text-violet-200 hover:text-violet-500 text-xs">{booking.specialist.name}</div>
+        <div className="text-white group-hover:text-violet-600 font-medium text-sm truncate">
+          {booking.service.name}
+        </div>
+        <div className="text-violet-200 group-hover:text-violet-500 text-xs">{booking.specialist.name}</div>
       </div>
 
       <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="bg-white/20 text-white hover:bg-violet-100 hover:text-violet-600 text-xs">
+        <Badge
+          variant="secondary"
+          className="bg-white/20 text-white group-hover:bg-violet-100 group-hover:text-violet-600 text-xs"
+        >
           <FormatIcon className="h-3 w-3 mr-1" />
           {booking.format === "video" ? "Видео" : "Очно"}
         </Badge>
-        {booking.status === "confirmed" && (
-          <div className="text-xs text-violet-200 hover:text-violet-500">Оплачено 100%</div>
+        {booking.paymentStatus === "paid" && (
+          <div className="text-xs text-violet-200 group-hover:text-violet-500">Оплачено 100%</div>
         )}
-        {booking.status === "upcoming" && (
-          <div className="text-xs text-violet-200 hover:text-violet-500">Оплачено 0%</div>
+        {booking.paymentStatus === "pending" && (
+          <div className="text-xs text-violet-200 group-hover:text-violet-500">Оплачено 0%</div>
         )}
       </div>
     </div>
@@ -130,38 +135,42 @@ export default function CalendarPage() {
   })
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Calendar Section */}
-      <div className="border-b border-gray-200 p-6">
-        <div className="flex items-start gap-8">
-          <div className="w-80">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold capitalize">{monthYear}</h2>
-              <div className="flex items-center gap-1">
-                <button onClick={handlePreviousMonth} className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
+    <div className="h-screen flex">
+      {/* Left Calendar Section */}
+      <div className="w-80 border-r border-gray-200 flex flex-col">
+        {/* Calendar at the top */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold capitalize">{monthYear}</h2>
+            <div className="flex items-center gap-1">
+              <button onClick={handlePreviousMonth} className="p-1 hover:bg-gray-100 rounded">
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 rounded">
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
+          </div>
 
+          <div className="w-full aspect-square">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
               month={currentMonth}
               onMonthChange={setCurrentMonth}
-              className="w-full"
+              className="w-full h-full [&_.rdp-table]:w-full [&_.rdp-table]:h-full [&_.rdp-cell]:h-[calc(100%/7)] [&_.rdp-day]:w-full [&_.rdp-day]:h-full [&_.rdp-day]:flex [&_.rdp-day]:items-center [&_.rdp-day]:justify-center"
             />
-
-            <div className="mt-4 text-xs text-gray-500">GMT+3</div>
           </div>
+        </div>
+
+        {/* Timezone at the bottom */}
+        <div className="mt-auto p-6">
+          <div className="text-xs text-gray-500">GMT+3</div>
         </div>
       </div>
 
-      {/* Schedule Section */}
+      {/* Right Schedule Section */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="flex">

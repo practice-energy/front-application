@@ -1,77 +1,154 @@
-import { v4 as uuidv4 } from "uuid"
 import type { Booking } from "@/types/booking"
 
 export const mockBookings: Booking[] = [
   {
-    id: uuidv4(),
+    id: "1",
+    service: {
+      id: "s1",
+      name: "Таро расклад на судьбу",
+      description: "Подробный расклад на жизненную ситуацию",
+      price: 2500,
+      duration: 60,
+      category: "Таро",
+    },
     specialist: {
-      id: "1",
+      id: "sp1",
       name: "Афалина",
       photo: "/placeholder-user.jpg",
+      rating: 4.9,
+      reviewsCount: 156,
     },
-    service: {
-      id: uuidv4(),
-      name: "Таро расклад на судьбу",
-      price: 3500,
+    client: {
+      id: "c1",
+      name: "Анна Петрова",
+      email: "anna@example.com",
     },
-    date: new Date(2025, 6, 13, 5, 0), // July 13, 2025, 5:00 AM
-    duration: 60,
-    format: "in-person",
+    date: new Date(2025, 6, 13, 5, 0), // July 13, 2025, 05:00
+    format: "video",
     status: "confirmed",
-    requiresConfirmation: false,
+    price: 2500,
+    paymentStatus: "paid",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: uuidv4(),
+    id: "2",
+    service: {
+      id: "s2",
+      name: "Таро расклад на судьбу",
+      description: "Краткий расклад на текущую ситуацию",
+      price: 1800,
+      duration: 45,
+      category: "Таро",
+    },
     specialist: {
-      id: "2",
+      id: "sp1",
+      name: "Афалина",
+      photo: "/placeholder-user.jpg",
+      rating: 4.9,
+      reviewsCount: 156,
+    },
+    client: {
+      id: "c2",
+      name: "Мария Сидорова",
+      email: "maria@example.com",
+    },
+    date: new Date(2025, 6, 13, 6, 0), // July 13, 2025, 06:00
+    format: "video",
+    status: "confirmed",
+    price: 1800,
+    paymentStatus: "pending",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "3",
+    service: {
+      id: "s3",
+      name: "Разбор натальной карты для начинающих",
+      description: "Подробный анализ натальной карты",
+      price: 3500,
+      duration: 90,
+      category: "Астрология",
+    },
+    specialist: {
+      id: "sp2",
       name: "Снежана",
       photo: "/placeholder-user.jpg",
+      rating: 4.8,
+      reviewsCount: 89,
     },
-    service: {
-      id: uuidv4(),
-      name: "Разбор натальной карты для женщин",
-      price: 5000,
+    client: {
+      id: "c3",
+      name: "Елена Козлова",
+      email: "elena@example.com",
     },
-    date: new Date(2025, 6, 13, 17, 0), // July 13, 2025, 5:00 PM
-    duration: 90,
-    format: "video",
-    status: "upcoming",
-    requiresConfirmation: true,
-  },
-  {
-    id: uuidv4(),
-    specialist: {
-      id: "3",
-      name: "Анна Петрова",
-      photo: "/placeholder-user.jpg",
-    },
-    service: {
-      id: uuidv4(),
-      name: "Консультация по астрологии",
-      price: 4000,
-    },
-    date: new Date(2025, 6, 14, 10, 0), // July 14, 2025, 10:00 AM
-    duration: 60,
-    format: "video",
-    status: "upcoming",
-    requiresConfirmation: false,
-  },
-  {
-    id: uuidv4(),
-    specialist: {
-      id: "4",
-      name: "Михаил Сидоров",
-      photo: "/placeholder-user.jpg",
-    },
-    service: {
-      id: uuidv4(),
-      name: "Коучинг сессия",
-      price: 6000,
-    },
-    date: new Date(2025, 6, 15, 14, 30), // July 15, 2025, 2:30 PM
-    duration: 90,
+    date: new Date(2025, 6, 13, 17, 0), // July 13, 2025, 17:00
     format: "in-person",
+    status: "upcoming",
+    price: 3500,
+    paymentStatus: "pending",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "4",
+    service: {
+      id: "s4",
+      name: "Консультация по отношениям",
+      description: "Анализ совместимости партнеров",
+      price: 2800,
+      duration: 60,
+      category: "Психология",
+    },
+    specialist: {
+      id: "sp3",
+      name: "Виктория",
+      photo: "/placeholder-user.jpg",
+      rating: 4.7,
+      reviewsCount: 234,
+    },
+    client: {
+      id: "c4",
+      name: "Дмитрий Волков",
+      email: "dmitry@example.com",
+    },
+    date: new Date(2025, 6, 14, 10, 0), // July 14, 2025, 10:00
+    format: "video",
     status: "confirmed",
-    requiresConfirmation: false,
+    price: 2800,
+    paymentStatus: "paid",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "5",
+    service: {
+      id: "s5",
+      name: "Медитативная практика",
+      description: "Групповая медитация и релаксация",
+      price: 1500,
+      duration: 45,
+      category: "Медитация",
+    },
+    specialist: {
+      id: "sp4",
+      name: "Александра",
+      photo: "/placeholder-user.jpg",
+      rating: 4.9,
+      reviewsCount: 67,
+    },
+    client: {
+      id: "c5",
+      name: "Ольга Смирнова",
+      email: "olga@example.com",
+    },
+    date: new Date(2025, 6, 15, 14, 0), // July 15, 2025, 14:00
+    format: "in-person",
+    status: "upcoming",
+    price: 1500,
+    paymentStatus: "pending",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ]

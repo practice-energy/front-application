@@ -1,34 +1,64 @@
-export interface Email {
-  address: string
-  verified: boolean
-}
-
-export interface EducationItem {
-  description: string
-  certificate: File | null
-}
-
-export interface ExperienceItem {
-  description: string
-  certificate: File | null
-}
-
 export interface User {
   id: string
-  first_name: string
-  last_name: string
-  avatar: string
-  email: Email
-  images: File[]
-  created_at: string // or Date if you'll convert it
-  account_balance: number
-  tier: string // or a union type like "Premium" | "Standard" | "Basic" if you have specific tiers
-  isSpecialist: boolean
-  bio: string
-  fullBio: string
-  location: string
-  timezone: string // Added timezone field
-  education: EducationItem[]
-  experience: ExperienceItem[]
-  hat: "adept" | "master" | "superviser"
+  name: string
+  email: string
+  phone?: string
+  avatar?: string
+  role: "client" | "specialist"
+  timezone: string
+  isVerified: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface UserProfile extends User {
+  bio?: string
+  location?: string
+  languages: string[]
+  rating?: number
+  reviewsCount: number
+  completedBookings: number
+}
+
+export interface Specialist extends UserProfile {
+  role: "specialist"
+  specialties: string[]
+  experience: number
+  hourlyRate: number
+  availability: AvailabilitySlot[]
+  education: Education[]
+  certifications: Certification[]
+  portfolio: PortfolioItem[]
+}
+
+export interface AvailabilitySlot {
+  dayOfWeek: number // 0-6 (Sunday-Saturday)
+  startTime: string // HH:mm format
+  endTime: string // HH:mm format
+}
+
+export interface Education {
+  id: string
+  institution: string
+  degree: string
+  field: string
+  startYear: number
+  endYear?: number
+}
+
+export interface Certification {
+  id: string
+  name: string
+  issuer: string
+  issueDate: Date
+  expiryDate?: Date
+}
+
+export interface PortfolioItem {
+  id: string
+  title: string
+  description: string
+  images: string[]
+  category: string
+  createdAt: Date
 }
