@@ -5,18 +5,22 @@ export interface User {
   avatar?: string
   phone?: string
   timezone: string
-  role: "client" | "specialist" // Updated role options
+  role: "client" | "specialist" | "admin"
+  isVerified: boolean
   createdAt: Date
   updatedAt: Date
 }
 
 export interface UserProfile extends User {
   bio?: string
-  location?: string
-  languages: string[]
-  verified: boolean
+  specialties?: string[]
   rating?: number
-  reviewsCount: number
+  reviewsCount?: number
+  location?: string
+  languages?: string[]
+  experience?: number
+  education?: string[]
+  certifications?: string[]
 }
 
 export interface UserStats {

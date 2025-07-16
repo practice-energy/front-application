@@ -20,7 +20,7 @@ export interface Booking {
   id: string
   service: Service
   specialist: Specialist
-  date: string
+  date: Date // Changed back to Date object for easier handling
   duration: number
   slots: number // количество часовых слотов (1 слот = 1 час)
   format: "video" | "in-person"
@@ -31,3 +31,7 @@ export interface Booking {
   createdAt: Date
   updatedAt: Date
 }
+
+export type BookingStatus = "upcoming" | "confirmed" | "completed" | "cancelled"
+export type BookingFormat = "video" | "in-person"
+export type ViewMode = "calendar" | "list"

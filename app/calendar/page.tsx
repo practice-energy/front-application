@@ -26,21 +26,25 @@ const formatDate = (date: Date) => {
 
 const getBookingsForDate = (date: Date, bookings: Booking[]) => {
   return bookings.filter((booking) => {
-    const bookingDate = new Date(booking.date)
-    return bookingDate.toDateString() === date.toDateString()
+    const bookingDate = booking.date
+    return (
+      bookingDate.getFullYear() === date.getFullYear() &&
+      bookingDate.getMonth() === date.getMonth() &&
+      bookingDate.getDate() === date.getDate()
+    )
   })
 }
 
 const getBookingAtTime = (hour: number, bookings: Booking[]) => {
   return bookings.find((booking) => {
-    const bookingHour = new Date(booking.date).getHours()
+    const bookingHour = booking.date.getHours()
     return bookingHour === hour
   })
 }
 
 const isBookingContinuation = (hour: number, bookings: Booking[]) => {
   return bookings.some((booking) => {
-    const bookingHour = new Date(booking.date).getHours()
+    const bookingHour = booking.date.getHours()
     return hour > bookingHour && hour < bookingHour + booking.slots
   })
 }

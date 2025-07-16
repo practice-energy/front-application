@@ -19,7 +19,7 @@ export const mockBookings: Booking[] = [
       reviewsCount: 127,
       specialties: ["Таро", "Астрология"],
     },
-    date: new Date(2025, 6, 13, 5, 0).toISOString(), // 13 июля 2025, 05:00
+    date: new Date(2025, 6, 13, 5, 0), // 13 июля 2025, 05:00
     duration: 60,
     slots: 1,
     format: "in-person",
@@ -47,7 +47,7 @@ export const mockBookings: Booking[] = [
       reviewsCount: 127,
       specialties: ["Таро"],
     },
-    date: new Date(2025, 6, 13, 6, 0).toISOString(), // 13 июля 2025, 06:00
+    date: new Date(2025, 6, 13, 6, 0), // 13 июля 2025, 06:00
     duration: 60,
     slots: 1,
     format: "in-person",
@@ -75,7 +75,7 @@ export const mockBookings: Booking[] = [
       reviewsCount: 89,
       specialties: ["Астрология", "Нумерология"],
     },
-    date: new Date(2025, 6, 13, 17, 0).toISOString(), // 13 июля 2025, 17:00
+    date: new Date(2025, 6, 13, 17, 0), // 13 июля 2025, 17:00
     duration: 120,
     slots: 2,
     format: "video",
@@ -103,7 +103,7 @@ export const mockBookings: Booking[] = [
       reviewsCount: 156,
       specialties: ["Астрология", "Коучинг"],
     },
-    date: new Date(2025, 6, 14, 10, 0).toISOString(), // 14 июля 2025, 10:00
+    date: new Date(2025, 6, 14, 10, 0), // 14 июля 2025, 10:00
     duration: 90,
     slots: 2,
     format: "video",
@@ -131,13 +131,69 @@ export const mockBookings: Booking[] = [
       reviewsCount: 203,
       specialties: ["Медитация", "Энергетика"],
     },
-    date: new Date(2025, 6, 15, 14, 0).toISOString(), // 15 июля 2025, 14:00
+    date: new Date(2025, 6, 15, 14, 0), // 15 июля 2025, 14:00
     duration: 180,
     slots: 3,
     format: "in-person",
     status: "confirmed",
     paymentStatus: "paid",
     clientId: "c4",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "6",
+    service: {
+      id: "s6",
+      name: "Экспресс консультация",
+      description: "Быстрая консультация по актуальному вопросу",
+      price: 1500,
+      duration: 30,
+      category: "Консультация",
+    },
+    specialist: {
+      id: "sp5",
+      name: "Анна",
+      photo: "/placeholder-user.jpg",
+      rating: 4.5,
+      reviewsCount: 78,
+      specialties: ["Психология"],
+    },
+    date: new Date(new Date().setHours(9, 0, 0, 0)), // Today at 9:00
+    duration: 30,
+    slots: 1,
+    format: "video",
+    status: "confirmed",
+    paymentStatus: "paid",
+    clientId: "c5",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "7",
+    service: {
+      id: "s7",
+      name: "Личная консультация",
+      description: "Индивидуальная работа с личными вопросами",
+      price: 3500,
+      duration: 90,
+      category: "Психология",
+    },
+    specialist: {
+      id: "sp6",
+      name: "Ирина",
+      photo: "/placeholder-user.jpg",
+      rating: 4.9,
+      reviewsCount: 234,
+      specialties: ["Психология", "Коучинг"],
+    },
+    date: new Date(new Date().setHours(15, 0, 0, 0)), // Today at 15:00
+    duration: 90,
+    slots: 2,
+    format: "in-person",
+    status: "confirmed",
+    paymentStatus: "paid",
+    clientId: "c6",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
