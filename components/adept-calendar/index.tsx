@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CalendarSidebar } from "./calendar-sidebar"
+import { CalendarSidebar } from "@/components/adept-calendar/calendar-sidebar"
 import { ScheduleView } from "./schedule-view"
 import type { Booking } from "@/types/booking"
 

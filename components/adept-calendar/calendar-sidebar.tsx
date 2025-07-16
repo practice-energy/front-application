@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarWidget } from "./calendar-widget"
+import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 
 interface CalendarSidebarProps {
   selectedDate: Date

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { TimeColumn } from "./time-column"
-import { DayColumn } from "./day-column"
+import { DayColumn } from "@/components/adept-calendar/day-column"
 import type { Booking } from "@/types/booking"
 
 interface ScheduleViewProps {
