@@ -4,7 +4,6 @@ export interface Service {
   description: string
   price: number
   duration: number
-  category: string
 }
 
 export interface Specialist {
@@ -24,8 +23,7 @@ export interface Booking {
   duration: number
   slots: number // количество часовых слотов (1 слот = 1 час)
   format: "video" | "in-person"
-  status: "confirmed" | "pending" | "cancelled" | "completed"
-  paymentStatus: "paid" | "pending" | "failed"
+  paymentStatus: "paid" | "pending" | "cancelled"
   clientId: string
   notes?: string
   createdAt: Date

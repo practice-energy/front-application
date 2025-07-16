@@ -2,7 +2,6 @@
 
 import { TimeSlot } from "./time-slot"
 import type { Booking } from "@/types/booking"
-import {cn} from "@/lib/utils";
 
 interface DayColumnProps {
   date: Date
@@ -49,18 +48,11 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
   const dayBookings = getBookingsForDate(date, bookings)
 
   return (
-    <div className="flex-1 min-w-0 bg-white border-l border-gray-200 overflow-hidden flex-shrink-0 border-r">
-      {/* Улучшенный sticky header */}
-      <div className={cn(
-          "sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-50",
-          "shadow-sm" // Добавляем тень при скролле
-      )}>
-        <div className="text-sm font-medium text-gray-900">
-          {formatDate(date)}
-        </div>
+    <div className="flex-1 min-w-0">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-20">
+        <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
-
-      <div className="relative">
+      <div>
         {HOURS.map((hour) => {
           const booking = getBookingAtTime(hour, dayBookings)
           const isContinuation = isBookingContinuation(hour, dayBookings)

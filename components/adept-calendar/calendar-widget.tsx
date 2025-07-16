@@ -5,12 +5,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CalendarWidgetProps {
-  selected?: Date
-  onSelect?: (date: Date) => void
+  selected: Date
+  onSelect: (date: Date) => void
   className?: string
 }
 
-const MONTHS_RU = [
+const MONTHS = [
   "Январь",
   "Февраль",
   "Март",
@@ -25,126 +25,111 @@ const MONTHS_RU = [
   "Декабрь",
 ]
 
-const DAYS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
 
 export function CalendarWidget({ selected, onSelect, className }: CalendarWidgetProps) {
-  const [currentMonth, setCurrentMonth] = useState(selected || new Date())
+  const [currentMonth, setCurrentMonth] = useState(new Date(selected.getFullYear(), selected.getMonth(), 1))
+
   const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const year = currentMonth.getFullYear()
-  const month = currentMonth.getMonth()
+  const selectedDate = new Date(selected)
+  selectedDate.setHours(0, 0, 0, 0)
 
-  const firstDayOfMonth = new Date(year, month, 1)
-  const lastDayOfMonth = new Date(year, month + 1, 0)
-  const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7 // Monday = 0
-  const daysInMonth = lastDayOfMonth.getDate()
-
-  const prevMonth = new Date(year, month - 1, 0)
-
-  const handlePrevMonth = () => {
-    setCurrentMonth(new Date(year, month - 1, 1))
+  const navigateMonth = (direction: "prev" | "next") => {
+    setCurrentMonth((prev) => {
+      const newMonth = new Date(prev)
+      if (direction === "prev") {
+        newMonth.setMonth(prev.getMonth() - 1)
+      } else {
+        newMonth.setMonth(prev.getMonth() + 1)
+      }
+      return newMonth
+    })
   }
 
-  const handleNextMonth = () => {
-    setCurrentMonth(new Date(year, month + 1, 1))
-  }
+  const getDaysInMonth = () => {
+    const year = currentMonth.getFullYear()
+    const month = currentMonth.getMonth()
 
-  const handleDateClick = (date: Date) => {
-    onSelect?.(date)
-  }
+    // First day of the month
+    const firstDay = new Date(year, month, 1)
+    // Last day of the month
+    const lastDay = new Date(year, month + 1, 0)
 
-  const isToday = (date: Date) => {
-    return date.toDateString() === today.toDateString()
-  }
+    // Get the day of week for first day (0 = Sunday, 1 = Monday, etc.)
+    // Convert to Monday = 0, Sunday = 6
+    const firstDayOfWeek = (firstDay.getDay() + 6) % 7
 
-  const isSelected = (date: Date) => {
-    return selected && date.toDateString() === selected.toDateString()
-  }
-
-  const renderCalendarDays = () => {
     const days = []
 
-    // Previous month days
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      const date = new Date(year, month, -i)
-      days.push(
-          <button
-              key={`prev-${date.getDate()}`}
-              onClick={() => handleDateClick(date)}
-              className="w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 transition-colors rounded-sm"
-          >
-            {date.getDate()}
-          </button>,
-      )
+    // Add days from previous month
+    const prevMonth = new Date(year, month - 1, 0)
+    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+      const day = prevMonth.getDate() - i
+      days.push({
+        date: new Date(prevMonth.getFullYear(), prevMonth.getMonth(), day),
+        isCurrentMonth: false,
+        isToday: false,
+        isSelected: false,
+      })
     }
 
-    // Current month days
-    for (let day = 1; day <= daysInMonth; day++) {
+    // Add days from current month
+    for (let day = 1; day <= lastDay.getDate(); day++) {
       const date = new Date(year, month, day)
-      const isCurrentDay = isToday(date)
-      const isSelectedDay = isSelected(date)
+      const dateOnly = new Date(date)
+      dateOnly.setHours(0, 0, 0, 0)
 
-      days.push(
-        <button
-          key={day}
-          onClick={() => handleDateClick(date)}
-          className={cn("w-full h-full flex items-center justify-center text-sm transition-colors hover:bg-violet-50 rounded-sm", {
-            "text-gray-900": !isCurrentDay && !isSelectedDay,
-            "text-violet-600 font-medium": isCurrentDay && !isSelectedDay,
-            "bg-violet-600 text-white font-medium hover:bg-violet-700": isSelectedDay,
-          })}
-        >
-          {day}
-        </button>,
-      )
+      days.push({
+        date,
+        isCurrentMonth: true,
+        isToday: dateOnly.getTime() === today.getTime(),
+        isSelected: dateOnly.getTime() === selectedDate.getTime(),
+      })
     }
 
-    // Next month days to fill 6 weeks (42 days total)
+    // Add days from next month to complete 6 weeks (42 days)
     const remainingDays = 42 - days.length
     for (let day = 1; day <= remainingDays; day++) {
-      const date = new Date(year, month + 1, day)
-      days.push(
-        <button
-          key={`next-${day}`}
-          onClick={() => handleDateClick(date)}
-          className={cn(
-              "w-full h-full flex items-center justify-center text-sm text-gray-400 hover:bg-violet-50 rounded-sm transition-colors",
-              {
-                "": !isToday(date) && !isSelected(date),
-                "text-violet-600 font-medium": isToday(date) && !isSelected(date),
-                "bg-violet-600 text-white font-medium hover:bg-violet-700": isSelected(date),
-              }
-          )}
-        >
-          {day}
-        </button>,
-      )
+      days.push({
+        date: new Date(year, month + 1, day),
+        isCurrentMonth: false,
+        isToday: false,
+        isSelected: false,
+      })
     }
 
     return days
   }
 
+  const days = getDaysInMonth()
+
+  const handleDateClick = (date: Date) => {
+    onSelect(date)
+  }
+
   return (
-    <div className={cn("bg-white", className)}>
+    <div className={cn("bg-white p-4", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="p-3 text-lg font-semibold">
-          {MONTHS_RU[month]} {year}
-        </h2>
-        <div className="flex items-center gap-1 pr-3">
-          <button onClick={handlePrevMonth} className="p-1 hover:bg-violet-50 rounded-sm transition-colors">
+        <div className="text-sm font-medium">
+          {MONTHS[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+        </div>
+        <div className="flex items-center gap-1">
+          <button onClick={() => navigateMonth("prev")} className="p-1 hover:bg-gray-100 rounded">
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <button onClick={handleNextMonth} className="p-1 hover:bg-violet-50 rounded-sm transition-colors">
+          <button onClick={() => navigateMonth("next")} className="p-1 hover:bg-gray-100 rounded">
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Days of week */}
-      <div className="grid grid-cols-7 mb-3">
-        {DAYS_RU.map((day) => (
-          <div key={day} className="h-8 flex items-center justify-center text-sm text-gray-500 font-normal">
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {WEEKDAYS.map((day) => (
+          <div key={day} className="text-xs text-gray-500 text-center py-1">
             {day}
           </div>
         ))}
@@ -152,10 +137,22 @@ export function CalendarWidget({ selected, onSelect, className }: CalendarWidget
 
       {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-1">
-        {renderCalendarDays().map((day, index) => (
-          <div key={index} className="aspect-square">
-            {day}
-          </div>
+        {days.map((day, index) => (
+          <button
+            key={index}
+            onClick={() => handleDateClick(day.date)}
+            className={cn(
+              "aspect-square text-sm flex items-center justify-center rounded hover:bg-gray-100 transition-colors",
+              {
+                "text-gray-400": !day.isCurrentMonth,
+                "text-gray-900": day.isCurrentMonth && !day.isToday && !day.isSelected,
+                "text-violet-600": day.isToday && !day.isSelected,
+                "bg-violet-600 text-white hover:bg-violet-600": day.isSelected,
+              },
+            )}
+          >
+            {day.date.getDate()}
+          </button>
         ))}
       </div>
     </div>

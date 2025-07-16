@@ -31,6 +31,11 @@ export interface UserProfile extends User {
     telegram?: string
     website?: string
   }
+  preferences: {
+    notifications: boolean
+    emailUpdates: boolean
+    language: "ru" | "en"
+  }
 }
 
 export interface UserStats {

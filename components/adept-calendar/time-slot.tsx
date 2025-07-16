@@ -1,6 +1,6 @@
 "use client"
 
-import { BookingCard } from "@/components/adept-calendar/booking-card"
+import { BookingCard } from "./booking-card"
 import type { Booking } from "@/types/booking"
 
 interface TimeSlotProps {
