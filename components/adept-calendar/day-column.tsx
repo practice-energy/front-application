@@ -70,7 +70,7 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
               {!isContinuation && <TimeSlot hour={hour} slotHeight={slotHeight} />}
 
               {booking && (
-                <div className="absolute z-10 h-full">
+                <div className="absolute inset-0 z-10">
                   <BookingCard booking={booking} slotHeight={slotHeight} />
                 </div>
               )}
