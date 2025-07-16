@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -10,6 +10,7 @@ import { CustomCalendar } from "@/components/custom-calendar"
 import type { Booking } from "@/types/booking"
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
+const SLOT_HEIGHT = 60 // pixels per hour slot
 
 const formatTime = (hour: number) => {
   return `${hour.toString().padStart(2, "0")}:00`
@@ -50,35 +51,35 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
 
   return (
     <div
-      className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-3 flex items-center gap-3 transition-colors cursor-pointer group w-full"
-      style={{ height: `${booking.slots * 60 - 8}px` }} // 60px per slot minus gap
+      className="bg-violet-600 hover:bg-violet-50 hover:border-violet-600 border border-violet-600 rounded-sm p-2 flex flex-col gap-2 transition-colors cursor-pointer group w-full"
+      style={{ height: `${booking.slots * SLOT_HEIGHT - 4}px` }}
     >
-      <Avatar className="h-8 w-8 flex-shrink-0">
-        <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
-        <AvatarFallback>{booking.specialist.name.charAt(0)}</AvatarFallback>
-      </Avatar>
-
-      <div className="flex-1 min-w-0">
-        <div className="text-white group-hover:text-violet-600 font-medium text-sm truncate">
-          {booking.service.name}
+      <div className="flex items-center gap-2">
+        <Avatar className="h-6 w-6 flex-shrink-0">
+          <AvatarImage src={booking.specialist.photo || "/placeholder.svg"} alt={booking.specialist.name} />
+          <AvatarFallback className="text-xs">{booking.specialist.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <div className="text-white group-hover:text-violet-600 font-medium text-xs truncate">
+            {booking.service.name}
+          </div>
+          <div className="text-violet-200 group-hover:text-violet-500 text-xs">{booking.specialist.name}</div>
         </div>
-        <div className="text-violet-200 group-hover:text-violet-500 text-xs">{booking.specialist.name}</div>
-        <div className="text-violet-200 group-hover:text-violet-500 text-xs mt-1">{booking.duration} мин</div>
       </div>
 
-      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+      <div className="flex items-center justify-between">
         <Badge
           variant="secondary"
-          className="bg-white/20 text-white group-hover:bg-violet-100 group-hover:text-violet-600 text-xs"
+          className="bg-white/20 text-white group-hover:bg-violet-100 group-hover:text-violet-600 text-xs px-1 py-0"
         >
           <FormatIcon className="h-3 w-3 mr-1" />
           {booking.format === "video" ? "Видео" : "Очно"}
         </Badge>
         {booking.paymentStatus === "paid" && (
-          <div className="text-xs text-violet-200 group-hover:text-violet-500">Оплачено 100%</div>
+          <div className="text-xs text-violet-200 group-hover:text-violet-500">100%</div>
         )}
         {booking.paymentStatus === "pending" && (
-          <div className="text-xs text-violet-200 group-hover:text-violet-500">Оплачено 0%</div>
+          <div className="text-xs text-violet-200 group-hover:text-violet-500">0%</div>
         )}
       </div>
     </div>
@@ -87,15 +88,16 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
 
 const TimeSlot = ({ hour, booking, isHidden }: { hour: number; booking?: Booking; isHidden?: boolean }) => {
   if (isHidden) {
-    return null // Don't render slots that are part of multi-hour bookings
+    return (
+      <div style={{ height: `${SLOT_HEIGHT}px` }} className="border-b border-gray-100">
+        {/* Empty slot that's part of a multi-hour booking */}
+      </div>
+    )
   }
 
   return (
-    <div className="flex border-b border-gray-100" style={{ minHeight: "60px" }}>
-      <div className="w-16 py-4 px-2 text-xs text-gray-500 border-r border-gray-100 flex-shrink-0">
-        {formatTime(hour)}
-      </div>
-      <div className="flex-1 p-2 relative">{booking && <BookingCard booking={booking} />}</div>
+    <div className="border-b border-gray-100" style={{ height: `${SLOT_HEIGHT}px` }}>
+      <div className="h-full p-1">{booking && <BookingCard booking={booking} />}</div>
     </div>
   )
 }
@@ -120,8 +122,30 @@ const DayColumn = ({ date, bookings }: { date: Date; bookings: Booking[] }) => {
   )
 }
 
+const TimeColumn = () => {
+  return (
+    <div className="w-16 flex-shrink-0 border-r border-gray-200">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-10">
+        <div className="text-sm font-medium text-transparent">Time</div>
+      </div>
+      <div>
+        {HOURS.map((hour) => (
+          <div
+            key={hour}
+            className="border-b border-gray-100 px-2 py-4 text-xs text-gray-500 text-right"
+            style={{ height: `${SLOT_HEIGHT}px` }}
+          >
+            {formatTime(hour)}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   const today = new Date()
   const tomorrow = new Date(today)
@@ -130,6 +154,14 @@ export default function CalendarPage() {
   dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2)
 
   const displayDates = [selectedDate, tomorrow, dayAfterTomorrow]
+
+  // Scroll to 7 AM on mount
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollTo = 7 * SLOT_HEIGHT // 7 AM
+      scrollAreaRef.current.scrollTop = scrollTo
+    }
+  }, [])
 
   return (
     <div className="h-screen flex">
@@ -150,8 +182,9 @@ export default function CalendarPage() {
 
       {/* Right Schedule Section */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="flex">
+            <TimeColumn />
             {displayDates.map((date, index) => (
               <DayColumn key={date.toISOString()} date={date} bookings={mockBookings} />
             ))}

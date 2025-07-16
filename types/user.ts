@@ -9,25 +9,15 @@ export interface User {
   isVerified: boolean
   createdAt: Date
   updatedAt: Date
-  preferences?: {
-    language: "ru" | "en"
-    notifications: {
-      email: boolean
-      push: boolean
-      sms: boolean
-    }
-    theme: "light" | "dark" | "system"
-  }
-  profile?: {
-    bio?: string
-    location?: string
-    website?: string
-    socialLinks?: {
-      instagram?: string
-      telegram?: string
-      whatsapp?: string
-    }
-  }
+}
+
+export interface UserProfile extends User {
+  bio?: string
+  location?: string
+  languages: string[]
+  verified: boolean
+  rating?: number
+  reviewsCount: number
 }
 
 export interface UserStats {
