@@ -1,10 +1,10 @@
 "use client"
 
-import {useEffect, useRef} from "react"
-import {ScrollArea} from "@/components/ui/scroll-area"
-import {TimeColumn} from "./time-column"
-import {DayColumn} from "./day-column"
-import type {Booking} from "@/types/booking"
+import { useEffect, useRef } from "react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { TimeColumn } from "./time-column"
+import { DayColumn } from "./day-column"
+import type { Booking } from "@/types/booking"
 
 interface ScheduleViewProps {
   selectedDate: Date
@@ -37,7 +37,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   }, [selectedDate])
 
   return (
-    <div className="flex-1 overflow-hidden">
+    <div className="flex-1 h-full overflow-hidden">
       <ScrollArea className="h-full" ref={scrollAreaRef}>
         <div className="flex">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
