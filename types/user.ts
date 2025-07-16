@@ -6,7 +6,6 @@ export interface User {
   avatar?: string
   role: "client" | "specialist"
   timezone: string
-  isVerified: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -15,26 +14,20 @@ export interface UserProfile extends User {
   bio?: string
   location?: string
   languages: string[]
+  verified: boolean
   rating?: number
   reviewsCount: number
-  completedBookings: number
 }
 
 export interface Specialist extends UserProfile {
   role: "specialist"
   specialties: string[]
   experience: number
+  education: Education[]
+  certifications: string[]
   hourlyRate: number
   availability: AvailabilitySlot[]
-  education: Education[]
-  certifications: Certification[]
   portfolio: PortfolioItem[]
-}
-
-export interface AvailabilitySlot {
-  dayOfWeek: number // 0-6 (Sunday-Saturday)
-  startTime: string // HH:mm format
-  endTime: string // HH:mm format
 }
 
 export interface Education {
@@ -46,12 +39,12 @@ export interface Education {
   endYear?: number
 }
 
-export interface Certification {
+export interface AvailabilitySlot {
   id: string
-  name: string
-  issuer: string
-  issueDate: Date
-  expiryDate?: Date
+  dayOfWeek: number // 0-6 (Sunday-Saturday)
+  startTime: string // HH:mm format
+  endTime: string // HH:mm format
+  isAvailable: boolean
 }
 
 export interface PortfolioItem {

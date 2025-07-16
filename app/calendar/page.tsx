@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar } from "@/components/ui/calendar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ChevronLeft, ChevronRight, Video, MapPin } from "lucide-react"
+import { Video, MapPin } from "lucide-react"
 import { mockBookings } from "@/services/mock-bookings"
+import { CustomCalendar } from "@/components/custom-calendar"
 import type { Booking } from "@/types/booking"
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -103,7 +103,6 @@ const DayColumn = ({ date, bookings }: { date: Date; bookings: Booking[] }) => {
 
 export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
 
   const today = new Date()
   const tomorrow = new Date(today)
@@ -113,54 +112,14 @@ export default function CalendarPage() {
 
   const displayDates = [selectedDate, tomorrow, dayAfterTomorrow]
 
-  const handlePreviousMonth = () => {
-    setCurrentMonth((prev) => {
-      const newDate = new Date(prev)
-      newDate.setMonth(newDate.getMonth() - 1)
-      return newDate
-    })
-  }
-
-  const handleNextMonth = () => {
-    setCurrentMonth((prev) => {
-      const newDate = new Date(prev)
-      newDate.setMonth(newDate.getMonth() + 1)
-      return newDate
-    })
-  }
-
-  const monthYear = currentMonth.toLocaleDateString("ru-RU", {
-    month: "long",
-    year: "numeric",
-  })
-
   return (
     <div className="h-screen flex">
       {/* Left Calendar Section */}
       <div className="w-80 border-r border-gray-200 flex flex-col">
         {/* Calendar at the top */}
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold capitalize">{monthYear}</h2>
-            <div className="flex items-center gap-1">
-              <button onClick={handlePreviousMonth} className="p-1 hover:bg-gray-100 rounded">
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button onClick={handleNextMonth} className="p-1 hover:bg-gray-100 rounded">
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
           <div className="w-full aspect-square">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => date && setSelectedDate(date)}
-              month={currentMonth}
-              onMonthChange={setCurrentMonth}
-              className="w-full h-full [&_.rdp-table]:w-full [&_.rdp-table]:h-full [&_.rdp-cell]:h-[calc(100%/7)] [&_.rdp-day]:w-full [&_.rdp-day]:h-full [&_.rdp-day]:flex [&_.rdp-day]:items-center [&_.rdp-day]:justify-center"
-            />
+            <CustomCalendar selected={selectedDate} onSelect={setSelectedDate} className="w-full h-full" />
           </div>
         </div>
 
