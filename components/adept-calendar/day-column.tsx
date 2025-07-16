@@ -14,21 +14,12 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
   const hours = Array.from({ length: 24 }, (_, i) => i)
 
   // Format day header
-  const formatDayHeader = (date: Date) => {
-    const today = new Date()
-    const tomorrow = new Date(today)
-    tomorrow.setDate(today.getDate() + 1)
-
-    if (date.toDateString() === today.toDateString()) {
-      return `Сегодня ${date.getDate()}`
-    } else if (date.toDateString() === tomorrow.toDateString()) {
-      return `Завтра ${date.getDate()}`
-    } else {
-      return new Intl.DateTimeFormat("ru-RU", {
-        weekday: "short",
-        day: "numeric",
-      }).format(date)
-    }
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("ru-RU", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    })
   }
 
   // Get bookings for this date
@@ -64,8 +55,8 @@ export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
   return (
     <div className="flex-1 min-w-0">
       {/* Sticky day header */}
-      <div className="sticky top-0 z-20 bg-white border-b border-gray-200 p-3 text-center font-medium text-gray-900">
-        {formatDayHeader(date)}
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-20">
+        <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
 
       {/* Time slots */}

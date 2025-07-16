@@ -1,17 +1,17 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { TimeColumn } from "./time-column"
-import { DayColumn } from "./day-column"
-import type { Booking } from "@/types/booking"
+import {useEffect, useRef} from "react"
+import {ScrollArea} from "@/components/ui/scroll-area"
+import {TimeColumn} from "./time-column"
+import {DayColumn} from "./day-column"
+import type {Booking} from "@/types/booking"
 
 interface ScheduleViewProps {
   selectedDate: Date
   bookings: Booking[]
 }
 
-const SLOT_HEIGHT = 60
+const SLOT_HEIGHT = 90
 
 export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
@@ -32,8 +32,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   // Scroll to 7 AM on mount and when date changes
   useEffect(() => {
     if (scrollAreaRef.current) {
-      const scrollTo = 7 * SLOT_HEIGHT // 7 AM
-      scrollAreaRef.current.scrollTop = scrollTo
+      scrollAreaRef.current.scrollTop = 7 * SLOT_HEIGHT
     }
   }, [selectedDate])
 

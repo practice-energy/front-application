@@ -13,8 +13,9 @@ export function TimeColumn({ slotHeight }: TimeColumnProps) {
 
   return (
     <div className="w-16 flex-shrink-0 border-r border-gray-200">
-      {/* Empty header space to align with day columns */}
-      <div className="h-[57px] border-b border-gray-200" />
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-10">
+        <div className="text-sm font-medium text-transparent">Time</div>
+      </div>
 
       {/* Time labels */}
       {hours.map((hour) => (

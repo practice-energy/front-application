@@ -21,12 +21,3 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   )
 }
 
-// Export all components for individual use if needed
-export { CalendarWidget } from "./calendar-widget"
-export { CalendarSidebar } from "./calendar-sidebar"
-export { ScheduleView } from "./schedule-view"
-export { BookingCard } from "./booking-card"
-export { DayColumn } from "./day-column"
-export { TimeColumn } from "./time-column"
-export { TimeSlot } from "./time-slot"
-export { BookingDetailsModal } from "./booking-details-modal"
