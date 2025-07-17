@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   BellIcon,
   GlobeAltIcon,
@@ -84,80 +83,6 @@ export function PreferencesSection() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Language & Region */}
-        {/*<Card*/}
-        {/*    className="shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg"*/}
-        {/*>*/}
-        {/*  <CardHeader className="p-6">*/}
-        {/*    <CardTitle className="flex items-center gap-2 dark:text-gray-100">*/}
-        {/*      <GlobeAltIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />*/}
-        {/*      Language & Region*/}
-        {/*    </CardTitle>*/}
-        {/*    <CardDescription className="dark:text-gray-400">Set your language and regional preferences</CardDescription>*/}
-        {/*  </CardHeader>*/}
-        {/*  <CardContent className="p-6 pt-0">*/}
-        {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">*/}
-        {/*      /!* Language Selector *!/*/}
-        {/*      <div className="space-y-3">*/}
-        {/*        <Label*/}
-        {/*            htmlFor="language-select"*/}
-        {/*            className="dark:text-gray-200 block font-medium text-sm"*/}
-        {/*        >*/}
-        {/*          Language*/}
-        {/*        </Label>*/}
-        {/*        <Select value={language} onValueChange={setLanguage}>*/}
-        {/*          <SelectTrigger*/}
-        {/*              id="language-select"*/}
-        {/*              className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 h-10"*/}
-        {/*          >*/}
-        {/*            <SelectValue placeholder="Select language" />*/}
-        {/*          </SelectTrigger>*/}
-        {/*          <SelectContent*/}
-        {/*              className="dark:bg-gray-700 dark:border-gray-600"*/}
-        {/*              position="item-aligned"*/}
-        {/*          >*/}
-        {/*            <SelectItem value="en">English</SelectItem>*/}
-        {/*            <SelectItem value="ru">Русский</SelectItem>*/}
-        {/*          </SelectContent>*/}
-        {/*        </Select>*/}
-        {/*      </div>*/}
-
-        {/*      /!* Timezone Selector *!/*/}
-        {/*      <div className="space-y-3">*/}
-        {/*        <Label*/}
-        {/*            htmlFor="timezone-select"*/}
-        {/*            className="dark:text-gray-200 block font-medium text-sm"*/}
-        {/*        >*/}
-        {/*          Timezone*/}
-        {/*        </Label>*/}
-        {/*        <Select value={timezone} onValueChange={setTimezone}>*/}
-        {/*          <SelectTrigger*/}
-        {/*              id="timezone-select"*/}
-        {/*              className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 h-10"*/}
-        {/*          >*/}
-        {/*            <SelectValue placeholder="Select timezone" />*/}
-        {/*          </SelectTrigger>*/}
-        {/*          <SelectContent*/}
-        {/*              className="dark:bg-gray-700 dark:border-gray-600 max-h-60"*/}
-        {/*              position="item-aligned"*/}
-        {/*          >*/}
-        {/*            <SelectItem value="UTC-12">International Date Line West (UTC-12)</SelectItem>*/}
-        {/*            <SelectItem value="UTC-8">Pacific Time (UTC-8)</SelectItem>*/}
-        {/*            <SelectItem value="UTC-7">Mountain Time (UTC-7)</SelectItem>*/}
-        {/*            <SelectItem value="UTC-6">Central Time (UTC-6)</SelectItem>*/}
-        {/*            <SelectItem value="UTC-5">Eastern Time (UTC-5)</SelectItem>*/}
-        {/*            <SelectItem value="UTC+0">Greenwich Mean Time (UTC+0)</SelectItem>*/}
-        {/*            <SelectItem value="UTC+1">Central European Time (UTC+1)</SelectItem>*/}
-        {/*            <SelectItem value="UTC+3">Moscow Time (UTC+3)</SelectItem>*/}
-        {/*            <SelectItem value="UTC+8">China Standard Time (UTC+8)</SelectItem>*/}
-        {/*            <SelectItem value="UTC+9">Japan Standard Time (UTC+9)</SelectItem>*/}
-        {/*          </SelectContent>*/}
-        {/*        </Select>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  </CardContent>*/}
-        {/*</Card>*/}
 
         {/* Appearance Section */}
         <Card

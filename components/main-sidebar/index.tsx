@@ -2,17 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
-  Search,
-  Plus,
-  MessageSquare,
-  PanelRightOpen,
-  Activity,
-  LucideArchive,
-  SparklesIcon,
-  CalendarDays,
-  User,
-  Heart,
-  Crown, Repeat2,
+  Search, PanelRightOpen, Activity, LucideArchive, SparklesIcon, CalendarDays, Repeat2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -107,13 +97,6 @@ export function MainSidebar() {
     }
   }
 
-  const handleProfileClick = () => {
-    router.push("/profile")
-    if (isMobile) {
-      toggleSidebar()
-    }
-  }
-
   const handleCalendarClick = () => {
     router.push("/profile?section=calendar")
     if (isMobile) {
@@ -141,7 +124,6 @@ export function MainSidebar() {
 
   // Определяем тип контента в зависимости от роли пользователя
   const isSpecialist = user?.isSpecialist || false
-  const newChatLabel = isSpecialist ? "Новый клиент" : "Новый чат"
   const hat = user?.hat || "adept"
 
   const getSpecialistButtonText = () => {
@@ -158,7 +140,7 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full md:w-96 bg-white shadow-sm flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
+        "fixed left-0 top-0 h-full w-full 1. md:w-[400px] bg-white shadow-sm flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
     >
@@ -209,8 +191,8 @@ export function MainSidebar() {
                   <UserSwitch className="w-9 h-9  text-gray-700" />
                 </div>
                 <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] leading-tight">
-      {getSpecialistButtonText()}
-    </span>
+                  {getSpecialistButtonText()}
+                </span>
               </button>
             </div>
           </div>
@@ -248,7 +230,7 @@ export function MainSidebar() {
       )}
 
       {/* Область скролла - общая для всех устройств */}
-      <ScrollArea className={cn("flex-1 h-[calc(100%-180px)] relative")}>
+      <ScrollArea className={cn("flex-1 relative")}>
         {/* Исчезающий градиент сверху */}
         <div
           className={cn(

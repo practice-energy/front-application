@@ -124,7 +124,7 @@ export function Header() {
   }
 
   const handleLogoClick = () => {
-    if (role === "specialist") {
+    if (hat === "master") {
       router.push("/specialist-dashboard")
     } else {
       router.push("/")
@@ -142,7 +142,7 @@ export function Header() {
       <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
-            <div className="flex items-center space-x-6 gap-1.5">
+            <div className="flex items-start space-x-3 ml-[172px]">
               {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
               {shouldShowSidebar && (
                 <button

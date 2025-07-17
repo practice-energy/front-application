@@ -26,10 +26,7 @@ import { Badge } from "@/components/ui/badge"
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { id } = params
-  const { t } = useTranslations()
-  const { isAuthenticated } = useAuth()
   const [authModalOpen, setAuthModalOpen] = useState(false)
-  const [bookingModalOpen, setBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [, setSelectedTimeRange] = useState<string | null>(null)
@@ -198,26 +195,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
                   {/* Client Feedback Section */}
                   <FeedbackSection feedbacks={service.reviews}/>
-
-                  {/* Booking Section */}
-                  <div ref={bookingRef} id="booking" className="pt-4">
-                    <h3 className="text-xl font-bold mb-6 dark:text-gray-100">Book This Service</h3>
-
-                    {/* Fluid Layout for Calendar and Time Slots */}
-                    <div className="space-y-6">
-                      {/* Calendar */}
-                      <div>
-                        <AirbnbCalendar
-                          selectedDate={selectedDate}
-                          onDateSelect={(date) => {
-                            setSelectedDate(date)
-                            setSelectedTime(null)
-                            setSelectedTimeRange(null)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -239,19 +216,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
       </main>
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
-
-      {selectedTime && (
-        <BookingConfirmation
-          isOpen={bookingModalOpen}
-          onClose={() => setBookingModalOpen(false)}
-          bookingDetails={{
-            specialist: specialist,
-            service: service,
-            date: selectedDate.toISOString(),
-            time: selectedTime,
-          }}
-        />
-      )}
 
       <ShareServiceModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} service={service} />
     </>

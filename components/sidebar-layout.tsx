@@ -22,13 +22,13 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       // Используем custom event для уведомления компонентов о изменении состояния сайдбара
       window.dispatchEvent(
         new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 384 },
+          detail: { isCollapsed, width: isCollapsed ? 0 : 400 },
         }),
       )
 
       // Отложенная установка стилей для лучшей синхронизации рендеринга
       const applyStyles = () => {
-        const sidebarWidth = window.innerWidth < 768 ? "0" : "384px"
+        const sidebarWidth = window.innerWidth < 768 ? "0" : "400px"
         document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
         document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }
@@ -43,10 +43,10 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   }, [isAuthenticated, isCollapsed])
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <Header />
       {isAuthenticated && <MainSidebar />}
-      <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+      <main className="min-h-[calc(100vh-3rem)]">{children}</main>
     </div>
   )
 }

@@ -231,7 +231,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
     if (!dynamicWidth) return {}
 
     // Use sidebar context state for immediate response
-    const currentSidebarWidth = sidebarCollapsed ? 0 : sidebarWidth || 384
+    const currentSidebarWidth = sidebarCollapsed ? 0 : sidebarWidth || 512
 
     const baseStyles = {
       marginLeft: `${currentSidebarWidth}px`,

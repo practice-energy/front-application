@@ -60,6 +60,8 @@ export interface SectionContentProps {
   children: React.ReactNode
   isCollapsed: boolean
   isMobile: boolean
+  sectionKey: string
+  sectionVisibility: boolean
 }
 
 export interface User {
