@@ -1,7 +1,19 @@
 "use client"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { Search, PanelRightOpen, SparklesIcon, CalendarDays, Repeat2 } from "lucide-react"
+import {
+  Search,
+  Plus,
+  MessageSquare,
+  PanelRightOpen,
+  Activity,
+  LucideArchive,
+  SparklesIcon,
+  CalendarDays,
+  User,
+  Heart,
+  Crown, Repeat2,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -17,8 +29,8 @@ import { SectionContent } from "./components/section-content"
 import { ChatItem } from "./components/chat-item"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
 import { useProfileStore } from "@/stores/profile-store"
-import { Pentagram } from "@/components/icons/icon-pentagram"
-import { UserSwitch } from "@/components/icons/icon-user-switch"
+import {Pentagram} from "@/components/icons/icon-pentagram";
+import {UserSwitch} from "@/components/icons/icon-user-switch";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -40,7 +52,7 @@ function useMediaQuery(query: string) {
   return matches
 }
 
-export function MainSidebar({ className }: { className?: string }) {
+export function MainSidebar() {
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
@@ -48,15 +60,24 @@ export function MainSidebar({ className }: { className?: string }) {
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
 
-  const { chats, specialists, services } = useSidebarData()
-  const { searchQuery, setSearchQuery, filteredChats, filteredSpecialists, filteredServices } = useSidebarSearch({
-    chats,
-    specialists,
-    services,
-  })
+  const {
+    allChats,
+    groupedChats,
+    sectionVisibility,
+    toggleSection,
+    updateLastReadTimestamp,
+    hasNewMessages,
+    isActiveChat,
+  } = useSidebarData(pathname)
+
+  const { searchQuery, searchResults, isSearching, handleSearch } = useSidebarSearch(allChats)
 
   const handleChatClick = (chatId: string) => {
     if (isCollapsed && !isMobile) return
+
+    if (!isActiveChat(chatId)) {
+      updateLastReadTimestamp(chatId)
+    }
 
     router.push(`/search/${chatId}`)
 
@@ -139,7 +160,6 @@ export function MainSidebar({ className }: { className?: string }) {
       className={cn(
         "fixed left-0 top-0 h-full w-full md:w-96 bg-white shadow-sm flex flex-col z-50 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
-        className,
       )}
     >
       {isMobile ? (
@@ -151,7 +171,7 @@ export function MainSidebar({ className }: { className?: string }) {
                 <Input
                   placeholder={"Поиск в чатах"}
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                   className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
                 />
               </div>
@@ -162,39 +182,35 @@ export function MainSidebar({ className }: { className?: string }) {
             </div>
             <div className="flex flex-row items-center justify-center w-full gap-6 pl-6 pr-3">
               <button
-                onClick={handleCalendarClick}
-                className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
+                  onClick={handleCalendarClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
                 <div className="absolute top-1/4 transform -translate-y-1/4">
                   <CalendarDays className="w-12 h-12 text-gray-700" />
                 </div>
-                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">
-                  Календарь
-                </span>
+                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">Календарь</span>
               </button>
 
               <button
-                onClick={handleSavedClick}
-                className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
+                  onClick={handleSavedClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
                 <div className="absolute top-1/4 transform -translate-y-1/4">
                   <Pentagram className="w-12 h-12 mt-1 text-gray-700" />
                 </div>
-                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">
-                  Избранное
-                </span>
+                <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] text-left">Избранное</span>
               </button>
 
               <button
-                onClick={handleSpecialistClick}
-                className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
+                  onClick={handleSpecialistClick}
+                  className="relative flex flex-col items-center justify-start w-24 h-24 p-2 border border-gray-200 hover:bg-violet-50 rounded-sm transition-colors"
               >
                 <div className="absolute top-1/4 transform -translate-y-1/4">
                   <UserSwitch className="w-9 h-9  text-gray-700" />
                 </div>
                 <span className="absolute bottom-2 left-2 text-xs font-bold w-[calc(100%-1rem)] leading-tight">
-                  {getSpecialistButtonText()}
-                </span>
+      {getSpecialistButtonText()}
+    </span>
               </button>
             </div>
           </div>
@@ -213,14 +229,17 @@ export function MainSidebar({ className }: { className?: string }) {
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
                 <Input
-                  placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
+                    placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
                 />
               </div>
 
-              <button onClick={handleNewSearch} className="justify-between hover:bg-none rounded-sm">
+              <button
+                  onClick={handleNewSearch}
+                  className="justify-between hover:bg-none rounded-sm"
+              >
                 <Repeat2 className="w-6 h-6" />
               </button>
             </div>
@@ -234,47 +253,141 @@ export function MainSidebar({ className }: { className?: string }) {
         <div
           className={cn(
             "sticky top-0 left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
-            "from-white via-white/80 to-transparent",
+             "from-white via-white/80 to-transparent",
           )}
         />
 
         <div>
-          <div className="px-1.5">
-            <SectionHeader title="Чаты" sectionKey="chats" count={filteredChats.length} />
-            <SectionContent>
-              {filteredChats.map((chat) => (
-                <ChatItem key={chat.id} chat={chat} onChatClick={handleChatClick} />
-              ))}
-            </SectionContent>
-          </div>
+          {isSearching ? (
+            <div className="px-1.5">
+              <SectionHeader
+                title="Результаты поиска"
+                sectionKey="search"
+                count={searchResults.length}
+                sectionVisibility={sectionVisibility}
+                toggleSection={toggleSection}
+                isCollapsed={isCollapsed}
+                isMobile={isMobile}
+                icon={Search}
+              />
+              <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
+                {searchResults.length > 0 ? (
+                    searchResults.map((chat) => (
+                        <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                        />
+                    ))
+                ) : (
+                    <div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                      <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      Ничего не найдено
+                    </div>
+                )}
+              </SectionContent>
+            </div>
+          ) : (
+            <>
+              {groupedChats.today.length > 0 && (
+                  <div className="px-1.5">
+                  <SectionHeader
+                    title="Активные сегодня"
+                    sectionKey="today"
+                    count={groupedChats.today.length}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                    icon={Activity}
+                    iconStyle={"text-violet-600"}
+                  />
+                  <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
+                    {groupedChats.today.map((chat) => (
+                        <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                        />
+                    ))}
+                  </SectionContent>
+                </div>
+              )}
 
-          <div className="px-1.5">
-            <SectionHeader title="Специалисты" sectionKey="specialists" count={filteredSpecialists.length} />
-            <SectionContent>
-              {filteredSpecialists.map((specialist) => (
-                <ChatItem key={specialist.id} chat={specialist} onChatClick={handleChatClick} />
-              ))}
-            </SectionContent>
-          </div>
+              {groupedChats.last7Days.length > 0 && (
+                  <div className="px-1.5">
+                  <SectionHeader
+                    title="Прошлые 7 дней"
+                    sectionKey="last7Days"
+                    count={groupedChats.last7Days.length}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                  />
+                  <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
+                    {groupedChats.last7Days.map((chat) => (
+                        <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                        />
+                    ))}
+                  </SectionContent>
+                </div>
+              )}
 
-          <div className="px-1.5">
-            <SectionHeader title="Услуги" sectionKey="services" count={filteredServices.length} />
-            <SectionContent>
-              {filteredServices.map((service) => (
-                <ChatItem key={service.id} chat={service} onChatClick={handleChatClick} />
-              ))}
-            </SectionContent>
-          </div>
+              {groupedChats.older.length > 0 && (
+                  <div className="px-1.5">
+                  <SectionHeader
+                    title="Архив опыта"
+                    sectionKey="older"
+                    count={groupedChats.older.length}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                    icon={LucideArchive}
+                  />
+                  <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
+                    {groupedChats.older.map((chat) => (
+                        <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                        />
+                    ))}
+                  </SectionContent>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         <div className="h-12" />
 
         {/* Исчезающий градиент снизу */}
         <div
-          className={cn(
-            "sticky bottom-0 left-0 right-0 h-3 bg-gradient-to-t to-transparent pointer-events-none z-10",
-            "from-white via-white/80 to-transparent",
-          )}
+            className={cn(
+                "sticky bottom-0 left-0 right-0 h-3 bg-gradient-to-t to-transparent pointer-events-none z-10",
+                "from-white via-white/80 to-transparent",
+            )}
         />
       </ScrollArea>
 
