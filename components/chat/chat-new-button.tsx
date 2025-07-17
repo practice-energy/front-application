@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { MessageSquarePlus } from "lucide-react"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
+import {Repeat2} from "lucide-react";
 
 export function ChatNewButton() {
   const router = useRouter()
@@ -41,7 +41,7 @@ export function ChatNewButton() {
         title="New chat"
         aria-label="New chat"
       >
-        <MessageSquarePlus className="w-4 h-4 rounded-sm" />
+        <Repeat2 className="w-4 h-4 rounded-sm" />
       </motion.button>
     </div>
   )

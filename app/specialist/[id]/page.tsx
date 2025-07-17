@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { Images, MapPin, Share } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/modals/auth-modal"
-import { BookingConfirmation } from "@/components/booking-confirmation"
 import { useTranslations } from "@/hooks/use-translations"
 import { Mufi } from "@/components/mufi/index"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
@@ -225,23 +224,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
       </div>
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
-
-      {selectedService && selectedTime && (
-        <BookingConfirmation
-          isOpen={bookingModalOpen}
-          onClose={() => setBookingModalOpen(false)}
-          bookingDetails={{
-            specialist: {
-              name: specialist.name,
-              avatar: specialist.images[0],
-              title: specialist.title,
-            },
-            service: selectedService,
-            date: selectedDate.toISOString(),
-            time: selectedTime,
-          }}
-        />
-      )}
 
       <ShareSpecialistModal
         isOpen={shareModalOpen}
