@@ -24,7 +24,6 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [isAnimating] = useState(false)
-  const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
@@ -201,7 +200,6 @@ export default function SearchPage() {
                 <MessageList
                   chat={currentChat}
                   isLoading={isLoading}
-                  highlightedMessageId={highlightedMessageId}
                   onSpecialistClick={handleSpecialistClick}
                   onServiceClick={handleServiceClick}
                   onShare={handleShare}

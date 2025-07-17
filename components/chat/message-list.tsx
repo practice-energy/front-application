@@ -6,7 +6,6 @@ import type { Chat, Message } from "@/types/chats"
 
 interface MessageListProps {
   chat: Chat | null
-  highlightedMessageId: string | null
   onSpecialistClick: (id: string) => void
   onServiceClick: (id: string) => void
   onShare: (message: Message) => void
@@ -17,7 +16,6 @@ interface MessageListProps {
 
 export function MessageList({
   chat,
-  highlightedMessageId,
   onSpecialistClick,
   onServiceClick,
   onShare,
@@ -36,7 +34,6 @@ export function MessageList({
           onServiceClick={onServiceClick}
           onShare={onShare}
           onRegenerate={onRegenerate}
-          highlightedMessageId={highlightedMessageId}
           isAI={chat.isAI === true}
           footerContent={
             message.type === "assistant" && message.specialists && index === chat.messages.length - 1

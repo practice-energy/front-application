@@ -35,7 +35,6 @@ export const MessageItem = React.memo(
     onServiceClick,
     onShare,
     onRegenerate,
-    highlightedMessageId,
     isAI,
     footerContent,
     aiMessageType,
