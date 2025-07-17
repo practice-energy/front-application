@@ -42,7 +42,7 @@ export function MessageList({
           }
         />
       )),
-    [chat, specialistId, highlightedMessageId, onSpecialistClick, onServiceClick, onShare, onRegenerate],
+    [chat, specialistId, onSpecialistClick, onServiceClick, onShare, onRegenerate],
   )
 
   return (

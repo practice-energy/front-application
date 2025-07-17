@@ -21,7 +21,6 @@ interface MessageItemProps {
   onServiceClick: (id: string) => void
   onShare: (message: Message) => void
   onRegenerate: (message: Message) => void
-  highlightedMessageId: string | null
   isAI: boolean
   footerContent?: string
   aiMessageType?: "info" | "warning" | "service"
