@@ -155,9 +155,9 @@ export const mockCalendarEvents: CalendarEvent[] = [
 export const mockSidebarChats: ChatItem[] = [
   {
     id: chatSpecialist1Id, // Соответствует chat-specialist-1 в mockChatData
-    title: "Анна Петрова",
+    title: "Анна Шлюхтенбург-Кронштадтская",
     description: "Консультация по астрологии",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     status: "waiting",
     timestamp: Date.now() - 1000 * 60 * 30, // 30 минут назад
     updatedAt: Date.now() - 1000 * 60 * 30,
@@ -168,7 +168,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: chatSpecialist2Id, // Соответствует chat-specialist-2 в mockChatData
     title: "Михаил Сидоров",
     description: "Коучинг сессия по астрофизической квантовой психофизиологии",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     status: "confirmed",
     timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 часа назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 2,
@@ -179,7 +179,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: uuidv4(),
     title: "Елена Иванова",
     description: "Массаж и релаксация",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 день назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24,
     mode: "none",
@@ -189,7 +189,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: uuidv4(),
     title: "Дмитрий Козлов",
     description: "Психологическая консультация",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     status: "waiting",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 дня назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
@@ -200,7 +200,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: uuidv4(),
     title: "Ольга Смирнова",
     description: "Йога и медитация",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     status: "confirmed",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 7, // 7 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
@@ -211,7 +211,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: uuidv4(),
     title: "Александр Волков",
     description: "Бизнес консультация",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 15, // 15 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
     mode: "none",
@@ -221,7 +221,7 @@ export const mockSidebarChats: ChatItem[] = [
     id: uuidv4(),
     title: "Мария Федорова",
     description: "Нутрициология",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 45, // 45 дней назад
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 45,
     mode: "ai",
@@ -229,7 +229,7 @@ export const mockSidebarChats: ChatItem[] = [
   },
   {
     id: chatAI1Id,
-    title: "Аллюра",
+    title: "Alura",
     description: "Поиск себя",
     timestamp: Date.now() - 1000 * 60 * 60 * 24 * 41,
     updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 41,
@@ -242,17 +242,16 @@ export const mockSidebarChats: ChatItem[] = [
 export const mockSpecialists: Specialist[] = [
   {
     id: specialist1Id,
-    name: "Анна Петрова",
-    title: "Астролог и таролог",
+    name: "Апполинария Шлюхтенбург-Кронштадтская",
+    title: "Астролог и таролог с уклоном в квантовую болгарскую филологию с терморектальным анализом",
     avatar: "/placeholder.jpg",
     images: ["/placeholder.jpg", "/placeholder.jpg"],
-    reviewCount: 127,
+    practices: 127,
     price: 3500,
     location: "Москва",
     description:
       "Профессиональный астролог с 10-летним опытом. Помогу разобраться в жизненных вопросах через призму астрологии.",
     specialties: ["Натальная астрология", "Таро", "Нумерология"],
-    languages: ["Русский", "Английский"],
     education: [
       {
         description: "Изучение основ натальной астрологии и прогностических техник",
@@ -264,17 +263,6 @@ export const mockSpecialists: Specialist[] = [
         description: "Проведение индивидуальных консультаций, обучение начинающих астрологов",
       },
     ],
-    reviews: [
-      {
-        id: uuidv4(),
-        author: "Мария К.",
-        avatar: "/placeholder.jpg",
-        comment: "Анна очень точно описала мою ситуацию и дала полезные рекомендации. Рекомендую!",
-        date: Date.now() - 1000 * 60 * 60 * 24 * 41,
-        verified: true,
-      },
-    ],
-    availability: [],
     services: [
       {
         id: uuidv4(),
@@ -364,20 +352,20 @@ export const mockSpecialists: Specialist[] = [
         reviews: [],
       },
     ],
+    likes: 1488,
   },
   {
     id: specialist2Id,
     name: "Михаил Сидоров",
     title: "Лайф-коуч и бизнес-тренер",
-    avatar: "/placeholder-user.jpg",
+    avatar: "/placeholder.jpg",
     images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
-    reviewCount: 89,
+    practices: 89,
     price: 5000,
     location: "Санкт-Петербург",
     description:
       "Помогаю людям достигать целей и раскрывать потенциал. Специализируюсь на карьерном росте и личностном развитии.",
     specialties: ["Лайф-коучинг", "Бизнес-коучинг", "Карьерное консультирование"],
-    languages: ["Русский", "Английский", "Немецкий"],
     education: [
       {
         description: "Обучение в карьерном росте и личностном развитии",
@@ -385,9 +373,8 @@ export const mockSpecialists: Specialist[] = [
       },
     ],
     experience: [],
-    reviews: [],
-    availability: [],
     services: [],
+    likes: 1337,
   },
 ]
 
@@ -684,63 +671,6 @@ export const mockServices: Service[] = [
     tags: ["пакет", "коучинг", "личное развитие"],
     reviews: [],
     format: "video",
-  },
-]
-
-const fallbackMeetings: Booking[] = [
-  {
-    id: "1",
-    specialist: {
-      id: "1",
-      name: "Dr. Anna Smith",
-      photo: "/placeholder.svg?height=40&width=40",
-    },
-    service: {
-      id: uuidv4(),
-      name: "Натальная карта",
-      price: 500,
-    },
-    date: new Date(Date.now() + 86400000),
-    duration: 60,
-    format: "video",
-    status: "upcoming",
-    requiresConfirmation: true,
-  },
-  {
-    id: "2",
-    specialist: {
-      id: "2",
-      name: "Michael Johnson",
-      photo: "/placeholder.svg?height=40&width=40",
-    },
-    service: {
-      id: uuidv4(),
-      name: "Натальная карта",
-      price: 500,
-    },
-    date: new Date(Date.now() + 86400000),
-    duration: 45,
-    format: "in-person",
-    status: "upcoming",
-    requiresConfirmation: true,
-  },
-  {
-    id: uuidv4(),
-    specialist: {
-      id: "3",
-      name: "Sarah Williams",
-      photo: "/placeholder.svg?height=40&width=40",
-    },
-    service: {
-      id: uuidv4(),
-      name: "Натальная карта",
-      price: 500,
-    },
-    date: new Date(Date.now() + 86400000),
-    duration: 60,
-    format: "video",
-    status: "completed",
-    requiresConfirmation: false,
   },
 ]
 

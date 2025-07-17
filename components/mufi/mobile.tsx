@@ -19,7 +19,7 @@ interface MobileSearchBarProps {
 export const MobileMufi = React.memo(function MobileSearchBar({
                                                                   onSearch,
                                                                   placeholder = "Поиск пути",
-                                                                  chatTitle = "Аллюра",
+                                                                  chatTitle = "Alura",
                                                               }: MobileSearchBarProps) {
     const { t } = useTranslations()
     const router = useRouter()

@@ -10,6 +10,9 @@ export interface ProfileMenuProps {
   profileMenuRef: React.RefObject<HTMLDivElement>
   handleLogout: () => void
   isMobile?: boolean
+  role?: string
+  handleRoleToggle?: () => void
+  isSpecialist?: boolean
 }
 
 export interface BurgerMenuProps {

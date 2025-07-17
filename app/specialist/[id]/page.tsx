@@ -172,7 +172,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
                       <div className="flex items-center">
                         {/* Review count text */}
                         <span className="text-gray-600 dark:text-gray-300 text-sm">
-                          {specialist.reviewCount} практик
+                          {specialist.practices} практик
                         </span>
                       </div>
                     </div>

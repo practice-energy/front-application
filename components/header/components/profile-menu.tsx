@@ -8,15 +8,6 @@ import { cn } from "@/lib/utils"
 import type { ProfileMenuProps } from "../types/header.types"
 import { Pentagram } from "@/components/icons/icon-pentagram"
 
-interface ExtendedProfileMenuProps extends ProfileMenuProps {
-  role?: string
-  handleRoleToggle?: () => void
-  user?: any
-  isSpecialsit?: boolean
-  isMobile?: boolean
-  handleLogout?: () => void
-}
-
 export function ProfileMenu({
   isAuthenticated,
   user,
@@ -28,8 +19,8 @@ export function ProfileMenu({
   isMobile = false,
   role,
   handleRoleToggle,
-  isSpecialsit = false,
-}: ExtendedProfileMenuProps) {
+  isSpecialist = false,
+}: ProfileMenuProps) {
   if (!isAuthenticated) return null
 
   const buttonComponent = (
@@ -73,7 +64,7 @@ export function ProfileMenu({
           </div>
 
           {/* Role toggle button */}
-          {user?.specialistProfile !== null && handleRoleToggle && user?.isSpecialist && (
+          {user?.specialistProfile !== null && handleRoleToggle && isSpecialist && (
               <button
                   onClick={() => {
                     handleRoleToggle()

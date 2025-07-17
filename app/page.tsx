@@ -5,12 +5,11 @@ import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { mockChatData } from "@/services/mock-data"
-import { MonoprintBackground } from "@/components/monoprint-bg"
 
 export default function HomePage() {
   const router = useRouter()
 
-  const handleSearch = (query: string, title = "Аллюра", files: File[] = [], isPractice?: boolean) => {
+  const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
     const userMessage: Message = {
       id: uuidv4(),
@@ -22,7 +21,7 @@ export default function HomePage() {
 
     const newChat: Chat = {
       id: newChatId,
-      title: "Аллюра",
+      title: "Alura",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       messages: [userMessage],
       isAI: true,
@@ -65,7 +64,7 @@ export default function HomePage() {
           </div>
 
           {/* Контейнер для поиска - теперь ниже логотипа */}
-            <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Аллюра" />
+            <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" />
         </div>
       </main>
     </div>

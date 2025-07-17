@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Copy, Share, Paperclip } from "lucide-react"
 import { ArrowPathIcon } from "@heroicons/react/24/outline"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
@@ -13,6 +12,7 @@ import { cn } from "@/lib/utils"
 import type { Message } from "@/types/chats"
 import type { Service } from "@/types/common"
 import {getSpecialistById} from "@/services/mock-data";
+import Image from "next/image";
 
 interface MessageItemProps {
   specialistId: string
@@ -24,6 +24,7 @@ interface MessageItemProps {
   highlightedMessageId: string | null
   isAI: boolean
   footerContent?: string
+  aiMessageType?: "info" | "warning" | "service"
 }
 
 export const MessageItem = React.memo(
@@ -37,12 +38,12 @@ export const MessageItem = React.memo(
     highlightedMessageId,
     isAI,
     footerContent,
+    aiMessageType,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
     const isAssistant = message.type === "assistant"
     const isSpecialist = message.type === "specialist"
-    const isHighlighted = highlightedMessageId === message.id
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -63,36 +64,38 @@ export const MessageItem = React.memo(
     return (
       <div
         id={`message-${message.id}`}
-        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4 transition-all duration-500 ${
-          isHighlighted ? "bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-2 -m-2" : ""
-        }`}
+        className={`flex ${isUser ? "justify-end" : "justify-start"} transition-all duration-500`}
       >
         <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-4xl w-full`}>
-          <div className="flex items-end">  {/* Добавляем items-end для выравнивания по нижнему краю */}
+            <div className="flex mb-1">
                 {!isUser && (
-                    <Button
-                        size="sm"
-                        className="w-16 h-16 py-3 px-0 transition-colors mb-1.5 border-none hover:bg-transparent active:bg-none relative"
-                        variant="outline"
-                        onClick={handleViewSpecialistProfile}
-                        aria-label={isAssistant ? "" : `View ${message.type} profile`}
-                        title={isAssistant ? "Allura" : "View profile"}
-                    >
-                        <Avatar className="w-16 h-16">
-                            <AvatarImage
-                                src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.png"}
-                                className={cn(isAssistant ? "dark:invert dark:brightness-0 dark:filter active:bg-none" : "hover:bg-gray-100")}
+                    <div className="flex ml-1">  {/* И здесь тоже убираем items-end */}
+                        <button
+                            className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
+                            onClick={handleViewSpecialistProfile}
+                            aria-label={isAssistant ? "" : `View ${message.type} profile`}
+                            title={isAssistant ? "Alura" : "View profile"}
+                        >
+                            <Image
+                                src={isAssistant ? "/allura-logo.svg" : isSpecialist && specialist ? specialist.avatar : "/placeholder.jpg"}
+                                className={cn(
+                                    "rounded-sm",
+                                    isAssistant ? "dark:invert dark:brightness-0 dark:filter active:bg-none" : "hover:bg-violet-50"
+                                )}
+                                alt={""}
+                                width={36}
+                                height={36}
                             />
-                            <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                                {isAssistant ? "AI" : isSpecialist ? "SP" : "U"}
-                            </AvatarFallback>
-                        </Avatar>
-                    </Button>
+                        </button>
+
+                        <div className="flex flex-col ml-3 justify-end">  {/* Добавляем justify-end */}
+                            <div className="text-black font-sans">{isAssistant ? "Alura" : specialist?.name}</div>
+                            <div className="text-accent text-gray-500">
+                                {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            </div>
+                        </div>
+                    </div>
                 )}
-                {/* Время снаружи справа, выровнено по низу аватарки */}
-              {!isUser &&(<span className="text-gray-500 dark:text-gray-400 text-xs ml-3 mb-1.5">
-    {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-  </span>)}
             </div>
 
           <div className="flex-1 min-w-0 w-full">
@@ -102,7 +105,7 @@ export const MessageItem = React.memo(
                   className={cn(`rounded-sm py-3 ${
                     isUser
                       ? "bg-violet-50 shadow-md px-3 py-3 gap-3 "
-                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-md px-3 gap-3"
+                      : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
                   }`,  isAssistant && "border-none shadow-none px-0 ")
                 }
                   style={{ wordBreak: "break-word" }}
@@ -114,7 +117,7 @@ export const MessageItem = React.memo(
 
               {message.files && message.files.length > 0 && (
                   <div className={cn(
-                      "mt-2 space-y-2",
+                      "space-y-1 mt-2",
                       isUser ? "flex flex-col items-end" : "inline-flex flex-col items-start"
                   )}>
                       {message.files.map((file, index) => (
@@ -137,7 +140,7 @@ export const MessageItem = React.memo(
               )}
 
             {message.specialists && message.specialists.length > 0 && (
-              <div className="mt-3 space-y-3">
+              <div className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {message.specialists.slice(0, 2).map((specialist) => (
                     <InstagramSpecialistCard
@@ -174,9 +177,13 @@ export const MessageItem = React.memo(
             </div>
           )}
 
-           {isAssistant && !isUser && (<div className="border-t border-gray-200 dark:border-gray-700 mt-3 w-full"></div>)}
+           {isAssistant && !isUser && (<div className={cn(
+               "border-t border-gray-200 dark:border-gray-700 mt-3 w-full",
+               aiMessageType === "service" && ("border-violet-600"),
+               aiMessageType === "warning" && ("border-pink-500")
+            )}/>)}
 
-            <div className="flex items-center mt-3 w-full">
+            <div className="flex items-center mt-2 w-full">
                 <div className={cn(
                     "flex gap-2 text-xs opacity-60 ml-auto", // Добавлен ml-auto для выравнивания вправо
                     isUser ? "justify-end" : "justify-start" // Опционально: если нужно разное выравнивание для пользователя/ассистента
@@ -186,7 +193,7 @@ export const MessageItem = React.memo(
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => onRegenerate(message)}
-                            className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                            className="rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
                             title="Regenerate response"
                         >
                             <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
@@ -196,7 +203,7 @@ export const MessageItem = React.memo(
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => onShare(message)}
-                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        className="p-1.5 rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
                         title="Share message"
                     >
                         <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
@@ -205,7 +212,7 @@ export const MessageItem = React.memo(
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleCopyMessage}
-                        className="p-1.5 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        className="rounded-sm hover:bg-violet-50 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
                         title="Copy message"
                     >
                         <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />

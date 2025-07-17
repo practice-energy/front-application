@@ -134,7 +134,7 @@ export default function SearchPage() {
 
   // handleSearch now only adds the user's message. The useEffect handles the response.
   const handleSearch = useCallback(
-    async (query: string, title = "Аллюра", files: File[] = [], isPractice = false) => {
+    async (query: string, title = "Alura", files: File[] = [], isPractice = false) => {
       if ((!query || !query.trim()) && (!files || files.length === 0)) return
 
       const now = Date.now()

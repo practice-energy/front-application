@@ -9,12 +9,24 @@ const config: Config = {
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ['Inter', 'sans-serif'],
+    },
     extend: {
+      fontSize: {
+        simple: ['14px', { fontWeight: '900' }],
+        bold: ['16px', { fontWeight: '700' }],
+        description: ['14px', { fontWeight: '900' }],
+        accent: ['12px', { fontWeight: '600', color: '#374151' }],
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
       backgroundImage: {
         'allura-pattern': "url('/allura-logo.svg')",
       },
       backgroundSize: {
-        'allura-tile': '20px 20px', // размер одного тайла
+        'allura-tile': '20px 20px',
       },
       colors: {
         background: "hsl(var(--background))",
@@ -67,7 +79,6 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Enhanced dark theme palette
         "theme-light": {
           bg: "#ffffff",
           "bg-secondary": "#f8fafc",
@@ -77,18 +88,6 @@ const config: Config = {
           "text-muted": "#64748b",
           border: "#e2e8f0",
           "border-light": "#f1f5f9",
-          accent: "#8b5cf6",
-          "accent-hover": "#7c3aed",
-        },
-        "theme-dark": {
-          bg: "#0f172a",
-          "bg-secondary": "#1e293b",
-          "bg-tertiary": "#334155",
-          text: "#f8fafc",
-          "text-secondary": "#cbd5e1",
-          "text-muted": "#94a3b8",
-          border: "#334155",
-          "border-light": "#475569",
           accent: "#8b5cf6",
           "accent-hover": "#7c3aed",
         },
@@ -108,6 +107,7 @@ const config: Config = {
             "text-active": "#ffffff",
             border: "#4b5563",
             "border-active": "#8b5cf6",
+            borderRadius: "calc(var(--radius) - 4px)",
           },
         },
       },
@@ -115,6 +115,7 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        button: "calc(var(--radius) - 4px)", // Добавлен специальный радиус для кнопок
       },
       keyframes: {
         "accordion-down": {

@@ -31,7 +31,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
   showHeading = true,
   dynamicWidth = false,
   placeholder = "Поиск пути",
-  chatTitle = "Аллюра",
+  chatTitle = "Alura",
 }: DesktopSearchBarProps) {
   const { t } = useTranslations()
   const router = useRouter()
@@ -324,21 +324,19 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
               <div className="flex items-center justify-between mt-1">
                 <div className="flex items-center gap-2">
                   {/* File Upload Button */}
-                  <Button
+                  <button
                     type="button"
-                    size="sm"
                     onClick={openFileDialog}
-                    className="bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+                    className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
                   >
                     <Paperclip className="w-4 h-4" />
-                  </Button>
+                  </button>
 
                   {/* Settings/Practice Button */}
-                  <Button
+                  <button
                     type="button"
-                    size="sm"
                     onClick={togglePractice}
-                    className={`px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                    className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
                       isPractice
                         ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
                         : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
@@ -352,7 +350,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                       className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
                     />
                     <span>Практис</span>
-                  </Button>
+                  </button>
                 </div>
 
                 {/* Send Button */}

@@ -14,7 +14,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp1",
       name: "Афалина",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.8,
       reviewsCount: 127,
       specialties: ["Таро", "Астрология"],
@@ -42,7 +42,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp1",
       name: "Афалина",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.8,
       reviewsCount: 127,
       specialties: ["Таро"],
@@ -70,7 +70,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp2",
       name: "Снежана",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.9,
       reviewsCount: 89,
       specialties: ["Астрология", "Нумерология"],
@@ -98,7 +98,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp3",
       name: "Елена",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.7,
       reviewsCount: 156,
       specialties: ["Астрология", "Коучинг"],
@@ -126,7 +126,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp4",
       name: "Мария",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.6,
       reviewsCount: 203,
       specialties: ["Медитация", "Энергетика"],
@@ -154,7 +154,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp5",
       name: "Анна",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.5,
       reviewsCount: 78,
       specialties: ["Психология"],
@@ -182,7 +182,7 @@ export const mockBookings: Booking[] = [
     specialist: {
       id: "sp6",
       name: "Ирина",
-      photo: "/placeholder-user.jpg",
+      photo: "/placeholder.jpg",
       rating: 4.9,
       reviewsCount: 234,
       specialties: ["Психология", "Коучинг"],

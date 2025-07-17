@@ -20,18 +20,16 @@ export interface Specialist {
     name: string
     title: string
     avatar: string
-    reviewCount: number
+    practices: number
     price: number
     images: string[]
     location: string
     description: string
     specialties: string[]
-    languages: string[]
     education: Education[]
     experience: Experience[]
-    availability: AvailabilitySlot[]
     services: Service[]
-    reviews?: Review[]
+    likes: number
 }
 
 export interface Service {

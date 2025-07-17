@@ -44,12 +44,12 @@ export default function EmailVerifiedPage() {
             Your email address has been successfully verified. You can now access all features of your account.
           </p>
 
-          <Button
+          <button
             onClick={handleContinue}
-            className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white transition-all duration-300"
+            className="w-full bg-gradient-to-r text-white transition-all duration-300"
           >
             Continue to Profile
-          </Button>
+          </button>
         </Card>
       </main>
     </div>

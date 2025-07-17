@@ -20,10 +20,10 @@ export function SectionHeader({
   if (count === 0) return null
 
   return (
-      <div className="px-3">
+      <div>
         <button
             className={cn(
-                "flex items-center w-full py-3 px-3 group transition-all duration-100 ease-in-out gap-3",
+                "flex items-center w-full py-3 px-1 pl-2 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
                 "hover:bg-violet-50 rounded-sm",
                 isCollapsed && !isMobile ? "hidden" : "flex",
             )}
@@ -33,15 +33,15 @@ export function SectionHeader({
             }}
         >
           <Icon className={cn(
-              "h-6 w-6 mb-0.5 gap-3",
+              "h-6 w-6 mb-0.5 ml-3",
               iconStyle,
           )}/>
-          <h3 className="tracking-wider px-1.5">
+          <h3 className="tracking-wider">
         {title}
       </h3>
           <ChevronDown
               className={cn(
-                  "w-4 h-4 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",
+                  "w-6 h-6 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",
                   "group-hover:text-gray-600 dark:group-hover:text-gray-300",
                   isVisible ? "rotate-180" : "rotate-0",
               )}

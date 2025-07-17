@@ -4,6 +4,8 @@ import { useState } from "react"
 import { CalendarSidebar } from "./calendar-sidebar"
 import { ScheduleView } from "./schedule-view"
 import type { Booking } from "@/types/booking"
+import {mockBookings} from "@/services/mock-bookings";
+import {BookingDetailsModal} from "@/components/modals/booking-details-modal";
 
 interface AdeptCalendarProps {
   bookings: Booking[]
@@ -14,15 +16,10 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex h-2/3">
+    <div className="h-full flex flex-col overflow-hidden top-0">
+      <div className="flex h-full">
         <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} timezone={timezone} />
         <ScheduleView selectedDate={selectedDate} bookings={bookings} />
-      </div>
-
-      {/* Bottom content */}
-      <div className="h-1/3 bg-gray-50 p-4">
-        <div className="h-full flex items-center justify-center text-gray-500">Bottom content area</div>
       </div>
     </div>
   )

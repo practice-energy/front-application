@@ -46,13 +46,13 @@ export interface SectionHeaderProps {
   title: string
   onAddClick?: () => void
   addButtonLabel?: string
+  toggleSection: (s: string) => void
   isCollapsed: boolean
   isMobile: boolean
   icon: Icon
   iconStyle: string
   sectionKey: string
   sectionVisibility: boolean
-  toggleSection: boolean
   count: number
 }
 

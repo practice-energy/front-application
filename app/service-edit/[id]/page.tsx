@@ -209,9 +209,6 @@ export default function ServiceEditPage({ params }: { params: { id: string } }) 
                 </h1>
                 {id !== "new" && (
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant={draftData.isActive ? "default" : "secondary"}>
-                      {draftData.isActive ? "Активна" : "Неактивна"}
-                    </Badge>
                     {draftData.serviceType && (
                       <Badge variant="outline">
                         {SERVICE_TYPES.find((t) => t.id === draftData.serviceType)?.label}

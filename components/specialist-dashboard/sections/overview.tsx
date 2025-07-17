@@ -273,7 +273,7 @@ export default function Overview() {
                                     </div>
                                     <div className="flex items-center">
                                 <span className="text-gray-600 dark:text-gray-300">
-                                  {currentData.reviewCount} practices
+                                  {currentData.practices} practices
                                 </span>
                                     </div>
                                   </div>

@@ -12,7 +12,7 @@ import {
   CalendarDays,
   User,
   Heart,
-  Crown,
+  Crown, Repeat2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -219,32 +219,29 @@ export function MainSidebar() {
         <>
           <div className="relative p-3 space-y-3 mt-6">
             <div className="flex items-center justify-end">
-              <button onClick={toggleSidebar} className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3">
+              <button onClick={toggleSidebar} className="rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2">
                 <PanelRightOpen width={24} height={24} />
                 <span className="sr-only">Закрыть сайдбар</span>
               </button>
             </div>
 
-            <Button
-              onClick={handleNewSearch}
-              variant="ghost"
-              className="w-full justify-between hover:bg-violet-100 h-10 rounded-sm"
-            >
-              <div className="flex items-center">
-                <MessageSquare className="w-4 h-4 mr-3" />
-                <span className="text-sm">{newChatLabel}</span>
+            <div className="flex flex-row gap-3 mt-6">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
+                <Input
+                    placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
+                />
               </div>
-              <Plus className="w-4 h-4" />
-            </Button>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500 " />
-              <Input
-                placeholder={isSpecialist ? "Поиск клиентов" : "Поиск в чатах"}
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
-              />
+              <button
+                  onClick={handleNewSearch}
+                  className="justify-between hover:bg-none rounded-sm"
+              >
+                <Repeat2 className="w-6 h-6" />
+              </button>
             </div>
           </div>
         </>
@@ -262,7 +259,7 @@ export function MainSidebar() {
 
         <div>
           {isSearching ? (
-            <div className="px-3">
+            <div className="px-1.5">
               <SectionHeader
                 title="Результаты поиска"
                 sectionKey="search"
@@ -271,34 +268,33 @@ export function MainSidebar() {
                 toggleSection={toggleSection}
                 isCollapsed={isCollapsed}
                 isMobile={isMobile}
+                icon={Search}
               />
               <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
-                <div className="px-2">
-                  {searchResults.length > 0 ? (
+                {searchResults.length > 0 ? (
                     searchResults.map((chat) => (
-                      <ChatItem
-                        key={chat.id}
-                        chat={chat}
-                        onChatClick={handleChatClick}
-                        isActiveChat={isActiveChat}
-                        hasNewMessages={hasNewMessages}
-                        isCollapsed={isCollapsed}
-                        isMobile={isMobile}
-                      />
+                        <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
+                        />
                     ))
-                  ) : (
+                ) : (
                     <div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
                       <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       Ничего не найдено
                     </div>
-                  )}
-                </div>
+                )}
               </SectionContent>
             </div>
           ) : (
             <>
               {groupedChats.today.length > 0 && (
-                <div>
+                  <div className="px-1.5">
                   <SectionHeader
                     title="Активные сегодня"
                     sectionKey="today"
@@ -311,25 +307,23 @@ export function MainSidebar() {
                     iconStyle={"text-violet-600"}
                   />
                   <SectionContent sectionKey="today" sectionVisibility={sectionVisibility}>
-                    <div className="px-3">
-                      {groupedChats.today.map((chat) => (
+                    {groupedChats.today.map((chat) => (
                         <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
                         />
-                      ))}
-                    </div>
+                    ))}
                   </SectionContent>
                 </div>
               )}
 
               {groupedChats.last7Days.length > 0 && (
-                <div>
+                  <div className="px-1.5">
                   <SectionHeader
                     title="Прошлые 7 дней"
                     sectionKey="last7Days"
@@ -340,25 +334,23 @@ export function MainSidebar() {
                     isMobile={isMobile}
                   />
                   <SectionContent sectionKey="last7Days" sectionVisibility={sectionVisibility}>
-                    <div className="px-3">
-                      {groupedChats.last7Days.map((chat) => (
+                    {groupedChats.last7Days.map((chat) => (
                         <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
                         />
-                      ))}
-                    </div>
+                    ))}
                   </SectionContent>
                 </div>
               )}
 
               {groupedChats.older.length > 0 && (
-                <div>
+                  <div className="px-1.5">
                   <SectionHeader
                     title="Архив опыта"
                     sectionKey="older"
@@ -370,19 +362,17 @@ export function MainSidebar() {
                     icon={LucideArchive}
                   />
                   <SectionContent sectionKey="older" sectionVisibility={sectionVisibility}>
-                    <div className="px-3">
-                      {groupedChats.older.map((chat) => (
+                    {groupedChats.older.map((chat) => (
                         <ChatItem
-                          key={chat.id}
-                          chat={chat}
-                          onChatClick={handleChatClick}
-                          isActiveChat={isActiveChat}
-                          hasNewMessages={hasNewMessages}
-                          isCollapsed={isCollapsed}
-                          isMobile={isMobile}
+                            key={chat.id}
+                            chat={chat}
+                            onChatClick={handleChatClick}
+                            isActiveChat={isActiveChat}
+                            hasNewMessages={hasNewMessages}
+                            isCollapsed={isCollapsed}
+                            isMobile={isMobile}
                         />
-                      ))}
-                    </div>
+                    ))}
                   </SectionContent>
                 </div>
               )}

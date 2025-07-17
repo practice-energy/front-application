@@ -35,12 +35,12 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
       <div
           className={cn(
               "relative rounded-sm transition-colors cursor-pointer w-full",
-              isMobile ? "px-2 py-2" : "pr-3 pl-0 py-0.5",
+              "pl-0 py-0.5 px-2",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
               isCollapsed && !isMobile
                   ? ""
                   : isActive
-                      ? "bg-white shadow-md"
+                      ? "bg-white shadow-md shadow-violet-50"
                       : "hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:shadow-sm",
           )}
           onClick={() => onChatClick(chat.id)}
@@ -49,7 +49,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           {/* Profile Image - spans all three rows */}
           <div className={cn(
               "flex-shrink-0 flex items-center",
-              "h-[81px] pl-1.5" // Высота аватара под три строки
+              "h-[81px]" // Высота аватара под три строки
           )}>
             {chat.isAI ? (
                 <Image
@@ -74,18 +74,18 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           <div className="flex-1 min-w-0 flex flex-col">
             {/* Row 1: Title and Status */}
             <div className="flex items-center justify-between mt-1.5">
-              <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 truncate flex-1">{chat.title}</h3>
-              <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+              <h3 className="text-base font-medium truncate flex-1">{chat.title}</h3>
+              <div className="flex items-center gap-1 flex-shrink-0 pl-1">
                 {chat.status && (
                     <>
-                  <span className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                  <span className="text-accent text-gray-700 opacity-80 whitespace-nowrap">
                     {chat.status === "waiting" ? "Ожидает" : chat.status === "confirmed" ? "Подтвержден" : chat.status}
                   </span>
                       <div
                           className={cn(
                               "w-4 h-4 rounded-sm flex-shrink-0",
                               chat.status === "waiting" && "bg-pink-500",
-                              chat.status === "confirmed" && "bg-green-300",
+                              chat.status === "confirmed" && "bg-teal-400",
                           )}
                       />
                     </>
@@ -97,7 +97,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
             <div className="flex items-start">  {/* Убрано justify-between */}
               {/* Описание - занимает всё доступное пространство */}
               <div className="flex-1 min-w-0 overflow-hidden">  {/* Добавлен overflow-hidden */}
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 mb-1 w-full">
+                <p className="text-gray-600  leading-relaxed line-clamp-2 w-full">
                   {chat.description}
                 </p>
               </div>
