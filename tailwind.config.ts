@@ -10,23 +10,20 @@ const config: Config = {
   ],
   theme: {
     fontFamily: {
-      sans: ['Inter', 'sans-serif'],
+      sans: ["var(--font-inter)", "Inter", "sans-serif"],
     },
     extend: {
       fontSize: {
-        simple: ['14px', { fontWeight: '900' }],
-        bold: ['16px', { fontWeight: '700' }],
-        description: ['14px', { fontWeight: '900' }],
-        accent: ['12px', { fontWeight: '600', color: '#374151' }],
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        simple: ["14px", { fontWeight: "900" }],
+        bold: ["16px", { fontWeight: "700" }],
+        description: ["14px", { fontWeight: "900" }],
+        accent: ["12px", { fontWeight: "600", color: "#374151" }],
       },
       backgroundImage: {
-        'allura-pattern': "url('/allura-logo.svg')",
+        "allura-pattern": "url('/allura-logo.svg')",
       },
       backgroundSize: {
-        'allura-tile': '20px 20px',
+        "allura-tile": "20px 20px",
       },
       colors: {
         background: "hsl(var(--background))",
