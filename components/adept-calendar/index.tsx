@@ -4,8 +4,7 @@ import { useState } from "react"
 import { CalendarSidebar } from "./calendar-sidebar"
 import { ScheduleView } from "./schedule-view"
 import { CalendarWidget } from "./calendar-widget"
-import { TimeColumn } from "./time-column"
-import { DayColumn } from "./day-column"
+import { BackButton } from "@/components/ui/button-back"
 import type { Booking } from "@/types/booking"
 import { useIsMobile } from "@/hooks/use-mobile"
 
@@ -34,9 +33,14 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   if (isMobile) {
     return (
       <div className="h-full flex flex-col">
-        {/* Mobile Calendar Widget */}
+        {/* Mobile Back Button and Calendar Widget */}
         <div className="flex-shrink-0">
-          <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+          <div className="flex items-center p-4">
+            <BackButton className="mr-4" />
+            <div className="flex-1">
+              <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+            </div>
+          </div>
         </div>
 
         {/* Mobile Schedule */}
