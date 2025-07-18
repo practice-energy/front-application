@@ -9,8 +9,8 @@ interface CalendarSidebarProps {
 
 export function CalendarSidebar({ selectedDate, onDateSelect }: CalendarSidebarProps) {
   return (
-    <div className="w-80 bg-gray-50 border-r border-gray-200 p-4">
-      <div className="fixed top-0 z-30">
+    <div className="w-80">
+      <div className="fixed mt-24 w-80 top-0 z-30">
         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} />
       </div>
     </div>

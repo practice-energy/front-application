@@ -1,12 +1,9 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { TimeColumn } from "./time-column"
 import { DayColumn } from "./day-column"
 import type { Booking } from "@/types/booking"
-import {BookingDetailsModal} from "@/components/modals/booking-details-modal";
-import {mockBookings} from "@/services/mock-bookings";
 
 interface ScheduleViewProps {
   selectedDate: Date
