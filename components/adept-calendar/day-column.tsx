@@ -3,7 +3,7 @@
 import { BookingCard } from "./booking-card"
 import { TimeSlot } from "./time-slot"
 import type { Booking } from "@/types/booking"
-import {cn} from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
 interface DayColumnProps {
   date: Date
@@ -17,24 +17,23 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
 
   // Format day header
   function formatDate(date: Date) {
-    const formatted = date.toLocaleDateString('ru-RU', {
-      weekday: 'short',
-      day: 'numeric'
-    }).replace(',', '');
+    const formatted = date
+      .toLocaleDateString("ru-RU", {
+        weekday: "short",
+        day: "numeric",
+      })
+      .replace(",", "")
 
-    const [weekday, day] = formatted.split(' ');
+    const [weekday, day] = formatted.split(" ")
 
     return (
-        <>
-      <span className={cn(
-      "px-1 py-0.5 mr-1",
-          isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square",)
-      }>
-        {weekday.replace(/^./, (letter) => letter.toUpperCase())}
-      </span>
-          {day}
-        </>
-    );
+      <>
+        <span className={cn("px-1 py-0.5 mr-1", isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square")}>
+          {weekday.replace(/^./, (letter) => letter.toUpperCase())}
+        </span>
+        {day}
+      </>
+    )
   }
   // Get bookings for this date
   const getBookingsForDate = (date: Date) => {
@@ -67,14 +66,14 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   }
 
   return (
-    <div className="flex-1 min-w-0">
-      {/* Sticky day header */}
-      <div className="sticky top-0 bg-white border-b border-r border-gray-200 p-3 text-center z-20">
+    <div className="flex-1 min-w-0 relative">
+      {/* Fixed day header */}
+      <div className="fixed top-[72px] bg-white border-b border-r border-gray-200 p-3 text-center z-30 flex-1 min-w-0">
         <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
 
-      {/* Time slots */}
-      <div className="relative bg-white border-r">
+      {/* Time slots with top margin to account for fixed header */}
+      <div className="relative bg-white border-r mt-12">
         {hours.map((hour) => {
           const booking = getBookingForHour(hour)
           const isContinuation = isBookingContinuation(hour)
