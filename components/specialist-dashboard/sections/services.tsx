@@ -1,275 +1,220 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import type React from "react"
+import { useState } from "react"
 import { useAuth } from "@/hooks/use-auth"
-import { useTranslations } from "@/hooks/use-translations"
-import { Images, Check, X, PlusCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
-import { motion, AnimatePresence } from "framer-motion"
+import { ClipboardPlus, Sparkles, GripVertical } from "lucide-react"
+import { motion, AnimatePresence, Reorder } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
-import {mockServices, mockSpecialist} from "@/services/mock-data"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar"
-import {InstagramServiceCard} from "@/components/instagram-service-card";
+import { Button } from "@/components/ui/button"
+import { mockServices } from "@/services/mock-data"
+import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
+import { cn } from "@/lib/utils"
+import { RubleIcon } from "@/components/ui/ruble-sign"
+import { ClockIcon } from "@heroicons/react/24/outline"
+import type { Service } from "@/types/common"
 
-// Компонент грида карточек
-const Cards = ({
-                   services,
-                   isEditMode,
-                   onToggleService,
-                   onCardClick,
-                   onAddService
-               }: {
-    services: any[];
-    isEditMode: boolean;
-    onToggleService: (id: number) => void;
-    onCardClick: (service: any) => void;
-    onAddService: () => void;
-}) => {
-    return (
-        <div className="mt-12">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    {isEditMode ? "My Services" : "Services Offered"}
-                </h2>
+interface ServiceCardProps {
+  service: Service & { isActive?: boolean }
+  onToggleActive: () => void
+  onClick: () => void
+}
 
-                {isEditMode && (
-                    <button
-                        onClick={onAddService}
-                        className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
-                    >
-                        <PlusCircle className="h-5 w-5" />
-                        Add Service
-                    </button>
-                )}
-            </div>
+function ServiceCard({ service, onToggleActive, onClick }: ServiceCardProps) {
+  const handleToggleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onToggleActive()
+  }
 
-            <AnimatePresence>
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 gap-5"
-                >
-                    {services.map(service => (
-                        <InstagramServiceCard
-                            key={service.id}
-                            service={service}
-                            // isEditMode={isEditMode}
-                            // isActive={service.isActive}
-                            onToggleActive={() => onToggleService(service.id)}
-                            onClick={() => onCardClick(service)}
-                        />
-                    ))}
+  const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
+  }
 
-                    {isEditMode && (
-                        <motion.div
-                            layout
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.3 }}
-                            className={`
-                border-2 border-dashed rounded-sm flex flex-col items-center justify-center
-                border-gray-300 dark:border-gray-600 hover:border-indigo-400
-                cursor-pointer min-h-[150px] transition-colors bg-white dark:bg-gray-800
-              `}
-                            onClick={onAddService}
-                        >
-                            <PlusCircle className="h-8 w-8 text-gray-400 mb-2" />
-                            <span className="text-gray-600 dark:text-gray-400 font-medium">
-                Add New Service
-              </span>
-                        </motion.div>
-                    )}
-                </motion.div>
-            </AnimatePresence>
+  return (
+    <div className="w-full max-w-sm mx-auto group">
+      <div
+        className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600 relative"
+        onClick={onClick}
+      >
+        {/* Drag Handle */}
+        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+          <GripVertical className="h-4 w-4 text-gray-400 cursor-grab active:cursor-grabbing" />
         </div>
-    );
-};
+
+        {/* Image Container */}
+        <div className="relative aspect-square overflow-hidden">
+          <img
+            src={service.images[0] || "/placeholder.svg?height=320&width=320"}
+            alt={service.title}
+            className="w-full h-full object-cover"
+          />
+
+          {/* Active/Inactive overlay */}
+          {!service.isActive && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <span className="text-white font-semibold">Неактивно</span>
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          <div className="flex justify-between items-start">
+            {/* Service Name */}
+            <h3 className="font-bold text-lg text-gray-900 dark:text-white transition-colors duration-300 flex-1 pr-2">
+              {truncateText(service.title, 50)}
+            </h3>
+
+            {/* Active/Inactive Toggle - Improved Style */}
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleToggleClick}
+              className={cn(
+                "rounded-sm h-9 w-9 flex items-center justify-center transition-all duration-200 relative overflow-hidden",
+                service.isActive
+                  ? "bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 shadow-md"
+                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600",
+                "focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2",
+              )}
+            >
+              <Sparkles
+                width={18}
+                height={18}
+                className={cn(
+                  "transition-all duration-200",
+                  service.isActive ? "text-white drop-shadow-sm" : "text-gray-500 dark:text-gray-400",
+                )}
+              />
+              {service.isActive && (
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-violet-600/20 animate-pulse" />
+              )}
+            </Button>
+          </div>
+
+          {/* Duration and Price */}
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
+              <ClockIcon className="h-4 w-4 mr-1" />
+              <span>{service.duration}</span>
+            </div>
+            <div className="text-lg font-bold text-violet-600 dark:text-violet-400 transition-colors duration-300 flex items-center">
+              <span>{service.price}</span>
+              <RubleIcon size={18} bold={true} className="text-violet-700 dark:text-violet-400 ml-1" />
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed transition-colors duration-300">
+            {truncateText(service.description, 80)}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Services() {
-    const router = useRouter()
-    const { isAuthenticated, user } = useAuth()
-    const [isEditMode, setIsEditMode] = useState(false)
-    const [isTransitioning, setIsTransitioning] = useState(false)
-    const [isSaving, setIsSaving] = useState(false)
-    const [hasChanges, setHasChanges] = useState(false)
-    const [isAnimating] = useState(false)
+  const router = useRouter()
+  const { isAuthenticated, user } = useAuth()
+  const [isAnimating] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-    // State for editable data
-    const [savedData, setSavedData] = useState(mockSpecialist)
-    const [draftData, setDraftData] = useState(mockSpecialist)
-    const [errors, setErrors] = useState<Record<string, string>>({})
+  // State for services with active/inactive status and order
+  const [services, setServices] = useState(mockServices.map((service) => ({ ...service, isActive: true })))
 
-    // State for services
-    const [services, setServices] = useState(mockServices);
-
-    // Check for changes between draft and saved data
-    useEffect(() => {
-        const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
-        setHasChanges(changed)
-    }, [draftData, savedData])
-
-    const handleInputChange = (field: string, value: any) => {
-        setDraftData((prev) => ({ ...prev, [field]: value }));
-
-        // Clear specific error when field changes
-        setErrors((prev) => {
-            const newErrors = { ...prev };
-            delete newErrors[field];
-            return newErrors;
-        });
-    }
-
-    const validateForm = () => {
-        const newErrors: Record<string, string> = {};
-
-        if (!draftData.name?.trim()) newErrors.name = "Name is required";
-        if (!draftData.title?.trim()) newErrors.title = "Title is required";
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    }
-
-    const handlePublish = async () => {
-        setIsSaving(true)
-        try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-
-            // Update saved data to new published state
-            setSavedData(draftData)
-            setHasChanges(false)
-
-            console.log("Saving profile data:", draftData)
-        } catch (error) {
-            console.error("Failed to save profile:", error)
-        } finally {
-            setIsSaving(false)
-        }
-    }
-
-    const handleModeToggle = async (mode: "view" | "edit") => {
-        if (mode === "view") {
-            // Validate before switching to view mode
-            if (!validateForm()) {
-                return
-            }
-
-            setIsTransitioning(true)
-
-            if (hasChanges) {
-                await handlePublish()
-            }
-
-            // Small delay for smoother transition
-            await new Promise((resolve) => setTimeout(resolve, 300))
-            setIsTransitioning(false)
-        }
-
-        setIsTransitioning(true)
-        setIsEditMode(mode === "edit")
-
-        // Small delay for smoother transition
-        await new Promise((resolve) => setTimeout(resolve, 300))
-        setIsTransitioning(false)
-    }
-
-    // Toggle service active state
-    const handleToggleService = (id: number) => {
-        setServices(prevServices =>
-            prevServices.map(service =>
-                service.id === id
-                    ? { ...service, isActive: !service.isActive }
-                    : service
-            )
-        );
-    };
-
-    // Handle service card click - navigate to service page
-    const handleServiceCardClick = (service: any) => {
-        router.push(`/service-edit/${service.id}`)
-    };
-
-    // Handle adding a new service
-    const handleAddService = () => {
-        const newService = {
-            id: services.length + 1,
-            title: "New Service",
-            price: 0,
-            duration: 30,
-            imageUrl: "",
-            isActive: true
-        };
-
-        setServices(prev => [...prev, newService]);
-    };
-
-    const currentData = isEditMode ? draftData : savedData
-    const hasErrors = Object.keys(errors).length > 0
-
-    // If data is still loading
-    // if (isAuthenticated === null) {
-    //     return (
-    //         <div className="flex items-center justify-center min-h-[400px]">
-    //             <div className="animate-pulse text-muted-foreground">Loading user data...</div>
-    //         </div>
-    //     )
-    // }
-
-    return (
-        <>
-            <ModeToggleBar
-                isEditMode={isEditMode}
-                onModeToggle={handleModeToggle}
-                hasErrors={hasErrors}
-                errors={errors}
-                hasChanges={hasChanges}
-                isSaving={isSaving}
-            />
-
-            <AnimatePresence mode="wait">
-                {isTransitioning ? (
-                    <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-                            <Skeleton className="h-[300px] w-full rounded-sm" />
-                            <Skeleton className="h-[200px] w-full rounded-sm" />
-                            <Skeleton className="h-[250px] w-full rounded-sm" />
-                            <Skeleton className="h-[300px] w-full rounded-sm" />
-                        </div>
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        key="content"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4 }}
-                    >
-                        <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-                            <div
-                                style={{
-                                    transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-                                }}
-                                data-animating={isAnimating ? "true" : "false"}
-                            >
-                                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-                                    {/* Instagram-style centered card */}
-                                    <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border-gray-200 dark:border-gray-700 overflow-hidden">
-                                    {/* Service Cards Grid */}
-                                    <Cards
-                                        services={services}
-                                        isEditMode={isEditMode}
-                                        onToggleService={handleToggleService}
-                                        onCardClick={handleServiceCardClick}
-                                        onAddService={handleAddService}
-                                    />
-                                    </div>
-                                </div>
-                            </div>
-                        </main>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+  // Toggle service active state
+  const handleToggleService = (id: string) => {
+    setServices((prevServices) =>
+      prevServices.map((service) => (service.id === id ? { ...service, isActive: !service.isActive } : service)),
     )
+  }
+
+  // Handle service card click - navigate to service edit page
+  const handleServiceCardClick = (service: Service) => {
+    router.push(`/service-edit/${service.id}`)
+  }
+
+  // Handle adding a new service
+  const handleAddService = () => {
+    // Navigate to create new service page
+    router.push("/service-edit/new")
+  }
+
+  // Handle reordering services
+  const handleReorder = (newOrder: any[]) => {
+    setServices(newOrder)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        <Skeleton className="h-[300px] w-full rounded-sm" />
+        <Skeleton className="h-[200px] w-full rounded-sm" />
+        <Skeleton className="h-[250px] w-full rounded-sm" />
+      </div>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div
+        style={{
+          transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+        }}
+        data-animating={isAnimating ? "true" : "false"}
+      >
+        {/* Services Grid with Drag and Drop */}
+        <Reorder.Group
+          axis="y"
+          values={services}
+          onReorder={handleReorder}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+        >
+          <AnimatePresence>
+            {services.map((service) => (
+              <Reorder.Item
+                key={service.id}
+                value={service}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+                whileDrag={{ scale: 1.05, zIndex: 10 }}
+                className="cursor-grab active:cursor-grabbing"
+              >
+                <ServiceCard
+                  service={service}
+                  onToggleActive={() => handleToggleService(service.id)}
+                  onClick={() => handleServiceCardClick(service)}
+                />
+              </Reorder.Item>
+            ))}
+
+            {/* Add New Service Card */}
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              className="border-2 border-dashed rounded-sm flex flex-col items-center justify-center border-gray-300 dark:border-gray-600 hover:border-violet-400 cursor-pointer min-h-[300px] transition-all duration-200 bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-900/10 group"
+              onClick={handleAddService}
+            >
+              <div className="p-8 text-center">
+                <ClipboardPlus className="h-12 w-12 text-gray-400 group-hover:text-violet-500 mb-4 mx-auto transition-colors duration-200" />
+                <span className="text-gray-600 dark:text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-400 font-medium text-lg transition-colors duration-200">
+                  Добавить новую услугу
+                </span>
+                <span className="text-gray-500 dark:text-gray-500 text-sm mt-2 block">
+                  Создайте новую услугу для клиентов
+                </span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </Reorder.Group>
+      </div>
+    </main>
+  )
 }

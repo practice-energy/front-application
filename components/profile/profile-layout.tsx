@@ -5,7 +5,7 @@ import type React from "react"
 import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useProfileStore } from "@/stores/profile-store"
-import { mockUser, mockStats, mockSavedSpecialists, mockCalendarEvents } from "@/services/mock-data"
+import { mockUser, mockSavedSpecialists, mockCalendarEvents } from "@/services/mock-data"
 import type { ProfileSection } from "@/types/profile"
 
 interface ProfileLayoutProps {
@@ -29,7 +29,6 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
   // Initialize data
   useEffect(() => {
     if (!user) setUser(mockUser)
-    if (!stats) setStats(mockStats)
     setSavedSpecialists(mockSavedSpecialists)
     setCalendarEvents(mockCalendarEvents)
   }, [user, stats, setUser, setStats, setSavedSpecialists, setCalendarEvents])

@@ -8,7 +8,12 @@ import { ThemeProvider } from "@/hooks/use-theme"
 import { SidebarProvider } from "@/contexts/sidebar-context"
 import { SidebarLayout } from "@/components/sidebar-layout"
 
-const inter = Inter({ subsets: ["latin"] })
+// Load Inter with all subsets needed
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Practice Energy - Find Your Perfect Specialist",
@@ -22,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -41,7 +46,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
+      <body className={`font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nProvider>
             <AuthProvider>

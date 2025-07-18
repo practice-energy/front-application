@@ -1,23 +1,37 @@
-export interface Booking {
+export interface Service {
   id: string
-  serviceId: string
-  specialist: {
-    id: string
-    name: string
-    photo: string
-  }
-  service: {
-    id: string
-    name: string
-    price: number
-  }
-  date: Date
-  duration: number // minutes
-  format: "video" | "in-person"
-  status: "upcoming" | "completed" | "cancelled"
-  requiresConfirmation: boolean
+  name: string
+  description: string
+  price: number
+  duration: number
+  category: string
 }
 
-export type BookingStatus = "upcoming" | "completed" | "cancelled"
+export interface Specialist {
+  id: string
+  name: string
+  photo?: string
+  rating: number
+  reviewsCount: number
+  specialties: string[]
+}
+
+export interface Booking {
+  id: string
+  service: Service
+  specialist: Specialist
+  date: Date
+  duration: number
+  slots: number // количество часовых слотов (1 слот = 1 час)
+  format: "video" | "in-person"
+  status?: "waiting" | "confirmed"
+  paymentStatus: "paid" | "pending" | "failed"
+  clientId: string
+  notes?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type BookingStatus = "upcoming" | "confirmed" | "completed" | "cancelled"
 export type BookingFormat = "video" | "in-person"
 export type ViewMode = "calendar" | "list"
