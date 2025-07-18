@@ -37,9 +37,9 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   }, [selectedDate])
 
   return (
-    <div className="flex-1 h-full">
+    <div className="flex-1 h-full relative">
       <ScrollArea className="h-full" ref={scrollAreaRef}>
-        <div className="flex">
+        <div className="flex relative">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
           <DayColumn
             key={displayDates[0].toISOString()}
