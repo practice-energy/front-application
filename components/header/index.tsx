@@ -142,30 +142,26 @@ export function Header() {
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
             <div className="flex items-start space-x-3">
-              {/* Кнопка panel-right-close - всегда в позиции 172px от левого края */}
+              {/* Sidebar toggle button - positioned to align with sidebar close button */}
               {shouldShowSidebar && (
-                <div
+                <button
+                  onClick={handleOpenSidebar}
                   className={cn(
-                    "transition-all duration-300 ease-in-out",
+                    "transition-all duration-300 ease-in-out rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700",
                     !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
+                    "w-20 h-20 flex items-center justify-center ml-3", // ml-3 to align with sidebar
                   )}
-                  style={{ marginLeft: "172px" }}
                 >
-                  <button
-                    onClick={handleOpenSidebar}
-                    className="rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 w-20 h-20 flex items-center justify-center"
-                  >
-                    <PanelRightClose width={24} height={24} />
-                    <span className="sr-only">Открыть сайдбар</span>
-                  </button>
-                </div>
+                  <PanelRightClose width={24} height={24} />
+                  <span className="sr-only">Открыть сайдбар</span>
+                </button>
               )}
 
-              {/* Лого всегда в фиксированной позиции */}
+              {/* Logo - always in the same position */}
               <div
                 className={cn(
-                  "transition-all duration-300 ease-in-out",
-                  shouldShowSidebar && !isCollapsed ? "ml-0" : "ml-[220px]",
+                  "flex items-center",
+                  shouldShowSidebar ? "ml-[400px]" : "ml-[172px]", // Fixed position regardless of sidebar state
                 )}
               >
                 {!isHomePage && <Logo onClick={handleLogoClick} />}

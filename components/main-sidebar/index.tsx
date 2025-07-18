@@ -202,8 +202,10 @@ export function MainSidebar() {
       ) : (
         <>
           <div className="relative p-3 space-y-3 mt-6">
-            <div className="flex items-center justify-end" style={{ paddingRight: "calc(400px - 172px - 24px)" }}>
-              <button onClick={toggleSidebar} className="rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className="flex items-center justify-end pr-3">
+              {" "}
+              {/* Added pr-3 for alignment */}
+              <button onClick={toggleSidebar} className="rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 p-2">
                 <PanelRightOpen width={24} height={24} />
                 <span className="sr-only">Закрыть сайдбар</span>
               </button>
