@@ -1,63 +1,51 @@
 "use client"
 
 import { useState } from "react"
+import { CalendarWidget } from "./calendar-widget"
 import { CalendarSidebar } from "./calendar-sidebar"
 import { ScheduleView } from "./schedule-view"
-import { CalendarWidget } from "./calendar-widget"
-import { BackButton } from "@/components/ui/button-back"
-import type { Booking } from "@/types/booking"
+import { TimeColumn } from "./time-column"
+import { DayColumn } from "./day-column"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { BackButton } from "@/components/ui/button-back"
 
-interface AdeptCalendarProps {
-  bookings: Booking[]
-  timezone?: string
-}
-
-export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
+export function AdeptCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const isMobile = useIsMobile()
 
-  // Calculate display dates for mobile: selected day only
-  const getDisplayDates = (baseDate: Date) => {
-    const dates = []
-    for (let i = 0; i < 3; i++) {
-      const date = new Date(baseDate)
-      date.setDate(baseDate.getDate() + i)
-      dates.push(date)
-    }
-    return dates
-  }
-
-  const displayDates = getDisplayDates(selectedDate)
-
   if (isMobile) {
     return (
-      <div className="h-full flex flex-col">
-        {/* Mobile Back Button and Calendar Widget */}
-        <div className="flex-shrink-0">
-          <div className="flex items-center p-4">
-            <BackButton className="mr-4" />
-            <div className="flex-1">
-              <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
-            </div>
-          </div>
+      <div className="h-screen flex flex-col bg-background">
+        {/* Mobile Header with Back Button */}
+        <div className="flex items-center p-4 border-b bg-background">
+          <BackButton />
+          <h1 className="ml-4 text-lg font-semibold">Календарь</h1>
         </div>
 
-        {/* Mobile Schedule */}
-        <div className="flex-1 overflow-auto">
-          <div className="flex">
-            <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+        {/* Calendar Widget */}
+        <div className="bg-gray-50 dark:bg-gray-800 p-4 border-b">
+          <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+        </div>
+
+        {/* Schedule Area */}
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full flex">
+            <TimeColumn />
+            <div className="flex-1 overflow-auto">
+              <DayColumn date={selectedDate} isSelected={true} />
+            </div>
           </div>
         </div>
       </div>
     )
   }
 
+  // Desktop layout
   return (
-    <div className="h-full flex flex-col overflow-auto top-0">
-      <div className="flex h-full">
-        <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} timezone={timezone} />
-        <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+    <div className="h-[calc(100vh-96px)] flex bg-background">
+      <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+      <div className="flex-1">
+        <ScheduleView selectedDate={selectedDate} />
       </div>
     </div>
   )

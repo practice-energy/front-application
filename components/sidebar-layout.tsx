@@ -2,51 +2,45 @@
 
 import type React from "react"
 
-import { useAuth } from "@/hooks/use-auth"
-import { Header } from "@/components/header/index"
-import { MainSidebar } from "@/components/main-sidebar/index"
 import { useSidebar } from "@/contexts/sidebar-context"
-import { useEffect } from "react"
+import { MainSidebar } from "@/components/main-sidebar"
+import { Header } from "@/components/header"
+import { usePathname } from "next/navigation"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface SidebarLayoutProps {
   children: React.ReactNode
 }
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
-  const { isAuthenticated } = useAuth()
   const { isCollapsed } = useSidebar()
+  const pathname = usePathname()
+  const isMobile = useIsMobile()
 
-  // Update body margin when sidebar state changes
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      // Используем custom event для уведомления компонентов о изменении состояния сайдбара
-      window.dispatchEvent(
-        new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 400 },
-        }),
-      )
-
-      // Отложенная установка стилей для лучшей синхронизации рендеринга
-      const applyStyles = () => {
-        const sidebarWidth = window.innerWidth < 768 ? "0" : "400px"
-        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
-        document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
-      }
-
-      requestAnimationFrame(applyStyles)
+  // Определяем нужно ли показывать header
+  const shouldShowHeader = () => {
+    // На мобильных устройствах не показываем header на странице календаря
+    if (isMobile && pathname === "/calendar") {
+      return false
     }
-    return () => {
-      if (typeof document !== "undefined") {
-        document.body.style.marginLeft = "0"
-      }
-    }
-  }, [isAuthenticated, isCollapsed])
+    // На всех остальных страницах показываем header
+    return true
+  }
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      {isAuthenticated && <MainSidebar />}
-      <main className="min-h-[calc(100vh-3rem)]">{children}</main>
+    <div className="flex h-screen bg-background">
+      <MainSidebar />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {shouldShowHeader() && <Header />}
+        <main
+          className={`
+            flex-1 overflow-auto transition-all duration-300 ease-in-out
+            ${shouldShowHeader() ? "" : "h-screen"}
+          `}
+        >
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
