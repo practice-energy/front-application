@@ -4,10 +4,8 @@ import { useParams, useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi/index"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import { useAuth } from "@/hooks/use-auth"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { ShareModal } from "@/components/modals/share-modal"
-import { useSidebar } from "@/contexts/sidebar-context"
 import { mockSavedSpecialists, getChatDataById, addMessageToChat } from "@/services/mock-data"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
@@ -15,7 +13,7 @@ import type { Chat, Message } from "@/types/chats"
 import { MessageList } from "@/components/chat/message-list"
 import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
-import {useIsMobile} from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export default function SearchPage() {
   const params = useParams()
@@ -191,9 +189,9 @@ export default function SearchPage() {
         data-animating={isAnimating ? "true" : "false"}
       >
         <ScrollArea className="h-full relative">
-          {!isMobile && (<ChatNewButton />)}
-          <div className="flex justify-center px-6 py-4">
-            <div className="max-w-6xl w-full pb-64 pt-20">
+          {!isMobile && <ChatNewButton />}
+          <div className="flex justify-center py-4" style={{ paddingLeft: "140px", paddingRight: "140px" }}>
+            <div className="w-full pb-64 pt-20">
               {currentChat && currentChat.messages.length === 0 && !isLoading ? (
                 <ChatEmptyState />
               ) : (

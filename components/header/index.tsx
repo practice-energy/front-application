@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import {X, PanelRightClose, CalendarDays, PanelRightOpen} from "lucide-react"
+import { X, PanelRightClose, CalendarDays } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
-import { useTranslations } from "@/hooks/use-translations"
 import { useRouter, usePathname } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { cn } from "@/lib/utils"
@@ -36,7 +35,7 @@ export function Header() {
     burgerMenuRef,
     profileMenuRef,
     hat,
-    setHat
+    setHat,
   } = useHeaderState(user)
 
   const shouldShowSidebar = useMemo(() => {
@@ -142,14 +141,15 @@ export function Header() {
       <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
-            <div className="flex items-start space-x-3 ml-[172px]">
-              {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
+            {/* Левая часть с фиксированным позиционированием */}
+            <div className="flex items-start space-x-3">
+              {/* Кнопка panel-right-close - всегда на фиксированной позиции */}
               {shouldShowSidebar && (
                 <button
                   onClick={handleOpenSidebar}
                   className={cn(
-                    "rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3",
-                      "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
+                    "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 gap-2 px-3",
+                    "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
                     !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
                     "w-20 h-20 m-0",
                   )}
@@ -161,12 +161,13 @@ export function Header() {
                 </button>
               )}
 
+              {/* Лого - всегда на фиксированной позиции после кнопки сайдбара */}
               {!isHomePage && <Logo onClick={handleLogoClick} />}
 
               <NavigationButtons isAuthenticated={isAuthenticated} role={role} router={router} />
             </div>
 
-            {/* Desktop Right side */}
+            {/* Правая часть */}
             <div className="hidden md:flex items-center space-x-3">
               {/* Кнопка "Стать мастером" показывается только если user.isSpecialist = false */}
               {isAuthenticated && !user?.isSpecialist && (
@@ -197,16 +198,16 @@ export function Header() {
               />
 
               {hat === "master" ? (
-                  <BurgerMenu
+                <BurgerMenu
                   isAuthenticated={isAuthenticated}
                   showBurgerMenu={showBurgerMenu}
                   toggleBurgerMenu={toggleBurgerMenu}
                   setShowBurgerMenu={setShowBurgerMenu}
                   burgerMenuRef={burgerMenuRef}
-                  />
-              ) : (<div className="h-8 w-8 p-0 "/>)
-              }
-
+                />
+              ) : (
+                <div className="h-8 w-8 p-0 " />
+              )}
             </div>
 
             {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
