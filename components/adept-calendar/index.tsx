@@ -35,16 +35,16 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
       <div className="h-full flex flex-col">
         {/* Mobile Back Button and Calendar Widget */}
         <div className="flex-shrink-0">
-          <div className="flex items-center p-4">
-            <BackButton className="mr-4" />
-            <div className="flex-1">
+          <div className="flex flex-col p-4 items-start justify-between">
+            <BackButton/>
+            <div className="flex-1 w-full">
               <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
             </div>
           </div>
         </div>
 
         {/* Mobile Schedule */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto border-t border-gray-200">
           <div className="flex">
             <ScheduleView selectedDate={selectedDate} bookings={bookings} />
           </div>

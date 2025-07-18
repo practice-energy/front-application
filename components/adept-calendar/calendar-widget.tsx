@@ -7,9 +7,10 @@ interface CalendarWidgetProps {
   selectedDate: Date
   onDateSelect: (date: Date) => void
   isMobile?: boolean
+  timezone?: string
 }
 
-export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetProps) {
+export function CalendarWidget({ selectedDate, onDateSelect, timezone }: CalendarWidgetProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))
 
   const monthNames = [
@@ -96,7 +97,7 @@ export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetPro
   const days = getDaysInMonth(currentMonth)
 
   return (
-    <div className="bg-white rounded-sm p-4 aspect-square">
+    <div className="bg-white rounded-sm aspect-square">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="font-medium text-gray-900">
