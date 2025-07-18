@@ -141,33 +141,37 @@ export function Header() {
       <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
-            {/* Левая часть с фиксированным позиционированием */}
             <div className="flex items-start space-x-3">
               {/* Кнопка panel-right-close - всегда на фиксированной позиции */}
               {shouldShowSidebar && (
-                <button
-                  onClick={handleOpenSidebar}
-                  className={cn(
-                    "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 gap-2 px-3",
-                    "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
-                    !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
-                    "w-20 h-20 m-0",
-                  )}
-                >
-                  <div className="h-18 w-18 items-center justify-center flex">
-                    <PanelRightClose width={24} height={24} />
-                  </div>
-                  <span className="sr-only">Открыть сайдбар</span>
-                </button>
+                <div className="fixed left-6 top-6 z-50">
+                  <button
+                    onClick={handleOpenSidebar}
+                    className={cn(
+                      "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 gap-2 px-3",
+                      "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
+                      !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
+                      "w-20 h-20 m-0",
+                    )}
+                  >
+                    <div className="h-18 w-18 items-center justify-center flex">
+                      <PanelRightClose width={24} height={24} />
+                    </div>
+                    <span className="sr-only">Открыть сайдбар</span>
+                  </button>
+                </div>
               )}
 
-              {/* Лого - всегда на фиксированной позиции после кнопки сайдбара */}
-              {!isHomePage && <Logo onClick={handleLogoClick} />}
+              {!isHomePage && (
+                <div className="fixed left-28 top-6 z-40">
+                  <Logo onClick={handleLogoClick} />
+                </div>
+              )}
 
               <NavigationButtons isAuthenticated={isAuthenticated} role={role} router={router} />
             </div>
 
-            {/* Правая часть */}
+            {/* Desktop Right side */}
             <div className="hidden md:flex items-center space-x-3">
               {/* Кнопка "Стать мастером" показывается только если user.isSpecialist = false */}
               {isAuthenticated && !user?.isSpecialist && (
