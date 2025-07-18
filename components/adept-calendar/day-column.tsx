@@ -66,14 +66,14 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   }
 
   return (
-    <div className="flex-1 min-w-0 relative">
-      {/* Fixed day header */}
-      <div className="fixed top-[72px] bg-white border-b border-r border-gray-200 p-3 text-center z-30 flex-1 min-w-0">
+    <div className="flex-1 min-w-0">
+      {/* Sticky day header */}
+      <div className="fixed top-0 bg-white border-b border-r border-gray-200 p-3 text-center z-20">
         <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
 
-      {/* Time slots with top margin to account for fixed header */}
-      <div className="relative bg-white border-r mt-12">
+      {/* Time slots */}
+      <div className="relative bg-white border-r">
         {hours.map((hour) => {
           const booking = getBookingForHour(hour)
           const isContinuation = isBookingContinuation(hour)
