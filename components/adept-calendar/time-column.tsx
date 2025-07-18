@@ -12,8 +12,8 @@ export function TimeColumn({ slotHeight }: TimeColumnProps) {
   }
 
   return (
-    <div className="w-16 flex-shrink-0 border-r border-gray-200 relative">
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-20">
+    <div className="w-16 flex-shrink-0 border-r border-gray-200">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-30">
         <div className="text-sm font-medium text-transparent">Time</div>
       </div>
 

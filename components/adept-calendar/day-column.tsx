@@ -1,83 +1,93 @@
 "use client"
 
-import { format } from "date-fns"
-import { ru } from "date-fns/locale"
-import { cn } from "@/lib/utils"
-import type { Booking } from "@/types/booking"
 import { BookingCard } from "./booking-card"
+import { TimeSlot } from "./time-slot"
+import type { Booking } from "@/types/booking"
+import { cn } from "@/lib/utils"
 
 interface DayColumnProps {
   date: Date
   bookings: Booking[]
   slotHeight: number
-  isSelectedDay?: boolean
+  isSelectedDay: boolean
 }
 
-export function DayColumn({ date, bookings, slotHeight, isSelectedDay = false }: DayColumnProps) {
+export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColumnProps) {
   const hours = Array.from({ length: 24 }, (_, i) => i)
 
-  // Filter bookings for this day
-  const dayBookings = bookings.filter((booking) => {
-    const bookingDate = new Date(booking.date)
-    return bookingDate.toDateString() === date.toDateString()
-  })
+  // Format day header
+  function formatDate(date: Date) {
+    const formatted = date
+      .toLocaleDateString("ru-RU", {
+        weekday: "short",
+        day: "numeric",
+      })
+      .replace(",", "")
 
-  const formatDate = (date: Date) => {
-    return format(date, "dd MMM", { locale: ru })
+    const [weekday, day] = formatted.split(" ")
+
+    return (
+      <>
+        <span className={cn("px-1 py-0.5 mr-1", isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square")}>
+          {weekday.replace(/^./, (letter) => letter.toUpperCase())}
+        </span>
+        {day}
+      </>
+    )
+  }
+  // Get bookings for this date
+  const getBookingsForDate = (date: Date) => {
+    return bookings.filter((booking) => {
+      const bookingDate = new Date(booking.date)
+      return (
+        bookingDate.getFullYear() === date.getFullYear() &&
+        bookingDate.getMonth() === date.getMonth() &&
+        bookingDate.getDate() === date.getDate()
+      )
+    })
   }
 
-  const formatDayName = (date: Date) => {
-    return format(date, "EEE", { locale: ru })
+  // Get booking for specific hour
+  const getBookingForHour = (hour: number) => {
+    const dayBookings = getBookingsForDate(date)
+    return dayBookings.find((booking) => {
+      const bookingHour = new Date(booking.date).getHours()
+      return bookingHour === hour
+    })
+  }
+
+  // Check if hour is continuation of multi-slot booking
+  const isBookingContinuation = (hour: number) => {
+    const dayBookings = getBookingsForDate(date)
+    return dayBookings.some((booking) => {
+      const bookingHour = new Date(booking.date).getHours()
+      return hour > bookingHour && hour < bookingHour + booking.slots
+    })
   }
 
   return (
-    <div className="flex-1 min-w-0 border-r border-gray-200 relative">
-      {/* Sticky header */}
-      <div
-        className={cn(
-          "sticky top-0 bg-white border-b border-gray-200 p-3 text-center z-20",
-          isSelectedDay && "bg-blue-50",
-        )}
-      >
-        <div className="text-sm font-medium text-gray-900">{formatDayName(date)}</div>
-        <div className={cn("text-xs text-gray-500", isSelectedDay && "text-blue-600 font-medium")}>
-          {formatDate(date)}
-        </div>
+    <div className="flex-1 min-w-0">
+      {/* Sticky day header */}
+      <div className="sticky top-0 bg-white border-b border-r border-gray-200 p-3 text-center z-30">
+        <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
       </div>
 
       {/* Time slots */}
-      <div className="relative">
-        {hours.map((hour) => (
-          <div key={hour} className="border-b border-gray-100 relative" style={{ height: `${slotHeight}px` }}>
-            {/* Hour grid lines */}
-            <div className="absolute inset-0 border-r border-gray-50" />
-          </div>
-        ))}
-
-        {/* Bookings */}
-        {dayBookings.map((booking) => {
-          const startTime = new Date(`2000-01-01T${booking.startTime}`)
-          const endTime = new Date(`2000-01-01T${booking.endTime}`)
-          const startHour = startTime.getHours()
-          const startMinutes = startTime.getMinutes()
-          const duration = (endTime.getTime() - startTime.getTime()) / (1000 * 60) // duration in minutes
-
-          const top = startHour * slotHeight + (startMinutes * slotHeight) / 60
-          const height = (duration * slotHeight) / 60
+      <div className="relative bg-white border-r">
+        {hours.map((hour) => {
+          const booking = getBookingForHour(hour)
+          const isContinuation = isBookingContinuation(hour)
 
           return (
-            <BookingCard
-              key={booking.id}
-              booking={booking}
-              style={{
-                position: "absolute",
-                top: `${top}px`,
-                height: `${height}px`,
-                left: "4px",
-                right: "4px",
-                zIndex: 10,
-              }}
-            />
+            <div key={hour} className="relative" style={{ height: `${slotHeight}px` }}>
+              {!isContinuation && <TimeSlot hour={hour} slotHeight={slotHeight} />}
+
+              {booking && (
+                <div className="absolute inset-0 z-10 p-1">
+                  <BookingCard booking={booking} slotHeight={slotHeight} />
+                </div>
+              )}
+            </div>
           )
         })}
       </div>
