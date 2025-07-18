@@ -88,7 +88,7 @@ export function ProfileMenu({
             </Link>
 
             <Link
-              href="/profile?section=calendar"
+              href="/calendar"
               className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
               onClick={() => setShowProfileMenu(false)}
             >

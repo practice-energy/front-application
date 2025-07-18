@@ -80,7 +80,7 @@ export function Header() {
   }
 
   const handleCalendarClick = () => {
-    router.push("/profile?section=calendar")
+    router.push("/calendar")
   }
 
   const handleLogout = () => {

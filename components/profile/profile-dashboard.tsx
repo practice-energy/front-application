@@ -5,10 +5,6 @@ import { useProfileStore } from "@/stores/profile-store"
 import { ProfileLayout } from "@/components/profile/profile-layout"
 import { OverviewSection } from "@/components/profile/sections/overview-section"
 
-// Lazy load sections for better performance
-const CalendarSection = lazy(() =>
-  import("@/components/profile/sections/calendar-section").then((m) => ({ default: m.CalendarSection })),
-)
 const SavedSection = lazy(() =>
   import("@/components/profile/sections/saved-section").then((m) => ({ default: m.SavedSection })),
 )
@@ -43,12 +39,6 @@ export function ProfileDashboard() {
     switch (activeSection) {
       case "overview":
         return <OverviewSection />
-      case "calendar":
-        return (
-          <Suspense fallback={<LoadingSkeleton />}>
-            <CalendarSection />
-          </Suspense>
-        )
       case "saved":
         return (
           <Suspense fallback={<LoadingSkeleton />}>

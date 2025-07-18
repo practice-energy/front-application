@@ -40,15 +40,24 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
 
   return (
     <div className="flex-1 h-full">
-      <ScrollArea className="h-full" ref={scrollAreaRef}>
         <div className="flex">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
-          {displayDates.map((date) => (
-            <DayColumn key={date.toISOString()} date={date} bookings={bookings} slotHeight={SLOT_HEIGHT} />
+          <DayColumn
+              key={displayDates[0].toISOString()}
+              date={displayDates[0]}
+              bookings={bookings}
+              slotHeight={SLOT_HEIGHT}
+              isSelectedDay={true}/>
+          {displayDates.slice(1).map((date) => (
+              <DayColumn
+                  key={date.toISOString()}
+                  date={date}
+                  bookings={bookings}
+                  slotHeight={SLOT_HEIGHT}
+                  isSelectedDay={false}
+              />
           ))}
-          {/*<BookingDetailsModal booking={mockBookings[0]} isOpen={true} onClose={() => {}} />*/}
         </div>
-      </ScrollArea>
     </div>
   )
 }

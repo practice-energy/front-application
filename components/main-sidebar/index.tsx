@@ -98,7 +98,7 @@ export function MainSidebar() {
   }
 
   const handleCalendarClick = () => {
-    router.push("/profile?section=calendar")
+    router.push("/calendar")
     if (isMobile) {
       toggleSidebar()
     }

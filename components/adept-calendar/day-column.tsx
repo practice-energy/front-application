@@ -3,25 +3,39 @@
 import { BookingCard } from "./booking-card"
 import { TimeSlot } from "./time-slot"
 import type { Booking } from "@/types/booking"
+import {cn} from "@/lib/utils";
 
 interface DayColumnProps {
   date: Date
   bookings: Booking[]
   slotHeight: number
+  isSelectedDay: boolean
 }
 
-export function DayColumn({ date, bookings, slotHeight }: DayColumnProps) {
+export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColumnProps) {
   const hours = Array.from({ length: 24 }, (_, i) => i)
 
   // Format day header
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("ru-RU", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-    })
-  }
+  function formatDate(date: Date) {
+    const formatted = date.toLocaleDateString('ru-RU', {
+      weekday: 'short',
+      day: 'numeric'
+    }).replace(',', '');
 
+    const [weekday, day] = formatted.split(' ');
+
+    return (
+        <>
+      <span className={cn(
+      "px-1 py-0.5 mr-1",
+          isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square",)
+      }>
+        {weekday.replace(/^./, (letter) => letter.toUpperCase())}
+      </span>
+          {day}
+        </>
+    );
+  }
   // Get bookings for this date
   const getBookingsForDate = (date: Date) => {
     return bookings.filter((booking) => {
