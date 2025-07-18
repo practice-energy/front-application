@@ -2,15 +2,14 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Share } from "lucide-react"
+import { MapPin, Share, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "@/hooks/use-translations"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
-import { AboutSection } from "@/components/about-section"
-import { SquareImageGallery } from "@/components/square-image-gallery"
 import { BackButton } from "@/components/ui/button-back"
 import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
+import { cn } from "@/lib/utils"
 
 interface SpecialistProfileProps {
   specialist: Specialist
@@ -20,6 +19,7 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
   const router = useRouter()
   const { t } = useTranslations()
   const [shareModalOpen, setShareModalOpen] = useState(false)
+  const [showFullDescription, setShowFullDescription] = useState(false)
 
   const handleServiceCardClick = (service: any) => {
     router.push(`/service/${service.id}`)
@@ -27,86 +27,124 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-[144px] relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Header with Back Button and Action Buttons */}
-        <div className="flex items-center justify-between gap-4">
-          <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between mb-8">
+          <BackButton className="text-gray-600 dark:text-gray-300" />
+          <div className="flex items-center space-x-3">
             <Button
               size="sm"
-              className="text-gray-600 dark:text-white shadow-md hover:shadow-lg backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6"
+              variant="outline"
+              className="h-10 w-10 p-0 rounded-lg border-gray-300 dark:border-gray-600 bg-transparent"
               onClick={() => setShareModalOpen(true)}
             >
-              <Share className="h-4 w-4 mr-2" />
-              {t("share")}
+              <Share className="h-4 w-4" />
             </Button>
             <Button
               size="sm"
-              className="text-gray-600 dark:text-white shadow-md hover:shadow-lg backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6"
+              variant="outline"
+              className="h-10 px-3 rounded-lg border-gray-300 dark:border-gray-600 flex items-center gap-2 bg-transparent"
             >
-              <PentagramIcon className="h-4 w-4 mr-2" />
-              {specialist.likes}
+              <PentagramIcon className="h-4 w-4 text-purple-600" />
+              <span className="text-sm font-medium">{specialist.likes || 1024}</span>
             </Button>
             <Button
               size="sm"
-              className="text-gray-600 dark:text-white shadow-md hover:shadow-lg backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6"
+              variant="outline"
+              className="h-10 px-3 rounded-lg border-gray-300 dark:border-gray-600 flex items-center gap-2 bg-transparent"
             >
-              {t("write_to_specialist")}
+              <MessageCircle className="h-4 w-4" />
+              <span className="text-sm font-medium">{specialist.practices || 304}</span>
             </Button>
           </div>
         </div>
 
-        {/* Instagram-style centered card */}
-        <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
-          {/* Photo Gallery */}
-          {specialist.images.length > 0 ? (
-            <SquareImageGallery
-              images={specialist.images}
-              alt={specialist.name}
-              ratioWidth={4}
-              ratioHeight={5}
-              orientation="vertical"
-            />
-          ) : (
-            <div className="text-center py-12 text-muted-foreground dark:text-gray-400">{t("no_photos_yet")}</div>
-          )}
+        {/* Main Content Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {/* Profile Section */}
+          <div className="p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Profile Image */}
+              <div className="lg:col-span-1">
+                <div className="aspect-[3/4] rounded-2xl overflow-hidden">
+                  <img
+                    src={specialist.images?.[0] || "/placeholder.svg?height=400&width=300"}
+                    alt={specialist.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
 
-          {/* Specialist header */}
-          <div className="p-6 space-y-6">
-            <div className="flex flex-col gap-4">
-              <div className="text-left">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{specialist.name}</h1>
-                <h2 className="text-lg text-gray-700 dark:text-gray-300 mb-3">{specialist.title}</h2>
+              {/* Profile Info */}
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{specialist.name}</h1>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{specialist.title}</p>
 
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-1" />
-                    <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.location}</span>
+                  <div className="flex items-center text-gray-500 dark:text-gray-400 mb-6">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <span>{specialist.location}</span>
                   </div>
-                  <div className="flex items-center">
-                    <PentagramIcon className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-1" />
-                    <span className="text-gray-600 dark:text-gray-300 text-sm">{specialist.practices} практик</span>
+
+                  {/* Stats */}
+                  <div className="flex items-center space-x-8">
+                    <div className="flex items-center space-x-2">
+                      <PentagramIcon className="h-5 w-5 text-purple-600" />
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {specialist.likes || 1024}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MessageCircle className="h-5 w-5 text-gray-500" />
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {specialist.practices || 304}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* About Section */}
-          <div className="px-6 pb-6 space-y-8">
-            <AboutSection
-              title={`${t("specialistProfile.about")} ${specialist.name}`}
-              description={specialist.description}
-              fullDescription={specialist.description}
-              education={specialist.education}
-              experience={specialist.experience}
-              showEducationExperience={true}
-            />
-
-            {/* Available Sessions Section */}
+          {/* Content Sections */}
+          <div className="px-8 pb-8 space-y-8">
+            {/* About Section */}
             <div>
-              <h3 className="text-xl font-bold mb-6 dark:text-gray-100">{t("available_sessions")}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">О мастере</h2>
+              <div className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className={cn("transition-all duration-300", !showFullDescription && "line-clamp-3")}>
+                  {specialist.description}
+                </p>
+                {specialist.description && specialist.description.length > 200 && (
+                  <button
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                    className="text-purple-600 hover:text-purple-700 mt-2 text-sm font-medium"
+                  >
+                    {showFullDescription ? "Скрыть" : "Раскрыть больше"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Skills Section */}
+            {specialist.skills && specialist.skills.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Навыки</h2>
+                <div className="space-y-2">
+                  {specialist.skills.map((skill, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-3"></div>
+                      <span className="text-gray-600 dark:text-gray-400">{skill}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Services Section */}
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Практис</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {specialist.services.map((service) => (
                   <InstagramServiceCard
                     key={service.id}
@@ -115,6 +153,54 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
                   />
                 ))}
               </div>
+            </div>
+
+            {/* Experience Section */}
+            {specialist.experience && specialist.experience.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Опыт</h2>
+                <div className="space-y-2">
+                  {specialist.experience.map((exp, index) => (
+                    <div key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-600 dark:text-gray-400 leading-relaxed">{exp.description}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Education and Certificates Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Education Section */}
+              {specialist.education && specialist.education.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Образование</h2>
+                  <div className="space-y-4">
+                    {specialist.education.map((edu, index) => (
+                      <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Хогвартс, Слизерен</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{edu.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Certificates Section */}
+              {specialist.certificates && specialist.certificates.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Сертификаты</h2>
+                  <div className="space-y-4">
+                    {specialist.certificates.map((cert, index) => (
+                      <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Хогвартс, Слизерен</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{cert.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -11,14 +11,15 @@ export default function Skills({ skills }: SkillsProps) {
 
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6 dark:text-gray-100">{t("skills")}</h3>
-      <ul>
-        {skills.map((skill) => (
-          <li key={skill} className="flex items-center mb-2">
-            {skill}
-          </li>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Навыки</h2>
+      <div className="space-y-2">
+        {skills.map((skill, index) => (
+          <div key={index} className="flex items-center">
+            <div className="w-2 h-2 bg-purple-600 rounded-full mr-3"></div>
+            <span className="text-gray-600 dark:text-gray-400">{skill}</span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }

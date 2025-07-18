@@ -11,14 +11,15 @@ export default function Education({ education }: EducationProps) {
 
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6 dark:text-gray-100">{t("education")}</h3>
-      <ul>
-        {education.map((item, index) => (
-          <li key={index} className="flex items-center mb-2">
-            {item.description}
-          </li>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Образование</h2>
+      <div className="space-y-4">
+        {education.map((edu, index) => (
+          <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Хогвартс, Слизерен</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{edu.description}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
