@@ -14,9 +14,11 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
   return (
-    <div className="h-full flex overflow-hidden">
-      <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} timezone={timezone} />
-      <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+    <div className="h-full flex flex-col overflow-auto top-0">
+      <div className="flex h-full">
+        <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} timezone={timezone} />
+        <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+      </div>
     </div>
   )
 }

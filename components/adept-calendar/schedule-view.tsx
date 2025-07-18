@@ -5,6 +5,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { TimeColumn } from "./time-column"
 import { DayColumn } from "./day-column"
 import type { Booking } from "@/types/booking"
+import {BookingDetailsModal} from "@/components/modals/booking-details-modal";
+import {mockBookings} from "@/services/mock-bookings";
 
 interface ScheduleViewProps {
   selectedDate: Date
@@ -37,28 +39,25 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   }, [selectedDate])
 
   return (
-    <div className="flex-1 h-full overflow-hidden">
-      <ScrollArea className="h-full" ref={scrollAreaRef}>
+    <div className="flex-1 h-full">
         <div className="flex">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
           <DayColumn
-            key={displayDates[0].toISOString()}
-            date={displayDates[0]}
-            bookings={bookings}
-            slotHeight={SLOT_HEIGHT}
-            isSelectedDay={true}
-          />
-          {displayDates.slice(1).map((date) => (
-            <DayColumn
-              key={date.toISOString()}
-              date={date}
+              key={displayDates[0].toISOString()}
+              date={displayDates[0]}
               bookings={bookings}
               slotHeight={SLOT_HEIGHT}
-              isSelectedDay={false}
-            />
+              isSelectedDay={true}/>
+          {displayDates.slice(1).map((date) => (
+              <DayColumn
+                  key={date.toISOString()}
+                  date={date}
+                  bookings={bookings}
+                  slotHeight={SLOT_HEIGHT}
+                  isSelectedDay={false}
+              />
           ))}
         </div>
-      </ScrollArea>
     </div>
   )
 }
