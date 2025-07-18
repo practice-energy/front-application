@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 interface CalendarWidgetProps {
   selectedDate: Date
   onDateSelect: (date: Date) => void
+  isMobile?: boolean
 }
 
 export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetProps) {
@@ -103,12 +103,14 @@ export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetPro
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="sm" onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => navigateMonth("next")} className="h-8 w-8 p-0">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <button
+              onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+              onClick={() => navigateMonth("next")} className="h-8 w-8 p-0">
+            <ChevronRight className="h-6 w-6" />
+          </button>
         </div>
       </div>
 

@@ -14,8 +14,6 @@ interface AdeptCalendarProps {
   timezone?: string
 }
 
-const SLOT_HEIGHT = 93
-
 export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const isMobile = useIsMobile()
@@ -37,21 +35,14 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     return (
       <div className="h-full flex flex-col">
         {/* Mobile Calendar Widget */}
-        <div className="flex-shrink-0 p-4 bg-gray-50">
+        <div className="flex-shrink-0">
           <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
         </div>
 
         {/* Mobile Schedule */}
         <div className="flex-1 overflow-auto">
           <div className="flex">
-            <TimeColumn slotHeight={SLOT_HEIGHT} />
-            <DayColumn
-              key={selectedDate.toISOString()}
-              date={selectedDate}
-              bookings={bookings}
-              slotHeight={SLOT_HEIGHT}
-              isSelectedDay={true}
-            />
+            <ScheduleView selectedDate={selectedDate} bookings={bookings} />
           </div>
         </div>
       </div>
