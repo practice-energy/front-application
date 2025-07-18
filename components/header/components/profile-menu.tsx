@@ -59,8 +59,7 @@ export function ProfileMenu({
       {showProfileMenu && (
         <div className="absolute right-0 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-sm shadow-md border border-gray-200 dark:border-gray-700 py-0 z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.name || "User"}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.first_name || "User"}</p>
           </div>
 
           {/* Role toggle button */}

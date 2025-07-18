@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { CheckCircle, Mail } from "lucide-react"
 
 export default function EmailVerifiedPage() {

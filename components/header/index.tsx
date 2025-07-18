@@ -138,7 +138,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
+      <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
             <div className="flex items-start space-x-3">
@@ -201,7 +201,6 @@ export function Header() {
                   showBurgerMenu={showBurgerMenu}
                   toggleBurgerMenu={toggleBurgerMenu}
                   setShowBurgerMenu={setShowBurgerMenu}
-                  burgerMenuRef={burgerMenuRef}
                 />
               ) : (
                 <div className="h-8 w-8 p-0 " />
@@ -221,7 +220,6 @@ export function Header() {
                   showProfileMenu={showProfileMenu}
                   toggleProfileMenu={toggleProfileMenu}
                   setShowProfileMenu={setShowProfileMenu}
-                  profileMenuRef={profileMenuRef}
                   handleLogout={handleLogout}
                   isMobile={true}
                   role={role}

@@ -6,15 +6,6 @@ export interface Education {
 export interface Experience {
     description: string;
 }
-
-export interface AvailabilitySlot {
-    id: string
-    date: string
-    startTime: string
-    endTime: string
-    available: boolean
-}
-
 export interface Specialist {
     id: string
     name: string
@@ -27,8 +18,10 @@ export interface Specialist {
     description: string
     specialties: string[]
     education: Education[]
+    certifcates: Education[]
     experience: Experience[]
     services: Service[]
+    skills: string[]
     likes: number
 }
 

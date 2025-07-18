@@ -41,7 +41,7 @@ export const mockImages = [
 
 // Mock User Data
 export const mockUser: User = {
-  id: "1",
+  id: uuidv4(),
   first_name: "Ivan",
   last_name: "Ivanov",
   email: {
@@ -49,14 +49,11 @@ export const mockUser: User = {
     verified: true,
   },
   location: "",
-  images: mockImages,
-  created_at: "2023-01-15T00:00:00Z",
-  account_balance: 125.5,
-  tier: "Pro",
+  timezone: "GMT+3",
+  createdAt: new Date(2023, 6, 10, 11, 0),
+  tier: "basic",
   isSpecialist: false,
   bio: "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation.",
-  fullBio:
-    "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation. I believe that everyone has the power to create positive change in their lives, and my role is to provide the tools, insights, and support needed to unlock that potential. Through personalized astrology readings, I help clients understand their unique cosmic blueprint and how planetary influences affect their daily lives. My life coaching sessions focus on practical goal-setting, overcoming limiting beliefs, and developing sustainable habits that lead to lasting transformation. I also offer meditation guidance to help clients develop mindfulness practices that support their overall well-being and spiritual growth.",
   education: [
     {
       description: "Certified Life Coach, International Coach Federation",
@@ -85,11 +82,34 @@ export const mockUser: User = {
   experience: [
     {
       description: "Senior Life Coach at Mindful Living Center (2015-Present)",
-      certificate: null,
     },
     {
       description: "Spiritual Guide at Wellness Collective (2010-2015)",
-      certificate: null,
+    },
+  ],
+  certifcates: [
+    {
+      description: "Certified Life Coach, International Coach Federation",
+      certificate: {
+        name: "life-coach-certificate.pdf",
+        size: 2456789,
+        type: "application/pdf",
+        lastModified: Date.now(),
+        // В реальном приложении здесь будет File объект или ссылка на файл
+      } as unknown as File, // Приведение типа для мока
+    },
+    {
+      description: "Master's in Psychology, Stanford University",
+      certificate: {
+        name: "psychology-degree.jpg",
+        size: 3456789,
+        type: "image/jpeg",
+        lastModified: Date.now(),
+      } as unknown as File,
+    },
+    {
+      description: "Yoga Instructor Certification",
+      certificate: null, // Пример отсутствующего сертификата
     },
   ],
   hat: "adept",

@@ -1,21 +1,31 @@
+import {Education, Experience, Specialist} from "@/types/common";
+
 export interface User {
   id: string
-  email: string
-  name: string
+  email: {
+    address: string
+    verified: boolean
+  }
+  bio: string
+  first_name: string
+  last_name: string
+  location: string
   avatar?: string
+  images: string[]
   timezone: string
-  role: "client" | "specialist" | "admin"
-  isVerified: boolean
   createdAt: Date
-  updatedAt: Date
   preferences?: {
     language: "ru" | "en"
     notifications: boolean
     theme: "light" | "dark"
   }
-  specialistProfile: any
+  education: Education[]
+  certifcates: Education[]
+  experience: Experience[]
+  specialistProfile?: Specialist
   isSpecialist: boolean
   hat: "master" | "adept"
+  tier: "unlimited" | "premium" | "basic"
 }
 
 export interface UserStats {
