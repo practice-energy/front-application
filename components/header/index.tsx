@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import {X, PanelRightClose, CalendarDays, PanelRightOpen} from "lucide-react"
+import { X, PanelRightClose, CalendarDays } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
-import { useTranslations } from "@/hooks/use-translations"
 import { useRouter, usePathname } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { cn } from "@/lib/utils"
@@ -36,7 +35,7 @@ export function Header() {
     burgerMenuRef,
     profileMenuRef,
     hat,
-    setHat
+    setHat,
   } = useHeaderState(user)
 
   const shouldShowSidebar = useMemo(() => {
@@ -142,26 +141,35 @@ export function Header() {
       <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg">
         <nav className="container mx-auto px-6">
           <div className="flex h-24 items-center justify-between">
-            <div className="flex items-start space-x-3 ml-[172px]">
-              {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
+            <div className="flex items-start space-x-3">
+              {/* Кнопка panel-right-close - всегда в позиции 172px от левого края */}
               {shouldShowSidebar && (
-                <button
-                  onClick={handleOpenSidebar}
+                <div
                   className={cn(
-                    "rounded-sm hover:bg-gra-100 dark:hover:bg-gray-700 gap-2 px-3",
-                      "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
+                    "transition-all duration-300 ease-in-out",
                     !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
-                    "w-20 h-20 m-0",
                   )}
+                  style={{ marginLeft: "172px" }}
                 >
-                  <div className="h-18 w-18 items-center justify-center flex">
+                  <button
+                    onClick={handleOpenSidebar}
+                    className="rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 w-20 h-20 flex items-center justify-center"
+                  >
                     <PanelRightClose width={24} height={24} />
-                  </div>
-                  <span className="sr-only">Открыть сайдбар</span>
-                </button>
+                    <span className="sr-only">Открыть сайдбар</span>
+                  </button>
+                </div>
               )}
 
-              {!isHomePage && <Logo onClick={handleLogoClick} />}
+              {/* Лого всегда в фиксированной позиции */}
+              <div
+                className={cn(
+                  "transition-all duration-300 ease-in-out",
+                  shouldShowSidebar && !isCollapsed ? "ml-0" : "ml-[220px]",
+                )}
+              >
+                {!isHomePage && <Logo onClick={handleLogoClick} />}
+              </div>
 
               <NavigationButtons isAuthenticated={isAuthenticated} role={role} router={router} />
             </div>
@@ -197,16 +205,16 @@ export function Header() {
               />
 
               {hat === "master" ? (
-                  <BurgerMenu
+                <BurgerMenu
                   isAuthenticated={isAuthenticated}
                   showBurgerMenu={showBurgerMenu}
                   toggleBurgerMenu={toggleBurgerMenu}
                   setShowBurgerMenu={setShowBurgerMenu}
                   burgerMenuRef={burgerMenuRef}
-                  />
-              ) : (<div className="h-8 w-8 p-0 "/>)
-              }
-
+                />
+              ) : (
+                <div className="h-8 w-8 p-0 " />
+              )}
             </div>
 
             {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
