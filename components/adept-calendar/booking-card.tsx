@@ -2,10 +2,8 @@
 
 import React, { useState } from "react"
 import type { Booking } from "@/types/booking"
-import { BookingDetailsModal } from "../modals/booking-details-modal"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
-import {MessageSquareOff} from "lucide-react";
 
 interface BookingCardProps {
   booking: Booking

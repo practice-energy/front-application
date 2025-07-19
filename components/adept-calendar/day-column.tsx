@@ -13,7 +13,7 @@ interface DayColumnProps {
 }
 
 export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColumnProps) {
-  const hours = Array.from({ length: 24 }, (_, i) => i)
+  const halfhours = Array.from({ length: 48 }, (_, i) => i)
 
   // Format day header
   function formatDate(date: Date) {
@@ -48,13 +48,23 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   }
 
   // Get booking for specific hour
-  const getBookingForHour = (hour: number) => {
-    const dayBookings = getBookingsForDate(date)
+  const getBookingForHalfHour = (halfhour: number) => {
+    const dayBookings = getBookingsForDate(date);
+
+    // Преобразуем номер получасового интервала в часы и минуты
+    const hour = Math.floor(halfhour / 2);
+    const minute = (halfhour % 2) * 30; // 0 или 30 минут
+
     return dayBookings.find((booking) => {
-      const bookingHour = new Date(booking.date).getHours()
-      return bookingHour === hour
-    })
-  }
+      const bookingTime = new Date(booking.date);
+      const bookingHour = bookingTime.getHours();
+      const bookingMinute = bookingTime.getMinutes();
+
+      // Проверяем совпадение с получасовым интервалом
+      return bookingHour === hour &&
+          Math.floor(bookingMinute / 30) === Math.floor(minute / 30);
+    });
+  };
 
   // Check if hour is continuation of multi-slot booking
   const isBookingContinuation = (hour: number) => {
@@ -74,13 +84,13 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
 
       {/* Time slots */}
       <div className="relative bg-white border-r border-t mt-11">
-        {hours.map((hour) => {
-          const booking = getBookingForHour(hour)
-          const isContinuation = isBookingContinuation(hour)
+        {halfhours.map((halfHour) => {
+          const booking = getBookingForHalfHour(halfHour)
+          const isContinuation = isBookingContinuation(halfHour)
 
           return (
-            <div key={hour} className="relative" style={{ height: `${slotHeight}px` }}>
-              {!isContinuation && <TimeSlot hour={hour} slotHeight={slotHeight} />}
+            <div key={halfHour} className="relative" style={{ height: `${slotHeight}px` }}>
+              {!isContinuation && <TimeSlot slotHeight={slotHeight} />}
 
               {booking && (
                 <div className="absolute inset-0 z-10">
