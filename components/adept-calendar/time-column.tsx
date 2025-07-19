@@ -13,15 +13,17 @@ export function TimeColumn({ slotHeight }: TimeColumnProps) {
 
   return (
     <div className="w-16 flex-shrink-0 border border-gray-100">
-      <div className="sticky top-0 bg-white border-b p-3 text-center z-10">
-        <div className="text-sm font-medium text-transparent">Time</div>
+      <div className="fixed top-24 bg-white p-3 text-center z-10 border border-gray-100 h-11 w-full">
+        <div className="text-sm font-medium  text-transparent">Time</div>
       </div>
+
+      <div className="h-11"/>
 
       {/* Time labels */}
       {hours.map((hour) => (
         <div
           key={hour}
-          className="flex items-center justify-center bg-white text-xs text-gray-500 border border-gray-100 z-50"
+          className="flex items-center justify-center bg-white text-xs text-gray-500 border-t border-gray-100 z-50"
           style={{ height: `${slotHeight}px` }}
         >
           {formatTime(hour)}
