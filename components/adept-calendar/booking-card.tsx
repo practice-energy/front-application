@@ -4,6 +4,7 @@ import { useState } from "react"
 import type { Booking } from "@/types/booking"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { useMobile } from "@/hooks/use-mobile"
 
 interface BookingCardProps {
   booking: Booking
@@ -12,6 +13,27 @@ interface BookingCardProps {
 
 export function BookingCard({ booking, slotHeight }: BookingCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const isMobile = useMobile()
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+  }
+
+  if (isMobile) {
+    return (
+      <div
+        className="bg-violet-500 rounded-sm cursor-pointer flex items-center justify-center text-white font-medium"
+        style={{ height: `${booking.slots * slotHeight}px` }}
+        onClick={() => setIsModalOpen(true)}
+      >
+        {formatTime(booking.startTime)}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -67,13 +89,9 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
 
             {/* Row 2: Description (multi-line) and New Message Indicator */}
             <div className="flex items-start">
-              {" "}
-              {/* Убрано justify-between */}
               {/* Описание - занимает всё доступное пространство */}
               <div className="flex-1 min-w-0 overflow-hidden">
-                {" "}
-                {/* Добавлен overflow-hidden */}
-                <p className="text-gray-600  leading-relaxed line-clamp-1 w-full">{booking.specialist.name}</p>
+                <p className="text-gray-600 leading-relaxed line-clamp-1 w-full">{booking.specialist.name}</p>
               </div>
             </div>
           </div>
