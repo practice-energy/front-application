@@ -105,7 +105,7 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
   const unreadCount = notifications.filter((n) => !n.read).length
 
   const getNotificationIcon = (type: Notification["type"]) => {
-    const iconClass = "h-4 w-4 text-purple-500 dark:text-purple-400"
+    const iconClass = "h-4 w-4 text-violet-600"
 
     switch (type) {
       case "message":
@@ -206,33 +206,26 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
     <>
       {/* Notification Button */}
       <div className={cn("relative", className)}>
-        <Button
+        <button
           ref={buttonRef}
-          variant="ghost"
-          size="sm"
           onClick={toggleNotifications}
           className={cn(
-            "h-8 w-8 p-0 rounded-sm transition-all duration-200 relative",
-            isOpen
-              ? "border-2 border-purple-600 bg-purple-50 dark:bg-purple-900/20"
-              : "border-2 border-transparent hover:bg-purple-50 dark:hover:bg-purple-900/20",
+            "h-8 w-8 p-0 rounded-sm transition-all duration-200 relative mt-3",
           )}
           aria-label="Notifications"
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
-          <Bell className="h-4 w-4" />
+          <Bell className="h-6 w-7" />
           {unreadCount > 0 && (
-            <Badge
+            <div
               className={cn(
-                "absolute -top-1 -right-1 h-5 min-w-[20px] p-0 text-xs bg-purple-600 hover:bg-purple-600 text-white border-2 border-white dark:border-gray-800 flex items-center justify-center",
+                "absolute -top-1 -right-1 w-3 h-3 p-0 text-xs bg-violet-600 hover:bg-violet-600 flex items-center justify-center rounded-sm",
                 hasNewNotifications && "animate-pulse",
               )}
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
+            />
           )}
-        </Button>
+        </button>
 
         {/* Desktop Dropdown */}
         {isOpen && !isMobile && (

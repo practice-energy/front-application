@@ -86,7 +86,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
       const { isCollapsed } = event.detail
       setIsAnimating(true)
 
-      const targetWidth = isCollapsed ? 0 : 320
+      const targetWidth = isCollapsed ? 0 : 400
       setSidebarWidth(targetWidth)
 
       setTimeout(() => {

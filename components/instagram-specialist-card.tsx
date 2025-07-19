@@ -76,9 +76,9 @@ export function InstagramSpecialistCard({
     <>
       <div className="flex items-start w-full max-w-md mx-auto">
         {/* Карточка специалиста */}
-        <div className="w-full min-w-[240px] max-w-sm relative">
+        <div className="relative">
           <div
-              className="bg-neutral-50 rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
+              className="bg-neutral-50 w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
               onClick={handleCardClick}
               onTouchEnd={doubleTapHandler}
           >
@@ -101,7 +101,7 @@ export function InstagramSpecialistCard({
             </div>
 
             {/* Content */}
-            <div className="px-2 pt-3">
+            <div className="px-2 pt-3 h-[170px]">
               <div className="flex justify-between items-start gap-2">
                 <div className="flex-1">
                   <div className="flex flex-row mb-2">

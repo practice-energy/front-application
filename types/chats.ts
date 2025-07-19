@@ -9,6 +9,7 @@ export interface Message {
   services?: Service[]
   files?: File[]
   replyTo?: string
+  aiMessageType?: "info" | "warning" | "service"
 }
 
 export type Chat = {

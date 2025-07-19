@@ -40,6 +40,7 @@ export function MessageList({
               ? chat.footerContent
               : undefined
           }
+          aiMessageType={message.aiMessageType}
         />
       )),
     [chat, specialistId, onSpecialistClick, onServiceClick, onShare, onRegenerate],

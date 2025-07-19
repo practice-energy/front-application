@@ -4,7 +4,7 @@ import type React from "react"
 
 import Image from "next/image"
 import { useState } from "react"
-import {Archive, VolumeX, Bot, MessageSquareOff} from "lucide-react"
+import {MessageSquareOff} from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ChatItemProps } from "../types/sidebar.types"
 
@@ -41,11 +41,11 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                   ? ""
                   : isActive
                       ? "bg-white shadow-md shadow-violet-50"
-                      : "hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:shadow-sm",
+                      : "hover:bg-violet-600 hover:shadow-sm hover:bg-opacity-5",
           )}
           onClick={() => onChatClick(chat.id)}
       >
-        <div className={cn("flex items-start w-full", isMobile ? "gap-1.5" : "gap-3")}>
+        <div className={cn("flex items-start w-full, hover:bg-opacity-100", isMobile ? "gap-1.5" : "gap-3")}>
           {/* Profile Image - spans all three rows */}
           <div className={cn(
               "flex-shrink-0 flex items-center",
@@ -74,18 +74,21 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           <div className="flex-1 min-w-0 flex flex-col">
             {/* Row 1: Title and Status */}
             <div className="flex items-center justify-between mt-1.5">
-              <h3 className="text-base font-medium truncate flex-1">{chat.title}</h3>
+              <h3 className={cn("text-base font-medium truncate flex-1",
+
+              )}>{chat.title}</h3>
               <div className="flex items-center gap-1 flex-shrink-0 pl-1">
                 {chat.status && (
                     <>
-                  <span className="text-accent text-gray-700 opacity-80 whitespace-nowrap">
-                    {chat.status === "waiting" ? "Ожидает" : chat.status === "confirmed" ? "Подтвержден" : chat.status}
-                  </span>
+                      <span className="text-accent text-gray-700 opacity-80 whitespace-nowrap">
+                        {chat.status === "waiting" ? "Ожидает" : chat.status === "confirmed" ? "Подтвержден" : chat.status === "request" ? "Запрос" : ""}
+                      </span>
                       <div
                           className={cn(
                               "w-4 h-4 rounded-sm flex-shrink-0",
                               chat.status === "waiting" && "bg-pink-500",
                               chat.status === "confirmed" && "bg-teal-400",
+                              chat.status === "request" && "bg-neutral-300",
                           )}
                       />
                     </>

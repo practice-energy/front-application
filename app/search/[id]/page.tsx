@@ -219,7 +219,7 @@ export default function SearchPage() {
                 dynamicWidth={true}
                 placeholder={"Найти специалистов..."}
                 onCancelReply={() => {}}
-                chatTitle="Аллюра"
+                chatTitle="Alura"
               />
             </div>
           </div>

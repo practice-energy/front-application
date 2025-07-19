@@ -96,6 +96,7 @@ const config: Config = {
           "text-active": "#ffffff",
           border: "#e5e7eb",
           "border-active": "#8b5cf6",
+          borderRadius: "calc(var(--radius) - 4px)",
           dark: {
             DEFAULT: "#374151",
             hover: "#7c3aed",
@@ -104,7 +105,6 @@ const config: Config = {
             "text-active": "#ffffff",
             border: "#4b5563",
             "border-active": "#8b5cf6",
-            borderRadius: "calc(var(--radius) - 4px)",
           },
         },
       },
@@ -112,7 +112,7 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        button: "calc(var(--radius) - 4px)", // Добавлен специальный радиус для кнопок
+        DEFAULT: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {

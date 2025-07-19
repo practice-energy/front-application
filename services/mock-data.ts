@@ -52,7 +52,7 @@ export const mockUser: User = {
   timezone: "GMT+3",
   createdAt: new Date(2023, 6, 10, 11, 0),
   tier: "basic",
-  isSpecialist: false,
+  isSpecialist: true,
   bio: "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation.",
   education: [
     {
@@ -372,6 +372,17 @@ export const mockSpecialists: Specialist[] = [
         reviews: [],
       },
     ],
+    skills: ["Ковыряться в носу", "Пить зеленеую фею литрами", "Поддерживать себя", "Завтракать пивчканским"],
+    certifcates: [
+      {
+        description: "Обучение в карьерном росте и личностном развитии",
+        certificate: null,
+      },
+      {
+        description: "Курсы повышения квалификации министерства магии",
+        certificate: null
+      }
+    ],
     likes: 1488,
   },
   {
@@ -394,6 +405,17 @@ export const mockSpecialists: Specialist[] = [
     ],
     experience: [],
     services: [],
+    skills: ["Ковыряться в носу", "Пить зеленеую фею литрами", "Поддерживать себя", "Завтракать пивчканским"],
+    certifcates: [
+      {
+        description: "Обучение в карьерном росте и личностном развитии",
+        certificate: null,
+      },
+      {
+        description: "Курсы повышения квалификации министерства магии",
+        certificate: null
+      }
+    ],
     likes: 1337,
   },
 ]
@@ -459,6 +481,13 @@ export const mockChatData: Chat[] = [
         type: "user",
         content: "Отлично! Может быть завтра вечером?",
         timestamp: Date.now() - 1000 * 60 * 30,
+      },
+      {
+        id: uuidv4(),
+        type: "assistant",
+        content: "Изи родная, погнали?",
+        timestamp: Date.now() - 1000 * 60 * 119,
+        aiMessageType: "service",
       },
     ],
     isAI: false,

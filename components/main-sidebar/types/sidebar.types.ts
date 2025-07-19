@@ -9,7 +9,7 @@ export interface Chat {
   avatar?: string
   isAI?: boolean
   isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | null
+  status?: "waiting" | "confirmed" | "request"
   lastMessage?: string
   timestamp?: string
   unreadCount?: number

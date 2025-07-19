@@ -89,13 +89,8 @@ export function InstagramServiceCard({
     }
   }
 
-  // Truncate long text
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
-  }
-
   return (
-    <div className="w-full min-w-[250px] max-w-sm mx-auto relative">
+    <div className="w-[240px] h-[330px] relative">
       <div
         className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600"
         onClick={handleCardClick}
@@ -108,48 +103,14 @@ export function InstagramServiceCard({
             alt={service.title}
             className="w-full h-full object-cover"
           />
-
-          {/* Double Tap Like Animation */}
-          {showLikeAnimation && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="bg-violet-600 rounded-sm p-2">
-                <Pentagram size={72} weight="fill" className="text-white animate-ping" />
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Content */}
         <div className="p-4">
           <div className="flex justify-between items-start">
             {/* Service Name - truncated */}
-            <h3 className="font-bold text-lg text-gray-900 dark:text-white transition-colors duration-300 flex-1 pr-2">
-              {truncateText(service.title, 50)}
+            <h3 className="font-bold text-lg text-gray-900 dark:text-white transition-colors duration-300 flex-1 pr-2 line-clamp-1 truncate leading-relaxed">
             </h3>
-
-            {/* Star Button - only show when not in chat context */}
-            {!showActionButtons && (
-                <Button
-                    type="button"
-                    size="sm"
-                    onClick={handleLikeClick}
-                    className={`
-                rounded-sm h-9 w-9 flex items-center justify-center border transition-colors duration-200
-                ${
-                        liked
-                            ? "bg-violet-600 border-violet-600 hover:bg-violet-500"
-                            : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-violet-50 dark:hover:bg-violet-700"
-                    }
-                active:bg-violet-600 dark:active:bg-violet-600
-                active:text-white dark:active:text-white
-                active:border-violet-600 dark:active:border-violet-600
-                text-black dark:text-white
-                focus:outline-none
-              `}
-                >
-                  <PentagramIcon size={20} className={cn(liked ? "text-white" : "text-gray-600 dark:text-gray-400")} />
-                </Button>
-            )}
           </div>
 
           {/* Duration and Price - moved price to left with gap-3 */}
@@ -165,78 +126,11 @@ export function InstagramServiceCard({
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed transition-colors duration-300">
-            {truncateText(service.description, 80)}
+          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-1 truncate leading-relaxed transition-colors duration-300">
+            service.description
           </p>
         </div>
       </div>
-
-      {/* Action Buttons - positioned on the right side when in chat context */}
-      {showActionButtons && (
-        <div className="absolute top-4 right-4 flex flex-col gap-2">
-          {/* Star Button */}
-          <Button
-            type="button"
-            size="sm"
-            onClick={handleLikeClick}
-            className={`
-              rounded-sm h-9 w-9 flex items-center justify-center border transition-colors duration-200 shadow-md
-              ${
-                liked
-                  ? "bg-violet-600 border-violet-600 hover:bg-violet-500"
-                  : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-violet-50 dark:hover:bg-violet-700"
-              }
-              active:bg-violet-600 dark:active:bg-violet-600
-              active:text-white dark:active:text-white
-              active:border-violet-600 dark:active:border-violet-600
-              text-black dark:text-white
-              focus:outline-none
-            `}
-            title="Сохранить в избранное"
-          >
-            <Pentagram
-              size={16}
-              weight={liked ? "fill" : "regular"}
-              className={cn(liked ? "text-white" : "text-gray-600 dark:text-gray-400")}
-            />
-          </Button>
-
-          {/* Reply Button - only show if specialistId is provided */}
-          {specialistId && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={handleReply}
-              className="rounded-sm h-9 w-9 flex items-center justify-center border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-md transition-colors duration-200"
-              title="Написать специалисту"
-            >
-              <Reply size={16} className="text-gray-600 dark:text-gray-400" />
-            </Button>
-          )}
-
-          {/* Share Button */}
-          <Button
-            type="button"
-            size="sm"
-            onClick={handleShare}
-            className="rounded-sm h-9 w-9 flex items-center justify-center border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-md transition-colors duration-200"
-            title="Поделиться"
-          >
-            <Share size={16} className="text-gray-600 dark:text-gray-400" />
-          </Button>
-
-          {/* Copy Button */}
-          <Button
-            type="button"
-            size="sm"
-            onClick={handleCopyLink}
-            className="rounded-sm h-9 w-9 flex items-center justify-center border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-md transition-colors duration-200"
-            title="Копировать ссылку"
-          >
-            <Copy size={16} className="text-gray-600 dark:text-gray-400" />
-          </Button>
-        </div>
-      )}
     </div>
   )
 }

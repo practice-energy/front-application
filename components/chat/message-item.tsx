@@ -3,8 +3,8 @@
 import React, { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Copy, Share, Paperclip } from "lucide-react"
-import { ArrowPathIcon } from "@heroicons/react/24/outline"
+import {Copy, Share, Paperclip, Flame, Check} from "lucide-react"
+import {ArrowPathIcon, ClockIcon} from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
@@ -194,30 +194,41 @@ export const MessageItem = React.memo(
           {isAssistant && !isUser && (
             <div
               className={cn(
-                "border-t border-gray-200 dark:border-gray-700 mt-3 w-full",
+                "border-t border-gray-200 dark:border-gray-700 mt-2 w-full",
                 aiMessageType === "service" && "border-violet-600",
                 aiMessageType === "warning" && "border-pink-500",
               )}
             />
           )}
 
-          <div className="flex items-center mt-2 w-full">
+          <div className="flex justify-between pt-2 w-full">
             {aiMessageType === "service" ? (
               // Service-specific buttons
-              <div className="flex gap-3 ml-auto">
-                <button className="flex items-center gap-2 px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors duration-200">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H11V21H5V3H13V9H21ZM14 10V12H22V10H14ZM14 14V16H22V14H14ZM14 18V20H22V18H14Z" />
-                  </svg>
-                  <span className="text-sm font-medium">Сжечь</span>
-                </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" />
-                  </svg>
-                  <span className="text-sm font-medium">Подтвердить</span>
-                </button>
-              </div>
+                <div className="flex justify-between items-center w-full pt-2">
+                  {/* Кнопка "Сжечь" - прижата к левому краю */}
+                  <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => onRegenerate(message)}
+                        className="flex rounded-sm w-8 h-8 bg-pink-500 hover:bg-pink-600 items-center justify-center"
+                        title="Regenerate response"
+                    >
+                      <Flame className="w-6 h-6 text-white rounded-sm" />
+                    </button>
+                    <span className="text-base whitespace-nowrap">Сжечь</span>
+                  </div>
+
+                  {/* Кнопка "Подтвердить" - прижата к правому краю */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-base whitespace-nowrap">Подтвердить</span>
+                    <button
+                        onClick={() => onRegenerate(message)}
+                        className="flex rounded-sm bg-teal-400 hover:bg-teal-500 w-8 h-8 items-center justify-center"
+                        title="Confirm"
+                    >
+                      <Check className="w-6 h-6 text-white rounded-sm" />
+                    </button>
+                  </div>
+                </div>
             ) : (
               // Regular action buttons
               <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
