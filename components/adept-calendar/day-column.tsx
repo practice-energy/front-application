@@ -13,7 +13,7 @@ interface DayColumnProps {
 }
 
 export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColumnProps) {
-  // Create 48 half-hour slots (30 minutes each)
+  // Create 48 half-hour slots (24 hours * 2)
   const halfHourSlots = Array.from({ length: 48 }, (_, i) => i)
 
   // Format day header
@@ -56,10 +56,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
       const bookingDate = new Date(booking.date)
       const bookingHour = bookingDate.getHours()
       const bookingMinutes = bookingDate.getMinutes()
-
-      // Convert booking time to half-hour slot index
       const bookingSlotIndex = bookingHour * 2 + (bookingMinutes >= 30 ? 1 : 0)
-
       return bookingSlotIndex === slotIndex
     })
   }
@@ -71,13 +68,13 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
       const bookingDate = new Date(booking.date)
       const bookingHour = bookingDate.getHours()
       const bookingMinutes = bookingDate.getMinutes()
-
-      // Convert booking time to half-hour slot index
       const bookingSlotIndex = bookingHour * 2 + (bookingMinutes >= 30 ? 1 : 0)
-
-      return slotIndex > bookingSlotIndex && slotIndex < bookingSlotIndex + booking.slots
+      const bookingEndSlot = bookingSlotIndex + booking.slots
+      return slotIndex > bookingSlotIndex && slotIndex < bookingEndSlot
     })
   }
+
+  const halfSlotHeight = slotHeight / 2
 
   return (
     <div className="flex-1 flex-shrink-1">
@@ -92,18 +89,17 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
           const booking = getBookingForSlot(slotIndex)
           const isContinuation = isBookingContinuation(slotIndex)
 
-          // Calculate hour for TimeSlot component (only show on even slots - full hours)
+          // Calculate hour for TimeSlot (only show on full hours)
           const hour = Math.floor(slotIndex / 2)
           const isFullHour = slotIndex % 2 === 0
 
           return (
-            <div key={slotIndex} className="relative" style={{ height: `${slotHeight / 2}px` }}>
-              {!isContinuation && isFullHour && <TimeSlot hour={hour} slotHeight={slotHeight / 2} />}
-              {!isContinuation && !isFullHour && <div className="absolute inset-0 border-t border-gray-100" />}
+            <div key={slotIndex} className="relative" style={{ height: `${halfSlotHeight}px` }}>
+              {!isContinuation && isFullHour && <TimeSlot hour={hour} slotHeight={halfSlotHeight} />}
 
               {booking && (
-                <div className="absolute inset-0 z-10">
-                  <BookingCard booking={booking} slotHeight={(slotHeight / 2) * booking.slots} />
+                <div className="absolute inset-0 z-10" style={{ height: `${booking.slots * halfSlotHeight}px` }}>
+                  <BookingCard booking={booking} slotHeight={booking.slots * halfSlotHeight} />
                 </div>
               )}
             </div>
