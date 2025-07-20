@@ -18,6 +18,28 @@ const config: Config = {
         bold: ["16px", { fontWeight: "700" }],
         description: ["14px", { fontWeight: "900" }],
         accent: ["12px", { fontWeight: "600", color: "#374151" }],
+        stat: [
+          "30px",
+          {
+            fontWeight: "700",
+            lineHeight: "1",
+          }
+        ],
+        statDescription: [
+          "14px",
+          {
+            fontWeight: "900",
+            lineHeight: "1.25",
+          }
+        ],
+        statSubtext: [
+          "12px",
+          {
+            fontWeight: "600",
+            lineHeight: "1",
+            color: "#374151"
+          }
+        ]
       },
       backgroundImage: {
         "allura-pattern": "url('/allura-logo.svg')",

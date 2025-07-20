@@ -1,57 +1,48 @@
-import type { ComponentType } from "react"
-
-export interface TopStat {
-  value: number | string
-  label: string
-  subtext: string
-  icon: ComponentType<{ className?: string }>
-}
-
-export interface OverviewStat {
-  value: number | string
-  label: string
-  icon: ComponentType<{ className?: string }>
-}
-
-export interface ActivityStat {
-  value: number | string
-  label: string
-  icon: ComponentType<{ className?: string }>
-  isCurrency?: boolean
-}
-
 export interface PracticeOverview {
-  title: string
-  subtitle: string
-  stats: OverviewStat[]
+  confirmedSlots: number
+  newInitiants: number
+  personalMeetings: number
+  repeatingMeetings: number
+}
+
+export interface TopStats {
+  activePracticesCount: number
+  unreadCount: number
+  issuesCount: number
+  slotsApprovedCount: number
+  unreadsForTodayactivities: number
 }
 
 export interface ActivityOverview {
-  title: string
-  stats: ActivityStat[]
+  fillRate: number
+  totalEarningsPredict: number
 }
 
 export interface UpcomingActivity {
   id: string
-  date: Date
+  start: Date
+  end: Date
+  duration: number
+  format: "video" | "in-person"
+  status?: "waiting" | "confirmed" | "request"
   client: {
     id: string
     name: string
+    avatar?: string
   }
+  isRepeat: boolean
   service: {
     id: string
     name: string
     price: number
   }
-  format: "video" | "in-person"
 }
 
 export interface DashboardStats {
-  topStats: TopStat[]
+  topStats: TopStats
   practiceOverview: PracticeOverview
   activityOverview: ActivityOverview
   upcomingActivities: {
-    title: string
     activities: UpcomingActivity[]
   }
 }

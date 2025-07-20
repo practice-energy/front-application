@@ -4,7 +4,7 @@ import { useState } from "react"
 import type { Booking } from "@/types/booking"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
-import { useMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface BookingCardProps {
   booking: Booking
@@ -13,7 +13,7 @@ interface BookingCardProps {
 
 export function BookingCard({ booking, slotHeight }: BookingCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const isMobile = useMobile()
+  const isMobile = useIsMobile()
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("ru-RU", {
@@ -30,7 +30,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
         style={{ height: `${booking.slots * slotHeight}px` }}
         onClick={() => setIsModalOpen(true)}
       >
-        {formatTime(booking.startTime)}
+        {formatTime(booking.date)}
       </div>
     )
   }
