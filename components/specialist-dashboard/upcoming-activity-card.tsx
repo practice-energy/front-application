@@ -6,6 +6,7 @@ import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
 import { mockSidebarChats } from "@/services/mock-data"
 import { useRouter } from "next/navigation"
+import { Comments } from "@nuclio/react"
 
 interface UpcomingActivityCardProps {
   startTime: string
@@ -80,7 +81,7 @@ export function UpcomingActivityCard({
             onClick={handleChatClick}
             className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-0.5 mr-4 text-gray-600 shadow-sm"
           >
-            <span className="text-xs">💬</span>
+            <Comments size={18} className="h-5 w-5" />
           </button>
         </div>
       </div>
