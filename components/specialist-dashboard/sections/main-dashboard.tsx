@@ -164,38 +164,46 @@ export function MainDashboard() {
             </CardHeader>
             <CardContent className="p-0">
               {stats.upcomingActivities.activities.length > 0 ? (
-                <ScrollArea className="h-[470px] px-6 pb-6">
-                  <div className="space-y-2">
-                    {stats.upcomingActivities.activities.map((activity, index) => {
-                      // Check if this activity starts when the previous one ends
-                      const isBackToBack =
-                        index > 0 &&
-                        stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+                <div className="relative">
+                  {/* Top gradient */}
+                  <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
 
-                      return (
-                        <div key={activity.id} className="pb-1">
-                          <UpcomingActivityCard
-                            startTime={activity.start.toLocaleTimeString("ru-RU", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                            endTime={activity.end.toLocaleTimeString("ru-RU", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                            client={activity.client}
-                            service={activity.service}
-                            duration={`${activity.duration} мин`}
-                            format={activity.format}
-                            isBackToBack={isBackToBack}
-                            isRepeat={activity.isRepeat}
-                            status={activity.status}
-                          />
-                        </div>
-                      )
-                    })}
-                  </div>
-                </ScrollArea>
+                  <ScrollArea className="h-[470px] px-6 pb-6">
+                    <div className="space-y-2">
+                      {stats.upcomingActivities.activities.map((activity, index) => {
+                        // Check if this activity starts when the previous one ends
+                        const isBackToBack =
+                          index > 0 &&
+                          stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+
+                        return (
+                          <div key={activity.id} className="pb-1">
+                            <UpcomingActivityCard
+                              startTime={activity.start.toLocaleTimeString("ru-RU", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                              endTime={activity.end.toLocaleTimeString("ru-RU", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                              client={activity.client}
+                              service={activity.service}
+                              duration={`${activity.duration} мин`}
+                              format={activity.format}
+                              isBackToBack={isBackToBack}
+                              isRepeat={activity.isRepeat}
+                              status={activity.status}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </ScrollArea>
+
+                  {/* Bottom gradient */}
+                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-[600px] px-6">
                   <Calendar className="w-12 h-12 mb-2" />
