@@ -6,16 +6,17 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { ShareModal } from "@/components/modals/share-modal"
-import { mockSavedSpecialists, getChatDataById, addMessageToChat } from "@/services/mock-data"
+import { mockSavedSpecialists } from "@/services/mock-data"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
+import { useAdeptChats } from "@/stores/chat-store"
 
 import { MessageList } from "@/components/chat/message-list"
 import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-export default function SearchPage() {
+const SearchPage = () => {
   const params = useParams()
   const router = useRouter()
   const [currentChat, setCurrentChat] = useState<Chat | null>(null)
@@ -27,6 +28,7 @@ export default function SearchPage() {
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
+  const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -79,12 +81,11 @@ export default function SearchPage() {
           specialists: selectedSpecialists,
         }
 
-        setCurrentChat((prevChat) => {
-          if (!prevChat) return null
-          const finalChat = addMessageToChat(prevChat, assistantMessage)
-          finalChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
-          return finalChat
-        })
+        const updatedChat = addMessageToChat(currentChat.id, assistantMessage)
+        if (updatedChat) {
+          updatedChat.footerContent = "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!"
+          setCurrentChat(updatedChat)
+        }
 
         setIsLoading(false)
       }, 1500)
@@ -146,19 +147,20 @@ export default function SearchPage() {
       setCurrentChat((prevChat) => {
         const isNewChat = !prevChat || prevChat.messages.length === 0
 
-        const chatToUpdate = prevChat ?? {
-          id: params.id as string,
-          title: "Новый чат",
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          messages: [],
-          isAI: true,
-          createdAt: Date.now(),
-          isMuted: false,
-          description: "",
-        }
-        const updatedChat = addMessageToChat(chatToUpdate, userMessage)
-
         if (isNewChat) {
+          const newChat: Chat = {
+            id: params.id as string,
+            title: title,
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            messages: [],
+            isAI: true,
+            createdAt: Date.now(),
+            isMuted: false,
+            description: query,
+          }
+          addChat(newChat)
+          const updatedChat = addMessageToChat(newChat.id, userMessage)
+
           window.dispatchEvent(
             new CustomEvent("addNewChatToSidebar", {
               detail: {
@@ -172,11 +174,13 @@ export default function SearchPage() {
               },
             }),
           )
+          return updatedChat
+        } else {
+          return addMessageToChat(prevChat.id, userMessage)
         }
-        return updatedChat
       })
     },
-    [params.id], // Dependency on currentChat is removed
+    [params.id],
   )
 
   return (
@@ -213,12 +217,12 @@ export default function SearchPage() {
         <div className="absolute bottom-0 left-0 right-0 z-10">
           <div className="pb-12">
             <Mufi
-                onSearch={handleSearch}
-                showHeading={false}
-                dynamicWidth={true}
-                placeholder={"Найти специалистов..."}
-                onCancelReply={() => {}}
-                chatTitle="Alura"
+              onSearch={handleSearch}
+              showHeading={false}
+              dynamicWidth={true}
+              placeholder={"Найти специалистов..."}
+              onCancelReply={() => {}}
+              chatTitle="Alura"
             />
           </div>
         </div>
@@ -229,3 +233,5 @@ export default function SearchPage() {
     </div>
   )
 }
+
+export default SearchPage
