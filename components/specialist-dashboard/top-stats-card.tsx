@@ -1,24 +1,28 @@
-import type { ReactNode } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import type React from "react"
+import { cn } from "@/lib/utils"
 
 interface TopStatsCardProps {
-  icon: ReactNode
+  icon: React.ReactNode
   title: string
   subtitle: string
 }
 
 export function TopStatsCard({ icon, title, subtitle }: TopStatsCardProps) {
   return (
-    <Card className="border-0 shadow-md">
-      <CardContent className="p-4">
-        <div className="flex items-start space-x-3">
-          <div className="flex-shrink-0">{icon}</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-black leading-tight">{title}</p>
-            <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+    <div className={cn("flex items-center w-full gap-3 shadow-md h-[72px] p-3 rounded-sm md:w-full")}>
+      <div className={cn("flex items-center justify-center h-10 w-10 rounded-sm bg-neutral-100")}>{icon}</div>
+
+      <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-medium truncate flex-1">{title}</h3>
+        </div>
+
+        <div className="flex items-start">
+          <div className="flex-1 min-w-0 overflow-hidden">
+            <p className="text-gray-600 leading-relaxed line-clamp-1 w-full">{subtitle}</p>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

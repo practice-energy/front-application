@@ -1,33 +1,31 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { MoreHorizontal, Repeat2, User } from "lucide-react"
+"use client"
+
+import { Repeat2, TimerReset, MonitorPlayIcon as TvMinimalPlay, User, Users, MessageSquareText } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-
-interface Client {
-  name: string
-  avatar?: string
-}
-
-interface Service {
-  name: string
-  price: number
-}
-
-interface Status {
-  text: string
-  color: string
-}
+import Image from "next/image"
+import { ActivityStatus } from "@/components/ui/activity-status"
+import { mockSidebarChats } from "@/services/mock-data"
+import { useRouter } from "next/navigation"
 
 interface UpcomingActivityCardProps {
   startTime: string
   endTime: string
-  client: Client
-  service: Service
+  client: {
+    id: string
+    name: string
+    avatar?: string
+  }
+  service: {
+    id: string
+    name: string
+    price: number
+    description: string
+  }
   duration: string
   format: string
   isBackToBack?: boolean
   isRepeat?: boolean
-  status: Status
+  status?: "waiting" | "confirmed" | "request"
 }
 
 export function UpcomingActivityCard({
@@ -41,62 +39,80 @@ export function UpcomingActivityCard({
   isRepeat = false,
   status,
 }: UpcomingActivityCardProps) {
+  const router = useRouter()
+
+  const handleChatClick = () => {
+    // Find chat by client.id + service.id combination
+    const chat = mockSidebarChats.find((chat) => chat.clientId === client.id && chat.serviceId === service.id)
+
+    if (chat) {
+      router.push(`/search/${chat.id}`)
+    }
+  }
+
   return (
-    <div className="h-21 p-1 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
-      <div className="flex h-full">
-        {/* Left column - Time and Avatar */}
-        <div className="flex flex-col items-center justify-between py-1 pr-2">
-          <div className={`text-xs font-medium ${isBackToBack ? "text-pink-500" : "text-gray-900"}`}>{startTime}</div>
-          <Avatar className="w-6 h-6">
-            <AvatarImage src={client.avatar || "/placeholder.svg"} alt={client.name} />
-            <AvatarFallback className="text-xs">{client.name.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="text-xs text-gray-500">{endTime}</div>
+    <div className="flex items-start gap-3 p-2 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5">
+      {/* Left column - times and avatar */}
+      <div className="flex flex-col items-center min-w-[40px]">
+        <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>
+        <Image
+          src={client.avatar || "/practice-logo.svg"}
+          alt={client.name}
+          width={36}
+          height={36}
+          className="rounded-sm object-cover"
+        />
+        <div className="text-sm text-gray-500">{endTime}</div>
+      </div>
+
+      {/* Service and client info - расширенная секция */}
+      <div className="flex-1 ml-3 min-w-0">
+        <div className="pb-1">
+          <div className="text-sm font-medium leading-relaxed line-clamp-2 h-10">{service.name}</div>
         </div>
-
-        {/* Main content */}
-        <div className="flex-1 ml-5 py-1">
-          <div className="space-y-1">
-            <div className="text-sm font-medium text-gray-900 line-clamp-2">{service.name}</div>
-            <div className="pb-2">
-              <div className="text-xs text-gray-600">{client.name}</div>
-            </div>
+        <div className="flex items-center justify-between pb-2">
+          <div className="text-sm text-gray-600 leading-relaxed line-clamp-1">
+            {client.name} {service.description}
           </div>
+          <button onClick={handleChatClick} className="ml-2 p-1 hover:bg-gray-100 rounded-sm transition-colors">
+            <MessageSquareText size={16} className="text-gray-500" />
+          </button>
         </div>
+      </div>
 
-        {/* Right column - Tags and Status */}
-        <div className="flex flex-col justify-between items-end py-1 pl-2">
-          {/* Status row */}
-          <div className="flex items-center space-x-1">
-            <span className="text-xs text-gray-600">{status.text}</span>
-            <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: status.color }} />
-          </div>
+      {/* Duration and format tags */}
+      <div className="flex flex-col gap-1 items-end mr-3 ml-auto">
+        <div className="inline-flex w-24 shadow-sm items-center justify-center rounded-sm p-1.5 gap-1 bg-white">
+          <TimerReset size={16} />
+          {duration}
+        </div>
+        <div className="inline-flex w-24 shadow-sm items-center justify-center rounded-sm p-1.5 gap-1 bg-white">
+          {format === "online" ? (
+            <>
+              <TvMinimalPlay size={16} />
+              Видео
+            </>
+          ) : (
+            <>
+              <Users size={16} />
+              Очно
+            </>
+          )}
+        </div>
+      </div>
 
-          {/* Icon row */}
-          <div className="flex items-center">
-            {isRepeat ? <Repeat2 size={14} className="text-gray-500" /> : <User size={14} className="text-gray-500" />}
-          </div>
+      {/* Right column - фиксированная ширина */}
+      <div className="flex flex-col w-24 items-end gap-2">
+        {/* Status line */}
+        <ActivityStatus status={status} />
 
-          {/* Price row */}
-          <div className="flex items-center space-x-1">
-            <span className="text-xs font-medium text-gray-900">{service.price}</span>
-            <RubleIcon size={12} className="text-gray-900" />
-          </div>
+        {/* Repeat/User icon line */}
+        <div>{isRepeat ? <Repeat2 size={18} /> : <User size={18} />}</div>
 
-          {/* Tags row */}
-          <div className="flex flex-col space-y-1">
-            <Badge variant="secondary" className="h-8 text-xs px-2">
-              {duration}
-            </Badge>
-            <Badge variant="secondary" className="h-8 text-xs px-2">
-              {format}
-            </Badge>
-          </div>
-
-          {/* Menu dots */}
-          <div className="flex items-center">
-            <MoreHorizontal size={14} className="text-gray-400" />
-          </div>
+        {/* Price line */}
+        <div className="flex items-center text-base">
+          <span>{service.price}</span>
+          <RubleIcon size={18} bold={false} />
         </div>
       </div>
     </div>

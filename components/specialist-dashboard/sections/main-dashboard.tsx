@@ -162,14 +162,14 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent className="p-0 relative">
+            <CardContent className="p-0">
               {stats.upcomingActivities.activities.length > 0 ? (
-                <>
+                <div className="relative">
                   {/* Top gradient */}
-                  <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white via-white/80 to-transparent z-10 pointer-events-none" />
+                  <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
 
                   <ScrollArea className="h-[470px] px-6 pb-6">
-                    <div className="space-y-2 pt-2 pb-2">
+                    <div className="space-y-2">
                       {stats.upcomingActivities.activities.map((activity, index) => {
                         // Check if this activity starts when the previous one ends
                         const isBackToBack =
@@ -202,10 +202,10 @@ export function MainDashboard() {
                   </ScrollArea>
 
                   {/* Bottom gradient */}
-                  <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none" />
-                </>
+                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-[470px] px-6">
+                <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-[600px] px-6">
                   <Calendar className="w-12 h-12 mb-2" />
                   <p>Запланированные активности появятся здесь</p>
                 </div>
