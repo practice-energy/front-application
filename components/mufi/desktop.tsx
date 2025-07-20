@@ -327,7 +327,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                   <button
                     type="button"
                     onClick={openFileDialog}
-                    className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white active:border-violet-600 dark:active:border-violet-600 px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group border"
+                    className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white  px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm"
                   >
                     <Paperclip className="w-4 h-4" />
                   </button>
@@ -336,10 +336,10 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                   <button
                     type="button"
                     onClick={togglePractice}
-                    className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group ${
+                    className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                       isPractice
-                        ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-500 border"
-                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white border"
+                        ? "bg-violet-600 text-white hover:bg-violet-500"
+                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
                     }`}
                   >
                     <Image
@@ -354,17 +354,17 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                 </div>
 
                 {/* Send Button */}
-                <Button
+                <button
                   type="submit"
                   disabled={!canSubmit}
-                  className={`h-9 w-9 p-0 ${
+                  className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
                     canSubmit
                       ? "bg-violet-600 hover:bg-violet-700 text-white"
                       : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
                   }`}
                 >
                   <ArrowUp className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
             </form>
 

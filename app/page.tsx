@@ -5,11 +5,15 @@ import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { mockChatData } from "@/services/mock-data"
+import {useSidebar} from "@/contexts/sidebar-context";
+import {cn} from "@/lib/utils";
 
 export default function HomePage() {
   const router = useRouter()
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
+    const { isCollapsed } = useSidebar()
+
     const newChatId = uuidv4()
     const userMessage: Message = {
       id: uuidv4(),
@@ -48,25 +52,29 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 flex flex-col">
-      <main className="flex-grow relative flex flex-col justify-end pb-80">
-        {/* Общий контейнер для логотипа и поиска */}
-        <div className="relative px-4 sm:px-6 lg:px-8">
-          {/* Увеличенный логотип с отступом снизу */}
-          <div className="max-w-4xl mx-auto text-center">
+      <div className="flex min-h-screen bg-white dark:bg-gray-900 transition-all duration-300">
+        {/* Основной контент */}
+        <div className="flex-1 relative min-h-screen">
+          {/* Скроллящийся контент с логотипом */}
+          <div className="pt-48 pb-96 text-center">
             <Image
-              src="/practice-logo.svg"
-              alt="Practice Logo"
-              width={180} // Увеличено с 120 до 180
-              height={180} // Увеличено с 120 до 180
-              className="mx-auto"
+                src="/practice-logo.svg"
+                alt="Practice Logo"
+                width={180}
+                height={180}
+                className="mx-auto"
             />
           </div>
 
-          {/* Контейнер для поиска - теперь ниже логотипа */}
-            <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" />
+          {/* Mufi - абсолютно позиционирован, но в потоке контента */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-10">
+            <Mufi
+                onSearch={handleSearch}
+                showHeading={true}
+                chatTitle="Alura"
+            />
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
   )
 }

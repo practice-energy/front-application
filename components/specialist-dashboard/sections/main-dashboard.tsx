@@ -130,7 +130,7 @@ export function MainDashboard() {
           <Card className="border-0 shadow-md ">
             <CardHeader>
               <div className="flex items-center">
-                <CardTitle className="text-lg text-black">Обзор практик</CardTitle>
+                <CardTitle className="text-lg text-black">Обзор активности</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
