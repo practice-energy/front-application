@@ -14,20 +14,20 @@ interface BackButtonProps {
 
 export function BackButton({
                                className = "",
-                               iconClassName = "h-4 w-4",
+                               iconClassName = "h-6 w-6",
                                variant = "ghost",
                                size = "default",
                            }: BackButtonProps) {
     const router = useRouter()
 
     return (
-        <Button
+        <button
             variant={variant}
             size={size}
-            className={`p-3 flex items-center justify-center ${className}`}
+            className={`flex p-3 items-center justify-center ${className}`}
             onClick={() => router.back()}
         >
             <ChevronLeft className={iconClassName} />
-        </Button>
+        </button>
     )
 }

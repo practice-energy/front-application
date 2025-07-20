@@ -1,18 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-
-interface User {
-  email: string
-  name: string
-  isSpecialist?: boolean
-  specialistProfile?: {
-    id: string
-    title: string
-    specialties: string[]
-    status: "pending" | "approved" | "rejected"
-  } | null
-}
+import {User} from "@/types/user";
 
 interface AuthContextType {
   user: User | null

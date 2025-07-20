@@ -142,7 +142,7 @@ export default function HelpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen  dark:bg-gray-900 transition-colors duration-300">
       <main className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8">
         {/* Header Section */}
         <div className="text-center mb-12">

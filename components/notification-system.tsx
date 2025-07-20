@@ -1,84 +1,22 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer"
+import {useCallback, useEffect, useRef, useState} from "react"
+import {Badge} from "@/components/ui/badge"
+import {Button} from "@/components/ui/button"
+import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer"
 import {
-  BellIcon,
   ChatBubbleLeftIcon,
-  ExclamationTriangleIcon,
   ClockIcon,
+  ExclamationTriangleIcon,
   InformationCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-
-// Notification types
-export interface Notification {
-  id: string
-  type: "message" | "email" | "meeting" | "system"
-  title: string
-  message: string
-  timestamp: Date
-  read: boolean
-  actionUrl: string
-  userId?: string
-  metadata?: Record<string, any>
-}
-
-// Mock notifications data with proper timestamps
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "message",
-    title: "New message from Dr. Sarah Williams",
-    message: "You have a new message from Dr. Sarah Williams",
-    timestamp: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
-    read: false,
-    actionUrl: "/search/123",
-    userId: "sarah-williams",
-  },
-  {
-    id: "2",
-    type: "email",
-    title: "Please verify your email address",
-    message: "Please verify your email address to secure your account",
-    timestamp: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
-    read: false,
-    actionUrl: "/profile?section=security",
-  },
-  {
-    id: "3",
-    type: "meeting",
-    title: "Meeting with Elena Rodriguez in 30 minutes",
-    message: "Meeting with Elena Rodriguez in 30 minutes",
-    timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-    read: false,
-    actionUrl: "/search/456",
-    userId: "elena-rodriguez",
-  },
-  {
-    id: "4",
-    type: "message",
-    title: "New message from Marcus Chen",
-    message: "You have a new message from Marcus Chen",
-    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
-    read: true,
-    actionUrl: "/search/789",
-    userId: "marcus-chen",
-  },
-  {
-    id: "5",
-    type: "system",
-    title: "Profile completion bonus available",
-    message: "Complete your profile to earn 50 bonus points",
-    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-    read: true,
-    actionUrl: "/profile?section=overview",
-  },
-]
+import {Bell} from "lucide-react"
+import {useRouter} from "next/navigation"
+import {cn} from "@/lib/utils"
+import {mockNotifications} from "@/services/mock-notification";
+import type {Notification} from "@/types/notification";
+import {BellIcon} from "@heroicons/react/24/outline";
 
 interface NotificationSystemProps {
   className?: string
@@ -167,7 +105,7 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
   const unreadCount = notifications.filter((n) => !n.read).length
 
   const getNotificationIcon = (type: Notification["type"]) => {
-    const iconClass = "h-4 w-4 text-purple-500 dark:text-purple-400"
+    const iconClass = "h-4 w-4 text-violet-600"
 
     switch (type) {
       case "message":
@@ -179,7 +117,7 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
       case "system":
         return <InformationCircleIcon className={iconClass} />
       default:
-        return <BellIcon className={iconClass} />
+        return <Bell className={iconClass} />
     }
   }
 
@@ -268,33 +206,26 @@ export function NotificationSystem({ className }: NotificationSystemProps) {
     <>
       {/* Notification Button */}
       <div className={cn("relative", className)}>
-        <Button
+        <button
           ref={buttonRef}
-          variant="ghost"
-          size="sm"
           onClick={toggleNotifications}
           className={cn(
-            "h-8 w-8 p-0 rounded-sm transition-all duration-200 relative",
-            isOpen
-              ? "border-2 border-purple-600 bg-purple-50 dark:bg-purple-900/20"
-              : "border-2 border-transparent hover:bg-purple-50 dark:hover:bg-purple-900/20",
+            "h-8 w-8 p-0 rounded-sm transition-all duration-200 relative mt-3",
           )}
           aria-label="Notifications"
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
-          <BellIcon className="h-4 w-4" />
+          <Bell className="h-6 w-7" />
           {unreadCount > 0 && (
-            <Badge
+            <div
               className={cn(
-                "absolute -top-1 -right-1 h-5 min-w-[20px] p-0 text-xs bg-purple-600 hover:bg-purple-600 text-white border-2 border-white dark:border-gray-800 flex items-center justify-center",
+                "absolute -top-1 -right-1 w-3 h-3 p-0 text-xs bg-violet-600 hover:bg-violet-600 flex items-center justify-center rounded-sm",
                 hasNewNotifications && "animate-pulse",
               )}
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
+            />
           )}
-        </Button>
+        </button>
 
         {/* Desktop Dropdown */}
         {isOpen && !isMobile && (

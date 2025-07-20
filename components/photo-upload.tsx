@@ -98,7 +98,7 @@ export function PhotoUpload({
         {photos.length > 0 && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-purple-600">
+            <span className="text-sm font-medium">
               {photos.length} of {maxPhotos} photos uploaded
             </span>
                 <button type="button" onClick={clearAllPhotos} className="text-sm text-destructive hover:underline">
