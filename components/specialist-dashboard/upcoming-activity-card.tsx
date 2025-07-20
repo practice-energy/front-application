@@ -1,6 +1,14 @@
 "use client"
 
-import { Repeat2, TimerReset, MonitorPlayIcon as TvMinimalPlay, User, Users, MessageSquareText } from "lucide-react"
+import {
+  Repeat2,
+  TimerReset,
+  MonitorPlayIcon as TvMinimalPlay,
+  User,
+  Users,
+  MessageSquareText,
+  TvMinimalPlayIcon
+} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
@@ -70,32 +78,34 @@ export function UpcomingActivityCard({
         <div className="pb-1">
           <div className="text-sm font-medium leading-relaxed line-clamp-2 h-10">{service.name}</div>
         </div>
-        <div className="flex items-center justify-between pb-2">
-          <div className="text-sm text-gray-600 leading-relaxed line-clamp-1">
-            {client.name} {service.description}
+        <div className="flex flex-row pt-2">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600 leading-relaxed line-clamp-1">
+              {client.name} {service.description}
+            </div>
           </div>
-          <button onClick={handleChatClick} className="ml-2 p-1 hover:bg-gray-100 rounded-sm transition-colors">
-            <MessageSquareText size={16} className="text-gray-500" />
+          <button onClick={handleChatClick} className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-0.5 mr-4 text-gray-600 shadow-sm">
+            <MessageSquareText size={18} className="h-5 w-5"/>
           </button>
         </div>
       </div>
 
       {/* Duration and format tags */}
       <div className="flex flex-col gap-1 items-end mr-3 ml-auto">
-        <div className="inline-flex w-24 shadow-sm items-center justify-center rounded-sm p-1.5 gap-1 bg-white">
+        <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
           <TimerReset size={16} />
-          {duration}
+          <p className="text-gray-600">{duration}</p>
         </div>
-        <div className="inline-flex w-24 shadow-sm items-center justify-center rounded-sm p-1.5 gap-1 bg-white">
-          {format === "online" ? (
+        <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+          {format === "video" ? (
             <>
-              <TvMinimalPlay size={16} />
-              Видео
+              <TvMinimalPlayIcon size={16} />
+              <p className="text-gray-600">Видео</p>
             </>
           ) : (
             <>
               <Users size={16} />
-              Очно
+              <p className="text-gray-600">Очная</p>
             </>
           )}
         </div>
