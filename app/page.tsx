@@ -33,18 +33,10 @@ export default function HomePage() {
       footerContent: "",
     }
 
-    window.dispatchEvent(
-      new CustomEvent("addNewChatToSidebar", {
-        detail: {
-          chat: {
-            ...newChat,
-            isPractice: isPractice,
-          },
-        },
-      }),
-    )
-
+    // Add chat to store
     addChat(newChat)
+
+    // Navigate to the chat page
     router.push(`/search/${newChatId}`)
   }
 

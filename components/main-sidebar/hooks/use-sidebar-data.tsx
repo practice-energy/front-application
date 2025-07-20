@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { groupChatsByTime } from "@/services/mock-data"
 import type { Chat } from "@/types/chats"
 import type { LastReadTimestamps, SectionVisibility } from "@/components/main-sidebar/types/sidebar.types"
@@ -23,7 +23,6 @@ const saveLastReadTimestamps = (timestamps: LastReadTimestamps) => {
 
 export function useSidebarData(pathname: string) {
   const { chats: storeChats } = useAdeptChats()
-  const [newChats, setNewChats] = useState<Chat[]>([])
   const [lastReadTimestamps, setLastReadTimestamps] = useState<LastReadTimestamps>(getLastReadTimestamps())
 
   // Section visibility state - each section maintains its own state
@@ -33,44 +32,6 @@ export function useSidebarData(pathname: string) {
     older: true,
     search: true,
   })
-
-  // Listen for new chats being added from search pages
-  useEffect(() => {
-    const handleAddNewChat = (event: CustomEvent) => {
-      const { chat } = event.detail
-      setNewChats((prev) => {
-        // Check if chat already exists
-        const exists = prev.some((c) => c.id === chat.id)
-        if (exists) return prev
-
-        console.log(chat)
-        console.log(prev)
-
-        // Add new chat to the beginning of the list
-        return [chat, ...prev]
-      })
-    }
-
-    window.addEventListener("addNewChatToSidebar", handleAddNewChat as EventListener)
-
-    return () => {
-      window.removeEventListener("addNewChatToSidebar", handleAddNewChat as EventListener)
-    }
-  }, [])
-
-  // Convert new chats to ChatItem format for display
-  const convertedNewChats: Chat[] = newChats.map((chat) => ({
-    id: chat.id,
-    title: chat.title,
-    description: chat.messages?.length > 0 ? chat.messages[0].content : "Новый чат",
-    avatar: chat.isAI ? "/allura-logo.png" : chat.avatar,
-    timestamp: chat.createdAt,
-    updatedAt: chat.createdAt,
-    isAIEnabled: chat.isAIEnabled,
-    isAI: chat.isAI,
-    isNew: true,
-    status: chat.status
-  }))
 
   // Convert store chats to ChatItem format
   const convertedStoreChats: Chat[] = storeChats.map((chat) => ({
@@ -87,8 +48,8 @@ export function useSidebarData(pathname: string) {
     mode: undefined,
   }))
 
-  // Combine store chats, new chats, and existing sidebar chats
-  const allChats = [...convertedStoreChats]
+  // Use store chats as the source of truth
+  const allChats = convertedStoreChats
 
   // Group chats by time period based on updatedAt
   const groupedChats = groupChatsByTime(allChats)

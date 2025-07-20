@@ -28,7 +28,7 @@ export default function SearchPage() {
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
-  const { getChatDataById, addMessageToChat, addChat, clearChats } = useAdeptChats()
+  const { getChatDataById, addMessageToChat, addChat, updateChat } = useAdeptChats()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -144,44 +144,34 @@ export default function SearchPage() {
         files: files,
       }
 
-      setCurrentChat((prevChat) => {
-        const isNewChat = !prevChat || prevChat.messages.length === 0
+      const chatId = params.id as string
+      const existingChat = getChatDataById(chatId)
 
-        if (isNewChat) {
-          const newChat: Chat = {
-            id: params.id as string,
-            title: "Новый чат",
-            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-            messages: [],
-            isAI: true,
-            createdAt: Date.now(),
-            isMuted: false,
-            description: "",
-          }
-
-          addChat(newChat)
-          const updatedChat = addMessageToChat(newChat.id, userMessage)
-
-          window.dispatchEvent(
-            new CustomEvent("addNewChatToSidebar", {
-              detail: {
-                chat: {
-                  ...updatedChat,
-                  title: title,
-                  description: query,
-                  files: files,
-                  isPractice: isPractice,
-                },
-              },
-            }),
-          )
-          return updatedChat
-        } else {
-          return addMessageToChat(prevChat.id, userMessage)
+      if (!existingChat || existingChat.messages.length === 0) {
+        // Create new chat only if it doesn't exist in store
+        const newChat: Chat = {
+          id: chatId,
+          title: title,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          messages: [userMessage],
+          isAI: true,
+          createdAt: Date.now(),
+          isMuted: false,
+          description: query,
+          hasNew: true,
         }
-      })
+
+        addChat(newChat)
+        setCurrentChat(newChat)
+      } else {
+        // Add message to existing chat
+        const updatedChat = addMessageToChat(chatId, userMessage)
+        if (updatedChat) {
+          setCurrentChat(updatedChat)
+        }
+      }
     },
-    [params.id, addChat, addMessageToChat],
+    [params.id, getChatDataById, addChat, addMessageToChat],
   )
 
   return (
