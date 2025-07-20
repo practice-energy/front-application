@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 
+import {mockChatData} from "@/services/mock-chat";
+
 interface ChatState {
   // Separate chats for different user hats
   adeptChats: Chat[]
@@ -32,7 +34,7 @@ const deepCopy = (obj: any): any => JSON.parse(JSON.stringify(obj))
 export const useChatStore = create(
   persist(
     (set, get) => ({
-      adeptChats: [],
+      adeptChats: mockChatData,
       masterChats: [],
 
       // Adept hat functions

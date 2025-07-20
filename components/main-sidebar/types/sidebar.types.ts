@@ -1,5 +1,4 @@
 import type React from "react"
-import {LucideIcon} from "lucide-react";
 import {Icon} from "@/components/icons/icon-types";
 
 export interface Chat {
@@ -35,13 +34,6 @@ export interface ChatItemProps {
   isMobile: boolean
 }
 
-export interface SearchResultItemProps {
-  result: SearchResult
-  onResultClick: (resultId: string) => void
-  isCollapsed: boolean
-  isMobile: boolean
-}
-
 export interface SectionHeaderProps {
   title: string
   onAddClick?: () => void
@@ -58,8 +50,6 @@ export interface SectionHeaderProps {
 
 export interface SectionContentProps {
   children: React.ReactNode
-  isCollapsed: boolean
-  isMobile: boolean
   sectionKey: string
   sectionVisibility: boolean
 }

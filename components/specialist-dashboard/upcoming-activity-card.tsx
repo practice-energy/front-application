@@ -4,7 +4,6 @@ import {Repeat2, TimerReset, User, Users, TvMinimalPlayIcon, MessageSquareText, 
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
-import { mockSidebarChats } from "@/services/mock-data"
 import { useRouter } from "next/navigation"
 
 interface UpcomingActivityCardProps {
@@ -43,11 +42,11 @@ export function UpcomingActivityCard({
 
   const handleChatClick = () => {
     // Find chat by client.id + service.id combination
-    const chat = mockSidebarChats.find((chat) => chat.clientId === client.id && chat.serviceId === service.id)
-
-    if (chat) {
-      router.push(`/search/${chat.id}`)
-    }
+    // const chat = mockChatData.find((chat) => chat.clientId === client.id && chat.serviceId === service.id)
+    //
+    // if (chat) {
+    //   router.push(`/search/${chat.id}`)
+    // }
   }
 
   return (

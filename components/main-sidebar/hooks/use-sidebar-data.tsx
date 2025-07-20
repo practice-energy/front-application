@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { mockSidebarChats, groupChatsByTime } from "@/services/mock-data"
-import type { Chat, ChatItem } from "@/types/chats"
-import type { LastReadTimestamps, SectionVisibility } from "../types/sidebar.types"
+import { groupChatsByTime } from "@/services/mock-data"
+import type { Chat } from "@/types/chats"
+import type { LastReadTimestamps, SectionVisibility } from "@/components/main-sidebar/types/sidebar.types"
 import { useAdeptChats } from "@/stores/chat-store"
 
 const getLastReadTimestamps = (): LastReadTimestamps => {
@@ -23,7 +23,6 @@ const saveLastReadTimestamps = (timestamps: LastReadTimestamps) => {
 
 export function useSidebarData(pathname: string) {
   const { chats: storeChats } = useAdeptChats()
-  const [chats, setChats] = useState<ChatItem[]>(mockSidebarChats)
   const [newChats, setNewChats] = useState<Chat[]>([])
   const [lastReadTimestamps, setLastReadTimestamps] = useState<LastReadTimestamps>(getLastReadTimestamps())
 
@@ -60,22 +59,21 @@ export function useSidebarData(pathname: string) {
   }, [])
 
   // Convert new chats to ChatItem format for display
-  const convertedNewChats: ChatItem[] = newChats.map((chat) => ({
+  const convertedNewChats: Chat[] = newChats.map((chat) => ({
     id: chat.id,
     title: chat.title,
     description: chat.messages?.length > 0 ? chat.messages[0].content : "Новый чат",
     avatar: chat.isAI ? "/allura-logo.png" : chat.avatar,
-    status: null,
     timestamp: chat.createdAt,
     updatedAt: chat.createdAt,
     isAIEnabled: chat.isAIEnabled,
     isAI: chat.isAI,
     isNew: true,
-    mode: undefined,
+    status: chat.status
   }))
 
   // Convert store chats to ChatItem format
-  const convertedStoreChats: ChatItem[] = storeChats.map((chat) => ({
+  const convertedStoreChats: Chat[] = storeChats.map((chat) => ({
     id: chat.id,
     title: chat.title,
     description: chat.messages?.length > 0 ? chat.messages[0].content : chat.description || "Новый чат",
@@ -90,7 +88,7 @@ export function useSidebarData(pathname: string) {
   }))
 
   // Combine store chats, new chats, and existing sidebar chats
-  const allChats = [...convertedNewChats, ...convertedStoreChats, ...chats]
+  const allChats = [...convertedStoreChats]
 
   // Group chats by time period based on updatedAt
   const groupedChats = groupChatsByTime(allChats)
@@ -108,7 +106,7 @@ export function useSidebarData(pathname: string) {
     saveLastReadTimestamps(timestamps)
   }
 
-  const hasNewMessages = (chat: ChatItem): boolean => {
+  const hasNewMessages = (chat: Chat): boolean => {
     const lastRead = lastReadTimestamps[chat.id]
     if (!lastRead) return true
     return chat.timestamp > new Date(lastRead).getTime()

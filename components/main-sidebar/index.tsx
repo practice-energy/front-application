@@ -251,6 +251,7 @@ export function MainSidebar() {
                 isCollapsed={isCollapsed}
                 isMobile={isMobile}
                 icon={Search}
+                iconStyle=""
               />
               <SectionContent sectionKey="search" sectionVisibility={sectionVisibility}>
                 {searchResults.length > 0 ? (

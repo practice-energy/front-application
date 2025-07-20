@@ -21,10 +21,8 @@ export type Chat = {
   avatar?: string
   isAI?: boolean
   isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | null
-  lastMessage?: string
+  status?: "waiting" | "confirmed" | "request" | "declined" | null
   timestamp?: string
-  unreadCount?: number
   isMuted?: boolean
   messages: Message[]
   createdAt: number,

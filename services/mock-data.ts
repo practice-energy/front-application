@@ -1,18 +1,14 @@
-import { v4 as uuidv4 } from "uuid"
-import type { Booking } from "@/types/booking"
-import type { User } from "@/types/user"
-import type { CalendarEvent } from "@/types/calendar-event"
-import type { Review, Service, Specialist } from "@/types/common"
-import type { Chat, ChatItem, Message } from "@/types/chats"
-
-// Generate UUIDs for all chat and specialist IDs first
-const chatAI1Id = uuidv4()
-const chatSpecialist1Id = uuidv4()
-const chatAI2Id = uuidv4()
-const chatSpecialist2Id = uuidv4()
+import {v4 as uuidv4} from "uuid"
+import type {User} from "@/types/user"
+import type {CalendarEvent} from "@/types/calendar-event"
+import type {Review, Service, Specialist} from "@/types/common"
+import type {ChatItem} from "@/types/chats"
 
 const specialist1Id = uuidv4()
 const specialist2Id = uuidv4()
+const specialist3Id = uuidv4();
+const specialist4Id = uuidv4();
+const specialist5Id = uuidv4();
 
 const service1Id = uuidv4()
 const service2Id = uuidv4()
@@ -48,6 +44,7 @@ export const mockUser: User = {
     address: "ivan.ivanov@example.com",
     verified: true,
   },
+  images: [],
   location: "",
   timezone: "GMT+3",
   createdAt: new Date(2023, 6, 10, 11, 0),
@@ -168,93 +165,6 @@ export const mockCalendarEvents: CalendarEvent[] = [
     status: "completed",
     title: "Fitness Assessment",
     price: 55,
-  },
-]
-
-// Mock данные для чатов (обновлены ID)
-export const mockSidebarChats: ChatItem[] = [
-  {
-    id: chatSpecialist1Id, // Соответствует chat-specialist-1 в mockChatData
-    title: "Анна Шлюхтенбург-Кронштадтская",
-    description: "Консультация по астрологии",
-    avatar: "/placeholder.jpg",
-    status: "waiting",
-    timestamp: Date.now() - 1000 * 60 * 30, // 30 минут назад
-    updatedAt: Date.now() - 1000 * 60 * 30,
-    mode: "ai",
-    isAI: false,
-  },
-  {
-    id: chatSpecialist2Id, // Соответствует chat-specialist-2 в mockChatData
-    title: "Михаил Сидоров",
-    description: "Коучинг сессия по астрофизической квантовой психофизиологии",
-    avatar: "/placeholder.jpg",
-    status: "confirmed",
-    timestamp: Date.now() - 1000 * 60 * 60 * 2, // 2 часа назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 2,
-    mode: "ai",
-    isAI: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Елена Иванова",
-    description: "Массаж и релаксация",
-    avatar: "/placeholder.jpg",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24, // 1 день назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24,
-    mode: "none",
-    isAI: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Дмитрий Козлов",
-    description: "Психологическая консультация",
-    avatar: "/placeholder.jpg",
-    status: "waiting",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3, // 3 дня назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
-    mode: "none",
-    isAI: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Ольга Смирнова",
-    description: "Йога и медитация",
-    avatar: "/placeholder.jpg",
-    status: "confirmed",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 7, // 7 дней назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
-    mode: "none",
-    isAI: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Александр Волков",
-    description: "Бизнес консультация",
-    avatar: "/placeholder.jpg",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 15, // 15 дней назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 15,
-    mode: "none",
-    isAI: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Мария Федорова",
-    description: "Нутрициология",
-    avatar: "/placeholder.jpg",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 45, // 45 дней назад
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 45,
-    mode: "ai",
-    isAI: false,
-  },
-  {
-    id: chatAI1Id,
-    title: "Alura",
-    description: "Поиск себя",
-    timestamp: Date.now() - 1000 * 60 * 60 * 24 * 41,
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24 * 41,
-    mode: "ai",
-    isAI: true,
   },
 ]
 
@@ -418,154 +328,118 @@ export const mockSpecialists: Specialist[] = [
     ],
     likes: 1337,
   },
-]
-
-// Новые моки для чатов (обновлены ID)
-export const mockChatData: Chat[] = [
-  // AI чат с Allura
   {
-    id: chatAI1Id,
-    title: "Поиск астролога",
-    description: "Привет а че там сегодня звезды говорят, Гендальф?",
-    timestamp: "14:30",
-    messages: [
+    id: specialist3Id,
+    name: "Анна Волкова",
+    title: "Клинический психолог",
+    avatar: "/placeholder.jpg",
+    images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
+    practices: 124,
+    price: 4500,
+    location: "Москва",
+    description:
+        "Специализируюсь на когнитивно-поведенческой терапии. Помогаю при тревожных расстройствах, депрессии и проблемах в отношениях.",
+    specialties: ["КПТ", "Семейная терапия", "Кризисное консультирование"],
+    education: [
       {
-        id: uuidv4(),
-        type: "user",
-        content: "Ищу хорошего астролога для консультации",
-        timestamp: Date.now() - 1000 * 60 * 30,
-      },
-      {
-        id: uuidv4(),
-        type: "assistant",
-        content: "Отлично! Я помогу вам найти подходящего астролога. Вот несколько специалистов с высоким рейтингом:",
-        timestamp: Date.now() - 1000 * 60 * 29,
-        specialists: [mockSpecialists[0]],
+        description: "МГУ, факультет психологии",
+        certificate: null,
       },
     ],
-    isAI: true,
-    hasNew: false,
-    createdAt: Date.now() - 1000 * 60 * 30,
-    footerContent: "Выберите подходящего специалиста или уточните ваши предпочтения.",
+    experience: [
+      {
+        description: "Частная практика - 7 лет"
+      },
+      {
+        description: "Психолог в центре психического здоровья - 3 года"
+      }
+    ],
+    services: [],
+    skills: ["Эмпатия", "Аналитическое мышление", "Работа с сопротивлением", "Медитация"],
+    certifcates: [
+      {
+        description: "Сертификат по когнитивно-поведенческой терапии",
+        certificate: null,
+      }
+    ],
+    likes: 892,
   },
-
-  // Чат с человеком-специалистом, но с сообщениями от Allura
   {
-    id: chatSpecialist1Id,
-    title: "Анна Петрова",
-    timestamp: "12:15",
-    description: "Здравствуйте! А можно вас в баню заказать?",
-    messages: [
+    id: specialist4Id,
+    name: "Дмитрий Жуков",
+    title: "Финансовый консультант",
+    avatar: "/placeholder.jpg",
+    images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
+    practices: 215,
+    price: 7500,
+    location: "Новосибирск",
+    description:
+        "Эксперт по управлению капиталом и инвестициям. Помогаю создать финансовую стратегию и достичь финансовой независимости.",
+    specialties: ["Инвестиции", "Финансовое планирование", "Налоговая оптимизация"],
+    education: [
       {
-        id: uuidv4(),
-        type: "user",
-        content: "Здравствуйте! Хотел бы записаться на консультацию по натальной карте",
-        timestamp: Date.now() - 1000 * 60 * 120,
-      },
-      {
-        id: uuidv4(),
-        type: "assistant",
-        content: "Анна Петрова сейчас недоступна, но я могу помочь вам с записью. Вот информация о её услугах:",
-        timestamp: Date.now() - 1000 * 60 * 119,
-        specialists: [mockSpecialists[0]],
-      },
-      {
-        id: uuidv4(),
-        type: "specialist",
-        content:
-          "Добрый день! Спасибо за интерес к моим услугам. Да, я провожу консультации по натальным картам. Когда вам удобно?",
-        timestamp: Date.now() - 1000 * 60 * 60,
-      },
-      {
-        id: uuidv4(),
-        type: "user",
-        content: "Отлично! Может быть завтра вечером?",
-        timestamp: Date.now() - 1000 * 60 * 30,
-      },
-      {
-        id: uuidv4(),
-        type: "assistant",
-        content: "Изи родная, погнали?",
-        timestamp: Date.now() - 1000 * 60 * 119,
-        aiMessageType: "service",
+        description: "Финансовый университет при Правительстве РФ",
+        certificate: null,
       },
     ],
-    isAI: false,
-    hasNew: true,
-    createdAt: Date.now() - 1000 * 60 * 120,
-  },
-
-  // Еще один AI чат
-  {
-    id: chatAI2Id,
-    title: "Поиск коуча",
-    timestamp: "вчера",
-    description: "Хотите узнать больше о любом из этих специалистов?",
-    messages: [
+    experience: [
+      {description: "Управляющий активами - 5 лет"},
+      {description: "Финансовый аналитик в банке - 3 года"}
+    ],
+    services: [],
+    skills: ["Анализ рынков", "Excel", "Прогнозирование", "Криптовалюты"],
+    certifcates: [
       {
-        id: uuidv4(),
-        type: "user",
-        content: "Нужен лайф-коуч для работы над целями",
-        timestamp: Date.now() - 1000 * 60 * 60 * 25,
+        description: "CFA Level I",
+        certificate: null,
       },
       {
-        id: uuidv4(),
-        type: "assistant",
-        content: "Понимаю! Работа с целями - важная задача. Вот специалисты, которые помогут вам:",
-        timestamp: Date.now() - 1000 * 60 * 60 * 25 + 1000,
-        specialists: [mockSpecialists[1]],
+        description: "Сертифицированный финансовый планировщик",
+        certificate: null
+      }
+    ],
+    likes: 1562,
+  },
+  {
+    id: specialist5Id,
+    name: "Екатерина Белова",
+    title: "Нутрициолог и wellness-коуч",
+    avatar: "/placeholder.jpg",
+    images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
+    practices: 178,
+    price: 3800,
+    location: "Казань",
+    description:
+        "Создаю индивидуальные программы питания для здоровья, похудения и спортивных результатов. Работаю с пищевым поведением.",
+    specialties: ["Снижение веса", "Спортивное питание", "Детокс"],
+    education: [
+      {
+        description: "Институт интегративной нутрициологии",
+        certificate: null,
       },
     ],
-    isAI: true,
-    hasNew: false,
-    createdAt: Date.now() - 1000 * 60 * 60 * 25,
-    footerContent: "Хотите узнать больше о любом из этих специалистов?",
-  },
-
-  // Чат с человеком
-  {
-    id: chatSpecialist2Id,
-    title: "Михаил Сидоров",
-    timestamp: "10:45",
-    description: "Анальные боли",
-    messages: [
+    experience: [
       {
-        id: uuidv4(),
-        type: "user",
-        content: "Здравствуйте! Интересует бизнес-коучинг",
-        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3,
+        description:      "Консультант в фитнес-сети - 4 года",
       },
       {
-        id: uuidv4(),
-        type: "specialist",
-        content:
-          "Привет! Отлично, что решили заняться развитием. Расскажите, какие у вас сейчас основные вызовы в бизнесе?",
-        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 15,
-      },
-      {
-        id: uuidv4(),
-        type: "user",
-        content: "Сложно с планированием и приоритизацией задач",
-        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 30,
-      },
-      {
-        id: uuidv4(),
-        type: "assistant",
-        content: "Михаил специализируется именно на таких вопросах! Вот его подход к решению подобных задач:",
-        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 31,
-      },
-      {
-        id: uuidv4(),
-        type: "specialist",
-        content:
-          "Да, это частая проблема. Предлагаю начать с аудита ваших текущих процессов. Можем назначить сессию на следующей неделе?",
-        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3 + 1000 * 60 * 45,
-      },
+        description:      "Автор программы «Осознанное питание»"
+      }
     ],
-    isAI: false,
-    hasNew: false,
-    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
-  },
+    services: [],
+    skills: ["Биохимия питания", "Мотивация", "Гастрономия", "Функциональный тренинг"],
+    certifcates: [
+      {
+        description: "Сертификат по спортивной нутрициологии",
+        certificate: null,
+      },
+      {
+        description: "Курс по психологии пищевого поведения",
+        certificate: null
+      }
+    ],
+    likes: 2045,
+  }
 ]
 
 export const mockReviews: Review[] = [
@@ -737,87 +611,9 @@ export const groupChatsByTime = (chats: ChatItem[]) => {
   }
 }
 
-// Функция для форматирования времени (остается без изменений)
-export const formatTimestamp = (timestamp: number): string => {
-  const now = Date.now()
-  const diff = now - timestamp
-  const minutes = Math.floor(diff / (1000 * 60))
-  const hours = Math.floor(diff / (1000 * 60 * 60))
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-
-  if (minutes < 1) {
-    return "сейчас"
-  } else if (minutes < 60) {
-    return `${minutes} мин`
-  } else if (hours < 24) {
-    return `${hours} ч`
-  } else if (days < 7) {
-    return `${days} дн`
-  } else {
-    return new Date(timestamp).toLocaleDateString("ru-RU", {
-      day: "numeric",
-      month: "short",
-    })
-  }
-}
-
 // Helper функции для получения данных по ID (остаются без изменений)
 export const getSpecialistById = (id: string): Specialist | undefined => {
   return mockSpecialists.find((specialist) => specialist.id === id)
-}
-
-export const getServiceById = (id: string): Service | undefined => {
-  return mockServices.find((service) => service.id === id)
-}
-
-export const getChatById = (id: string): ChatItem | undefined => {
-  return mockSidebarChats.find((chat) => chat.id === id)
-}
-
-// Новые helper функции для работы с чатами
-export const getChatDataById = (id: string): Chat | undefined => {
-  const chat = mockChatData.find((chat) => chat.id === id)
-  // Возвращаем глубокую копию, чтобы избежать проблем с мутацией состояния
-  return chat ? JSON.parse(JSON.stringify(chat)) : undefined
-}
-
-export const findChatBySpecialistId = (specialistId: string): Chat | undefined => {
-  return mockChatData.find((chat) => chat.specialistId === specialistId)
-}
-
-export const findChatByServiceId = (serviceId: string): Chat | undefined => {
-  return mockChatData.find((chat) => chat.serviceId === serviceId)
-}
-
-// Функция для добавления сообщения в чат
-export const addMessageToChat = (chat: Chat, message: Omit<Message, "id">): Chat => {
-  const newMessage: Message = {
-    ...message,
-    id: uuidv4(),
-  }
-
-  const chatIndex = mockChatData.findIndex((c) => c.id === chat.id)
-  if (chatIndex !== -1) {
-    mockChatData[chatIndex].messages.push(newMessage)
-    mockChatData[chatIndex].timestamp = new Date(message.timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-    mockChatData[chatIndex].hasNew = true
-  }
-
-  // Also update the sidebar chat item
-  const sidebarChatIndex = mockSidebarChats.findIndex((c) => c.id === chat.id)
-  if (sidebarChatIndex !== -1) {
-    mockSidebarChats[sidebarChatIndex].description = message.content
-    mockSidebarChats[sidebarChatIndex].updatedAt = message.timestamp
-  }
-
-  return {
-    ...chat,
-    messages: [...chat.messages, newMessage],
-    timestamp: new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-  }
 }
 
 // Экспорт для совместимости со старым кодом

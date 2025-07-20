@@ -28,7 +28,7 @@ export default function SearchPage() {
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
-  const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
+  const { getChatDataById, addMessageToChat, addChat, clearChats } = useAdeptChats()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -38,7 +38,7 @@ export default function SearchPage() {
     } else {
       const newChat: Chat = {
         id: chatId,
-        title: "Новый чат",
+        title: "Alura",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         messages: [],
         isAI: true,
@@ -158,6 +158,7 @@ export default function SearchPage() {
             isMuted: false,
             description: "",
           }
+
           addChat(newChat)
           const updatedChat = addMessageToChat(newChat.id, userMessage)
 
