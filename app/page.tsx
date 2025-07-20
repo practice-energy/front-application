@@ -4,12 +4,10 @@ import { Mufi } from "@/components/mufi/index"
 import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import { useSidebar } from "@/contexts/sidebar-context"
 import { useAdeptChats } from "@/stores/chat-store"
 
 export default function HomePage() {
   const router = useRouter()
-  const { isCollapsed } = useSidebar()
   const { addChat } = useAdeptChats()
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
@@ -35,8 +33,6 @@ export default function HomePage() {
       footerContent: "",
     }
 
-    addChat(newChat)
-
     window.dispatchEvent(
       new CustomEvent("addNewChatToSidebar", {
         detail: {
@@ -48,6 +44,7 @@ export default function HomePage() {
       }),
     )
 
+    addChat(newChat)
     router.push(`/search/${newChatId}`)
   }
 

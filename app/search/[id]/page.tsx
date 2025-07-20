@@ -16,7 +16,7 @@ import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-const SearchPage = () => {
+export default function SearchPage() {
   const params = useParams()
   const router = useRouter()
   const [currentChat, setCurrentChat] = useState<Chat | null>(null)
@@ -48,7 +48,7 @@ const SearchPage = () => {
       }
       setCurrentChat(newChat)
     }
-  }, [params.id])
+  }, [params.id, getChatDataById])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -90,7 +90,7 @@ const SearchPage = () => {
         setIsLoading(false)
       }, 1500)
     }
-  }, [currentChat])
+  }, [currentChat, addMessageToChat])
 
   const handleSpecialistClick = useCallback(
     (specialistId: string) => {
@@ -150,13 +150,13 @@ const SearchPage = () => {
         if (isNewChat) {
           const newChat: Chat = {
             id: params.id as string,
-            title: title,
+            title: "Новый чат",
             timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             messages: [],
             isAI: true,
             createdAt: Date.now(),
             isMuted: false,
-            description: query,
+            description: "",
           }
           addChat(newChat)
           const updatedChat = addMessageToChat(newChat.id, userMessage)
@@ -180,7 +180,7 @@ const SearchPage = () => {
         }
       })
     },
-    [params.id],
+    [params.id, addChat, addMessageToChat],
   )
 
   return (
@@ -233,5 +233,3 @@ const SearchPage = () => {
     </div>
   )
 }
-
-export default SearchPage
