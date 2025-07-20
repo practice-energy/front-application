@@ -5,18 +5,13 @@ import { useRouter } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { useTranslations } from "@/hooks/use-translations"
 import { Mufi } from "@/components/mufi/index"
-import {
-  getSpecialistById,
-  findChatBySpecialistId,
-  addMessageToChat,
-  mockChatData,
-  mockSpecialist,
-} from "@/services/mock-data"
+import { getSpecialistById, mockSpecialist } from "@/services/mock-data"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import { notFound } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import SpecialistProfile from "@/components/specialist/specialist-profile"
+import { useAdeptChats } from "@/stores/chat-store"
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -48,7 +43,8 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
     router.push(`/service/${service.id}`)
   }
 
-  // Handle search
+  const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
+
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
     if (!query.trim() && files.length === 0) return
 
@@ -61,7 +57,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         timestamp: Date.now(),
         files: files,
       }
-      addMessageToChat(existingChat, userMessage)
+      addMessageToChat(existingChat.id, userMessage)
       window.dispatchEvent(new CustomEvent("chatUpdated", { detail: { chatId: existingChat.id } }))
       router.push(`/search/${existingChat.id}`)
     } else {
@@ -87,6 +83,8 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         description: "",
       }
 
+      addChat(newChat)
+
       window.dispatchEvent(
         new CustomEvent("addNewChatToSidebar", {
           detail: {
@@ -99,7 +97,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         }),
       )
 
-      mockChatData.push(newChat)
       router.push(`/search/${newChatId}`)
     }
   }

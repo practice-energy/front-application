@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import {Clock, Images, Share, SquareUserIcon, Video} from "lucide-react"
+import { Clock, Images, Share, SquareUserIcon, Video } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { Mufi } from "@/components/mufi/index"
@@ -11,13 +11,14 @@ import { FeedbackSection } from "@/components/feedback-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import { mockServices, findChatBySpecialistId, addMessageToChat, mockChatData } from "@/services/mock-data"
+import { mockServices } from "@/services/mock-data"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
 import { ShareServiceModal } from "@/components/modals/share-service-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { Badge } from "@/components/ui/badge"
+import { useAdeptChats } from "@/stores/chat-store"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -37,7 +38,8 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   const service = mockServices.find((s) => s.id === id) || mockServices[0]
   const specialist = service.specialist
 
-  // Handle search
+  const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
+
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
     const existingChat = findChatBySpecialistId(specialist.id)
 
@@ -50,8 +52,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         files: files,
         services: [service],
       }
-      addMessageToChat(existingChat, userMessage)
-      // window.dispatchEvent(new CustomEvent("chatUpdated", { detail: { chatId: existingChat.id } }))
+      addMessageToChat(existingChat.id, userMessage)
       router.push(`/search/${existingChat.id}`)
     } else {
       const newChatId = uuidv4()
@@ -77,6 +78,8 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         createdAt: Date.now(),
       }
 
+      addChat(newChat)
+
       window.dispatchEvent(
         new CustomEvent("addNewChatToSidebar", {
           detail: {
@@ -89,7 +92,6 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         }),
       )
 
-      mockChatData.push(newChat)
       router.push(`/search/${newChatId}`)
     }
   }
@@ -98,11 +100,11 @@ export default function ServicePage({ params }: { params: { id: string } }) {
     <>
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-[144px] relative">
         <div
-            className="flex-1 overflow-hidden"
-            style={{
-              transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-            }}
-            data-animating={isAnimating ? "true" : "false"}
+          className="flex-1 overflow-hidden"
+          style={{
+            transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+          }}
+          data-animating={isAnimating ? "true" : "false"}
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
             <div className="flex items-center justify-between gap-4">
@@ -129,18 +131,18 @@ export default function ServicePage({ params }: { params: { id: string } }) {
             <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
               {/* Photo Gallery at the very top */}
               {service.images.length > 0 ? (
-                  <SquareImageGallery
-                      images={service.images}
-                      alt={service.title}
-                      ratioHeight={1}
-                      ratioWidth={1}
-                      borderRadius={0}
-                  />
+                <SquareImageGallery
+                  images={service.images}
+                  alt={service.title}
+                  ratioHeight={1}
+                  ratioWidth={1}
+                  borderRadius={0}
+                />
               ) : (
-                  <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
-                    <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Еще нет фото</p>
-                  </div>
+                <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
+                  <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Еще нет фото</p>
+                </div>
               )}
 
               {/* Service header below the gallery */}
@@ -190,7 +192,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
                   />
 
                   {/* Client Feedback Section */}
-                  <FeedbackSection feedbacks={service.reviews}/>
+                  <FeedbackSection feedbacks={service.reviews} />
                 </div>
               </div>
             </div>
