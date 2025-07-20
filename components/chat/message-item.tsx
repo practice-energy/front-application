@@ -3,7 +3,7 @@
 import React, { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import {Copy, Share, Paperclip, Flame, Check} from "lucide-react"
+import {Copy, Share, Paperclip, Flame, Check, RefreshCw, SquareSlash} from "lucide-react"
 import {ArrowPathIcon, ClockIcon} from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
@@ -204,29 +204,43 @@ export const MessageItem = React.memo(
           <div className="flex justify-between pt-2 w-full">
             {aiMessageType === "service" ? (
               // Service-specific buttons
-                <div className="flex justify-between items-center w-full pt-2">
-                  {/* Кнопка "Сжечь" - прижата к левому краю */}
-                  <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => onRegenerate(message)}
-                        className="flex rounded-sm w-8 h-8 bg-pink-500 hover:bg-pink-600 items-center justify-center"
-                        title="Regenerate response"
-                    >
-                      <Flame className="w-6 h-6 text-white rounded-sm" />
-                    </button>
-                    <span className="text-base whitespace-nowrap">Сжечь</span>
+                <div className="flex flex-col w-full pt-2">
+                  {/* Первая строка с кнопками "Альтернатива" и "Подтвердить" */}
+                  <div className="flex justify-between items-center w-full">
+                    {/* Кнопка "Альтернатива" - прижата к левому краю */}
+                    <div className="flex items-center gap-2">
+                      <button
+                          onClick={() => onRegenerate(message)}
+                          className="flex rounded-sm w-8 h-8 bg-violet-600 hover:bg-violet-700 items-center justify-center"
+                      >
+                        <SquareSlash className="w-6 h-6 text-white rounded-sm" />
+                      </button>
+                      <span className="text-base whitespace-nowrap">Альтернатива</span>
+                    </div>
+
+                    {/* Кнопка "Подтвердить" - прижата к правому краю */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-base whitespace-nowrap">Подтвердить</span>
+                      <button
+                          onClick={() => onRegenerate(message)}
+                          className="flex rounded-sm bg-teal-400 hover:bg-teal-500 w-8 h-8 items-center justify-center"
+                      >
+                        <Check className="w-6 h-6 text-white rounded-sm" />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Кнопка "Подтвердить" - прижата к правому краю */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-base whitespace-nowrap">Подтвердить</span>
-                    <button
-                        onClick={() => onRegenerate(message)}
-                        className="flex rounded-sm bg-teal-400 hover:bg-teal-500 w-8 h-8 items-center justify-center"
-                        title="Confirm"
-                    >
-                      <Check className="w-6 h-6 text-white rounded-sm" />
-                    </button>
+                  {/* Вторая строка с кнопкой "Сжечь" по центру */}
+                  <div className="flex items-start mt-6">
+                    <div className="flex items-center gap-2">
+                      <button
+                          onClick={() => onRegenerate(message)}
+                          className="flex rounded-sm w-8 h-8 bg-pink-500 hover:bg-pink-600 items-center justify-center"
+                      >
+                        <Flame className="w-6 h-6 text-white rounded-sm" />
+                      </button>
+                      <span className="text-base whitespace-nowrap">Сжечь</span>
+                    </div>
                   </div>
                 </div>
             ) : (
@@ -238,7 +252,6 @@ export const MessageItem = React.memo(
                     whileTap={{ scale: 0.95 }}
                     onClick={() => onRegenerate(message)}
                     className="rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                    title="Regenerate response"
                   >
                     <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                   </motion.button>

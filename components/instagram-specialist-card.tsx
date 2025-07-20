@@ -50,18 +50,6 @@ export function InstagramSpecialistCard({
     toggleLike("specialist", specialist.id)
   }
 
-  const handleCopyLink = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    const link = `${window.location.origin}/specialist/${specialist.id}`
-    try {
-      await navigator.clipboard.writeText(link)
-      // You could add a toast notification here
-      console.log("Link copied to clipboard")
-    } catch (error) {
-      console.error("Failed to copy link:", error)
-    }
-  }
-
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
     setShareModalOpen(true)
@@ -194,16 +182,6 @@ export function InstagramSpecialistCard({
                   title="Написать специалисту"
               >
                 <Share size={24} />
-              </button>
-
-              {/* Copy Button */}
-              <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-md transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                  title="Написать специалисту"
-              >
-                <Copy size={24} />
               </button>
             </div>
         )}
