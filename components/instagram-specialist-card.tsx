@@ -147,7 +147,7 @@ export function InstagramSpecialistCard({
                   type="button"
                   onClick={handleLikeClick}
                   className={`
-          rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-md aspect-square p-0 border-none 
+          rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
           ${
                       liked
                           ? "bg-violet-600 hover:bg-violet-700 text-white"
@@ -168,7 +168,7 @@ export function InstagramSpecialistCard({
               <button
                   type="button"
                   onClick={handleReply}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-md transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
                   title="Написать специалисту"
               >
                 <Reply size={24} />
@@ -178,7 +178,7 @@ export function InstagramSpecialistCard({
               <button
                   type="button"
                   onClick={handleShare}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-md transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
                   title="Написать специалисту"
               >
                 <Share size={24} />
