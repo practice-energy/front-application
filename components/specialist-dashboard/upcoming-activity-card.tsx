@@ -1,14 +1,6 @@
 "use client"
 
-import {
-  Repeat2,
-  TimerReset,
-  MonitorPlayIcon as TvMinimalPlay,
-  User,
-  Users,
-  MessageSquareText,
-  TvMinimalPlayIcon
-} from "lucide-react"
+import { Repeat2, TimerReset, MonitorPlayIcon as TvMinimalPlay, User, Users } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
@@ -84,8 +76,11 @@ export function UpcomingActivityCard({
               {client.name} {service.description}
             </div>
           </div>
-          <button onClick={handleChatClick} className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-0.5 mr-4 text-gray-600 shadow-sm">
-            <MessageSquareText size={18} className="h-5 w-5"/>
+          <button
+            onClick={handleChatClick}
+            className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-0.5 mr-4 text-gray-600 shadow-sm"
+          >
+            <span className="text-xs">💬</span>
           </button>
         </div>
       </div>
@@ -99,7 +94,7 @@ export function UpcomingActivityCard({
         <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
           {format === "video" ? (
             <>
-              <TvMinimalPlayIcon size={16} />
+              <TvMinimalPlay size={16} />
               <p className="text-gray-600">Видео</p>
             </>
           ) : (
