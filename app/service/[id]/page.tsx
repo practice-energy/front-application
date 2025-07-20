@@ -71,10 +71,10 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         avatar: specialist.avatar,
         specialistId: specialist.id,
         serviceId: service.id,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: Date.now(),
         messages: [userMessage],
         isAI: false,
-        hasNew: true,
+        hasNew: false,
         createdAt: Date.now(),
       }
 

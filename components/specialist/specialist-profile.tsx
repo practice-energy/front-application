@@ -188,11 +188,11 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
               )}
 
               {/* Certificates Section */}
-              {specialist.certificates && specialist.certificates.length > 0 && (
+              {specialist.certifcates && specialist.certifcates.length > 0 && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Сертификаты</h2>
                   <div className="space-y-4">
-                    {specialist.certificates.map((cert, index) => (
+                    {specialist.certifcates.map((cert, index) => (
                       <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Хогвартс, Слизерен</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">{cert.description}</p>

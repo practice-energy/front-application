@@ -15,14 +15,13 @@ export interface Message {
 export type Chat = {
   id: string
   title: string
-  description: string
   specialistId?: string
   serviceId?: string
   avatar?: string
   isAI?: boolean
   isAIEnabled?: boolean
   status?: "waiting" | "confirmed" | "request" | "declined" | null
-  timestamp?: string
+  timestamp: number
   isMuted?: boolean
   messages: Message[]
   createdAt: number,

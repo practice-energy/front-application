@@ -2,7 +2,6 @@ import {v4 as uuidv4} from "uuid"
 import type {User} from "@/types/user"
 import type {CalendarEvent} from "@/types/calendar-event"
 import type {Review, Service, Specialist} from "@/types/common"
-import type {ChatItem} from "@/types/chats"
 
 const specialist1Id = uuidv4()
 const specialist2Id = uuidv4()
@@ -596,20 +595,6 @@ export const mockServices: Service[] = [
     format: "video",
   },
 ]
-
-// Функции для группировки чатов по времени (остаются без изменений)
-export const groupChatsByTime = (chats: ChatItem[]) => {
-  const now = Date.now()
-  const oneDayAgo = now - 24 * 60 * 60 * 1000
-  const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000
-  const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000
-
-  return {
-    today: chats.filter((chat) => chat.updatedAt > oneDayAgo),
-    last7Days: chats.filter((chat) => chat.updatedAt <= oneDayAgo && chat.updatedAt > sevenDaysAgo),
-    older: chats.filter((chat) => chat.updatedAt <= sevenDaysAgo),
-  }
-}
 
 // Helper функции для получения данных по ID (остаются без изменений)
 export const getSpecialistById = (id: string): Specialist | undefined => {

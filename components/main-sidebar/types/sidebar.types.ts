@@ -1,19 +1,6 @@
 import type React from "react"
 import {Icon} from "@/components/icons/icon-types";
-
-export interface Chat {
-  id: string
-  title: string
-  description: string
-  avatar?: string
-  isAI?: boolean
-  isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | "request" | "declined"
-  lastMessage?: string
-  timestamp?: string
-  unreadCount?: number
-  isMuted: boolean
-}
+import { Chat } from "@/types/chats";
 
 export interface SearchResult {
   id: string

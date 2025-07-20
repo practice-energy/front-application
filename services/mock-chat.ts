@@ -20,8 +20,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatAI1Id,
         title: "Поиск астролога",
-        description: "Привет а че там сегодня звезды говорят, Гендальф?",
-        timestamp: "14:30",
+        timestamp: Date.now() - 1000 * 60 * 30,
         messages: [
             {
                 id: uuidv4(),
@@ -47,8 +46,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatSpecialist1Id,
         title: "Анна Петрова",
-        timestamp: "12:15",
-        description: "Здравствуйте! А можно вас в баню заказать?",
+        timestamp: Date.now() - 1000 * 60 * 120,
         messages: [
             {
                 id: uuidv4(),
@@ -94,8 +92,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatAI2Id,
         title: "Поиск коуча",
-        timestamp: "вчера",
-        description: "Хотите узнать больше о любом из этих специалистов?",
+        timestamp: Date.now() - 1000 * 60 * 60 * 25,
         messages: [
             {
                 id: uuidv4(),
@@ -122,8 +119,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatSpecialist2Id,
         title: "Михаил Сидоров",
-        timestamp: "10:45",
-        description: "Анальные боли",
+        timestamp: Date.now() - 1000 * 60 * 60 * 24 * 3,
         messages: [
             {
                 id: uuidv4(),
@@ -166,8 +162,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatAI3Id,
         title: "Поиск нутрициолога",
-        description: "Нужна помощь с составлением рациона",
-        timestamp: "09:20",
+        timestamp: Date.now() - 1000 * 60 * 45,
         messages: [
             {
                 id: uuidv4(),
@@ -193,8 +188,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatSpecialist3Id,
         title: "Елена Воробьева",
-        timestamp: "вчера",
-        description: "Обсуждение плана питания",
+        timestamp: Date.now() - 1000 * 60 * 60 * 12,
         messages: [
             {
                 id: uuidv4(),
@@ -226,8 +220,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatAI4Id,
         title: "Юридическая консультация",
-        timestamp: "позавчера",
-        description: "Подбор юриста по семейному праву",
+        timestamp: Date.now() - 1000 * 60 * 60 * 48,
         messages: [
             {
                 id: uuidv4(),
@@ -253,8 +246,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatSpecialist4Id,
         title: "Алексей Ковалев",
-        timestamp: "25.06",
-        description: "Вопросы по разделу имущества",
+        timestamp: Date.now() - 1000 * 60 * 60 * 72,
         specialistId: mockSpecialists[1].id,
         messages: [
             {
@@ -299,8 +291,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatAI5Id,
         title: "Подбор психолога",
-        timestamp: "24.06",
-        description: "Несколько вариантов специалистов",
+        timestamp: Date.now() - 1000 * 60 * 60 * 96,
         messages: [
             {
                 id: uuidv4(),
@@ -326,8 +317,7 @@ export const mockChatData: Chat[] = [
     {
         id: chatSpecialist5Id,
         title: "Ольга Семенова",
-        timestamp: "23.06",
-        description: "Консультация психолога",
+        timestamp: Date.now() - 1000 * 60 * 60 * 120,
         specialistId: mockSpecialists[3].id,
         messages: [
             {

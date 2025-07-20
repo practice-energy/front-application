@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { groupChatsByTime } from "@/services/mock-data"
 import type { Chat } from "@/types/chats"
 import type { LastReadTimestamps, SectionVisibility } from "@/components/main-sidebar/types/sidebar.types"
 import { useAdeptChats } from "@/stores/chat-store"
@@ -33,23 +32,23 @@ export function useSidebarData(pathname: string) {
     search: true,
   })
 
-  // Convert store chats to ChatItem format
-  const convertedStoreChats: Chat[] = storeChats.map((chat) => ({
-    id: chat.id,
-    title: chat.title,
-    description: chat.messages?.length > 0 ? chat.messages[0].content : chat.description || "Новый чат",
-    avatar: chat.isAI ? "/allura-logo.png" : chat.avatar,
-    status: null,
-    timestamp: chat.createdAt,
-    updatedAt: chat.createdAt,
-    isAIEnabled: chat.isAIEnabled,
-    isAI: chat.isAI,
-    isNew: chat.hasNew,
-    mode: undefined,
-  }))
+  const groupChatsByTime = (chats: Chat[]) => {
+    const now = Date.now();
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
+    const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+    return {
+      today: chats.filter((chat) => chat.timestamp > oneDayAgo),
+      last7Days: chats.filter(
+          (chat) => chat.timestamp <= oneDayAgo &&
+              chat.timestamp > sevenDaysAgo
+      ),
+      older: chats.filter((chat) => chat.timestamp <= sevenDaysAgo),
+    };
+  };
 
   // Use store chats as the source of truth
-  const allChats = convertedStoreChats
+  const allChats = storeChats
 
   // Group chats by time period based on updatedAt
   const groupedChats = groupChatsByTime(allChats)
@@ -70,7 +69,7 @@ export function useSidebarData(pathname: string) {
   const hasNewMessages = (chat: Chat): boolean => {
     const lastRead = lastReadTimestamps[chat.id]
     if (!lastRead) return true
-    return chat.timestamp > new Date(lastRead).getTime()
+    return chat.timestamp > lastRead
   }
 
   const isActiveChat = (chatId: string) => pathname === `/search/${chatId}`

@@ -75,12 +75,11 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         title: specialist.name,
         specialistId: specialist.id,
         avatar: specialist.avatar || "placeholder.jpg",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp:Date.now(),
         messages: [userMessage],
         isAI: false,
         hasNew: false,
         createdAt: Date.now(),
-        description: "",
       }
 
       addChat(newChat)

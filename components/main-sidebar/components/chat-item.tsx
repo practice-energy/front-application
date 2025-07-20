@@ -12,6 +12,7 @@ import {ActivityStatus} from "@/components/ui/activity-status";
 export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCollapsed, isMobile }: ChatItemProps) {
   const isActive = isActiveChat(chat.id)
   const hasUnread = hasNewMessages(chat)
+  const lastMessage = chat.messages.at(-1)
 
   // State for mute/AI toggle: 'none' | 'muted' | 'ai'
   const [toggleState, setToggleState] = useState<"none" | "mute" | "ai">("none")
@@ -86,7 +87,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               {/* Описание - занимает всё доступное пространство */}
               <div className="flex-1 min-w-0 overflow-hidden">  {/* Добавлен overflow-hidden */}
                 <p className="text-gray-600  leading-relaxed line-clamp-2 w-full">
-                  {chat.description}
+                  {lastMessage && (lastMessage.content)}
                 </p>
               </div>
 

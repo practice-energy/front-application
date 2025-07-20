@@ -49,6 +49,8 @@ export const useChatStore = create(
       },
 
       addAdeptChat: (chat: any) => {
+        console.log(chat)
+        console.log(get().adeptChats)
         set((state) => ({
           adeptChats: [deepCopy(chat), ...state.adeptChats],
         }))
@@ -82,11 +84,8 @@ export const useChatStore = create(
           updatedChat = {
             ...chat,
             messages: [...chat.messages, newMessage],
-            timestamp: new Date(message.timestamp).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            hasNew: true,
+            timestamp: message.timestamp,
+            hasNew: false,
           }
 
           const newChats = [...state.adeptChats]
@@ -149,11 +148,8 @@ export const useChatStore = create(
           updatedChat = {
             ...chat,
             messages: [...chat.messages, newMessage],
-            timestamp: new Date(message.timestamp).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            hasNew: true,
+            timestamp: message.timestamp,
+            hasNew: false,
           }
 
           const newChats = [...state.masterChats]

@@ -28,7 +28,7 @@ export default function SearchPage() {
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
-  const { getChatDataById, addMessageToChat, addChat, updateChat } = useAdeptChats()
+  const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -39,12 +39,13 @@ export default function SearchPage() {
       const newChat: Chat = {
         id: chatId,
         title: "Alura",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        messages: [],
+        timestamp: Date.now(),
         isAI: true,
         createdAt: Date.now(),
         isMuted: false,
-        description: "",
+        messages: [],
+        hasNew: false,
+        footerContent: "",
       }
       setCurrentChat(newChat)
     }
@@ -152,12 +153,11 @@ export default function SearchPage() {
         const newChat: Chat = {
           id: chatId,
           title: title,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          timestamp: Date.now(),
           messages: [userMessage],
           isAI: true,
           createdAt: Date.now(),
           isMuted: false,
-          description: query,
           hasNew: true,
         }
 

@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { Mufi } from "@/components/mufi/index"
+import { Mufi } from "@/components/mufi"
 import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
@@ -8,7 +8,7 @@ import { useAdeptChats } from "@/stores/chat-store"
 
 export default function HomePage() {
   const router = useRouter()
-  const { addChat } = useAdeptChats()
+  const { addChat, clearChats } = useAdeptChats()
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
@@ -23,13 +23,12 @@ export default function HomePage() {
     const newChat: Chat = {
       id: newChatId,
       title: "Alura",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: Date.now(),
       messages: [userMessage],
       isAI: true,
-      hasNew: true,
+      hasNew: false,
       createdAt: Date.now(),
       isMuted: false,
-      description: query,
       footerContent: "",
     }
 
