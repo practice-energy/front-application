@@ -1,12 +1,11 @@
 "use client"
 
-import { Repeat2, TimerReset, MonitorPlayIcon as TvMinimalPlay, User, Users } from "lucide-react"
+import {Repeat2, TimerReset, User, Users, TvMinimalPlayIcon, MessageSquareText, MessagesSquare} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
 import { mockSidebarChats } from "@/services/mock-data"
 import { useRouter } from "next/navigation"
-import { Comments } from "@nuclio/react"
 
 interface UpcomingActivityCardProps {
   startTime: string
@@ -79,9 +78,9 @@ export function UpcomingActivityCard({
           </div>
           <button
             onClick={handleChatClick}
-            className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-0.5 mr-4 text-gray-600 shadow-sm"
+            className="bg-white rounded-sm transition-colors w-6 h-6 ml-auto items-center p-1 mr-4 text-gray-600 shadow-sm"
           >
-            <Comments size={18} className="h-5 w-5" />
+            <MessagesSquare size={18} className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -95,7 +94,7 @@ export function UpcomingActivityCard({
         <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
           {format === "video" ? (
             <>
-              <TvMinimalPlay size={16} />
+              <TvMinimalPlayIcon size={16} />
               <p className="text-gray-600">Видео</p>
             </>
           ) : (
