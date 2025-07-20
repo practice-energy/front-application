@@ -1,6 +1,6 @@
 import type React from "react"
 interface OverviewStatCardProps {
-  value: number | string
+  value: string | number
   label: string
   icon: React.ReactNode
 }

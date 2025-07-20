@@ -13,6 +13,7 @@ interface UpcomingActivityCardProps {
   }
   duration: string
   format: string
+  isBackToBack?: boolean
 }
 
 export function UpcomingActivityCard({
@@ -22,12 +23,13 @@ export function UpcomingActivityCard({
   service,
   duration,
   format,
+  isBackToBack = false,
 }: UpcomingActivityCardProps) {
   return (
     <div className="h-21 p-1 flex items-start gap-5">
       {/* Left column - times and avatar */}
       <div className="flex flex-col items-center">
-        <div className="text-sm font-medium">{startTime}</div>
+        <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>
         <Avatar className="w-6 h-6 aspect-square my-1">
           <AvatarImage src={client.avatar || "/placeholder.svg"} />
           <AvatarFallback>

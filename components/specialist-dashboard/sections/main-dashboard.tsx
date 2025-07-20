@@ -165,23 +165,31 @@ export function MainDashboard() {
               <div className="space-y-4">
                 {stats.upcomingActivities.activities.length > 0 ? (
                   <div className="space-y-2">
-                    {stats.upcomingActivities.activities.map((activity) => (
-                      <UpcomingActivityCard
-                        key={activity.id}
-                        startTime={activity.start.toLocaleTimeString("ru-RU", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        endTime={activity.end.toLocaleTimeString("ru-RU", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        client={activity.client}
-                        service={activity.service}
-                        duration={`${activity.duration} мин`}
-                        format={activity.format === "video" ? "Видео" : "Очно"}
-                      />
-                    ))}
+                    {stats.upcomingActivities.activities.map((activity, index) => {
+                      // Check if this activity starts when the previous one ends
+                      const isBackToBack =
+                        index > 0 &&
+                        stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+
+                      return (
+                        <UpcomingActivityCard
+                          key={activity.id}
+                          startTime={activity.start.toLocaleTimeString("ru-RU", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                          endTime={activity.end.toLocaleTimeString("ru-RU", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                          client={activity.client}
+                          service={activity.service}
+                          duration={`${activity.duration} мин`}
+                          format={activity.format === "video" ? "Видео" : "Очно"}
+                          isBackToBack={isBackToBack}
+                        />
+                      )
+                    })}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-8 text-gray-400">
