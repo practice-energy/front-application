@@ -187,6 +187,8 @@ export function MainDashboard() {
                           duration={`${activity.duration} мин`}
                           format={activity.format === "video" ? "Видео" : "Очно"}
                           isBackToBack={isBackToBack}
+                          isRepeat={activity.isRepeat}
+                          status={activity.status}
                         />
                       )
                     })}

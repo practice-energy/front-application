@@ -1,5 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Repeat2, User } from "lucide-react"
+import { RubleIcon } from "@/components/ui/ruble-sign"
 
 interface UpcomingActivityCardProps {
   startTime: string
@@ -10,10 +12,16 @@ interface UpcomingActivityCardProps {
   }
   service: {
     name: string
+    price: number
   }
   duration: string
   format: string
   isBackToBack?: boolean
+  isRepeat?: boolean
+  status?: {
+    text: string
+    color: string
+  }
 }
 
 export function UpcomingActivityCard({
@@ -24,6 +32,8 @@ export function UpcomingActivityCard({
   duration,
   format,
   isBackToBack = false,
+  isRepeat = false,
+  status = { text: "Подтверждено", color: "bg-green-500" },
 }: UpcomingActivityCardProps) {
   return (
     <div className="h-21 p-1 flex items-start gap-5">
@@ -58,11 +68,24 @@ export function UpcomingActivityCard({
         </Badge>
       </div>
 
-      {/* Right column - 3 lines similar to chat-item */}
-      <div className="flex flex-col justify-between h-full text-xs text-gray-500">
-        <div>•</div>
-        <div>•</div>
-        <div>•</div>
+      {/* Right column - status, repeat/user icon, price */}
+      <div className="flex flex-col justify-between h-full text-xs">
+        {/* Status line */}
+        <div className="flex items-center gap-1">
+          <span className="text-gray-600">{status.text}</span>
+          <div className={`w-2 h-2 rounded-sm ${status.color}`} />
+        </div>
+
+        {/* Repeat/User icon line */}
+        <div className="flex items-center justify-center">
+          {isRepeat ? <Repeat2 size={12} className="text-gray-500" /> : <User size={12} className="text-gray-500" />}
+        </div>
+
+        {/* Price line */}
+        <div className="flex items-center gap-1">
+          <span className="text-gray-600">{service.price}</span>
+          <RubleIcon size={12} className="text-gray-600" />
+        </div>
       </div>
     </div>
   )
