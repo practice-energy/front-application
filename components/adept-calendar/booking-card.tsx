@@ -5,6 +5,7 @@ import type { Booking } from "@/types/booking"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { useIsMobile } from "@/hooks/use-mobile"
+import {ActivityStatus} from "@/components/ui/activity-status";
 
 interface BookingCardProps {
   booking: Booking
@@ -73,18 +74,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
             {/* Row 1: Title  */}
             <div className="flex items-center justify-between mt-1.5">
               <h3 className="text-base font-medium truncate flex-1">{booking.service.title}</h3>
-              <div className="flex items-center gap-1 flex-shrink-0 pl-1">
-                {booking.status && (
-                  <div
-                    className={cn(
-                      "w-4 h-4 rounded-sm flex-shrink-0",
-                      booking.status === "waiting" && "bg-pink-500",
-                      booking.status === "confirmed" && "bg-teal-400",
-                      booking.status === "request" && "bg-neutral-300",
-                    )}
-                  />
-                )}
-              </div>
+              <ActivityStatus status={booking.status} />
             </div>
 
             {/* Row 2: Description (multi-line) and New Message Indicator */}

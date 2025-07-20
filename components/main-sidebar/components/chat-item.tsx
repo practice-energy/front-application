@@ -7,6 +7,7 @@ import { useState } from "react"
 import {MessageSquareOff} from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ChatItemProps } from "../types/sidebar.types"
+import {ActivityStatus} from "@/components/ui/activity-status";
 
 export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCollapsed, isMobile }: ChatItemProps) {
   const isActive = isActiveChat(chat.id)
@@ -77,23 +78,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               <h3 className={cn("text-base font-medium truncate flex-1",
 
               )}>{chat.title}</h3>
-              <div className="flex items-center gap-1 flex-shrink-0 pl-1">
-                {chat.status && (
-                    <>
-                      <span className="text-accent text-gray-700 opacity-80 whitespace-nowrap">
-                        {chat.status === "waiting" ? "Ожидает" : chat.status === "confirmed" ? "Подтвержден" : chat.status === "request" ? "Запрос" : ""}
-                      </span>
-                      <div
-                          className={cn(
-                              "w-4 h-4 rounded-sm flex-shrink-0",
-                              chat.status === "waiting" && "bg-pink-500",
-                              chat.status === "confirmed" && "bg-teal-400",
-                              chat.status === "request" && "bg-neutral-300",
-                          )}
-                      />
-                    </>
-                )}
-              </div>
+              <ActivityStatus status={chat.status} className="items-end pl-1"/>
             </div>
 
             {/* Row 2: Description (multi-line) and New Message Indicator */}

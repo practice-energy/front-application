@@ -83,7 +83,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
         </div>
 
       {/* Time slots */}
-      <div className="relative bg-white border-r border-t mt-11">
+      <div className="relative bg-white border-l border-t border-gray-100 mt-11">
         {halfhours.map((halfHour) => {
           const booking = getBookingForHalfHour(halfHour)
           const isContinuation = isBookingContinuation(halfHour)

@@ -13,7 +13,7 @@ export function TimeColumn({ slotHeight }: TimeColumnProps) {
 
   return (
     <div className="w-16 flex-shrink-0 border border-gray-100">
-      <div className="fixed top-24 bg-white p-3 text-center z-10 border border-gray-100 h-11 w-full">
+      <div className="fixed top-24 bg-white p-3 text-center z-10 border-b border-gray-100  w-full">
         <div className="text-sm font-medium  text-transparent">Time</div>
       </div>
 

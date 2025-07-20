@@ -17,6 +17,7 @@ import { mockDashboardStats } from "@/services/mock-dash"
 import { TopStatsCard } from "../top-stats-card"
 import { OverviewStatCard } from "../overview-stat-card"
 import { UpcomingActivityCard } from "../upcoming-activity-card"
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 export function MainDashboard() {
   const stats = mockDashboardStats
@@ -64,7 +65,7 @@ export function MainDashboard() {
   const { weekday, day, month } = formatDate()
 
   return (
-    <div className="space-y-6 pl-20">
+    <div className="md:flex md:flex-col space-y-6 p-2">
       {/* Top Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <TopStatsCard
@@ -152,7 +153,7 @@ export function MainDashboard() {
 
         {/* Right side - new upcoming activities section (1/3 width) */}
         <div className="space-y-6 w-full">
-          <Card className="border-0 shadow-md min-h-full">
+          <Card className="border-0 shadow-md h-full flex flex-col">
             <CardHeader>
               <div className="flex items-center">
                 <CardTitle className="text-lg text-black">
@@ -161,43 +162,46 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+            <CardContent className="flex-1 overflow-hidden">
+              <div className="h-full space-y-4">
                 {stats.upcomingActivities.activities.length > 0 ? (
-                  <div className="space-y-2">
-                    {stats.upcomingActivities.activities.map((activity, index) => {
-                      // Check if this activity starts when the previous one ends
-                      const isBackToBack =
-                        index > 0 &&
-                        stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+                    <ScrollArea className="h-full pr-4">
+                      <div className="space-y-2">
+                        {stats.upcomingActivities.activities.map((activity, index) => {
+                          // Check if this activity starts when the previous one ends
+                          const isBackToBack =
+                              index > 0 &&
+                              stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
 
-                      return (
-                        <UpcomingActivityCard
-                          key={activity.id}
-                          startTime={activity.start.toLocaleTimeString("ru-RU", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                          endTime={activity.end.toLocaleTimeString("ru-RU", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                          client={activity.client}
-                          service={activity.service}
-                          duration={`${activity.duration} мин`}
-                          format={activity.format === "video" ? "Видео" : "Очно"}
-                          isBackToBack={isBackToBack}
-                          isRepeat={activity.isRepeat}
-                          status={activity.status}
-                        />
-                      )
-                    })}
-                  </div>
+                          return (
+                              <div key={activity.id} className="pb-1">
+                                <UpcomingActivityCard
+                                    startTime={activity.start.toLocaleTimeString("ru-RU", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                    endTime={activity.end.toLocaleTimeString("ru-RU", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                    client={activity.client}
+                                    service={activity.service}
+                                    duration={`${activity.duration} мин`}
+                                    format={activity.format}
+                                    isBackToBack={isBackToBack}
+                                    isRepeat={activity.isRepeat}
+                                    status={activity.status}
+                                />
+                              </div>
+                          )
+                        })}
+                      </div>
+                    </ScrollArea>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                    <Calendar className="w-12 h-12 mb-2" />
-                    <p>Запланированные активности появятся здесь</p>
-                  </div>
+                    <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-full">
+                      <Calendar className="w-12 h-12 mb-2" />
+                      <p>Запланированные активности появятся здесь</p>
+                    </div>
                 )}
               </div>
             </CardContent>

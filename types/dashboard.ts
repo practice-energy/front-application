@@ -35,6 +35,7 @@ export interface UpcomingActivity {
     id: string
     name: string
     price: number
+    description: string
   }
 }
 
