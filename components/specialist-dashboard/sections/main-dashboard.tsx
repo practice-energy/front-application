@@ -164,7 +164,7 @@ export function MainDashboard() {
             </CardHeader>
             <CardContent className="p-0">
               {stats.upcomingActivities.activities.length > 0 ? (
-                <ScrollArea className="h-[600px] px-6 pb-6">
+                <ScrollArea className="h-[470px] px-6 pb-6">
                   <div className="space-y-2">
                     {stats.upcomingActivities.activities.map((activity, index) => {
                       // Check if this activity starts when the previous one ends
