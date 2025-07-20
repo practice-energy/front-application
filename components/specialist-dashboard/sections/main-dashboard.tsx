@@ -202,7 +202,7 @@ export function MainDashboard() {
                   </ScrollArea>
 
                   {/* Bottom gradient */}
-                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute bottom-6 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-[600px] px-6">
