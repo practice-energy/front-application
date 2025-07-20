@@ -122,18 +122,18 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
               {/* Share button positioned absolutely in the header area */}
               <div className="items-end">
-                <Button
+              <Button
                   size="sm"
                   className={cn(
-                    "text-gray-600 dark:text-white",
-                    "shadow-md hover:shadow-lg",
-                    "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
+                      "text-gray-600 dark:text-white",
+                      "shadow-md hover:shadow-lg",
+                      "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
                   )}
                   onClick={() => setShareModalOpen(true)}
-                >
-                  <Share className="h-4 w-4 mr-2" />
-                  Поделиться
-                </Button>
+              >
+                <Share className="h-4 w-4 mr-2" />
+                Поделиться
+              </Button>
               </div>
             </div>
 
@@ -213,15 +213,14 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
       <div className="fixed bottom-0 left-0 right-0 z-10">
         <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
-          <div className="pb-6 px-6">
-            <div className="max-w-4xl mx-auto">
-              <SearchBar
-                onSearch={handleSearch}
-                showHeading={false}
-                placeholder={"Найти специалистов..."}
-                chatTitle={specialist.name}
-              />
-            </div>
+          <div className="pb-6">
+            <SearchBar
+              onSearch={handleSearch}
+              showHeading={false}
+              dynamicWidth={true}
+              placeholder={"Найти специалистов..."}
+              chatTitle={specialist.name}
+            />
           </div>
         </div>
       </div>

@@ -222,14 +222,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         {/* Fixed SearchBar at the bottom of the screen with sidebar sync */}
         <div ref={searchRef} className="fixed bottom-0 left-0 right-0 py-4">
           <div className="px-6">
-            <div className="max-w-4xl mx-auto">
-              <SearchBar
-                onSearch={handleSearch}
-                showHeading={false}
-                placeholder="Забронировать услугу"
-                chatTitle={specialist.name}
-              />
-            </div>
+            <SearchBar
+              onSearch={handleSearch}
+              showHeading={false}
+              dynamicWidth={true}
+              placeholder="Забронировать услугу"
+              chatTitle={specialist.name}
+            />
           </div>
         </div>
       </main>
