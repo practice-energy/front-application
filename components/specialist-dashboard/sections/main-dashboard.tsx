@@ -17,7 +17,7 @@ import { mockDashboardStats } from "@/services/mock-dash"
 import { TopStatsCard } from "../top-stats-card"
 import { OverviewStatCard } from "../overview-stat-card"
 import { UpcomingActivityCard } from "../upcoming-activity-card"
-import {ScrollArea} from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function MainDashboard() {
   const stats = mockDashboardStats
@@ -67,7 +67,7 @@ export function MainDashboard() {
   return (
     <div className="md:flex md:flex-col space-y-6 p-2">
       {/* Top Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <TopStatsCard
           icon={<LayoutGrid size={24} className="text-neutral-600" />}
           title={`${stats.topStats.activePracticesCount} ${pluralize(stats.topStats.activePracticesCount, "практика активна", "практики активны", "практик активно")}`}
@@ -87,7 +87,7 @@ export function MainDashboard() {
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 lg:items-start">
         {/* Practice & Activity Overview - Wider Section */}
         <div className="space-y-6">
           <Card className="border-0 shadow-md">
@@ -152,8 +152,8 @@ export function MainDashboard() {
         </div>
 
         {/* Right side - new upcoming activities section (1/3 width) */}
-        <div className="space-y-6 w-full">
-          <Card className="border-0 shadow-md h-full flex flex-col">
+        <div className="w-full">
+          <Card className="border-0 shadow-md h-full">
             <CardHeader>
               <div className="flex items-center">
                 <CardTitle className="text-lg text-black">
@@ -162,48 +162,46 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 overflow-hidden">
-              <div className="h-full space-y-4">
-                {stats.upcomingActivities.activities.length > 0 ? (
-                    <ScrollArea className="h-full pr-4">
-                      <div className="space-y-2">
-                        {stats.upcomingActivities.activities.map((activity, index) => {
-                          // Check if this activity starts when the previous one ends
-                          const isBackToBack =
-                              index > 0 &&
-                              stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+            <CardContent className="p-0">
+              {stats.upcomingActivities.activities.length > 0 ? (
+                <ScrollArea className="h-[600px] px-6 pb-6">
+                  <div className="space-y-2">
+                    {stats.upcomingActivities.activities.map((activity, index) => {
+                      // Check if this activity starts when the previous one ends
+                      const isBackToBack =
+                        index > 0 &&
+                        stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
 
-                          return (
-                              <div key={activity.id} className="pb-1">
-                                <UpcomingActivityCard
-                                    startTime={activity.start.toLocaleTimeString("ru-RU", {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}
-                                    endTime={activity.end.toLocaleTimeString("ru-RU", {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}
-                                    client={activity.client}
-                                    service={activity.service}
-                                    duration={`${activity.duration} мин`}
-                                    format={activity.format}
-                                    isBackToBack={isBackToBack}
-                                    isRepeat={activity.isRepeat}
-                                    status={activity.status}
-                                />
-                              </div>
-                          )
-                        })}
-                      </div>
-                    </ScrollArea>
-                ) : (
-                    <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-full">
-                      <Calendar className="w-12 h-12 mb-2" />
-                      <p>Запланированные активности появятся здесь</p>
-                    </div>
-                )}
-              </div>
+                      return (
+                        <div key={activity.id} className="pb-1">
+                          <UpcomingActivityCard
+                            startTime={activity.start.toLocaleTimeString("ru-RU", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                            endTime={activity.end.toLocaleTimeString("ru-RU", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                            client={activity.client}
+                            service={activity.service}
+                            duration={`${activity.duration} мин`}
+                            format={activity.format}
+                            isBackToBack={isBackToBack}
+                            isRepeat={activity.isRepeat}
+                            status={activity.status}
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+                </ScrollArea>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-gray-400 h-[600px] px-6">
+                  <Calendar className="w-12 h-12 mb-2" />
+                  <p>Запланированные активности появятся здесь</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
