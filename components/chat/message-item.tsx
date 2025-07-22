@@ -10,8 +10,9 @@ import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/chats"
 import type { Service } from "@/types/common"
-import { getSpecialistById } from "@/services/mock-data"
 import Image from "next/image"
+import {getSpecialistById} from "@/services/mock-specialists";
+import {IconAlura} from "@/components/icons/icon-alura";
 
 interface MessageItemProps {
   specialistId: string
@@ -75,22 +76,25 @@ export const MessageItem = React.memo(
                   aria-label={isAssistant ? "" : `View ${message.type} profile`}
                   title={isAssistant ? "Alura" : "View profile"}
                 >
-                  <Image
-                    src={
-                      isAssistant
-                        ? "/allura-logo.svg"
-                        : isSpecialist && specialist
-                          ? specialist.avatar
-                          : "/placeholder.jpg"
-                    }
-                    className={cn(
-                      "rounded-sm",
-                      isAssistant ? "dark:invert dark:brightness-0 dark:filter active:bg-none" : "hover:bg-violet-50",
-                    )}
-                    alt={""}
-                    width={36}
-                    height={36}
-                  />
+                  {isAssistant ? (
+                      <IconAlura
+                          width={36}
+                          height={36}
+                          className="rounded-sm active:bg-none"
+                      />
+                  ): (<Image
+                      src={
+                        isSpecialist && specialist
+                            ? specialist.avatar
+                            : "/placeholder.jpg"
+                      }
+                      className={cn(
+                          "rounded-sm hover:bg-violet-50",
+                      )}
+                      alt={""}
+                      width={36}
+                      height={36}
+                  />)}
                 </button>
                 <div className="flex flex-col ml-3 justify-end">
                   {" "}

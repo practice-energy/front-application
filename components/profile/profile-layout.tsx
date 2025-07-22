@@ -5,8 +5,9 @@ import type React from "react"
 import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useProfileStore } from "@/stores/profile-store"
-import { mockUser, mockSavedSpecialists, mockCalendarEvents } from "@/services/mock-data"
 import type { ProfileSection } from "@/types/profile"
+import {mockUser} from "@/services/mock-user";
+import {mockSavedSpecialists} from "@/services/mock-specialists";
 
 interface ProfileLayoutProps {
   children: React.ReactNode
@@ -23,15 +24,13 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
     setUser,
     setStats,
     setSavedSpecialists,
-    setCalendarEvents,
   } = useProfileStore()
 
   // Initialize data
   useEffect(() => {
     if (!user) setUser(mockUser)
     setSavedSpecialists(mockSavedSpecialists)
-    setCalendarEvents(mockCalendarEvents)
-  }, [user, stats, setUser, setStats, setSavedSpecialists, setCalendarEvents])
+  }, [user, stats, setUser, setStats, setSavedSpecialists])
 
   // Handle URL section parameter
   useEffect(() => {

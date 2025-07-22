@@ -7,10 +7,11 @@ import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { useLikes } from "@/hooks/use-likes"
 import { useRouter } from "next/navigation"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import {mockSavedSpecialists, mockServices} from "@/services/mock-data";
 import {Service, Specialist} from "@/types/common";
 import {v4 as uuidv4} from "uuid";
 import {Pentagram} from "@/components/icons/icon-pentagram";
+import {mockSavedSpecialists} from "@/services/mock-specialists";
+import {mockServices} from "@/services/mock-services";
 
 export function SavedSection() {
   const router = useRouter()

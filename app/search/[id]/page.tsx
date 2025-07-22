@@ -6,7 +6,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { ShareModal } from "@/components/modals/share-modal"
-import { mockSavedSpecialists } from "@/services/mock-data"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { useAdeptChats } from "@/stores/chat-store"
@@ -15,6 +14,7 @@ import { MessageList } from "@/components/chat/message-list"
 import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
+import {mockSavedSpecialists} from "@/services/mock-specialists";
 
 export default function SearchPage() {
   const params = useParams()

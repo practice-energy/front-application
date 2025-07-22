@@ -5,6 +5,7 @@ import Image from "next/image"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { useAdeptChats } from "@/stores/chat-store"
+import {IconPractice} from "@/components/icons/icon-practice";
 
 export default function HomePage() {
   const router = useRouter()
@@ -45,7 +46,11 @@ export default function HomePage() {
       <div className="flex-1 relative min-h-screen">
         {/* Скроллящийся контент с логотипом */}
         <div className="pt-48 pb-96 text-center">
-          <Image src="/practice-logo.svg" alt="Practice Logo" width={180} height={180} className="mx-auto" />
+          <IconPractice
+                 width={180}
+                 height={180}
+                 className="mx-auto"
+          />
         </div>
 
         {/* Mufi - абсолютно позиционирован, но в потоке контента */}

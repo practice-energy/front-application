@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { useTranslations } from "@/hooks/use-translations"
 import { Mufi } from "@/components/mufi/index"
-import { getSpecialistById, mockSpecialist } from "@/services/mock-data"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import { notFound } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import SpecialistProfile from "@/components/specialist/specialist-profile"
 import { useAdeptChats } from "@/stores/chat-store"
+import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -106,13 +106,13 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
           <div className="pb-6">
-            <Mufi
-              onSearch={handleSearch}
-              showHeading={false}
-              dynamicWidth={true}
-              placeholder={"Найти специалистов..."}
-              chatTitle={specialist.name}
-            />
+            {/*<Mufi*/}
+            {/*  onSearch={handleSearch}*/}
+            {/*  showHeading={false}*/}
+            {/*  dynamicWidth={true}*/}
+            {/*  placeholder={"Найти специалистов..."}*/}
+            {/*  chatTitle={specialist.name}*/}
+            {/*/>*/}
           </div>
         </div>
       </div>

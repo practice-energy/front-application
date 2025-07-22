@@ -8,12 +8,12 @@ import { ClipboardPlus, Sparkles, GripVertical } from "lucide-react"
 import { motion, AnimatePresence, Reorder } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { mockServices } from "@/services/mock-data"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { cn } from "@/lib/utils"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import { ClockIcon } from "@heroicons/react/24/outline"
 import type { Service } from "@/types/common"
+import {mockServices} from "@/services/mock-services";
 
 interface ServiceCardProps {
   service: Service & { isActive?: boolean }

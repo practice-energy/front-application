@@ -11,6 +11,8 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
+import {IconPractice} from "@/components/icons/icon-practice";
+import {IconAlura} from "@/components/icons/icon-alura";
 
 interface DesktopSearchBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -291,13 +293,10 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
             <form onSubmit={handleSubmit} className="w-full">
               <div className="flex items-center gap-2.5 pb-2">
                 <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                  <Image
-                    src="/allura-logo.svg"
-                    alt="Alura Logo"
+                  <IconAlura
                     width={20}
                     height={20}
                     className="w-4 h-4 mb-1.5"
-                    priority
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -342,9 +341,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                         : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
                     }`}
                   >
-                    <Image
-                      src="/practice-logo.svg"
-                      alt="Settings"
+                    <IconPractice
                       width={14}
                       height={14}
                       className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}

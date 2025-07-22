@@ -5,8 +5,8 @@ import { useState, useEffect, useCallback } from "react"
 type LikeType = "specialist" | "service"
 
 interface UseLikesReturn {
-  isLiked: (type: LikeType, id: string | number) => boolean
-  toggleLike: (type: LikeType, id: string | number) => void
+  isLiked: (id: string) => boolean
+  toggleLike: (id: string) => void
   getLikedItems: (type: LikeType) => string[]
 }
 
@@ -32,14 +32,14 @@ export function useLikes(): UseLikesReturn {
   }, [likedSpecialists])
 
   const isLiked = useCallback(
-    (type: LikeType, id: string | number): boolean => {
+    (id: string): boolean => {
       const idStr = String(id)
       return likedSpecialists.has(idStr)
     },
     [likedSpecialists],
   )
 
-  const toggleLike = useCallback((type: LikeType, id: string | number) => {
+  const toggleLike = useCallback((id: string) => {
     const idStr = String(id)
 
     setLikedSpecialists((prev) => {

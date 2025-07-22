@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {ActivityStatus} from "@/components/ui/activity-status";
+import {IconPractice} from "@/components/icons/icon-practice";
 
 interface BookingCardProps {
   booking: Booking
@@ -51,9 +52,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
           {/* Profile Image - spans all three rows */}
           <div className={cn("flex-shrink-0 flex items-center p-1")}>
             {!booking.service.avatar ? (
-              <Image
-                src="/practice-logo.svg"
-                alt={booking.service.title}
+              <IconPractice
                 width={45}
                 height={45}
                 className={cn("rounded-sm object-cover bg-none items-center")}

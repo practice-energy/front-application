@@ -11,7 +11,6 @@ import { FeedbackSection } from "@/components/feedback-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import { mockServices } from "@/services/mock-data"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
 import { ShareServiceModal } from "@/components/modals/share-service-modal"
@@ -19,6 +18,7 @@ import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { Badge } from "@/components/ui/badge"
 import { useAdeptChats } from "@/stores/chat-store"
+import {mockServices} from "@/services/mock-services";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()

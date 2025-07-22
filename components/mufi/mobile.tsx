@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
+import {IconPractice} from "@/components/icons/icon-practice";
+import {IconAlura} from "@/components/icons/icon-alura";
 
 interface MobileSearchBarProps {
     onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -261,13 +263,10 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                                 <form onSubmit={handleSubmit} className="w-full transition-all duration-300 ease-in-out">
                                     <div className="flex items-center gap-2.5 transition-all duration-300 ease-in-out">
                                         <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center mb-1.5 transition-all duration-300 ease-in-out">
-                                            <Image
-                                                src="/allura-logo.svg"
-                                                alt="Alura Logo"
+                                            <IconAlura
                                                 width={20}
                                                 height={20}
                                                 className="w-4 h-4 transition-all duration-300 ease-in-out"
-                                                priority
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0 transition-all duration-300 ease-in-out">
@@ -320,9 +319,7 @@ export const MobileMufi = React.memo(function MobileSearchBar({
                                                             : "bg-white dark:bg-gray-800text-gray-900 dark:text-white border-gray-200 dark:border-gray-600"
                                                     }`}
                                                 >
-                                                    <Image
-                                                        src="/practice-logo.svg"
-                                                        alt="Settings"
+                                                    <IconPractice
                                                         width={14}
                                                         height={14}
                                                         className={`mr-2 transition-all duration-300 ease-in-out ${

@@ -1,6 +1,7 @@
 export interface Education {
+    title: string;
     description: string;
-    certificate: File | null;
+    certificate?: string;
 }
 
 export interface Experience {
@@ -18,7 +19,7 @@ export interface Specialist {
     description: string
     specialties: string[]
     education: Education[]
-    certifcates: Education[]
+    certificates: Education[]
     experience: Experience[]
     services: Service[]
     skills: string[]

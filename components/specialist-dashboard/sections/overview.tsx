@@ -11,13 +11,13 @@ import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PhotoUpload } from "@/components/photo-upload"
-import { mockSpecialist } from "@/services/mock-data"
 import ExperienceForm from "@/components/experience-item"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import {Specialist} from "@/types/common";
+import {mockSpecialist} from "@/services/mock-specialists";
 
 export default function Overview() {
   const router = useRouter()

@@ -8,6 +8,7 @@ import {MessageSquareOff} from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ChatItemProps } from "../types/sidebar.types"
 import {ActivityStatus} from "@/components/ui/activity-status";
+import {IconAlura} from "@/components/icons/icon-alura";
 
 export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCollapsed, isMobile }: ChatItemProps) {
   const isActive = isActiveChat(chat.id)
@@ -54,9 +55,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               "h-[81px]" // Высота аватара под три строки
           )}>
             {chat.isAI ? (
-                <Image
-                    src="/allura-logo.svg"
-                    alt={chat.title}
+                <IconAlura
                     width={71}
                     height={71}
                     className={cn("rounded-sm object-cover bg-white p-1.5")}
@@ -106,13 +105,6 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                       className="hover:bg-none dark:hover:bg-gray-700 rounded transition-colors mt-1.5"
                   >
                     {toggleState === "mute" && <MessageSquareOff className="w-4 h-4 text-red-600" />}
-                    {toggleState === "ai" && (
-                        <img
-                            src="/allura-logo.svg"
-                            alt="AI"
-                            className="text-violet-600 flex-shrink-0 bg-none w-4 h-4"
-                        />
-                    )}
                     {/*{toggleState === "none" && */}
                         <div className="w-3 h-3 bg-none rounded-sm" />
                   {/*}*/}

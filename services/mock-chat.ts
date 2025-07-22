@@ -1,7 +1,8 @@
 // Generate UUIDs for all chat and specialist IDs first
 import {v4 as uuidv4} from "uuid";
 import type {Chat} from "@/types/chats";
-import {mockSpecialists} from "@/services/mock-data";
+
+import {mockSpecialists} from "@/services/mock-specialists";
 
 const chatAI1Id = uuidv4()
 const chatSpecialist1Id = uuidv4()

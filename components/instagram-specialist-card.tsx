@@ -10,6 +10,7 @@ import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import Image from "next/image.js"
+import {IconPractice} from "@/components/icons/icon-practice";
 
 interface InstagramSpecialistCardProps {
   specialist: Specialist
@@ -27,10 +28,10 @@ export function InstagramSpecialistCard({
   const [showLikeAnimation, setShowLikeAnimation] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
-  const liked = isLiked("specialist", specialist.id)
+  const liked = isLiked(specialist.id)
 
   const handleDoubleTap = () => {
-    toggleLike("specialist", specialist.id)
+    toggleLike(specialist.id)
     setShowLikeAnimation(true)
     setTimeout(() => setShowLikeAnimation(false), 1000)
   }
@@ -47,7 +48,7 @@ export function InstagramSpecialistCard({
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    toggleLike("specialist", specialist.id)
+    toggleLike(specialist.id)
   }
 
   const handleShare = (e: React.MouseEvent) => {
@@ -66,16 +67,16 @@ export function InstagramSpecialistCard({
         {/* Карточка специалиста */}
         <div className="relative">
           <div
-              className="bg-neutral-50 w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
+              className="bg-colors-neutral-150 w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
               onClick={handleCardClick}
               onTouchEnd={doubleTapHandler}
           >
             {/* Image Container */}
-            <div className="relative aspect-square overflow-hidden">
+            <div className="relative aspect-square overflow-auto">
               <img
                   src={specialist.avatar || "/placeholder.svg?height=300&width=300"}
                   alt={specialist.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-[340px] object-cover"
               />
 
               {/* Double Tap Like Animation */}
@@ -88,52 +89,42 @@ export function InstagramSpecialistCard({
               )}
             </div>
 
-            {/* Content */}
-            <div className="px-2 pt-3 h-[170px]">
-              <div className="flex justify-between items-start gap-2">
-                <div className="flex-1">
-                  <div className="flex flex-row mb-2">
-                    {/* Name */}
-                    <h3 className="font-bold text-base text-gray-900 dark:text-white line-clamp-1 transition-colors duration-300 mr-1">
-                      {specialist.name}
-                    </h3>
-                    <div className="ml-auto flex items-center gap-1 text-violet-600">
-                      <PentagramIcon size={18}/>
-                      <span>{specialist.likes}</span>
-                    </div>
+            <div className="px-2 pt-3.5 h-[158px] w-[300px]">
+              <div className="flex gap-3">
+                {/* Левая колонка - имя и должность */}
+                <div className="flex-1 overflow-hidden">
+                  <p className="font-bold text-base text-gray-900 dark:text-white line-clamp-1">
+                    {specialist.name}
+                  </p>
+                  <p className="text-neutral-900 opacity-80 leading-relaxed line-clamp-2 pt-2" style={{ minHeight: 'calc(2 * 1rem * 1.725)' }}>
+                    {specialist.title}
+                  </p>
+                </div>
+
+                {/* Правая колонка - метрики (55x55) */}
+                <div className="w-[55px] h-[55px] flex flex-col items-start justify-center font-bold text-sm gap-[11px] mr-2 pt-1.5">
+                  {/* Блок лайков */}
+                  <div className="flex items-center gap-1 text-violet-600">
+                    <PentagramIcon size={20} />
+                    {specialist.likes}
                   </div>
 
-                  {/* Title */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-gray-600 leading-relaxed line-clamp-2 w-full" style={{ minHeight: 'calc(2 * 1rem * 1.725)' }}>
-                      {specialist.title}
-                    </p>
+                  {/* Блок практик */}
+                  <div className="flex items-center gap-1">
+                    <IconPractice
+                        width={20}
+                        height={18}
+                    />
+                    {specialist.practices}
                   </div>
                 </div>
               </div>
-
-              {/* Reviews */}
-              <div className="flex items-left justify-between text-sm transition-colors duration-300 mt-1.5 space-y-1.5">
-                <div className="flex items-left">
-                  <Image
-                      src="/practice-logo.svg"
-                      alt="Practices"
-                      width={20}
-                      height={20}
-                  />
-                  <span className="ml-1.5 text-bold">{specialist.practices}</span>
-                  <p className="ml-1">Практис</p>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-left mt-3 pb-0.5 opacity-80">
-                  <MapPinHouse
-                      width={20}
-                      height={20}
-                  />
-                  <span className="ml-1.5">{specialist.location}</span>
-                </div>
+              <div className="flex items-left mt-[30px] text-neutral-700 opacity-80 gap-1.5">
+                <MapPinHouse
+                    width={18}
+                    height={18}
+                />
+                {specialist.location}
               </div>
             </div>
           </div>

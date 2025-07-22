@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, Trash2, Video, MapPin, Zap, Clock, DollarSign } from "lucide-react"
-import { mockServices } from "@/services/mock-data"
 import type { Service } from "@/types/common"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -16,6 +15,7 @@ import { AboutSection } from "@/components/about-section"
 import { SquareImageGallery } from "@/components/square-image-gallery"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { cn } from "@/lib/utils"
+import {mockServices} from "@/services/mock-services";
 
 interface EditableService extends Service {
   isActive?: boolean
