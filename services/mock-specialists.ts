@@ -1,14 +1,21 @@
 // Mock данные для специалистов (обновлены ID)
 import type {Specialist} from "@/types/common";
 import {v4 as uuidv4} from "uuid";
-import {specialist1Id, specialist2Id, specialist3Id, specialist4Id, specialist5Id} from "@/services/mock-data";
+import {
+    service1Id, service2Id,
+    specialist1Id,
+    specialist2Id,
+    specialist3Id,
+    specialist4Id,
+    specialist5Id
+} from "@/services/mock-data";
 
 export const mockSpecialists: Specialist[] = [
     {
         id: specialist1Id,
         name: "Апполинария Шлюхтенбург-Кронштадтская Фон Таргариен",
         title: "Астролог и таролог с уклоном в квантовую болгарскую филологию с терморектальным анализом Королева Андалов, Ройнаров и Первых Людей, Защитница Семи Королевств, Королева Миэрина, Кхалиси Великого Травяного Моря, Бурерожденная, Матерь Драконов, Разрушительница Оков, Неопалимая, Низвергательница Колдунов",
-        avatar: "/placeholder.jpg",
+        avatar: "/test-photo.jpg",
         images: ["/placeholder.jpg", "/placeholder.jpg"],
         practices: 127,
         price: 3500,
@@ -34,7 +41,7 @@ export const mockSpecialists: Specialist[] = [
         ],
         services: [
             {
-                id: uuidv4(),
+                id: service1Id,
                 title: "Натальная карта",
                 description: "Полный анализ натальной карты с разбором основных аспектов и домов",
                 format: "in-person",
@@ -57,7 +64,7 @@ export const mockSpecialists: Specialist[] = [
                 reviews: [],
             },
             {
-                id: uuidv4(),
+                id: service2Id,
                 title: "Гадание на Таро",
                 description: "Ответы на вопросы с помощью карт Таро с детальным толкованием",
                 format: "in-person",
@@ -135,7 +142,7 @@ export const mockSpecialists: Specialist[] = [
         id: specialist2Id,
         name: "Михаил Сидоров",
         title: "Лайф-коуч и бизнес-тренер",
-        avatar: "/placeholder.jpg",
+        avatar: "/test-photo-2.jpg",
         images: ["/placeholder.jpg", "/placeholder.jpg", "/placeholder.jpg"],
         practices: 89,
         price: 5000,

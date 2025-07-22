@@ -10,7 +10,7 @@ import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { formatCompactNumber } from "@/utils/format"
+import {formatCompactNumber, formatNumber} from "@/utils/format"
 import { Certificates } from "./certificates"
 import { Skills } from "./skills"
 import { AboutSkillsSection } from "./about-skills-section"
@@ -136,13 +136,13 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
                 {/* Блок лайков */}
                 <div className="flex flex-row items-center gap-1 text-violet-600 w-full border h-1/2 p-2 rounded-sm">
                   <PentagramIcon size={20} />
-                  <div className="ml-auto">{formatCompactNumber(specialist.likes)}</div>
+                  <div className="ml-auto">{formatNumber(specialist.likes)}</div>
                 </div>
 
                 {/* Блок практик */}
                 <div className="flex flex-row items-center gap-1 w-full border h-1/2 p-2 rounded-sm mt-3">
                   <IconPractice width={20} height={18} />
-                  <div className="ml-auto">{formatCompactNumber(specialist.practices)}</div>
+                  <div className="ml-auto">{formatNumber(specialist.practices)}</div>
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">
                   {specialist.services?.slice(0, 3).map((service, index) => (
-                    <InstagramServiceCard key={index} onClick={() => {}} service={service} />
+                    <InstagramServiceCard key={index} service={service} />
                   ))}
                 </div>
               </>
