@@ -34,7 +34,7 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
           <div
             ref={contentRef}
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isExpanded ? "" : shouldShowToggle ? "h-[100px]" : ""
+              isExpanded ? "" : shouldShowToggle ? "h-[80px]" : ""
             }`}
           >
             <div className="ml-1 text-neutral-700">{description}</div>
