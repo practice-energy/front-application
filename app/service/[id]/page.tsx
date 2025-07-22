@@ -2,23 +2,19 @@
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Clock, Images, Share, SquareUserIcon, Video } from "lucide-react"
+import { Share } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { Mufi } from "@/components/mufi/index"
-import { AboutSection } from "@/components/about-section"
-import { FeedbackSection } from "@/components/feedback-section"
-import { SquareImageGallery } from "@/components/square-image-gallery"
-import { RubleIcon } from "@/components/ui/ruble-sign"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { BackButton } from "@/components/ui/button-back"
 import { cn } from "@/lib/utils"
 import { ShareServiceModal } from "@/components/modals/share-service-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import { Badge } from "@/components/ui/badge"
 import { useAdeptChats } from "@/stores/chat-store"
-import {mockServices} from "@/services/mock-services";
+import { mockServices } from "@/services/mock-services"
+import { ServiceCard } from "@/components/service/service-card"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -106,96 +102,26 @@ export default function ServicePage({ params }: { params: { id: string } }) {
           }}
           data-animating={isAnimating ? "true" : "false"}
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
-            <div className="flex items-center justify-between gap-4">
-              {/* Back button */}
-              <BackButton className="mb-6 text-gray-600 dark:text-gray-300" />
-
-              {/* Share button positioned absolutely in the header area */}
-              <div className="items-end">
-                <Button
-                  size="sm"
-                  className={cn(
-                    "text-gray-600 dark:text-white",
-                    "shadow-md hover:shadow-lg",
-                    "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 mb-6",
-                  )}
-                  onClick={() => setShareModalOpen(true)}
-                >
-                  <Share className="h-4 w-4 mr-2" />
-                  Поделиться
-                </Button>
-              </div>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+            {/* Header with buttons */}
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <BackButton className="text-gray-600 dark:text-gray-300" />
+              <Button
+                size="sm"
+                className={cn(
+                  "text-gray-600 dark:text-white",
+                  "shadow-md hover:shadow-lg",
+                  "backdrop-blur-sm bg-white/80 dark:bg-gray-800/80",
+                )}
+                onClick={() => setShareModalOpen(true)}
+              >
+                <Share className="h-4 w-4 mr-2" />
+                Поделиться
+              </Button>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-4xl mx-auto">
-              {/* Photo Gallery at the very top */}
-              {service.images.length > 0 ? (
-                <SquareImageGallery
-                  images={service.images}
-                  alt={service.title}
-                  ratioHeight={1}
-                  ratioWidth={1}
-                  borderRadius={0}
-                />
-              ) : (
-                <div className="text-center py-12 text-muted-foreground dark:text-gray-400">
-                  <Images className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Еще нет фото</p>
-                </div>
-              )}
-
-              {/* Service header below the gallery */}
-              <div className="p-6 space-y-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">{service.title}</h1>
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="flex items-center">
-                    <Clock className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-                    <span className="text-gray-700 dark:text-gray-300">{service.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-lg font-bold transition-colors duration-300">
-                      {service.price}
-                      <RubleIcon size={18} bold={true} className="mb-0.5" />
-                    </div>
-                    {service.format && (
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1 bg-violet-50 text-violet-600 text-base border border-violet-600"
-                      >
-                        {service.format === "video" && (
-                          <>
-                            <Video className="w-4 h-4" />
-                            <span className="text-sm">Видео</span>
-                          </>
-                        )}
-                        {service.format === "in-person" && (
-                          <>
-                            <SquareUserIcon className="w-4 h-4" />
-                            <span className="text-sm">Лично</span>
-                          </>
-                        )}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-
-                {/* Service description */}
-                <div className="space-y-6">
-                  {/* About This Service Section */}
-                  <AboutSection
-                    title="About This Service"
-                    description={service.description}
-                    fullDescription={service.description}
-                    includes={service.includes}
-                    showIncludes={true}
-                  />
-
-                  {/* Client Feedback Section */}
-                  <FeedbackSection feedbacks={service.reviews} />
-                </div>
-              </div>
-            </div>
+            {/* Service Card */}
+            <ServiceCard service={service} />
           </div>
         </div>
 
