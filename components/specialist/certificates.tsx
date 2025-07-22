@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import { IconPractice } from "@/components/icons/icon-practice"
 
@@ -16,7 +18,7 @@ export function Certificates({ title, items }: CertificatesProps) {
   if (!items || items.length === 0) return null
 
   return (
-    <div>
+    <>
       <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">{title}</div>
       <div className="space-y-4">
         {items.map((item, index) => (
@@ -43,6 +45,6 @@ export function Certificates({ title, items }: CertificatesProps) {
           </div>
         ))}
       </div>
-    </div>
+    </>
   )
 }

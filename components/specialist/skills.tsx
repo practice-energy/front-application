@@ -1,3 +1,5 @@
+"use client"
+
 interface SkillsProps {
   title: string
   items: string[]
@@ -7,7 +9,7 @@ export function Skills({ title, items }: SkillsProps) {
   if (!items || items.length === 0) return null
 
   return (
-    <div>
+    <>
       <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">{title}</div>
       <ul className="space-y-2 ml-1">
         {items.map((item, index) => (
@@ -17,6 +19,6 @@ export function Skills({ title, items }: SkillsProps) {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   )
 }

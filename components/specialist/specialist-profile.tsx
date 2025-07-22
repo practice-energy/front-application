@@ -13,6 +13,7 @@ import { IconPractice } from "@/components/icons/icon-practice"
 import { formatCompactNumber } from "@/utils/format"
 import { Certificates } from "./certificates"
 import { Skills } from "./skills"
+import { AboutSkillsSection } from "./about-skills-section"
 
 interface SpecialistProfileProps {
   specialist: Specialist
@@ -149,22 +150,7 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
         </div>
         <div className="bg-white rounded-b-sm shadow-md relative">
           {/* Блок под шапкой с двумя колонками */}
-          <div className="relative px-6 pt-6 flex pb-7">
-            {/* Колонка "О мастере" (2/3 ширины) */}
-            <div className="w-2/3 pr-6">
-              <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">
-                О мастере
-              </div>
-              <div className="overflow-hidden transition-all duration-300 ease-in-out">
-                <div className="ml-1 text-neutral-700">{specialist.description}</div>
-              </div>
-            </div>
-
-            {/* Колонка "Навыки" (1/3 ширины) */}
-            <div className="w-1/3">
-              <Skills title="Навыки" items={specialist.skills} />
-            </div>
-          </div>
+          <AboutSkillsSection description={specialist.description} skills={specialist.skills} />
         </div>
         <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
           <div className="relative px-6 pt-6 pb-4">
