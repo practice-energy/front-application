@@ -10,7 +10,7 @@ interface FeedbackSectionProps {
   className?: string
 }
 
-export function FeedbackSection({ feedbacks, title = "Client Feedback", className = "" }: FeedbackSectionProps) {
+export function FeedbackSection({ feedbacks, title = "Реко и отзывы", className = "" }: FeedbackSectionProps) {
   // States for top row (even indexes)
   const [isTopAutoScrollPaused, setIsTopAutoScrollPaused] = useState(false)
   const topScrollRef = useRef<HTMLDivElement>(null)
