@@ -1,6 +1,6 @@
 "use client"
 
-import {MapPin, TimerReset, TvIcon as TvMinimalPlayIcon, TvMinimalPlay, Users} from "lucide-react"
+import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image"
@@ -8,7 +8,7 @@ import { AboutContentsSection } from "@/components/service/about-contents-sectio
 import { IconPractice } from "@/components/icons/icon-practice"
 import { useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
-import type {BookingSlot} from "@/types/booking"
+import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
 
 interface ServiceCardProps {
@@ -110,7 +110,7 @@ export function ServiceCard({ service, bookingSlots }: ServiceCardProps) {
 
       {/* Bookings section */}
       <div className="flex flex-row px-6 pb-3">
-        <div className="w-80">
+        <div className="w-80 flex-shrink-0">
           <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
         </div>
         <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
