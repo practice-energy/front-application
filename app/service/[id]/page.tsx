@@ -1,7 +1,10 @@
 "use client"
 
+import { useRef } from "react"
+
+import { useState } from "react"
+
 import type React from "react"
-import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { MessagesSquare, Share } from "lucide-react"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"

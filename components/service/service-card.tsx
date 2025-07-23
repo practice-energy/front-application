@@ -1,11 +1,14 @@
 "use client"
 
-import { MapPin, TimerReset, TvIcon as TvMinimalPlayIcon, Users } from "lucide-react"
+import {Clock, MapPin, SquareUserIcon, TimerReset, TvMinimalPlayIcon, Users, Video} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
-import Image from "next/image"
-import { AboutContentsSection } from "@/components/service/about-contents-section"
-import { IconPractice } from "@/components/icons/icon-practice"
+import Image from "next/image";
+import {AboutContentsSection} from "@/components/service/about-contents-section";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {formatNumber} from "@/utils/format";
+import type React from "react";
 
 interface ServiceCardProps {
   service: Service
@@ -83,24 +86,25 @@ export function ServiceCard({ service }: ServiceCardProps) {
           </div>
           <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
             {service.format === "video" ? (
-              <>
-                <TvMinimalPlayIcon size={16} />
-                <p className="text-gray-600">Видео</p>
-              </>
+                <>
+                  <TvMinimalPlayIcon size={16} />
+                  <p className="text-gray-600">Видео</p>
+                </>
             ) : (
-              <>
-                <Users size={16} />
-                <p className="text-gray-600">Очная</p>
-              </>
+                <>
+                  <Users size={16} />
+                  <p className="text-gray-600">Очная</p>
+                </>
             )}
           </div>
           <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
             <IconPractice width={20} height={18} />
             {service.practice}
           </div>
+
         </div>
       </div>
-      <AboutContentsSection description={service.description} contents={service.includes} />
+      <AboutContentsSection description={service.description} contents={service.includes}/>
     </div>
   )
 }

@@ -1,77 +1,81 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Included } from "@/components/service/included"
+import { cn } from "@/lib/utils"
+import {ChevronDown} from "lucide-react";
+import {Included} from "@/components/service/included";
 
 interface AboutContentsSectionProps {
-  description: string
-  contents: string[]
+    description: string
+    contents: string[]
 }
 
 export function AboutContentsSection({ description, contents }: AboutContentsSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [showExpandButton, setShowExpandButton] = useState(false)
-  const contentRef = useRef<HTMLDivElement>(null)
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [shouldShowToggle, setShouldShowToggle] = useState(false)
+    const [contentHeight, setContentHeight] = useState(0)
+    const contentRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (contentRef.current) {
-      const height = contentRef.current.scrollHeight
-      setShowExpandButton(height > 100)
+    useEffect(() => {
+        if (contentRef.current) {
+            const height = contentRef.current.scrollHeight
+            setContentHeight(height)
+            setShouldShowToggle(height > 120)
+        }
+    }, [description, contents])
+
+    const handleToggle = () => {
+        setIsExpanded(!isExpanded)
     }
-  }, [description, contents])
 
-  return (
-    <div className="bg-white p-6 space-y-6">
-      <div className="relative">
-        <div
-          ref={contentRef}
-          className={`overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-none" : "max-h-[100px]"}`}
-        >
-          {/* About This Service Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">О данной услуге</h3>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{description}</p>
-          </div>
+    return (
+        <div className="relative px-6 pt-6 pb-7">
+            <div
+                ref={contentRef}
+                className="overflow-hidden transition-all duration-500 ease-in-out flex"
+                style={{
+                    height: isExpanded
+                        ? `${contentHeight}px`
+                        : shouldShowToggle
+                            ? '120px'
+                            : 'auto'
+                }}
+            >
+                {/* Колонка "О мастере" (2/3 ширины) */}
+                <div className="w-2/3 pr-6">
+                    <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">
+                        О практис
+                    </div>
+                    <div
+                        className={cn(
+                            "ml-1 text-neutral-700 transition-opacity duration-300",
+                            !isExpanded && "line-clamp-3"
+                        )}
+                    >
+                        {description}
+                    </div>
+                </div>
 
-          {/* What's Included Section */}
-          {contents && contents.length > 0 && (
-            <div className="space-y-4 mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Что входит в услугу</h3>
-              <Included items={contents} />
+                {/* Колонка "Навыки" (1/3 ширины) */}
+                <div className="w-1/3">
+                    <Included title="Наполнение" items={contents} />
+                </div>
             </div>
-          )}
-        </div>
 
-        {/* Gradient overlay when collapsed */}
-        {!isExpanded && showExpandButton && (
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-        )}
-      </div>
-
-      {/* Expand/Collapse button */}
-      {showExpandButton && (
-        <div className="flex justify-center">
-          <Button
-            variant="ghost"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-violet-600 hover:text-violet-700 hover:bg-violet-50"
-          >
-            {isExpanded ? (
-              <>
-                Скрыть
-                <ChevronUp className="ml-2 h-4 w-4" />
-              </>
-            ) : (
-              <>
-                Раскрыть больше
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </>
+            {/* Fade overlay when collapsed */}
+            {shouldShowToggle && !isExpanded && (
+                <div className="absolute w-full h-14 bottom-[55px] left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500" />
             )}
-          </Button>
+
+            {shouldShowToggle && (
+                <button
+                    onClick={handleToggle}
+                    className="text-violet-600 hover:text-violet-700 h-auto mt-1 ml-1 transition-colors duration-300 flex items-center gap-1 group"
+                >
+                    {isExpanded ? "Свернуть" : "Раскрыть больше"}
+                    <ChevronDown width={24} height={24} className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")} />
+                </button>
+            )}
         </div>
-      )}
-    </div>
-  )
+    )
 }

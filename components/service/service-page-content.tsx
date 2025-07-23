@@ -4,14 +4,8 @@ import type React from "react"
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { MessagesSquare, Share } from "lucide-react"
-import { AuthModal } from "@/components/modals/auth-modal"
-import { Mufi } from "@/components/mufi/index"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { BackButton } from "@/components/ui/button-back"
-import { ShareServiceModal } from "@/components/modals/share-service-modal"
-import { v4 as uuidv4 } from "uuid"
-import type { Chat, Message } from "@/types/chats"
-import { useAdeptChats } from "@/stores/chat-store"
 import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
 
@@ -29,64 +23,6 @@ export function ServicePageContent({ service }: ServicePageContentProps) {
   const searchRef = useRef<HTMLDivElement>(null)
 
   const specialist = service.specialist
-
-  const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
-
-  const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
-    const existingChat = findChatBySpecialistId(specialist.id)
-
-    if (existingChat) {
-      const userMessage: Message = {
-        id: uuidv4(),
-        type: "user",
-        content: query,
-        timestamp: Date.now(),
-        files: files,
-        services: [service],
-      }
-      addMessageToChat(existingChat.id, userMessage)
-      router.push(`/search/${existingChat.id}`)
-    } else {
-      const newChatId = uuidv4()
-      const userMessage: Message = {
-        id: uuidv4(),
-        type: "user",
-        content: query,
-        timestamp: Date.now(),
-        files: files,
-        services: [service],
-      }
-
-      const newChat: Chat = {
-        id: newChatId,
-        title: specialist.name,
-        avatar: specialist.avatar,
-        specialistId: specialist.id,
-        serviceId: service.id,
-        timestamp: Date.now(),
-        messages: [userMessage],
-        isAI: false,
-        hasNew: false,
-        createdAt: Date.now(),
-      }
-
-      addChat(newChat)
-
-      window.dispatchEvent(
-        new CustomEvent("addNewChatToSidebar", {
-          detail: {
-            chat: {
-              ...newChat,
-              description: query,
-              isPractice: isPractice,
-            },
-          },
-        }),
-      )
-
-      router.push(`/search/${newChatId}`)
-    }
-  }
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -131,7 +67,7 @@ export function ServicePageContent({ service }: ServicePageContentProps) {
                   type="button"
                   onClick={handleShare}
                   className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                  title="Поделиться"
+                  title="Написать специалисту"
                 >
                   <Share size={24} />
                 </button>
@@ -142,24 +78,7 @@ export function ServicePageContent({ service }: ServicePageContentProps) {
             <ServiceCard service={service} />
           </div>
         </div>
-
-        {/* Fixed SearchBar at the bottom of the screen with sidebar sync */}
-        <div ref={searchRef} className="fixed bottom-0 left-0 right-0">
-          <div className="px-6">
-            <Mufi
-              onSearch={handleSearch}
-              showHeading={false}
-              dynamicWidth={true}
-              placeholder="Забронировать услугу"
-              chatTitle={specialist.name}
-            />
-          </div>
-        </div>
       </main>
-
-      <AuthModal isOpen={false} onClose={() => {}} mode="login" />
-
-      <ShareServiceModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} service={service} />
     </>
   )
 }
