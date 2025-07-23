@@ -1,16 +1,15 @@
 "use client"
 
-import {Clock, MapPin, SquareUserIcon, TimerReset, TvMinimalPlayIcon, Users, Video} from "lucide-react"
+import { MapPin, TimerReset, TvIcon as TvMinimalPlayIcon, Users } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
-import Image from "next/image";
-import {AboutContentsSection} from "@/components/service/about-contents-section";
-import {IconPractice} from "@/components/icons/icon-practice";
-import React, {useState} from "react";
-import {CalendarWidget} from "@/components/adept-calendar/calendar-widget";
-import {ScheduleView} from "@/components/adept-calendar/schedule-view";
-import {Booking} from "@/types/booking";
-import {ScrollArea} from "@/components/ui/scroll-area";
+import Image from "next/image"
+import { AboutContentsSection } from "@/components/service/about-contents-section"
+import { IconPractice } from "@/components/icons/icon-practice"
+import { useState } from "react"
+import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
+import type { Booking } from "@/types/booking"
+import { BookingSection } from "@/components/service/booking-section"
 
 interface ServiceCardProps {
   service: Service
@@ -90,37 +89,31 @@ export function ServiceCard({ service, bookings }: ServiceCardProps) {
           </div>
           <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
             {service.format === "video" ? (
-                <>
-                  <TvMinimalPlayIcon size={16} />
-                  <p className="text-gray-600">Видео</p>
-                </>
+              <>
+                <TvMinimalPlayIcon size={16} />
+                <p className="text-gray-600">Видео</p>
+              </>
             ) : (
-                <>
-                  <Users size={16} />
-                  <p className="text-gray-600">Очная</p>
-                </>
+              <>
+                <Users size={16} />
+                <p className="text-gray-600">Очная</p>
+              </>
             )}
           </div>
           <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
             <IconPractice width={20} height={18} />
             {service.practice}
           </div>
-
         </div>
       </div>
-      <AboutContentsSection description={service.description} contents={service.includes}/>
+      <AboutContentsSection description={service.description} contents={service.includes} />
 
-      {/*bookings section*/}
-      <div className="flex flex-row">
-          <div className="flex-1">
-              <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
-          </div>
-
-          <div className="flex-1 overflow-auto border-t border-gray-200">
-              <ScrollArea>
-                  <ScheduleView selectedDate={selectedDate} bookings={bookings} />
-              </ScrollArea>
-          </div>
+      {/* Bookings section */}
+      <div className="flex flex-row border-t border-gray-200">
+        <div className="w-1/3">
+          <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+        </div>
+        <BookingSection selectedDate={selectedDate} bookings={bookings} />
       </div>
     </div>
   )
