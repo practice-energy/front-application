@@ -74,7 +74,7 @@ export function InstagramServiceCard({
 
             {/* Second row: Duration with icon */}
             <div className="flex items-center gap-1 mb-1.5">
-              <TimerReset className="h-3 w-3 text-gray-500 " />
+              <TimerReset className="text-gray-500 w-[14px] h-[14px]" size={14}/>
               <span className="text-xs text-neutral-700 ">
               {service.duration}
             </span>

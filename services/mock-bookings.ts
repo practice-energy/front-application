@@ -42,7 +42,7 @@ export const mockBookings: Booking[] = [
     },
     date: new Date(2025, 6, 13, 6, 0), // 13 июля 2025, 06:00
     duration: 60,
-    slots: 1,
+    slots: 3,
     format: "in-person",
     status: "waiting",
     createdAt: new Date(),

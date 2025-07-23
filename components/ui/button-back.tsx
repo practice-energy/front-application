@@ -20,7 +20,7 @@ export function BackButton({
 
     return (
         <button
-            className={`flex p-3 items-center justify-center gap-1 ${className}`}
+            className={`flex py-3 items-center justify-center gap-1 ${className}`}
             onClick={() => router.back()}
         >
             <ChevronLeft className={iconClassName} />

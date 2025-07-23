@@ -234,7 +234,7 @@ export function MainSidebar() {
         {/* Исчезающий градиент сверху */}
         <div
           className={cn(
-            "sticky top-0 left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
+            "sticky top-[-1px] left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",
              "from-white via-white/80 to-transparent",
           )}
         />

@@ -35,7 +35,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
       <div className="h-full flex flex-col">
         {/* Mobile Back Button and Calendar Widget */}
         <div className="flex-shrink-0">
-          <div className="flex flex-col p-4 items-start justify-between">
+          <div className="flex flex-col px-4 items-start justify-between">
             <BackButton/>
             <div className="flex-1 w-full">
               <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
