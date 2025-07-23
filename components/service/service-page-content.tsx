@@ -8,12 +8,15 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { BackButton } from "@/components/ui/button-back"
 import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
+import {Booking} from "@/types/booking";
+import {FeedbackSection} from "@/components/feedback-section";
 
 interface ServicePageContentProps {
   service: Service
+  bookings: Booking[]
 }
 
-export function ServicePageContent({ service }: ServicePageContentProps) {
+export function ServicePageContent({ service, bookings }: ServicePageContentProps) {
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
@@ -75,7 +78,8 @@ export function ServicePageContent({ service }: ServicePageContentProps) {
             </div>
 
             {/* Service Card */}
-            <ServiceCard service={service} />
+            <ServiceCard service={service}  bookings={bookings}/>
+            <FeedbackSection feedbacks={service.reviews}/>
           </div>
         </div>
       </main>

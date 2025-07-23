@@ -1,22 +1,26 @@
 "use client"
 
 import {Clock, MapPin, SquareUserIcon, TimerReset, TvMinimalPlayIcon, Users, Video} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image";
 import {AboutContentsSection} from "@/components/service/about-contents-section";
 import {IconPractice} from "@/components/icons/icon-practice";
-import {formatNumber} from "@/utils/format";
-import type React from "react";
+import React, {useState} from "react";
+import {CalendarWidget} from "@/components/adept-calendar/calendar-widget";
+import {ScheduleView} from "@/components/adept-calendar/schedule-view";
+import {Booking} from "@/types/booking";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 interface ServiceCardProps {
   service: Service
+  bookings: Booking[]
 }
 
-export function ServiceCard({ service }: ServiceCardProps) {
+export function ServiceCard({ service, bookings }: ServiceCardProps) {
   const mainImage = service.images[0]
   const thumbnails = service.images
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
   return (
     <div className="bg-white rounded-sm shadow-sm overflow-hidden md:w-[845px]">
@@ -105,6 +109,19 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </div>
       </div>
       <AboutContentsSection description={service.description} contents={service.includes}/>
+
+      {/*bookings section*/}
+      <div className="flex flex-row">
+          <div className="flex-1">
+              <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+          </div>
+
+          <div className="flex-1 overflow-auto border-t border-gray-200">
+              <ScrollArea>
+                  <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+              </ScrollArea>
+          </div>
+      </div>
     </div>
   )
 }

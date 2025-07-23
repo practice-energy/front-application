@@ -11,76 +11,22 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { BackButton } from "@/components/ui/button-back"
 import { mockServices } from "@/services/mock-services"
 import { ServicePageContent } from "@/components/service/service-page-content"
+import {mockBookings} from "@/services/booking-data";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
-  const router = useRouter()
   const { id } = params
   const [isAnimating] = useState(false)
-  const [shareModalOpen, setShareModalOpen] = useState(false)
-
-  // Refs for scrolling
-  const bookingRef = useRef<HTMLDivElement>(null)
-  const searchRef = useRef<HTMLDivElement>(null)
 
   // Find the service by ID
   const service = mockServices.find((s) => s.id === id) || mockServices[0]
-  const specialist = service.specialist
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setShareModalOpen(true)
-  }
-
-  const handleReply = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    router.push(`/search/${specialist.id}`)
-  }
+  const bookings = mockBookings
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-[144px] relative">
-        <div
-          className="flex-1 overflow-hidden"
-          style={{
-            transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-          }}
-          data-animating={isAnimating ? "true" : "false"}
-        >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-            {/* Header with Back Button and Action Buttons */}
-            <div className="flex items-center justify-between mb-8 relative">
-              <div className="flex-1">
-                <BackButton className="text-neutral-700 opacity-80" text={"назад к профайл"} />
-              </div>
-
-              <div className="flex flex-row gap-3 items-center pt-2.5">
-                {/* Message Button */}
-                <button
-                  type="button"
-                  onClick={handleReply}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                  title="Написать специалисту"
-                >
-                  <MessagesSquare size={24} />
-                </button>
-
-                {/* Share Button */}
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                  title="Написать специалисту"
-                >
-                  <Share size={24} />
-                </button>
-              </div>
-            </div>
-
-            {/* Service Page Content */}
-            <ServicePageContent service={service} />
-          </div>
-        </div>
-      </main>
+      <div className="mx-auto px-4 sm:px-6 py-8">
+        {/* Service Page Content */}
+        <ServicePageContent service={service} bookings={bookings}/>
+      </div>
     </>
   )
 }
