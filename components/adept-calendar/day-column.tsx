@@ -35,6 +35,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
       </>
     )
   }
+
   // Get bookings for this date
   const getBookingsForDate = (date: Date) => {
     return bookings.filter((booking) => {

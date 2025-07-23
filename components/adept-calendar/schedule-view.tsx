@@ -39,19 +39,13 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
     <div className="flex-1 h-full">
         <div className="flex">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
-          <DayColumn
-              key={displayDates[0].toISOString()}
-              date={displayDates[0]}
-              bookings={bookings}
-              slotHeight={SLOT_HEIGHT}
-              isSelectedDay={true}/>
-          {displayDates.slice(1).map((date) => (
+          {displayDates.map((date, index) => (
               <DayColumn
                   key={date.toISOString()}
                   date={date}
                   bookings={bookings}
                   slotHeight={SLOT_HEIGHT}
-                  isSelectedDay={false}
+                  isSelectedDay={index === 0}
               />
           ))}
         </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { MapPin, TimerReset, TvIcon as TvMinimalPlayIcon, Users } from "lucide-react"
+import {MapPin, TimerReset, TvIcon as TvMinimalPlayIcon, TvMinimalPlay, Users} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image"
@@ -8,21 +8,21 @@ import { AboutContentsSection } from "@/components/service/about-contents-sectio
 import { IconPractice } from "@/components/icons/icon-practice"
 import { useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
-import type { Booking } from "@/types/booking"
+import type {BookingSlot} from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
 
 interface ServiceCardProps {
   service: Service
-  bookings: Booking[]
+  bookingSlots: BookingSlot[]
 }
 
-export function ServiceCard({ service, bookings }: ServiceCardProps) {
+export function ServiceCard({ service, bookingSlots }: ServiceCardProps) {
   const mainImage = service.images[0]
   const thumbnails = service.images
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
   return (
-    <div className="bg-white rounded-sm shadow-sm overflow-hidden md:w-[845px]">
+    <div className="bg-white rounded-sm shadow-md overflow-hidden md:w-[845px]">
       {/* Black background photo section */}
       <div className="bg-neutral-800 p-6 flex gap-6 rounded-sm">
         {/* Main image */}
@@ -90,7 +90,7 @@ export function ServiceCard({ service, bookings }: ServiceCardProps) {
           <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
             {service.format === "video" ? (
               <>
-                <TvMinimalPlayIcon size={16} />
+                <TvMinimalPlay size={16} />
                 <p className="text-gray-600">Видео</p>
               </>
             ) : (
@@ -109,11 +109,11 @@ export function ServiceCard({ service, bookings }: ServiceCardProps) {
       <AboutContentsSection description={service.description} contents={service.includes} />
 
       {/* Bookings section */}
-      <div className="flex flex-row border-t border-gray-200">
-        <div className="w-1/3">
+      <div className="flex flex-row px-6 pb-3">
+        <div className="w-80">
           <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
         </div>
-        <BookingSection selectedDate={selectedDate} bookings={bookings} />
+        <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
       </div>
     </div>
   )

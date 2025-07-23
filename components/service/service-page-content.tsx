@@ -8,22 +8,18 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { BackButton } from "@/components/ui/button-back"
 import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
-import {Booking} from "@/types/booking";
+import {Booking, BookingSlot} from "@/types/booking";
 import {FeedbackSection} from "@/components/feedback-section";
 
 interface ServicePageContentProps {
   service: Service
-  bookings: Booking[]
+  bookingSlots: BookingSlot[]
 }
 
-export function ServicePageContent({ service, bookings }: ServicePageContentProps) {
+export function ServicePageContent({ service, bookingSlots }: ServicePageContentProps) {
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
-
-  // Refs for scrolling
-  const bookingRef = useRef<HTMLDivElement>(null)
-  const searchRef = useRef<HTMLDivElement>(null)
 
   const specialist = service.specialist
 
@@ -39,7 +35,7 @@ export function ServicePageContent({ service, bookings }: ServicePageContentProp
 
   return (
     <>
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-[144px] relative">
+      <main className="min-h-screen pb-[144px] relative">
         <div
           className="flex-1 overflow-hidden"
           style={{
@@ -78,8 +74,8 @@ export function ServicePageContent({ service, bookings }: ServicePageContentProp
             </div>
 
             {/* Service Card */}
-            <ServiceCard service={service}  bookings={bookings}/>
-            <FeedbackSection feedbacks={service.reviews}/>
+            <ServiceCard service={service}  bookingSlots={bookingSlots}/>
+            {/*<FeedbackSection feedbacks={service.reviews}/>*/}
           </div>
         </div>
       </main>

@@ -1,17 +1,11 @@
 "use client"
 
-import { useRef } from "react"
-
 import { useState } from "react"
 
 import type React from "react"
-import { useRouter } from "next/navigation"
-import { MessagesSquare, Share } from "lucide-react"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
-import { BackButton } from "@/components/ui/button-back"
 import { mockServices } from "@/services/mock-services"
 import { ServicePageContent } from "@/components/service/service-page-content"
-import {mockBookings} from "@/services/booking-data";
+import {mockBookingSlots} from "@/services/booking-slot-data";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const { id } = params
@@ -19,13 +13,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   // Find the service by ID
   const service = mockServices.find((s) => s.id === id) || mockServices[0]
-  const bookings = mockBookings
+  const bookingSlots = mockBookingSlots
 
   return (
     <>
       <div className="mx-auto px-4 sm:px-6 py-8">
         {/* Service Page Content */}
-        <ServicePageContent service={service} bookings={bookings}/>
+        <ServicePageContent service={service} bookingSlots={bookingSlots}/>
       </div>
     </>
   )

@@ -22,3 +22,9 @@ export interface Booking {
   createdAt: Date
   updatedAt: Date
 }
+
+
+export interface BookingSlot {
+  date: Date
+  slots: number // количество часовых слотов (1 слот = 1 час)
+}
