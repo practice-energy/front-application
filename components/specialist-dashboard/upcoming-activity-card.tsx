@@ -5,6 +5,7 @@ import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
 import { useRouter } from "next/navigation"
+import {IconPractice} from "@/components/icons/icon-practice";
 
 interface UpcomingActivityCardProps {
   startTime: string
@@ -54,13 +55,13 @@ export function UpcomingActivityCard({
       {/* Left column - times and avatar */}
       <div className="flex flex-col items-center min-w-[40px]">
         <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>
-        <Image
-          src={client.avatar || "/practice-logo.svg"}
-          alt={client.name}
-          width={36}
-          height={36}
-          className="rounded-sm object-cover"
-        />
+        {client.avatar ? (<Image
+            src={client.avatar}
+            alt={client.name}
+            width={36}
+            height={36}
+            className="rounded-sm object-cover"
+        />) : (<IconPractice width={36} height={36}/>)}
         <div className="text-sm text-gray-500">{endTime}</div>
       </div>
 
@@ -86,11 +87,11 @@ export function UpcomingActivityCard({
 
       {/* Duration and format tags */}
       <div className="flex flex-col gap-1 items-end mr-3 ml-auto">
-        <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+        <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
           <TimerReset size={16} />
           <p className="text-gray-600">{duration}</p>
         </div>
-        <div className="inline-flex w-24 shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+        <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
           {format === "video" ? (
             <>
               <TvMinimalPlayIcon size={16} />

@@ -1,9 +1,14 @@
 "use client"
 
-import { Clock, MapPin, SquareUserIcon, Video } from "lucide-react"
+import {Clock, MapPin, SquareUserIcon, TimerReset, TvMinimalPlayIcon, Users, Video} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
+import Image from "next/image";
+import {AboutContentsSection} from "@/components/service/about-contents-section";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {formatNumber} from "@/utils/format";
+import type React from "react";
 
 interface ServiceCardProps {
   service: Service
@@ -11,36 +16,40 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service }: ServiceCardProps) {
   const mainImage = service.images[0]
-  const thumbnails = service.images.slice(1, 4) // Show up to 3 thumbnails
+  const thumbnails = service.images
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white rounded-sm shadow-sm overflow-hidden md:w-[845px]">
       {/* Black background photo section */}
-      <div className="bg-black p-4 flex gap-4">
+      <div className="bg-neutral-800 p-6 flex gap-6 rounded-sm">
         {/* Main image */}
         <div className="flex-1">
           {mainImage ? (
-            <img
+            <Image
               src={mainImage || "/placeholder.svg"}
               alt={service.title}
-              className="w-full h-64 object-cover rounded-lg"
+              className="object-cover rounded-sm"
+              width={640}
+              height={640}
             />
           ) : (
-            <div className="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center">
+            <div className="w-full h-64 bg-gray-800 rounded-sm flex items-center justify-start">
               <span className="text-gray-400">Нет фото</span>
             </div>
           )}
         </div>
 
         {/* Thumbnails */}
-        {thumbnails.length > 0 && (
-          <div className="flex flex-col gap-2 w-20">
+        {thumbnails.length > 1 && (
+          <div className="flex flex-col justify-between">
             {thumbnails.map((image, index) => (
-              <img
+              <Image
                 key={index}
                 src={image || "/placeholder.svg"}
                 alt={`${service.title} ${index + 2}`}
-                className="w-20 h-20 object-cover rounded-lg"
+                className="object-cover rounded-sm"
+                width={160}
+                height={160}
               />
             ))}
           </div>
@@ -54,7 +63,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex-1">{service.title}</h1>
           <div className="flex items-center text-lg font-bold text-gray-900 dark:text-gray-100">
             {service.price}
-            <RubleIcon size={18} bold={true} className="mb-0.5 ml-1" />
+            <RubleIcon size={18} bold={false} className="mb-0.5 ml-1" />
           </div>
         </div>
 
@@ -71,36 +80,31 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
         {/* Tags row */}
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Duration tag */}
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            <span>{service.duration}</span>
-          </Badge>
-
-          {/* Format tag */}
-          {service.format && (
-            <Badge variant="outline" className="flex items-center gap-1 bg-violet-50 text-violet-600 border-violet-600">
-              {service.format === "video" && (
+          <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
+            <TimerReset size={16} />
+            <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
+          </div>
+          <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+            {service.format === "video" ? (
                 <>
-                  <Video className="w-4 h-4" />
-                  <span>Видео</span>
+                  <TvMinimalPlayIcon size={16} />
+                  <p className="text-gray-600">Видео</p>
                 </>
-              )}
-              {service.format === "in-person" && (
+            ) : (
                 <>
-                  <SquareUserIcon className="w-4 h-4" />
-                  <span>Лично</span>
+                  <Users size={16} />
+                  <p className="text-gray-600">Очная</p>
                 </>
-              )}
-            </Badge>
-          )}
+            )}
+          </div>
+          <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+            <IconPractice width={20} height={18} />
+            {service.practice}
+          </div>
 
-          {/* Practice tag */}
-          <Badge variant="outline" className="flex items-center gap-1">
-            <span>Практика</span>
-          </Badge>
         </div>
       </div>
+      <AboutContentsSection description={service.description} contents={service.includes}/>
     </div>
   )
 }

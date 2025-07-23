@@ -12,12 +12,17 @@ export const mockServices: Service[] = [
         description: "Подробный разбор натальной карты с рекомендациями",
         price: 3500,
         duration: "90 минут",
-        images: ["/placeholder.jpg"],
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+        ],
         specialist: mockSpecialists[0],
         tags: ["астрология", "натальная карта", "личность"],
         reviews: mockReviews,
         includes: ["Wipes", "Pencils", "Markers"],
         format: "video",
+        practice: "30 минут",
     },
     {
         id: service2Id,
@@ -31,6 +36,7 @@ export const mockServices: Service[] = [
         reviews: mockReviews,
         includes: ["Wipes", "Pencils", "Markers"],
         format: "video",
+        practice: "30 минут",
     },
     {
         id: uuidv4(),
@@ -54,6 +60,7 @@ export const mockServices: Service[] = [
         tags: ["натальная карта", "астрология", "индивидуальная консультация"],
         reviews: [],
         format: "video",
+        practice: "30 минут",
     },
     {
         id: uuidv4(),
@@ -72,6 +79,7 @@ export const mockServices: Service[] = [
         tags: ["таро", "гадание", "предсказание"],
         reviews: [],
         format: "in-person",
+        practice: "30 минут",
     },
     {
         id: uuidv4(),
@@ -95,6 +103,7 @@ export const mockServices: Service[] = [
         tags: ["карьера", "коучинг", "профессиональное развитие"],
         reviews: [],
         format: "video",
+        practice: "30 минут",
     },
     {
         id: uuidv4(),
@@ -113,5 +122,6 @@ export const mockServices: Service[] = [
         tags: ["пакет", "коучинг", "личное развитие"],
         reviews: [],
         format: "video",
+        practice: "30 минут",
     },
 ]

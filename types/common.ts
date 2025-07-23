@@ -32,6 +32,7 @@ export interface Service {
     format: "video" | "in-person"
     location?: string
     description: string
+    practice: string
     price: number
     duration: string
     images: string[]

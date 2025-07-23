@@ -29,3 +29,51 @@ export function formatCompactNumber(number) {
 
     return sign + formattedNumber + units[exponent - 1];
 }
+
+export function formatMinutes(totalMinutes: number): string {
+    if (isNaN(totalMinutes) || totalMinutes < 0) {
+        return '0 минут';
+    }
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    const parts: string[] = [];
+
+    // Форматирование часов
+    if (hours > 0) {
+        let hourWord = 'часов';
+        if (hours % 100 >= 5 && hours % 100 <= 20) {
+            hourWord = 'часов';
+        } else {
+            switch (hours % 10) {
+                case 1: hourWord = 'час'; break;
+                case 2:
+                case 3:
+                case 4: hourWord = 'часа'; break;
+                default: hourWord = 'часов';
+            }
+        }
+        parts.push(`${hours} ${hourWord}`);
+    }
+
+    // Форматирование минут
+    if (minutes > 0 || totalMinutes === 0) {
+        let minuteWord = 'минут';
+        if (minutes % 100 >= 5 && minutes % 100 <= 20) {
+            minuteWord = 'минут';
+        } else {
+            switch (minutes % 10) {
+                case 1: minuteWord = 'минута'; break;
+                case 2:
+                case 3:
+                case 4: minuteWord = 'минуты'; break;
+                default: minuteWord = 'минут';
+            }
+        }
+        parts.push(`${minutes} ${minuteWord}`);
+    }
+
+    return parts.join(' ');
+}
+
