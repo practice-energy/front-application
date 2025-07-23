@@ -1,20 +1,13 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import type React from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import {MessagesSquare, Share} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { AuthModal } from "@/components/modals/auth-modal"
-import { Mufi } from "@/components/mufi/index"
+import { MessagesSquare, Share } from "lucide-react"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { BackButton } from "@/components/ui/button-back"
-import { cn } from "@/lib/utils"
-import { ShareServiceModal } from "@/components/modals/share-service-modal"
-import { v4 as uuidv4 } from "uuid"
-import type { Chat, Message } from "@/types/chats"
-import { useAdeptChats } from "@/stores/chat-store"
 import { mockServices } from "@/services/mock-services"
-import { ServiceCard } from "@/components/service/service-card"
+import { ServicePageContent } from "@/components/service/service-page-content"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -60,28 +53,28 @@ export default function ServicePage({ params }: { params: { id: string } }) {
               <div className="flex flex-row gap-3 items-center pt-2.5">
                 {/* Message Button */}
                 <button
-                    type="button"
-                    onClick={handleReply}
-                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                    title="Написать специалисту"
+                  type="button"
+                  onClick={handleReply}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                  title="Написать специалисту"
                 >
                   <MessagesSquare size={24} />
                 </button>
 
                 {/* Share Button */}
                 <button
-                    type="button"
-                    onClick={handleShare}
-                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                    title="Написать специалисту"
+                  type="button"
+                  onClick={handleShare}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                  title="Написать специалисту"
                 >
                   <Share size={24} />
                 </button>
               </div>
             </div>
 
-            {/* Service Card */}
-            <ServiceCard service={service} />
+            {/* Service Page Content */}
+            <ServicePageContent service={service} />
           </div>
         </div>
       </main>

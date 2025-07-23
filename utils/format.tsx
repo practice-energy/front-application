@@ -76,4 +76,3 @@ export function formatMinutes(totalMinutes: number): string {
 
     return parts.join(' ');
 }
-
