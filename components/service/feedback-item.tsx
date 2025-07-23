@@ -1,6 +1,8 @@
 "use client"
 import type { Feedback } from "@/types/common"
 import { IconPractice } from "@/components/icons/icon-practice"
+import Image from "next/image";
+import {PracticePlaceholder} from "@/components/practice-placeholder";
 
 interface FeedbackItemProps {
   feedback: Feedback
@@ -18,30 +20,32 @@ export function FeedbackItem({ feedback, rating = 203 }: FeedbackItemProps) {
   }
 
   return (
-    <div className="flex-shrink-0 w-60 h-[90px] bg-white shadow-md rounded-lg p-3 flex gap-3">
+    <div className="flex-shrink-0 w-60 h-[90px] bg-white shadow-md rounded-sm p-1 flex gap-3">
       {/* Left column */}
-      <div className="flex flex-col items-center justify-between w-12">
+      <div className="flex flex-col items-center justify-between">
         {/* PracticeIcon with rating */}
         <div className="flex items-center gap-1">
           <IconPractice width={16} height={14} />
           <span className="text-sm font-medium text-gray-900">{rating}</span>
         </div>
 
-        {/* Avatar */}
-        <img
-          src={feedback.avatar || "/placeholder.svg"}
-          alt={feedback.author}
-          className="w-9 h-9 rounded-md object-cover"
-        />
+        {feedback.avatar ? (
+            <Image
+                src={feedback.avatar}
+                alt={feedback.author}
+                width={36}
+                height={36}
+                className="rounded-sm object-cover"
+            />) : (<PracticePlaceholder width={36} height={36}/>)}
 
         {/* Date */}
-        <span className="text-xs text-gray-500">{formatDate(feedback.date)}</span>
+        <span className="text-xs text-gray-500 pl-1">{formatDate(feedback.date)}</span>
       </div>
 
       {/* Right column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Author name */}
-        <span className="font-medium text-gray-900 text-sm truncate mb-1">{feedback.author}</span>
+        <span className="font-medium text-gray-900 text-sm truncate">{feedback.author}</span>
 
         {/* Feedback text with line-clamp-4 */}
         <p className="text-xs text-gray-700 leading-tight line-clamp-4 flex-1">{feedback.comment}</p>

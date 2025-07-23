@@ -10,6 +10,8 @@ import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
 import {Booking, BookingSlot} from "@/types/booking";
 import {FeedbackSection} from "@/components/service/feedback-section";
+import Image from "next/image";
+import {PracticePlaceholder} from "@/components/practice-placeholder";
 
 interface ServicePageContentProps {
   service: Service
@@ -33,6 +35,13 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
     router.push(`/search/${specialist.id}`)
   }
 
+
+  const handleToProfile = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    router.push(`/specialist/${specialist.id}`)
+  }
+
+
   return (
     <>
       <main className="min-h-screen relative">
@@ -50,7 +59,27 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
                 <BackButton className="text-neutral-700 opacity-80" text={"назад к профайл"} />
               </div>
 
-              <div className="flex flex-row gap-3 items-center pt-2.5">
+              <div className="flex flex-row gap-3 items-center pt-2.5 pr-9">
+                {/* Message Button */}
+                <button
+                    type="button"
+                    onClick={handleToProfile}
+                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                    title="Написать специалисту"
+                >
+                  {specialist.avatar ? (<Image
+                      src={specialist.avatar}
+                      alt={specialist.name}
+                      width={36}
+                      height={36}
+                      className="rounded-sm"
+                  />) : (<PracticePlaceholder
+                      width={36}
+                      height={36}
+                      className="rounded-sm"
+                  />)}
+                </button>
+
                 {/* Message Button */}
                 <button
                   type="button"

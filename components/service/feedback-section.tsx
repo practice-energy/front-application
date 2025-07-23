@@ -19,7 +19,7 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
   const bottomScrollRef = useRef<HTMLDivElement>(null)
 
   // Create tripled array for infinite scrolling
-  const loopedFeedbacks = [...feedbacks, ...feedbacks, ...feedbacks]
+  const loopedFeedbacks = [...feedbacks, ...feedbacks, ...feedbacks, ...feedbacks, ...feedbacks, ...feedbacks]
 
   // Split into two rows
   const topFeedbacks = loopedFeedbacks.filter((_, index) => index % 2 === 0)
@@ -82,8 +82,8 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
       {/* Top row (even indexes) */}
       <div className="relative mb-3">
-        <div className="absolute left-0 top-0 bottom-0 w-9 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-9 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+        <div className="absolute top-0 bottom-0 right-0 w-4 bg-gradient-to-r from-transparent  to-colors-neutral-150 z-10 pointer-events-none" />
+        <div className="absolute top-0 bottom-0 left-[-1px] w-4 bg-gradient-to-l from-transparent to-colors-neutral-150 z-10 pointer-events-none" />
 
         <div
           ref={topScrollRef}
@@ -98,8 +98,8 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
       {/* Bottom row (odd indexes) */}
       <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-9 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-9 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-5 pointer-events-none"></div>
+        <div className="absolute top-0 bottom-0 right-0 w-4 bg-gradient-to-r from-transparent  to-colors-neutral-150 z-10 pointer-events-none" />
+        <div className="absolute top-0 bottom-0 left-[-1px] w-4 bg-gradient-to-l from-transparent to-colors-neutral-150 z-10 pointer-events-none" />
 
         <div
           ref={bottomScrollRef}

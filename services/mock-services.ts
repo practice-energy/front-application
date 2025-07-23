@@ -13,7 +13,7 @@ export const mockServices: Service[] = [
         price: 3500,
         duration: "90 минут",
         images: [
-            "/placeholder.jpg",
+            // "/placeholder.jpg",
             "/placeholder.jpg",
             "/placeholder.jpg",
         ],

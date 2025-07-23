@@ -43,6 +43,9 @@ const config: Config = {
       },
       backgroundImage: {
         "allura-pattern": "url('/allura-logo.svg')",
+        'gradient-from-neutral-150': 'linear-gradient(to top, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
+        'gradient-to-left-neutral-150': 'linear-gradient(to left, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
+        'gradient-to-right-neutral-150': 'linear-gradient(to right, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
       },
       backgroundSize: {
         "allura-tile": "20px 20px",
