@@ -9,7 +9,7 @@ import { BackButton } from "@/components/ui/button-back"
 import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
 import {Booking, BookingSlot} from "@/types/booking";
-import {FeedbackSection} from "@/components/feedback-section";
+import {FeedbackSection} from "@/components/service/feedback-section";
 
 interface ServicePageContentProps {
   service: Service
@@ -35,7 +35,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
 
   return (
     <>
-      <main className="min-h-screen pb-[144px] relative">
+      <main className="min-h-screen relative">
         <div
           className="flex-1 overflow-hidden"
           style={{
@@ -75,7 +75,6 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
 
             {/* Service Card */}
             <ServiceCard service={service}  bookingSlots={bookingSlots}/>
-            {/*<FeedbackSection feedbacks={service.reviews}/>*/}
           </div>
         </div>
       </main>

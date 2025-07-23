@@ -44,14 +44,13 @@ export interface Service {
         avatar: string
     }
     tags: string[]
-    reviews: Review[]
+    reviews: Feedback[]
 }
 
-export interface Review {
+export interface Feedback {
     id: string
     author: string
     avatar: string
     comment: string
     date: number
-    verified: boolean
 }

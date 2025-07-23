@@ -1,7 +1,7 @@
 // Mock данные для услуг (обновлены ID)
 import type {Service} from "@/types/common";
 import {mockSpecialists} from "@/services/mock-specialists";
-import {mockReviews} from "@/services/mock-reviews";
+import {mockFeedbacks} from "@/services/mock-feedbacks";
 import {v4 as uuidv4} from "uuid";
 import {service1Id, service2Id, specialist1Id, specialist2Id} from "@/services/mock-data";
 
@@ -19,7 +19,7 @@ export const mockServices: Service[] = [
         ],
         specialist: mockSpecialists[0],
         tags: ["астрология", "натальная карта", "личность"],
-        reviews: mockReviews,
+        reviews: mockFeedbacks,
         includes: ["Wipes", "Pencils", "Markers"],
         format: "video",
         practice: "30 минут",
@@ -33,7 +33,7 @@ export const mockServices: Service[] = [
         images: ["/placeholder.jpg"],
         specialist: mockSpecialists[0],
         tags: ["коучинг", "цели", "развитие"],
-        reviews: mockReviews,
+        reviews: mockFeedbacks,
         includes: ["Wipes", "Pencils", "Markers"],
         format: "video",
         practice: "30 минут",

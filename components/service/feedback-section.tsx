@@ -2,10 +2,10 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import { Review } from "@/types/common"
+import { Feedback } from "@/types/common"
 
 interface FeedbackSectionProps {
-  feedbacks: Review[]
+  feedbacks: Feedback[]
   title?: string
   className?: string
 }
