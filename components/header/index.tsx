@@ -146,40 +146,40 @@ export function Header() {
           isSticky && "sticky",
         )}
       >
-        <nav className="h-full w-full">
-          <div className="flex h-full items-center">
-            {/* Кнопка сайдбара - фиксированная позиция */}
-            {shouldShowSidebar && (
-              <button
-                onClick={handleOpenSidebar}
-                className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
-                style={{
-                  position: "fixed",
-                  left: "364px",
-                  zIndex: 60,
-                }}
-              >
-                <PanelRightClose width={24} height={24} />
-              </button>
-            )}
+        {/* Кнопка сайдбара - фиксированная позиция */}
+        {shouldShowSidebar && (
+          <button
+            onClick={handleOpenSidebar}
+            className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
+            style={{
+              position: "fixed",
+              left: "364px",
+              top: "0",
+              zIndex: 60,
+            }}
+          >
+            <PanelRightClose width={24} height={24} />
+          </button>
+        )}
 
-            {/* Логотип - фиксированная позиция */}
-            {pathname !== "/" && (
-              <div
-                style={{
-                  position: "fixed",
-                  left: "420px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  zIndex: 60,
-                }}
-              >
-                <Logo onClick={handleLogoClick} />
-              </div>
-            )}
+        {/* Логотип - фиксированная позиция */}
+        {pathname !== "/" && (
+          <div
+            style={{
+              position: "fixed",
+              left: "420px",
+              top: "12px",
+              zIndex: 60,
+            }}
+          >
+            <Logo onClick={handleLogoClick} />
+          </div>
+        )}
 
-            {/* Правая секция - абсолютное позиционирование */}
-            <div className="hidden md:flex items-center space-x-3 absolute right-3 top-1/2 transform -translate-y-1/2">
+        <nav className="container mx-auto px-6 h-full">
+          <div className="flex h-full items-center justify-end">
+            {/* Правая секция */}
+            <div className="hidden md:flex items-center space-x-3">
               {isAuthenticated && !user?.isSpecialist && (
                 <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
               )}
@@ -216,7 +216,7 @@ export function Header() {
             </div>
 
             {/* Мобильная версия */}
-            <div className="md:hidden absolute right-3 top-1/2 transform -translate-y-1/2">
+            <div className="md:hidden">
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
               ) : (
@@ -235,7 +235,7 @@ export function Header() {
             </div>
 
             {!isAuthenticated && (
-              <div className="hidden md:flex absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="hidden md:flex">
                 <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>
               </div>
             )}
