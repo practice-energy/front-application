@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react"
 import type { Feedback } from "@/types/common"
 import { FeedbackItem } from "./feedback-item"
+import {Mufi} from "@/components/mufi";
 
 interface FeedbackSectionProps {
   feedbacks: Feedback[]
@@ -78,7 +79,7 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
   return (
     <div className={className}>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">{title}</h3>
+      <div className="text-xl font-bold text-gray-900 dark:text-gray-100 px-4 mb-6">{title}</div>
 
       {/* Top row (even indexes) */}
       <div className="relative mb-3">
@@ -87,7 +88,7 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
         <div
           ref={topScrollRef}
-          className="flex space-x-4 overflow-x-hidden pb-4 scroll-smooth"
+          className="flex space-x-4 overflow-x-hidden pb-2 scroll-smooth"
           style={{ scrollBehavior: "smooth" }}
         >
           {topFeedbacks.map((feedback, index) => (
@@ -103,7 +104,7 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
         <div
           ref={bottomScrollRef}
-          className="flex space-x-4 overflow-x-hidden pb-1 scroll-smooth"
+          className="flex space-x-2 overflow-x-hidden pb-2 scroll-smooth"
           style={{ scrollBehavior: "smooth" }}
         >
           {bottomFeedbacks.map((feedback, index) => (

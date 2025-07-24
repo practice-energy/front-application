@@ -17,6 +17,8 @@ interface SearchBarProps {
   onCancelReply?: () => void
   placeholder?: string
   chatTitle?: string
+  disableFileApply: boolean
+  showPractice: boolean
 }
 
 export const Mufi = React.memo(function SearchBar(props: SearchBarProps) {

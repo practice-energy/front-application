@@ -8,13 +8,15 @@ interface ActivityStatusProps {
     className?: string;
     textClassName?: string;
     dotClassName?: string;
+    showTitle?: boolean
 }
 
 export const ActivityStatus = React.memo(({
                                               status,
                                               className = "",
                                               textClassName = "",
-                                              dotClassName = ""
+                                              dotClassName = "",
+                                              showTitle = true,
                                           }: ActivityStatusProps) => {
     const statusConfig = {
         waiting: {
@@ -43,12 +45,12 @@ export const ActivityStatus = React.memo(({
 
     return (
         <div className={cn("flex items-center text-accent gap-1", className)}>
-      <span className={cn("text-xs text-gray-600 whitespace-nowrap", textClassName)}>
+            {showTitle && (<span className={cn("text-xs text-gray-600 whitespace-nowrap", textClassName)}>
         {currentStatus.text}
-      </span>
+      </span>)}
             {currentStatus.dotClass && (
                 <div className={cn(
-                    "w-4 h-4 rounded-sm flex-shrink-0",
+                    "w-5 h-5 rounded-sm flex-shrink-0",
                     currentStatus.dotClass,
                     dotClassName
                 )}/>

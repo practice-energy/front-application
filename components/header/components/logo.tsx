@@ -17,7 +17,7 @@ export function Logo({ onClick }: LogoProps) {
   }
 
   return (
-    <button onClick={onClick} className="flex space-x-2 items-start">
+    <button onClick={onClick} className="flex space-x-2">
       <div className="h-20 w-20 flex rounded-sm">
         <IconPractice
           width={60}

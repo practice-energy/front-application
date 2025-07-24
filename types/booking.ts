@@ -21,6 +21,7 @@ export interface Booking {
   status?: "waiting" | "confirmed" | "request"
   createdAt: Date
   updatedAt: Date
+  isRepeat?: boolean
 }
 
 

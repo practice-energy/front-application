@@ -175,52 +175,61 @@ export default function SearchPage() {
   )
 
   return (
-    <div className="flex h-screen flex-col">
-      <div
-        className="flex-1 bg-white dark:bg-gray-900 overflow-hidden relative"
-        style={{
-          transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
-        }}
-        data-animating={isAnimating ? "true" : "false"}
-      >
-        <ScrollArea className="h-full relative">
-          {!isMobile && <ChatNewButton />}
-          <div className="flex justify-center py-4" style={{ paddingLeft: "140px", paddingRight: "140px" }}>
-            <div className="max-w-6xl w-full pb-64 pt-20">
-              {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                <ChatEmptyState />
-              ) : (
-                <MessageList
-                  chat={currentChat}
-                  isLoading={isLoading}
-                  onSpecialistClick={handleSpecialistClick}
-                  onServiceClick={handleServiceClick}
-                  onShare={handleShare}
-                  onRegenerate={handleRegenerate}
-                  specialistId={params.id as string}
-                />
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          </div>
-        </ScrollArea>
+      <div className="relative h-screen bg-white dark:bg-gray-900">
+        {!isMobile && <ChatNewButton />}
 
-        <div className="absolute bottom-0 left-0 right-0 z-10">
-          <div className="pb-12">
+        {/* Фиксированный контейнер чата по центру экрана */}
+        <div
+            className="fixed inset-0 flex justify-center overflow-hidden"
+            style={{
+              left: "500px", // Отступ для сайдбара
+              right: "0",
+            }}
+        >
+          {/* Прокручиваемая область сообщений */}
+          <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
+            <div className="h-24"/>
+            {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+                <ChatEmptyState />
+            ) : (
+                <MessageList
+                    chat={currentChat}
+                    isLoading={isLoading}
+                    onSpecialistClick={handleSpecialistClick}
+                    onServiceClick={handleServiceClick}
+                    onShare={handleShare}
+                    onRegenerate={handleRegenerate}
+                    specialistId={params.id as string}
+                />
+            )}
+            <div className="h-16"/>
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {/* Фиксированный Mufi по центру экрана */}
+        <div
+            className="fixed bottom-0 left-0 right-0 flex justify-center"
+            style={{
+              left: "500px", // Учитываем отступ сайдбара
+            }}
+        >
+          <div className="w-full max-w-4xl px-4 pb-4 pt-4">
             <Mufi
-              onSearch={handleSearch}
-              showHeading={false}
-              dynamicWidth={true}
-              placeholder={"Найти специалистов..."}
-              onCancelReply={() => {}}
-              chatTitle="Alura"
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={false}
+                showPractice={currentChat?.isAI}
+                disableFileApply={true}
+                placeholder={ `Спроси у ${currentChat?.title || "Alura"}`}
+                onCancelReply={() => {}}
+                chatTitle="Alura"
             />
           </div>
         </div>
-      </div>
 
-      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
-      <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
-    </div>
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
+        <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
+      </div>
   )
 }

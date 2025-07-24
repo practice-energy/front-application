@@ -113,11 +113,11 @@ export function Header() {
   }
 
   const handleRoleToggle = () => {
-    if (role === "specialist") {
-      setRole("user")
+    if (hat === "adept") {
+      setHat("master")
       router.push("/")
     } else {
-      setRole("specialist")
+      setHat("adept")
       router.push("/specialist-dashboard")
     }
     setShowProfileMenu(false)
@@ -137,18 +137,26 @@ export function Header() {
     }
   }
 
+  const isSticky = pathname === "/" || pathname?.startsWith('/search/')
+
   return (
       <>
-        <header className="sticky top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80">
-          <nav className="container mx-auto px-6">
-            <div className="flex h-24 items-center justify-between">
-              <div className="flex items-start space-x-3 pr-3">
+        <header className={cn(
+            "top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80",
+            isSticky && "sticky"
+        )}>
+          <nav className="container px-3">
+            <div className="flex h-24 items-center">
+              <div className={cn(
+                  "flex items-start",
+                  shouldShowSidebar ? "gap-x-12 ml-40" : ""
+              )}>
                 {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
                 {shouldShowSidebar && (
                     <button
                         onClick={handleOpenSidebar}
                         className={cn(
-                            "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 gap-2 px-3",
+                            "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 px-3",
                             "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
                             !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
                             "h-20 m-0",
@@ -160,66 +168,51 @@ export function Header() {
                       <div className="h-18 w-18 items-center justify-center flex">
                         <PanelRightClose width={24} height={24} />
                       </div>
-                      <span className="sr-only">Открыть сайдбар</span>
                     </button>
                 )}
+
+                {pathname !== "/" && (<Logo
+                    onClick={handleLogoClick}
+                />)}
               </div>
 
-              {pathname !== "/" && (<Logo
-                  onClick={handleLogoClick}
-                  className={cn(
-                      "transition-all duration-300 items-start",
-                  )}
-              />)}
-
-              <NavigationButtons isAuthenticated={isAuthenticated} role={role} router={router} />
-
               {/* Desktop Right side */}
-              <div className="hidden md:flex items-center space-x-3 opacity-100">
+              <div className="hidden md:flex items-center space-x-3 opacity-100 items-end">
                 {/* Кнопка "Стать мастером" показывается только если user.isSpecialist = false */}
                 {isAuthenticated && !user?.isSpecialist && (
                     <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
                 )}
 
-                {/* Calendar button for users */}
-                {isAuthenticated && hat === "adept" && (
-                    <div className={cn(
-                        "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-md h-10 w-10 p-1",
-                        pathname === "/calendar" && "text-white bg-violet-600"
+                <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
 
-                    )}>
-                      <button onClick={handleCalendarClick}>
-                        <CalendarDays className="h-8 w-8 bold" />
-                        <span className="sr-only">Календарь</span>
-                      </button>
-                    </div>
-                )}
+                <div className="flex items-center gap-6 opacity-100">
+                  {/* Calendar button for users */}
+                  {isAuthenticated && hat === "adept" && (
+                      <div className={cn(
+                          "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
+                          pathname === "/calendar" && "text-white bg-violet-600"
 
-                <ProfileMenu
-                    isAuthenticated={isAuthenticated}
-                    user={user}
-                    showProfileMenu={showProfileMenu}
-                    toggleProfileMenu={toggleProfileMenu}
-                    setShowProfileMenu={setShowProfileMenu}
-                    profileMenuRef={profileMenuRef}
-                    handleLogout={handleLogout}
-                    role={role}
-                    handleRoleToggle={handleRoleToggle}
-                    isSpecialist={isSpecialist}
-                />
+                      )}>
+                        <button onClick={handleCalendarClick}>
+                          <CalendarDays className="h-8 w-8 bold" />
+                          <span className="sr-only">Календарь</span>
+                        </button>
+                      </div>
+                  )}
 
-                {hat === "master" ? (
-                    <BurgerMenu
-                        isAuthenticated={isAuthenticated}
-                        showBurgerMenu={showBurgerMenu}
-                        toggleBurgerMenu={toggleBurgerMenu}
-                        setShowBurgerMenu={setShowBurgerMenu}
-                    />
-                ) : (
-                    <div className="h-8 w-8 p-0 " />
-                )}
-
-                <NotificationSystem/>
+                  <ProfileMenu
+                      isAuthenticated={isAuthenticated}
+                      user={user}
+                      showProfileMenu={showProfileMenu}
+                      toggleProfileMenu={toggleProfileMenu}
+                      setShowProfileMenu={setShowProfileMenu}
+                      handleLogout={handleLogout}
+                      role={role}
+                      handleRoleToggle={handleRoleToggle}
+                      isSpecialist={isSpecialist}
+                  />
+                  {isAuthenticated && (<NotificationSystem/>)}
+                </div>
               </div>
 
               {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}

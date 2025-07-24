@@ -72,7 +72,7 @@ export function InstagramSpecialistCard({
               onTouchEnd={doubleTapHandler}
           >
             {/* Image Container */}
-            <div className="relative aspect-square overflow-auto">
+            <div className="relative aspect-square overflow-hidden">
               <img
                   src={specialist.avatar || "/placeholder.svg?height=300&width=300"}
                   alt={specialist.name}

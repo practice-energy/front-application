@@ -142,7 +142,7 @@ export function ServiceCard({ service, bookingSlots }: ServiceCardProps) {
                     </div>
                 </div>
 
-                <div className="relative px-6 pt-6 pb-4">
+                <div className="relative px-2 pt-6 pb-4">
                     <FeedbackSection feedbacks={service.reviews}/>
                 </div>
             </div>

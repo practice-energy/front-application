@@ -26,16 +26,19 @@ interface DesktopSearchBarProps {
   onCancelReply?: () => void
   placeholder?: string
   chatTitle?: string
+  showPractice: boolean
+  disableFileApply: boolean
 }
 
 export const DesktopMufi = React.memo(function DesktopSearchBar({
   onSearch,
   showHeading = true,
   dynamicWidth = false,
-  placeholder = "Поиск пути",
+  placeholder = "Спроси Alura",
   chatTitle = "Alura",
+  showPractice = false,
+  disableFileApply = true,
 }: DesktopSearchBarProps) {
-  const { t } = useTranslations()
   const router = useRouter()
   const [message, setMessage] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -274,7 +277,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
           </div>
         )}
 
-        <div className={cn("border rounded-sm", showHeading && "bg-violet-50 border-violet-100 bg-opacity-70")}>
+        <div className={cn("border rounded-sm", showHeading && "bg-violet-50 border-violet-100 bg-opacity-80")}>
           <div
             className={`relative border rounded-sm backdrop-blur-sm 
               p-2.5 sm:p-3.5 transition-all duration-300 flex 
@@ -283,8 +286,8 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                 isDragOver
                   ? "border-violet-400 bg-violet-50/30"
                   : hasContent
-                    ? "bg-white/20 border-white/30"
-                    : "bg-white/10 border-white/20 hover:border-white/30"
+                    ? "bg-white border-white/30 opacity-80"
+                    : "bg-white/40 border-white/20 hover:border-white/30"
               }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -292,11 +295,11 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
           >
             <form onSubmit={handleSubmit} className="w-full">
               <div className="flex items-center gap-2.5 pb-2">
-                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                <div className="flex-shrink-0 flex items-center justify-center">
                   <IconAlura
-                    width={20}
-                    height={20}
-                    className="w-4 h-4 mb-1.5"
+                    width={36}
+                    height={36}
+                    className="mb-1.5 mr-1"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -324,30 +327,38 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                 <div className="flex items-center gap-2">
                   {/* File Upload Button */}
                   <button
-                    type="button"
-                    onClick={openFileDialog}
-                    className="rounded-sm bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 active:hover:bg-violet-700 dark:hover:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white  px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm"
+                      type="button"
+                      onClick={openFileDialog}
+                      disabled={disableFileApply} // Добавлен disabled проп
+                      className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
+                          disableFileApply
+                              ? "bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100"
+                              : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white"
+                      }`}
                   >
-                    <Paperclip className="w-4 h-4" />
+                    <Paperclip className={`w-4 h-4 ${
+                        disableFileApply ? "opacity-50" : ""
+                    }`} />
                   </button>
 
                   {/* Settings/Practice Button */}
-                  <button
-                    type="button"
-                    onClick={togglePractice}
-                    className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
-                      isPractice
-                        ? "bg-violet-600 text-white hover:bg-violet-500"
-                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
-                    }`}
-                  >
-                    <IconPractice
-                      width={14}
-                      height={14}
-                      className={`mr-2 ${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-                    />
-                    <span>Практис</span>
-                  </button>
+                  {
+                    showPractice && (<button
+                          type="button"
+                          onClick={togglePractice}
+                          className={`rounded-sm px-1.5 h-[36px] w-[36px] font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
+                              isPractice
+                                  ? "bg-violet-600 text-white hover:bg-violet-500"
+                                  : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
+                          }`}
+                      >
+                        <IconPractice
+                            width={27}
+                            height={24}
+                            className={`${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                        />
+                      </button>)
+                  }
                 </div>
 
                 {/* Send Button */}

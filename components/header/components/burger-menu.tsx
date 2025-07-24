@@ -10,12 +10,11 @@ export function BurgerMenu({
   showBurgerMenu,
   toggleBurgerMenu,
   setShowBurgerMenu,
-  burgerMenuRef,
 }: BurgerMenuProps) {
   if (!isAuthenticated) return null
 
   return (
-    <div className="relative" ref={burgerMenuRef}>
+    <div className="relative">
       <Button
         variant="ghost"
         size="sm"

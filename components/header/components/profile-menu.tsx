@@ -7,6 +7,8 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import type { ProfileMenuProps } from "../types/header.types"
 import { Pentagram } from "@/components/icons/icon-pentagram"
+import {PracticePlaceholder} from "@/components/practice-placeholder";
+import Image from "next/image";
 
 export function ProfileMenu({
   isAuthenticated,
@@ -14,7 +16,6 @@ export function ProfileMenu({
   showProfileMenu,
   toggleProfileMenu,
   setShowProfileMenu,
-  profileMenuRef,
   handleLogout,
   isMobile = false,
   role,
@@ -25,26 +26,22 @@ export function ProfileMenu({
 
   const buttonComponent = (
     <button
-      variant="ghost"
-      size="sm"
       onClick={toggleProfileMenu}
       className={cn(
-        "h-15 w-15 p-0 rounded-sm transition-all duration-200",
+        "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10 mt-2",
         showProfileMenu
-          ? "border border-violet-600"
-          : "border border-transparent hover:bg-violet-50 dark:hover:bg-violet-900/20",
+          ? "ring-0 ring-violet-600"
+          : "ring-0  hover:bg-violet-50",
       )}
       aria-label="Profile menu"
     >
-      <div
-        className={cn(
-          "h-12 w-12 rounded-sm flex items-center justify-center aspect-square",
-          "bg-violet-100 dark:bg-violet-900",
-          showProfileMenu && "bg-violet-200 ",
-        )}
-      >
-        <User className="h-6 w-6 text-violet-600 " />
-      </div>
+      {user?.avatar ? (<Image
+          width={24}
+          height={24}
+          src={user?.avatar}
+          alt={user?.name}
+          className="overflow-hidden mr-[1px]"
+      />) : (<PracticePlaceholder width={50} height={50} className="bg-violet-50"/>)}
     </button>
   )
 
@@ -53,13 +50,13 @@ export function ProfileMenu({
   }
 
   return (
-    <div className="relative" ref={profileMenuRef}>
+    <div className="relative">
       {buttonComponent}
 
       {showProfileMenu && (
         <div className="absolute right-0 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-sm shadow-md border border-gray-200 dark:border-gray-700 py-0 z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.first_name || "User"}</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.name || "User"}</p>
           </div>
 
           {/* Role toggle button */}

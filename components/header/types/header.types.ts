@@ -7,7 +7,6 @@ export interface ProfileMenuProps {
   showProfileMenu: boolean
   toggleProfileMenu: () => void
   setShowProfileMenu: (show: boolean) => void
-  profileMenuRef: React.RefObject<HTMLDivElement>
   handleLogout: () => void
   isMobile?: boolean
   role?: string
@@ -20,7 +19,6 @@ export interface BurgerMenuProps {
   showBurgerMenu: boolean
   toggleBurgerMenu: () => void
   setShowBurgerMenu: (show: boolean) => void
-  burgerMenuRef: React.RefObject<HTMLDivElement>
 }
 
 export interface MobileMenuProps {

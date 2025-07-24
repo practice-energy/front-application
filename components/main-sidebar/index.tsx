@@ -217,13 +217,6 @@ export function MainSidebar() {
                     className="pl-10 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded-sm focus:border-gray-400"
                 />
               </div>
-
-              <button
-                  onClick={handleNewSearch}
-                  className="justify-between hover:bg-none rounded-sm"
-              >
-                <Repeat2 className="w-6 h-6" />
-              </button>
             </div>
           </div>
         </>

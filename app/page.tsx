@@ -55,7 +55,7 @@ export default function HomePage() {
 
         {/* Mufi - абсолютно позиционирован, но в потоке контента */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-10">
-          <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" />
+          <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" showPractice={true} />
         </div>
       </div>
     </div>

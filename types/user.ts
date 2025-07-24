@@ -7,8 +7,7 @@ export interface User {
     verified: boolean
   }
   bio: string
-  first_name: string
-  last_name: string
+  name: string
   location: string
   avatar?: string
   images: string[]

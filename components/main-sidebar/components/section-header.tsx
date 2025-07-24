@@ -36,7 +36,7 @@ export function SectionHeader({
               "h-6 w-6 mb-0.5 ml-3",
               iconStyle,
           )}/>
-          <h3 className="tracking-wider">
+          <h3 className="tracking-wider font-semibold">
         {title}
       </h3>
           <ChevronDown

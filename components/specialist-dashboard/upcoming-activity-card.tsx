@@ -51,9 +51,9 @@ export function UpcomingActivityCard({
   }
 
   return (
-    <div className="flex items-start gap-3 p-2 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5">
+    <div className="flex items-start gap-3 p-2 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5 w-full">
       {/* Left column - times and avatar */}
-      <div className="flex flex-col items-center min-w-[40px]">
+      <div className="flex flex-col items-center">
         <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>
         {client.avatar ? (<Image
             src={client.avatar}

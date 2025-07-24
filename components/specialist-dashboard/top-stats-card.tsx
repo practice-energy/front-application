@@ -9,7 +9,7 @@ interface TopStatsCardProps {
 
 export function TopStatsCard({ icon, title, subtitle }: TopStatsCardProps) {
   return (
-    <div className={cn("flex items-center w-full gap-3 shadow-md h-[72px] p-3 rounded-sm md:w-full")}>
+    <div className={cn("flex items-center w-[362px] gap-3 shadow-md h-[72px] p-3 rounded-sm ")}>
       <div className={cn("flex items-center justify-center h-10 w-10 rounded-sm bg-neutral-100")}>{icon}</div>
 
       <div className="flex-1 min-w-0 flex flex-col">
