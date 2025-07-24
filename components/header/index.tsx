@@ -146,38 +146,39 @@ export function Header() {
           isSticky && "sticky",
         )}
       >
-        <nav className="container relative px-3 h-full">
-          {" "}
-          {/* Добавляем relative для позиционирования */}
+        <nav className="h-full w-full">
           <div className="flex h-full items-center">
-            {/* Левая часть - кнопка сайдбара и логотип */}
-            <div className="flex items-center h-full">
-              {shouldShowSidebar && (
-                <button
-                  onClick={handleOpenSidebar}
-                  className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
-                  style={{
-                    position: "fixed",
-                    left: "364px",
-                  }}
-                >
-                  <PanelRightClose width={24} height={24} />
-                </button>
-              )}
+            {/* Кнопка сайдбара - фиксированная позиция */}
+            {shouldShowSidebar && (
+              <button
+                onClick={handleOpenSidebar}
+                className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
+                style={{
+                  position: "fixed",
+                  left: "364px",
+                  zIndex: 60,
+                }}
+              >
+                <PanelRightClose width={24} height={24} />
+              </button>
+            )}
 
-              {pathname !== "/" && (
-                <div
-                  style={{
-                    position: "fixed",
-                    left: "420px",
-                  }}
-                >
-                  <Logo onClick={handleLogoClick} />
-                </div>
-              )}
-            </div>
+            {/* Логотип - фиксированная позиция */}
+            {pathname !== "/" && (
+              <div
+                style={{
+                  position: "fixed",
+                  left: "420px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 60,
+                }}
+              >
+                <Logo onClick={handleLogoClick} />
+              </div>
+            )}
 
-            {/* Правая часть - абсолютное позиционирование */}
+            {/* Правая секция - абсолютное позиционирование */}
             <div className="hidden md:flex items-center space-x-3 absolute right-3 top-1/2 transform -translate-y-1/2">
               {isAuthenticated && !user?.isSpecialist && (
                 <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
@@ -239,6 +240,7 @@ export function Header() {
               </div>
             )}
           </div>
+
           <MobileMenu
             isMobileMenuOpen={isMobileMenuOpen}
             isAuthenticated={isAuthenticated}
