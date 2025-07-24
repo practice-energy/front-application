@@ -37,7 +37,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
       <div
           className={cn(
-              "relative rounded-sm transition-colors cursor-pointer w-full",
+              "relative rounded-sm transition-colors cursor-pointer w-[390px]",
               "pl-0 py-0.5 px-2",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
               isCollapsed && !isMobile
@@ -94,10 +94,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
               <div className="flex-shrink-0 ml-2">  {/* flex-shrink-0 + ml-2 для отступа */}
                 <div className="flex flex-col items-end gap-1 py-1.5">  {/* Вертикальное выравнивание */}
                   {/* Индикатор непрочитанного */}
-                  <div className={cn(
-                      "w-4 h-4 rounded-sm bg-none",
-                      hasUnread && "bg-violet-600"
-                  )} />
+                  <ActivityStatus status={hasUnread ? 'new': undefined} className="items-end pl-1"/>
 
                   {/* Кнопка */}
                   <button

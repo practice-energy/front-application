@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-export type ActivityStatusType = "waiting" | "confirmed" | "request" | "declined" | undefined;
+export type ActivityStatusType = "waiting" | "confirmed" | "request" | "declined" | "new" | undefined;
 
 interface ActivityStatusProps {
     status?: ActivityStatusType;
@@ -37,7 +37,11 @@ export const ActivityStatus = React.memo(({
         },
         undefined: {
             text: "",
-            dotClass: ""
+            dotClass: "bg-none"
+        },
+        new: {
+            text: "",
+            dotClass: "bg-violet-600"
         }
     };
 

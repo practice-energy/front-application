@@ -139,126 +139,129 @@ export function Header() {
 
   const isSticky = pathname === "/" || pathname?.startsWith('/search/')
 
-  return (
-      <>
-        <header className={cn(
-            "top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80",
-            isSticky && "sticky"
-        )}>
-          <nav className="container px-3">
-            <div className="flex h-24 items-center">
-              <div className={cn(
-                  "flex items-start",
-                  shouldShowSidebar ? "gap-x-12 ml-40" : ""
-              )}>
-                {/* Кнопка panel-right-close - исчезает при развернутом сайдбаре */}
-                {shouldShowSidebar && (
-                    <button
-                        onClick={handleOpenSidebar}
-                        className={cn(
-                            "rounded-sm hover:bg-gray-100 dark:hover:bg-gray-700 px-3",
-                            "transition-all duration-300 ease-in-out rounded-sm gap-0 p-0 hover:bg-transparent",
-                            !isCollapsed ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100",
-                            "h-20 m-0",
+    return (
+        <>
+            <header className={cn(
+                "top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80",
+                isSticky && "sticky"
+            )}>
+                <nav className="container relative px-3 h-full"> {/* Добавляем relative для позиционирования */}
+                    <div className="flex h-full items-center">
+                        {/* Левая часть - кнопка сайдбара и логотип */}
+                        <div className="flex items-center h-full">
+                            {shouldShowSidebar && (
+                                <button
+                                    onClick={handleOpenSidebar}
+                                    className={cn(
+                                        "h-full px-3 flex items-center",
+                                        !isCollapsed && "opacity-0 pointer-events-none"
+                                    )}
+                                    style={{
+                                        position: 'fixed',
+                                        left: '364px' // Фиксированная позиция кнопки
+                                    }}
+                                >
+                                    <PanelRightClose width={24} height={24} />
+                                </button>
+                            )}
+
+                            {pathname !== "/" && (
+                                <div style={{
+                                  position: 'fixed',
+                                  left: shouldShowSidebar ? '440px' : '0'// Фиксированная позиция кнопки
+                                }}>
+                                  <Logo
+                                      onClick={handleLogoClick}
+                                  />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Правая часть - абсолютное позиционирование */}
+                        <div
+                            className="hidden md:flex items-center space-x-3 absolute right-3 top-1/2 transform -translate-y-1/2"
+                        >
+                            {isAuthenticated && !user?.isSpecialist && (
+                                <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
+                            )}
+
+                            <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+
+                            <div className="flex items-center gap-6">
+                                {isAuthenticated && hat === "adept" && (
+                                    <div className={cn(
+                                        "flex items-center aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
+                                        pathname === "/calendar" && "text-white bg-violet-600"
+                                    )}>
+                                        <button onClick={handleCalendarClick}>
+                                            <CalendarDays className="h-8 w-8 bold" />
+                                        </button>
+                                    </div>
+                                )}
+
+                                <ProfileMenu
+                                    isAuthenticated={isAuthenticated}
+                                    user={user}
+                                    showProfileMenu={showProfileMenu}
+                                    toggleProfileMenu={toggleProfileMenu}
+                                    setShowProfileMenu={setShowProfileMenu}
+                                    handleLogout={handleLogout}
+                                    role={role}
+                                    handleRoleToggle={handleRoleToggle}
+                                    isSpecialist={isSpecialist}
+                                />
+                                {isAuthenticated && <NotificationSystem/>}
+                            </div>
+                        </div>
+
+                        {/* Мобильная версия */}
+                        <div className="md:hidden absolute right-3 top-1/2 transform -translate-y-1/2">
+                            {isMobileMenuOpen ? (
+                                <X className="h-5 w-5" />
+                            ) : (
+                                <ProfileMenu
+                                    isAuthenticated={isAuthenticated}
+                                    user={user}
+                                    showProfileMenu={showProfileMenu}
+                                    toggleProfileMenu={toggleProfileMenu}
+                                    setShowProfileMenu={setShowProfileMenu}
+                                    handleLogout={handleLogout}
+                                    isMobile={true}
+                                    role={role}
+                                    handleRoleToggle={handleRoleToggle}
+                                />
+                            )}
+                        </div>
+
+                        {!isAuthenticated && (
+                            <div className="hidden md:flex absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>
+                            </div>
                         )}
-                        style={{
-                          marginLeft: !isCollapsed || pathname === "/" ? 0 : 200 // Применяем отступ только когда сайдбар открыт
-                        }}
-                    >
-                      <div className="h-18 w-18 items-center justify-center flex">
-                        <PanelRightClose width={24} height={24} />
-                      </div>
-                    </button>
-                )}
+                    </div>
 
-                {pathname !== "/" && (<Logo
-                    onClick={handleLogoClick}
-                />)}
-              </div>
-
-              {/* Desktop Right side */}
-              <div className="hidden md:flex items-center space-x-3 opacity-100 items-end">
-                {/* Кнопка "Стать мастером" показывается только если user.isSpecialist = false */}
-                {isAuthenticated && !user?.isSpecialist && (
-                    <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
-                )}
-
-                <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
-
-                <div className="flex items-center gap-6 opacity-100">
-                  {/* Calendar button for users */}
-                  {isAuthenticated && hat === "adept" && (
-                      <div className={cn(
-                          "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
-                          pathname === "/calendar" && "text-white bg-violet-600"
-
-                      )}>
-                        <button onClick={handleCalendarClick}>
-                          <CalendarDays className="h-8 w-8 bold" />
-                          <span className="sr-only">Календарь</span>
-                        </button>
-                      </div>
-                  )}
-
-                  <ProfileMenu
-                      isAuthenticated={isAuthenticated}
-                      user={user}
-                      showProfileMenu={showProfileMenu}
-                      toggleProfileMenu={toggleProfileMenu}
-                      setShowProfileMenu={setShowProfileMenu}
-                      handleLogout={handleLogout}
-                      role={role}
-                      handleRoleToggle={handleRoleToggle}
-                      isSpecialist={isSpecialist}
-                  />
-                  {isAuthenticated && (<NotificationSystem/>)}
-                </div>
-              </div>
-
-              {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
-
-              {/* Mobile hamburger menu button */}
-              <div className="md:hidden">
-                {isMobileMenuOpen ? (
-                    <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                ) : (
-                    <ProfileMenu
+                    <MobileMenu
+                        isMobileMenuOpen={isMobileMenuOpen}
                         isAuthenticated={isAuthenticated}
                         user={user}
-                        showProfileMenu={showProfileMenu}
-                        toggleProfileMenu={toggleProfileMenu}
-                        setShowProfileMenu={setShowProfileMenu}
-                        handleLogout={handleLogout}
-                        isMobile={true}
                         role={role}
+                        isSpecialist={isSpecialist}
                         handleRoleToggle={handleRoleToggle}
+                        setShowProfileMenu={setShowProfileMenu}
+                        setIsMobileMenuOpen={setIsMobileMenuOpen}
+                        handleLogout={handleLogout}
+                        openAuthModal={openAuthModal}
                     />
-                )}
-              </div>
-            </div>
+                </nav>
+            </header>
 
-            <MobileMenu
-                isMobileMenuOpen={isMobileMenuOpen}
-                isAuthenticated={isAuthenticated}
-                user={user}
-                role={role}
-                isSpecialist={isSpecialist}
-                handleRoleToggle={handleRoleToggle}
-                setShowProfileMenu={setShowProfileMenu}
-                setIsMobileMenuOpen={setIsMobileMenuOpen}
-                handleLogout={handleLogout}
-                openAuthModal={openAuthModal}
+            <AuthModal
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
+                onSuccess={handleAuthSuccess}
+                initialMode={authMode}
+                mode={"login"}
             />
-          </nav>
-        </header>
-
-        <AuthModal
-            isOpen={isAuthModalOpen}
-            onClose={() => setIsAuthModalOpen(false)}
-            onSuccess={handleAuthSuccess}
-            initialMode={authMode}
-            mode={"login"}
-        />
-      </>
-  )
+        </>
+    )
 }
