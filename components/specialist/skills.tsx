@@ -1,16 +1,24 @@
 "use client"
 
+import {useIsMobile} from "@/hooks/use-mobile";
+import {cn} from "@/lib/utils";
+
 interface SkillsProps {
   title: string
   items: string[]
 }
 
 export function Skills({ title, items }: SkillsProps) {
+  const isMobile = useIsMobile()
+
   if (!items || items.length === 0) return null
 
   return (
-    <>
-      <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">{title}</div>
+    <div className="flex flex-col">
+      <div className={cn(
+          "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+          isMobile ? "text-mobilebase" : "text-base",
+          )}>{title}</div>
       <ul className="space-y-2 ml-1">
         {items.map((item, index) => (
           <li key={index} className="flex items-start gap-3">
@@ -19,6 +27,6 @@ export function Skills({ title, items }: SkillsProps) {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }

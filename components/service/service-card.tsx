@@ -17,9 +17,10 @@ import {formatNumber} from "@/utils/format";
 interface ServiceCardProps {
     service: Service
     bookingSlots: BookingSlot[]
+    isAuthenticated: boolean
 }
 
-export function ServiceCard({ service, bookingSlots }: ServiceCardProps) {
+export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceCardProps) {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
     const thumbnails = service.images
     const mainImage = thumbnails[selectedImageIndex]
@@ -134,12 +135,12 @@ export function ServiceCard({ service, bookingSlots }: ServiceCardProps) {
                     <AboutContentsSection description={service.description} contents={service.includes} />
 
                     {/* Bookings section */}
-                    <div className="flex flex-row px-6 pb-3">
+                    {isAuthenticated && (<div className="flex flex-row px-6 pb-3">
                         <div className="w-80 flex-shrink-0">
                             <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                         </div>
                         <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-                    </div>
+                    </div>)}
                 </div>
 
                 <div className="relative px-2 pt-6 pb-4">

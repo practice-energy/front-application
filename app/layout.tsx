@@ -47,7 +47,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <I18nProvider>
             <AuthProvider>
               <SidebarProvider>

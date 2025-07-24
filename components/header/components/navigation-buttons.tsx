@@ -7,7 +7,7 @@ import {cn} from "@/lib/utils";
 
 interface NavigationButtonsProps {
   isAuthenticated: boolean
-  hat: "adept" | "master" | "supervisor"
+  hat: "adept" | "master" | "superviser"
   router: AppRouterInstance
 }
 

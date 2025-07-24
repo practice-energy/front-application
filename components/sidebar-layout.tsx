@@ -23,8 +23,8 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   // Определяем нужно ли показывать header
   const shouldShowHeader = () => {
     // На мобильных устройствах не показываем header на странице календаря
-    if (isMobile && pathname === "/calendar") {
-      return false
+    if (isMobile) {
+        return false
     }
     // На всех остальных страницах показываем header
     return true

@@ -136,14 +136,65 @@ export function Header() {
     }
   }
 
-  const isSticky = pathname === "/" || pathname?.startsWith("/search/")
-
   return (
     <>
+      <div>
+        {/* Логотип - фиксированная позиция */}
+        {pathname !== "/" && (
+            <Logo onClick={handleLogoClick} />
+        )}
+      </div>
+
+      {/* Правая секция */}
+      <div className="items-center justify-end space-x-3 py-4 pr-3 flex animate-none z-50 fixed"
+           style={{
+             position: "fixed",
+             right: "10px",
+             top: "0px",
+             zIndex: 60,
+           }}
+      >
+        {isAuthenticated && !user?.isSpecialist && (
+            <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
+        )}
+
+        <div className="p-4">
+          <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+        </div>
+
+        <div className="flex items-center gap-6">
+          {isAuthenticated && hat === "adept" && (
+              <div
+                  className={cn(
+                      "flex items-center aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
+                      pathname === "/calendar" && "text-white bg-violet-600",
+                  )}
+              >
+                <button onClick={handleCalendarClick}>
+                  <CalendarDays className="h-8 w-8 bold" />
+                </button>
+              </div>
+          )}
+
+          <ProfileMenu
+              isAuthenticated={isAuthenticated}
+              user={user}
+              showProfileMenu={showProfileMenu}
+              toggleProfileMenu={toggleProfileMenu}
+              setShowProfileMenu={setShowProfileMenu}
+              handleLogout={handleLogout}
+              role={role}
+              handleRoleToggle={handleRoleToggle}
+              isSpecialist={isSpecialist}
+          />
+          {isAuthenticated && <NotificationSystem />}
+        </div>
+      </div>
+
       <header
         className={cn(
-          "top-0 z-50 h-24 w-full border-b bg-background bg-opacity-70 backdrop-blur-lg opacity-80",
-          isSticky && "sticky",
+          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg opacity-80 fixed",
+            isCollapsed ? "w-full": "w-[calc(100%-400px)]"
         )}
       >
         {/* Кнопка сайдбара - фиксированная позиция */}
@@ -153,8 +204,8 @@ export function Header() {
             className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
             style={{
               position: "fixed",
-              left: "364px",
               top: "0",
+              left: "364px",
               zIndex: 60,
             }}
           >
@@ -162,98 +213,7 @@ export function Header() {
           </button>
         )}
 
-        {/* Логотип - фиксированная позиция */}
-        {pathname !== "/" && (
-          <div
-            style={{
-              position: "fixed",
-              left: "420px",
-              top: "12px",
-              zIndex: 60,
-            }}
-          >
-            <Logo onClick={handleLogoClick} />
-          </div>
-        )}
-
-        <nav className="container mx-auto px-6 h-full">
-          <div className="flex h-full items-center justify-end">
-            {/* Правая секция */}
-            <div className="hidden md:flex items-center space-x-3">
-              {isAuthenticated && !user?.isSpecialist && (
-                <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
-              )}
-
-              <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
-
-              <div className="flex items-center gap-6">
-                {isAuthenticated && hat === "adept" && (
-                  <div
-                    className={cn(
-                      "flex items-center aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
-                      pathname === "/calendar" && "text-white bg-violet-600",
-                    )}
-                  >
-                    <button onClick={handleCalendarClick}>
-                      <CalendarDays className="h-8 w-8 bold" />
-                    </button>
-                  </div>
-                )}
-
-                <ProfileMenu
-                  isAuthenticated={isAuthenticated}
-                  user={user}
-                  showProfileMenu={showProfileMenu}
-                  toggleProfileMenu={toggleProfileMenu}
-                  setShowProfileMenu={setShowProfileMenu}
-                  handleLogout={handleLogout}
-                  role={role}
-                  handleRoleToggle={handleRoleToggle}
-                  isSpecialist={isSpecialist}
-                />
-                {isAuthenticated && <NotificationSystem />}
-              </div>
-            </div>
-
-            {/* Мобильная версия */}
-            <div className="md:hidden">
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <ProfileMenu
-                  isAuthenticated={isAuthenticated}
-                  user={user}
-                  showProfileMenu={showProfileMenu}
-                  toggleProfileMenu={toggleProfileMenu}
-                  setShowProfileMenu={setShowProfileMenu}
-                  handleLogout={handleLogout}
-                  isMobile={true}
-                  role={role}
-                  handleRoleToggle={handleRoleToggle}
-                />
-              )}
-            </div>
-
-            {!isAuthenticated && (
-              <div className="hidden md:flex">
-                <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>
-              </div>
-            )}
-          </div>
-
-          <MobileMenu
-            isMobileMenuOpen={isMobileMenuOpen}
-            isAuthenticated={isAuthenticated}
-            user={user}
-            role={role}
-            isSpecialist={isSpecialist}
-            handleRoleToggle={handleRoleToggle}
-            setShowProfileMenu={setShowProfileMenu}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
-            handleLogout={handleLogout}
-            openAuthModal={openAuthModal}
-          />
-        </nav>
+        {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
       </header>
 
       <AuthModal

@@ -37,7 +37,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
 
   return (
     <div className="flex-1 h-full">
-        <div className="flex">
+        <div className="flex overflow-hidden">
           <TimeColumn slotHeight={SLOT_HEIGHT} />
           {displayDates.map((date, index) => (
               <DayColumn

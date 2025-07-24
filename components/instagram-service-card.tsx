@@ -44,7 +44,7 @@ export function InstagramServiceCard({
   }
 
   return (
-      <div className="relative w-[240px]">
+      <div className="relative md:w-[240px]">
         <div
             className="w-full h-full bg-white  rounded-sm shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600"
             onClick={handleCardClick}

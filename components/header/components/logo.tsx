@@ -17,8 +17,17 @@ export function Logo({ onClick }: LogoProps) {
   }
 
   return (
-    <button onClick={onClick} className="flex space-x-2">
-      <div className="h-20 w-20 flex rounded-sm">
+    <button
+        onClick={onClick}
+        className="space-x-2"
+        style={{
+          position: "fixed",
+          left: "440px",
+          top: "20px",
+          zIndex: 60,
+        }}
+    >
+      <div className="h-20 w-20 rounded-sm">
         <IconPractice
           width={60}
           height={60}

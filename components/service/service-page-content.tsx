@@ -12,6 +12,7 @@ import {Booking, BookingSlot} from "@/types/booking";
 import {FeedbackSection} from "@/components/service/feedback-section";
 import Image from "next/image";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
+import {useAuth} from "@/hooks/use-auth";
 
 interface ServicePageContentProps {
   service: Service
@@ -22,6 +23,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
+  const isAuthenticated = useAuth()
 
   const specialist = service.specialist
 
@@ -103,7 +105,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
             </div>
 
             {/* Service Card */}
-            <ServiceCard service={service}  bookingSlots={bookingSlots}/>
+            <ServiceCard service={service}  bookingSlots={bookingSlots} isAuthenticated={isAuthenticated}/>
           </div>
         </div>
       </main>

@@ -9,9 +9,11 @@ import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal
 import { notFound } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import SpecialistProfile from "@/components/specialist/specialist-profile"
+import DesctopSpecialistProfile from "@/components/specialist/desktop-specialist-profile"
 import { useAdeptChats } from "@/stores/chat-store"
 import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
+import {useIsMobile} from "@/hooks/use-mobile";
+import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-profile";
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -23,6 +25,7 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   const [selectedTime] = useState<string | null>(null)
   const [selectedService] = useState<any>(null)
   const [isAnimating] = useState(false)
+  const isMobile = useIsMobile()
 
   // Refs for scrolling
   const servicesRef = useRef<HTMLDivElement>(null)
@@ -102,20 +105,22 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <SpecialistProfile specialist={specialist} />
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        <div className="bg-gradient-to-t from-white/90 to-transparent dark:from-gray-900/90 dark:to-transparent pt-16">
-          <div className="pb-6">
-            {/*<Mufi*/}
-            {/*  onSearch={handleSearch}*/}
-            {/*  showHeading={false}*/}
-            {/*  dynamicWidth={true}*/}
-            {/*  placeholder={"Найти специалистов..."}*/}
-            {/*  chatTitle={specialist.name}*/}
-            {/*/>*/}
-          </div>
-        </div>
-      </div>
+      {isMobile ? (<MobileSpecialistProfile specialist={specialist} />) :
+          (<>
+            <div className="h-24"/>
+            <DesctopSpecialistProfile specialist={specialist} />
+          </>)}
+
+      <Mufi
+          onSearch={handleSearch}
+          showHeading={false}
+          dynamicWidth={false}
+          showPractice={false}
+          disableFileApply={true}
+          placeholder={`Спроси у ${specialist?.name || "Alura"}`}
+          onCancelReply={() => {}}
+          chatTitle="Alura"
+      />
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
 

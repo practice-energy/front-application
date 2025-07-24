@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Skills } from "./skills"
 import { cn } from "@/lib/utils"
 import {ChevronDown} from "lucide-react";
+import {useIsMobile} from "@/components/ui/use-mobile";
 
 interface AboutSkillsSectionProps {
     description: string
@@ -16,21 +17,28 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
     const [contentHeight, setContentHeight] = useState(0)
     const contentRef = useRef<HTMLDivElement>(null)
+    const descriptionRef = useRef<HTMLDivElement>(null)
+    const isMobile = useIsMobile()
 
     useEffect(() => {
-        if (contentRef.current) {
-            const height = contentRef.current.scrollHeight
+        // Рассчитываем высоту только для описания на мобильных устройствах
+        const targetElement = isMobile ? descriptionRef.current : contentRef.current;
+        if (targetElement) {
+            const height = targetElement.scrollHeight
             setContentHeight(height)
-            setShouldShowToggle(height > 130)
+            setShouldShowToggle(height > (isMobile ? 130 : 130))
         }
-    }, [description, skills])
+    }, [description, skills, isMobile]) // Добавили isMobile в зависимости
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded)
     }
 
     return (
-        <div className="relative px-6 pt-6 pb-7">
+        <div className={cn(
+            "relative pt-6 pb-6",
+            isMobile ? "px-4" : "px-6"
+        )}>
             <div
                 ref={contentRef}
                 className="overflow-hidden transition-all duration-500 ease-in-out flex"
@@ -38,19 +46,27 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
                     height: isExpanded
                         ? `${contentHeight}px`
                         : shouldShowToggle
-                            ? '130px'
+                            ? `130px`
                             : 'auto'
                 }}
             >
                 {/* Колонка "О мастере" (2/3 ширины) */}
-                <div className="w-2/3 pr-6">
-                    <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">
+                <div
+                    ref={isMobile ? descriptionRef : null}
+                    className={cn(
+                        isMobile ? "w-full": "w-2/3 pr-6",
+                    )}
+                >
+                    <div className={cn(
+                        "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+                         isMobile ? "text-mobilebase" : "text-base",)}
+                    >
                         О мастере
                     </div>
                     <div
                         className={cn(
                             "ml-1 text-neutral-700 transition-opacity duration-300",
-                            !isExpanded && "line-clamp-3"
+                            // !isExpanded && "line-clamp-3"
                         )}
                     >
                         {description}
@@ -58,20 +74,25 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
                 </div>
 
                 {/* Колонка "Навыки" (1/3 ширины) */}
-                <div className="w-1/3">
-                    <Skills title="Навыки" items={skills} />
-                </div>
+                {!isMobile && (
+                    <div className="w-1/3">
+                        <Skills title="Навыки" items={skills} />
+                    </div>
+                )}
             </div>
 
             {/* Fade overlay when collapsed */}
             {shouldShowToggle && !isExpanded && (
-                <div className="absolute w-full h-14 bottom-[56px] left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500" />
+                <div className={cn(
+                    "absolute w-full h-14  left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
+                    "bottom-[50px]"
+                )}/>
             )}
 
             {shouldShowToggle && (
                 <button
                     onClick={handleToggle}
-                    className="text-violet-600 hover:text-violet-700 h-auto mt-1 ml-1 transition-colors duration-300 flex items-center gap-1 group"
+                    className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
                 >
                     {isExpanded ? "Свернуть" : "Раскрыть больше"}
                     <ChevronDown width={24} height={24} className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")} />

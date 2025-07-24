@@ -2,6 +2,8 @@
 
 import Image from "next/image"
 import { IconPractice } from "@/components/icons/icon-practice"
+import {useIsMobile} from "@/hooks/use-mobile";
+import {cn} from "@/lib/utils";
 
 interface CertificateItem {
   title: string
@@ -15,11 +17,16 @@ interface CertificatesProps {
 }
 
 export function Certificates({ title, items }: CertificatesProps) {
+   const isMobile = useIsMobile()
+
   if (!items || items.length === 0) return null
 
   return (
     <>
-      <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">{title}</div>
+      <div className={cn(
+          "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+          isMobile ? "text-mobilebase" : "text-base",
+      )}>{title}</div>
       <div className="space-y-4">
         {items.map((item, index) => (
           <div key={index} className="bg-white p-3 rounded-sm shadow-sm flex">

@@ -1,9 +1,9 @@
 "use client"
 
-import type React from "react"
+import React, {useEffect, useRef} from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Share, MessagesSquare } from "lucide-react"
+import {MapPin, Share, MessagesSquare, ChevronDown} from "lucide-react"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { BackButton } from "@/components/ui/button-back"
 import type { Specialist } from "@/types/common"
@@ -14,22 +14,37 @@ import {formatCompactNumber, formatNumber} from "@/utils/format"
 import { Certificates } from "./certificates"
 import { Skills } from "./skills"
 import { AboutSkillsSection } from "./about-skills-section"
+import {cn} from "@/lib/utils";
 
 interface SpecialistProfileProps {
   specialist: Specialist
 }
 
-export default function SpecialistProfile({ specialist }: SpecialistProfileProps) {
+export default function DesktopSpecialistProfile({ specialist }: SpecialistProfileProps) {
   const router = useRouter()
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const { isLiked, toggleLike } = useLikes()
-  const [showFullDescription, setShowFullDescription] = useState(false)
+
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [shouldShowToggle, setShouldShowToggle] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+  const expRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Рассчитываем высоту только для описания на мобильных устройствах
+    const targetElement = expRef.current;
+    if (targetElement) {
+      const height = targetElement.scrollHeight
+      setContentHeight(height)
+      setShouldShowToggle(height > 130)
+    }
+  },)
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded)
+  }
 
   const liked = isLiked(specialist.id)
-
-  const handleServiceCardClick = (service: any) => {
-    router.push(`/service/${service.id}`)
-  }
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -47,7 +62,7 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
   }
 
   return (
-    <main className="min-h-screen  pb-[144px] relative">
+    <main className="min-h-screen  relative">
       <div className="w-full mx-auto px-4 sm:px-6 py-8 md:w-[845px]">
         {/* Header with Back Button and Action Buttons */}
         <div className="flex items-center justify-between mb-8 relative">
@@ -121,7 +136,7 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
             {/* Блок с информацией справа от аватара и квадратный фрейм */}
             <div className="ml-[286px] pt-6 flex justify-between items-start ">
               <div className="pr-4">
-                <div className="text-xl font-bold text-neutral-900 line-clamp-1 leading-relaxed">{specialist.name}</div>
+                <div className="text-xl font-bold text-neutral-900 leading-relaxed">{specialist.name}</div>
                 <div className="text-sm text-neutral-700 opacity-80 line-clamp-2 leading-relaxed mt-6">
                   {specialist.description}
                 </div>
@@ -161,16 +176,47 @@ export default function SpecialistProfile({ specialist }: SpecialistProfileProps
                   Практис
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">
-                  {specialist.services?.slice(0, 3).map((service, index) => (
+                  {specialist.services?.map((service, index) => (
                     <InstagramServiceCard key={index} service={service} />
                   ))}
                 </div>
               </>
             )}
 
-            {/* Секция "Опыт" */}
-            <div className="mt-6">
-              <Skills title="Опыт" items={specialist.experience.map((exp) => exp.description)} />
+            <div className="relative">
+              {/* Секция "Опыт" */}
+              <div className="overflow-hidden transition-all duration-500 ease-in-out flex"
+                   style={{
+                     height: isExpanded
+                         ? `${contentHeight}px`
+                         : shouldShowToggle
+                             ? `130px`
+                             : 'auto'
+                   }}
+                   ref={expRef}
+              >
+                <div className="mt-4">
+                  <Skills title="Опыт" items={specialist.experience.map((exp) => exp.description)} />
+                </div>
+              </div>
+
+              {/* Fade overlay when collapsed */}
+              {shouldShowToggle && !isExpanded && (
+                  <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-from-neutral-150 to-transparent pointer-events-none" />
+              )}
+
+              {shouldShowToggle && (
+                  <button
+                      onClick={handleToggle}
+                      className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-3 transition-colors duration-300 flex items-center gap-1 group"
+                  >
+                    {isExpanded ? "Свернуть" : "Раскрыть больше"}
+                    <ChevronDown width={24} height={24} className={cn(
+                        "transition-transform duration-300",
+                        isExpanded ? "rotate-180" : ""
+                    )} />
+                  </button>
+              )}
             </div>
 
             {/* Секция "Образование и сертификаты" */}

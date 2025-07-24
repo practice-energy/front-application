@@ -14,10 +14,10 @@ const config: Config = {
     },
     extend: {
       fontSize: {
-        simple: ["14px", { fontWeight: "900" }],
-        bold: ["16px", { fontWeight: "700" }],
-        description: ["14px", { fontWeight: "900" }],
-        accent: ["12px", { fontWeight: "600", color: "#374151" }],
+        simple: ["14px", {fontWeight: "900"}],
+        bold: ["16px", {fontWeight: "700"}],
+        description: ["14px", {fontWeight: "900"}],
+        accent: ["12px", {fontWeight: "600", color: "#374151"}],
         stat: [
           "30px",
           {
@@ -39,7 +39,14 @@ const config: Config = {
             lineHeight: "1",
             color: "#374151"
           }
-        ]
+        ],
+        mobilebase: [
+          "18px",
+          {
+            fontWeight: "400",
+            color: "#404040" // neutral-700
+          },
+        ],
       },
       backgroundImage: {
         "allura-pattern": "url('/allura-logo.svg')",
