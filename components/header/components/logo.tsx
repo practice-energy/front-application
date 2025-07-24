@@ -22,7 +22,7 @@ export function Logo({ onClick }: LogoProps) {
         className="space-x-2"
         style={{
           position: "fixed",
-          left: "440px",
+          left: "430px",
           top: "20px",
           zIndex: 60,
         }}
@@ -31,7 +31,7 @@ export function Logo({ onClick }: LogoProps) {
         <IconPractice
           width={60}
           height={60}
-          className="text-black bg-white rounded-sm"
+          className="text-black bg-none rounded-sm"
         />
       </div>
     </button>

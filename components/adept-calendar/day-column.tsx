@@ -27,12 +27,15 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
     const [weekday, day] = formatted.split(" ")
 
     return (
-      <>
-        <span className={cn("px-1 py-0.5 mr-1", isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square")}>
+      <div className="flex flex-row gap-1 items-center justify-center w-full">
           {weekday.replace(/^./, (letter) => letter.toUpperCase())}
-        </span>
-        {day}
-      </>
+        {<div className={cn(
+            "p-0.5 mr-1 h-5 w-5 text-neutral-700",
+            isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square",
+        )}>{
+          day}
+        </div>}
+      </div>
     )
   }
 
@@ -68,18 +71,10 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   };
 
   // Check if hour is continuation of multi-slot booking
-  const isBookingContinuation = (hour: number) => {
-    const dayBookings = getBookingsForDate(date)
-    return dayBookings.some((booking) => {
-      const bookingHour = new Date(booking.date).getHours()
-      return hour > bookingHour && hour < bookingHour + booking.slots
-    })
-  }
-
   return (
       <div className="flex-1 flex-shrink-1">
         {/* Day header */}
-        <div className="fixed top-24 bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20 w-[calc(100%/5)]">
+        <div className="top-24 bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20">
           <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
         </div>
 
@@ -93,7 +88,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
               <TimeSlot slotHeight={slotHeight} />
 
               {booking && (
-                <div className="absolute inset-0 z-10">
+                <div className=" w-full inset-0 z-10">
                   <BookingCard booking={booking} slotHeight={slotHeight} />
                 </div>
               )}
