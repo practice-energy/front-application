@@ -97,7 +97,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone }: Calenda
   const days = getDaysInMonth(currentMonth)
 
   return (
-    <div className="bg-white rounded-sm aspect-square">
+    <div className="bg-none rounded-sm aspect-square">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="font-medium text-gray-900">

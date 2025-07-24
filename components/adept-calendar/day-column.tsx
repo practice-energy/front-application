@@ -74,7 +74,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   return (
       <div className="flex-1 flex-shrink-1">
         {/* Day header */}
-        <div className="top-24 bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20">
+        <div className=" w-full bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20">
           <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
         </div>
 
