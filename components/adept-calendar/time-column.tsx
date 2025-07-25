@@ -1,5 +1,7 @@
 "use client"
 
+import {cn} from "@/lib/utils";
+
 interface TimeColumnProps {
   slotHeight: number
 }
@@ -7,8 +9,8 @@ interface TimeColumnProps {
 // Выделяем компонент заголовка времени
 export function TimeColumnHeader() {
   return (
-    <div className="bg-white p-3 text-center z-10 border-b border-gray-100 w-full">
-      <div className="text-sm font-medium text-transparent">Time</div>
+    <div className="bg-white p-3 text-center z-10 border-b border-gray-200 w-full">
+      <div className="text-sm font-medium text-transparent h-[50px]">Time</div>
     </div>
   )
 }
@@ -26,22 +28,15 @@ export function TimeColumnContent({ slotHeight }: TimeColumnProps) {
       {hours.map((hour) => (
         <div
           key={hour}
-          className="flex items-center justify-center bg-white text-xs text-gray-500 border-t border-gray-100"
+          className={cn(
+              "flex items-center justify-center bg-white text-xs text-gray-500 border-gray-100 border z-30",
+              hour !== 0 && "border-t"
+          )}
           style={{ height: `${slotHeight * 2}px` }}
         >
           {formatTime(hour)}
         </div>
       ))}
-    </div>
-  )
-}
-
-// Оригинальный компонент TimeColumn теперь просто для совместимости
-export function TimeColumn(props: TimeColumnProps) {
-  return (
-    <div className="w-16 flex-shrink-0 border border-gray-100 flex flex-col">
-      <TimeColumnHeader />
-      <TimeColumnContent slotHeight={props.slotHeight} />
     </div>
   )
 }

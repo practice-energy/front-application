@@ -31,7 +31,7 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
     }
 
     return (
-        <div className="rounded-sm shadow-md overflow-hidden ">
+        <div className="rounded-sm shadow-md overflow-hidden">
             <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
                 <div className="rounded-b-sm bg-white md:w-[845px]">
                     {/* Black background photo section */}

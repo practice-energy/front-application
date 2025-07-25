@@ -46,7 +46,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
 
   return (
     <>
-      <main className="min-h-screen relative">
+      <main className="min-h-screen relative pl-8">
         <div
           className="flex-1 overflow-hidden"
           style={{
@@ -54,7 +54,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
           }}
           data-animating={isAnimating ? "true" : "false"}
         >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          <div className="max-w-4xl mx-auto py-8 px-6 ">
             {/* Header with Back Button and Action Buttons */}
             <div className="flex items-center justify-between mb-8 relative">
               <div className="flex-1">

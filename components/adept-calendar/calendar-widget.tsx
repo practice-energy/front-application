@@ -97,10 +97,10 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone }: Calenda
   const days = getDaysInMonth(currentMonth)
 
   return (
-    <div className="bg-none rounded-sm aspect-square">
+    <div className="bg-none rounded-sm aspect-square mt-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="font-medium text-gray-900">
+        <div className="font-medium text-gray-900 pl-2">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </div>
         <div className="flex gap-1">

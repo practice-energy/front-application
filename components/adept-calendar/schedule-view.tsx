@@ -36,12 +36,12 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   return (
     <div className="flex-1 flex flex-col">
       {/* Фиксированные заголовки */}
-      <div className="flex">
-        <div className="w-16 flex-shrink-0 border border-gray-100">
+      <div className="flex border border-gray-100 border-r-0 border-b-0">
+        <div className="w-16 flex-shrink-0">
           <TimeColumnHeader />
         </div>
         {displayDates.map((date, index) => (
-          <div key={`header-${date.toISOString()}`} className="flex-1 flex-shrink-1">
+          <div key={`header-${date.toISOString()}`} className="flex-1 flex-shrink-1 h-full">
             <DayColumnHeader date={date} isSelectedDay={index === 0} />
           </div>
         ))}
@@ -50,7 +50,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
       {/* Скроллируемое содержимое */}
       <div className="flex-1 overflow-auto">
         <div className="flex h-full">
-          <div className="w-16 flex-shrink-0 border border-gray-100">
+          <div className="w-16 flex-shrink-0 border-gray-200">
             <TimeColumnContent slotHeight={slotHeight} />
           </div>
           {displayDates.map((date) => (
