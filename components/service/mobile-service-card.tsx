@@ -1,12 +1,20 @@
 "use client"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
+import {
+  MapPin,
+  TimerReset,
+  MonitorPlayIcon as TvMinimalPlay,
+  Users,
+  MessagesSquare,
+  Share,
+  ChevronDown
+} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import type React from "react"
+import React, {useRef} from "react"
 import { useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
@@ -15,10 +23,12 @@ import { PracticePlaceholder } from "../practice-placeholder"
 import { formatNumber } from "@/utils/format"
 import { useRouter } from "next/navigation"
 import { BackButton } from "@/components/ui/button-back"
-import { useAuth } from "@/hooks/use-auth"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
+import {Skills} from "@/components/specialist/skills";
+import {cn} from "@/lib/utils";
+import {Included} from "@/components/service/included";
 
 interface MobileServiceCardProps {
   service: Service
@@ -28,8 +38,17 @@ interface MobileServiceCardProps {
 export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardProps) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const { isAuthenticated } = useAuth()
   const specialist = service.specialist
+
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [shouldShowToggle, setShouldShowToggle] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+  const expRef = useRef<HTMLDivElement>(null)
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded)
+  }
+
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -173,13 +192,48 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
         <AboutContentsSection description={service.description} contents={service.includes} />
       </div>
 
-      <div className="bg-colors-neutral-150 px-6 pt-2">
-        <div className="mb-4">
+      <div className="bg-colors-neutral-150 pt-2">
+        <div className="relative">
+          {/* Секция "Опыт" */}
+          <div className="overflow-hidden transition-all duration-500 ease-in-out flex"
+               style={{
+                 height: isExpanded
+                     ? `${contentHeight}px`
+                     : shouldShowToggle
+                         ? `130px`
+                         : 'auto'
+               }}
+               ref={expRef}>
+            <div className="mt-4 px-4">
+              <Included title="Опыт" items={service.includes} />
+            </div>
+          </div>
+
+          {/* Fade overlay when collapsed */}
+          {shouldShowToggle && !isExpanded && (
+              <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-from-neutral-150 to-transparent pointer-events-none" />
+          )}
+
+          {shouldShowToggle && (
+              <button
+                  onClick={handleToggle}
+                  className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
+              >
+                {isExpanded ? "Свернуть" : "Раскрыть больше"}
+                <ChevronDown width={24} height={24} className={cn(
+                    "transition-transform duration-300",
+                    isExpanded ? "rotate-180" : ""
+                )} />
+              </button>
+          )}
+        </div>
+
+        <div className="mb-4 px-4">
           <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
         </div>
         <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
 
-        <div className="bg-colors-neutral-150 p-4">
+        <div className="bg-colors-neutral-150 pt-4">
           <FeedbackSection feedbacks={service.reviews} />
         </div>
       </div>

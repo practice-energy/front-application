@@ -109,7 +109,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                     <span>Нет доступных слотов для бронирования</span>
                 </div>
             ) : (
-                <div className="w-full pl-1 pt-6">
+                <div className="w-full pt-6">
                     {/* Days header */}
                     <div className="grid grid-cols-[50px_1fr_1fr_1fr] mb-2">
                         <div className="text-sm w-[50px] text-gray-500"></div>
@@ -121,7 +121,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                     </div>
 
                     {/* Time slots with bookings */}
-                    <ScrollArea className="h-96 border-t border-gray-200">
+                    <ScrollArea className="h-96 border-t border-gray-200 w-full">
                         <div className="relative" style={{ height: `${totalHeight}px` }}>
                             {/* Render time grid */}
                             <div className="grid grid-cols-[50px_1fr_1fr_1fr] absolute inset-0">
@@ -199,7 +199,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                             })}
                         </div>
                     </ScrollArea>
-                    {/*<div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />*/}
+                    <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-from-neutral-150 z-10 pointer-events-none" />
                 </div>
             )}
         </div>

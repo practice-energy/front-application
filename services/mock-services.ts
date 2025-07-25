@@ -20,7 +20,7 @@ export const mockServices: Service[] = [
         specialist: mockSpecialists[0],
         tags: ["астрология", "натальная карта", "личность"],
         reviews: mockFeedbacks,
-        includes: ["Wipes", "Pencils", "Markers"],
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
         format: "video",
         practice: "30 минут",
     },
