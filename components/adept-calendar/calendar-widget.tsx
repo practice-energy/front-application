@@ -1,17 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
 
 interface CalendarWidgetProps {
   selectedDate: Date
   onDateSelect: (date: Date) => void
   isMobile?: boolean
   timezone?: string
+  isCollapsible?: boolean
 }
 
-export function CalendarWidget({ selectedDate, onDateSelect, timezone }: CalendarWidgetProps) {
+export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollapsible = false }: CalendarWidgetProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const monthNames = [
     "Январь",
@@ -100,46 +102,63 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone }: Calenda
     <div className="bg-none rounded-sm aspect-square mt-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="font-medium text-gray-900 pl-2">
-          {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+        <div className="flex items-center gap-2">
+          {isCollapsible && (
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="h-6 w-6 p-0 flex items-center justify-center transition-transform duration-200"
+            >
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${isCollapsed ? "-rotate-90" : "rotate-0"}`}
+              />
+            </button>
+          )}
+          <div className="font-medium text-gray-900 pl-2">
+            {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+          </div>
         </div>
         <div className="flex gap-1">
-          <button
-              onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
+          <button onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
             <ChevronLeft className="h-6 w-6" />
           </button>
-          <button
-              onClick={() => navigateMonth("next")} className="h-8 w-8 p-0">
+          <button onClick={() => navigateMonth("next")} className="h-8 w-8 p-0">
             <ChevronRight className="h-6 w-6" />
           </button>
         </div>
       </div>
 
-      {/* Day names */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {dayNames.map((day) => (
-          <div key={day} className="text-xs text-gray-500 text-center py-1">
-            {day}
-          </div>
-        ))}
-      </div>
+      {/* Calendar content with smooth animation */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isCollapsed ? "max-h-0 opacity-0" : "max-h-96 opacity-100"
+        }`}
+      >
+        {/* Day names */}
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {dayNames.map((day) => (
+            <div key={day} className="text-xs text-gray-500 text-center py-1">
+              {day}
+            </div>
+          ))}
+        </div>
 
-      {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1">
-        {days.map((day, index) => (
-          <button
-            key={index}
-            onClick={() => onDateSelect(day.fullDate)}
-            className={`
-              aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
-              ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
-              ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
-              ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
-            `}
-          >
-            {day.date}
-          </button>
-        ))}
+        {/* Calendar grid */}
+        <div className="grid grid-cols-7 gap-1">
+          {days.map((day, index) => (
+            <button
+              key={index}
+              onClick={() => onDateSelect(day.fullDate)}
+              className={`
+                aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
+                ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
+                ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
+                ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
+              `}
+            >
+              {day.date}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
