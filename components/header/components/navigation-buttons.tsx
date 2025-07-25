@@ -14,9 +14,9 @@ interface NavigationButtonsProps {
 export function NavigationButtons({ isAuthenticated, hat, router }: NavigationButtonsProps) {
 
   const handleChatsClick = () => {
-    if (hat === "master") {
-      router.push("/specialist-dashboard?section=chats")
-    }
+    // if (hat === "master") {
+    //   router.push("/specialist-dashboard?section=chats")
+    // }
   }
 
   const handleTasksClick = () => {
@@ -25,13 +25,13 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
   }
 
   const handleAnalyticsClick = () => {
-    if (hat === "master") {
-      router.push("/specialist-dashboard?section=analytics")
-    }
+    // if (hat === "master") {
+    //   router.push("/specialist-dashboard?section=analytics")
+    // }
   }
 
   const handleCalendarClick = () => {
-    router.push("/calendar")
+    router.push("/specialist-dashboard")
   }
 
   if (!isAuthenticated) return null
@@ -46,7 +46,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
               "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
           )}>
             <button onClick={handleChatsClick} disabled={true}>
-              <MessageSquareText className="h-[30px] w-[30px] bold disabled" />
+              <MessageSquareText className="h-[30px] w-[30px] bold disabled text-neutral-900 opacity-20" />
             </button>
           </div>
 
@@ -55,7 +55,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
               "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
           )}>
             <button onClick={handleCalendarClick}>
-              <CalendarDays className="h-[30px] w-[30px] bold" />
+              <CalendarDays className="h-[30px] w-[30px] bold text-neutral-900" />
             </button>
           </div>
 
@@ -64,7 +64,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
               "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
           )}>
             <button onClick={handleTasksClick}>
-              <CheckSquare className="h-[30px] w-[30px] bold" />
+              <CheckSquare className="h-[30px] w-[30px] bold disabled text-neutral-900 opacity-20" />
             </button>
           </div>
 
@@ -73,7 +73,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
               "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
           )}>
             <button onClick={handleAnalyticsClick}>
-              <BarChart3 className="h-[30px] w-[30px] bold" />
+              <BarChart3 className="h-[30px] w-[30px] bold text-neutral-900 opacity-20" />
             </button>
           </div>
         </div>

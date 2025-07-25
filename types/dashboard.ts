@@ -37,6 +37,7 @@ export interface UpcomingActivity {
     price: number
     description: string
   }
+  practiceCount?: number
 }
 
 export interface DashboardStats {
@@ -46,4 +47,8 @@ export interface DashboardStats {
   upcomingActivities: {
     activities: UpcomingActivity[]
   }
+  awaitingAttention: {
+    activities: UpcomingActivity[]
+  }
+
 }

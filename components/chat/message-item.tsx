@@ -13,6 +13,7 @@ import type { Service } from "@/types/common"
 import Image from "next/image"
 import {getSpecialistById} from "@/services/mock-specialists";
 import {IconAlura} from "@/components/icons/icon-alura";
+import {ActionButtonsRow} from "@/components/action-button";
 
 interface MessageItemProps {
   specialistId: string
@@ -209,43 +210,10 @@ export const MessageItem = React.memo(
             {aiMessageType === "service" ? (
               // Service-specific buttons
                 <div className="flex flex-col w-full pt-2">
-                  {/* Первая строка с кнопками "Альтернатива" и "Подтвердить" */}
-                  <div className="flex justify-between items-center w-full">
-                    {/* Кнопка "Альтернатива" - прижата к левому краю */}
-                    <div className="flex items-center gap-2">
-                      <button
-                          onClick={() => onRegenerate(message)}
-                          className="flex rounded-sm w-8 h-8 bg-violet-600 hover:bg-violet-700 items-center justify-center"
-                      >
-                        <SquareSlash className="w-6 h-6 text-white rounded-sm" />
-                      </button>
-                      <span className="text-base whitespace-nowrap">Альтернатива</span>
-                    </div>
-
-                    {/* Кнопка "Подтвердить" - прижата к правому краю */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-base whitespace-nowrap">Подтвердить</span>
-                      <button
-                          onClick={() => onRegenerate(message)}
-                          className="flex rounded-sm bg-teal-400 hover:bg-teal-500 w-8 h-8 items-center justify-center"
-                      >
-                        <Check className="w-6 h-6 text-white rounded-sm" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Вторая строка с кнопкой "Сжечь" по центру */}
-                  <div className="flex items-start mt-6">
-                    <div className="flex items-center gap-2">
-                      <button
-                          onClick={() => onRegenerate(message)}
-                          className="flex rounded-sm w-8 h-8 bg-pink-500 hover:bg-pink-600 items-center justify-center"
-                      >
-                        <Flame className="w-6 h-6 text-white rounded-sm" />
-                      </button>
-                      <span className="text-base whitespace-nowrap">Сжечь</span>
-                    </div>
-                  </div>
+                  <ActionButtonsRow
+                      onRegenerate={() => {}}
+                      onConfirm={() => {}}
+                      onBurn={() => {}}/>
                 </div>
             ) : (
               // Regular action buttons

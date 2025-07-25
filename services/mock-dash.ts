@@ -19,6 +19,7 @@ const mockDashboardStats: DashboardStats = {
     fillRate: 78,
     totalEarningsPredict: 12500
   },
+  awaitingAttention: {},
   upcomingActivities: {
     activities: [
       {
@@ -49,6 +50,26 @@ const mockDashboardStats: DashboardStats = {
         format: "in-person",
         status: "waiting",
         isRepeat: true,
+        client: {
+          id: uuidv4(),
+          name: "Иван Петров",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожности",
+          price: 3500,
+          description: "Боль моя дырка задница"
+        }
+      },
+      {
+        id: uuidv4(),
+        start: new Date("2023-05-16T09:00:00"),
+        end: new Date("2023-05-16T09:50:00"),
+        duration: 50,
+        format: "video",
+        status: "request",
+        isRepeat: false,
         client: {
           id: uuidv4(),
           name: "Иван Петров",
