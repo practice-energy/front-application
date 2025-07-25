@@ -135,11 +135,12 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
                     <AboutContentsSection description={service.description} contents={service.includes} />
 
                     {/* Bookings section */}
-                    {isAuthenticated && (<div className="flex flex-row px-6 pb-3">
+                    {isAuthenticated && (<div className=" relative flex flex-row px-6 pb-3">
                         <div className="w-80 flex-shrink-0">
                             <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                         </div>
                         <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+                        <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                     </div>)}
                 </div>
 

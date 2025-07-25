@@ -12,19 +12,14 @@ import type { Chat, Message } from "@/types/chats"
 import DesctopSpecialistProfile from "@/components/specialist/desktop-specialist-profile"
 import { useAdeptChats } from "@/stores/chat-store"
 import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
-import {useIsMobile} from "@/hooks/use-mobile";
 import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-profile";
+import {useIsMobile} from "@/components/ui/use-mobile";
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { t } = useTranslations()
   const { id } = params
   const [authModalOpen, setAuthModalOpen] = useState(false)
-  const [bookingModalOpen, setBookingModalOpen] = useState(false)
-  const [selectedDate] = useState<Date>(new Date())
-  const [selectedTime] = useState<string | null>(null)
-  const [selectedService] = useState<any>(null)
-  const [isAnimating] = useState(false)
   const isMobile = useIsMobile()
 
   // Refs for scrolling
@@ -111,16 +106,16 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
             <DesctopSpecialistProfile specialist={specialist} />
           </>)}
 
-      {/*<Mufi*/}
-      {/*    onSearch={handleSearch}*/}
-      {/*    showHeading={false}*/}
-      {/*    dynamicWidth={false}*/}
-      {/*    showPractice={false}*/}
-      {/*    disableFileApply={true}*/}
-      {/*    placeholder={`Спроси у ${specialist?.name || "Alura"}`}*/}
-      {/*    onCancelReply={() => {}}*/}
-      {/*    chatTitle="Alura"*/}
-      {/*/>*/}
+      <Mufi
+          onSearch={handleSearch}
+          showHeading={false}
+          dynamicWidth={false}
+          showPractice={false}
+          disableFileApply={true}
+          placeholder={`Спроси у ${specialist?.name || "Alura"}`}
+          onCancelReply={() => {}}
+          chatTitle="Alura"
+      />
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
 

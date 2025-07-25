@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
+import {cn} from "@/lib/utils";
 
 interface CalendarWidgetProps {
   selectedDate: Date
@@ -99,7 +100,10 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
   const days = getDaysInMonth(currentMonth)
 
   return (
-    <div className="bg-none rounded-sm aspect-square mt-5">
+    <div className={cn(
+        "bg-none rounded-sm mt-5",
+        isCollapsed ? "" : "aspect-square "
+    )}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">

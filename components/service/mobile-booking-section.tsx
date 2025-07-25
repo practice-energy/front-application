@@ -5,12 +5,12 @@ import { format, addDays, isSameDay } from "date-fns"
 import { cn } from "@/lib/utils"
 import { Calendar } from "lucide-react"
 
-interface BookingSectionProps {
+interface MobileBookingSectionProps {
     selectedDate: Date
     bookingSlots: BookingSlot[]
 }
 
-export function BookingSection({ selectedDate, bookingSlots }: BookingSectionProps) {
+export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBookingSectionProps) {
     // Generate 3 days: selected + 2 next days
     const days = [selectedDate, addDays(selectedDate, 1), addDays(selectedDate, 2)]
 
@@ -111,7 +111,7 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
             ) : (
                 <div className="w-full pl-1 pt-6">
                     {/* Days header */}
-                    <div className="grid grid-cols-[50px_1fr_1fr_1fr] mb-4">
+                    <div className="grid grid-cols-[50px_1fr_1fr_1fr] mb-2">
                         <div className="text-sm w-[50px] text-gray-500"></div>
                         {days.map((day, index) => (
                             <div key={index} className="text-center">

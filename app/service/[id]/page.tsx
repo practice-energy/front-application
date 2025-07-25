@@ -10,10 +10,15 @@ import {Mufi} from "@/components/mufi";
 import type {Chat, Message} from "@/types/chats";
 import {v4 as uuidv4} from "uuid";
 import {router} from "next/client";
+import {useAdeptChats} from "@/stores/chat-store";
+import {useIsMobile} from "@/components/ui/use-mobile";
+import {MobileServiceCard} from "@/components/service/mobile-service-card";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const { id } = params
-  const [isAnimating] = useState(false)
+  const isMobile = useIsMobile()
+
+  const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
 
   // Find the service by ID
   const service = mockServices.find((s) => s.id === id) || mockServices[0]
@@ -22,7 +27,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
     if (!query.trim() && files.length === 0) return
 
-    const existingChat = findChatBySpecialistId(specialist.id)
+    const existingChat = findChatBySpecialistId(service.specialist.id)
 
     if (existingChat) {
       const userMessage: Omit<Message, "id"> = {
@@ -46,9 +51,9 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
       const newChat: Chat = {
         id: newChatId,
-        title: specialist.name,
-        specialistId: specialist.id,
-        avatar: specialist.avatar || "placeholder.jpg",
+        title: service.specialist.name,
+        specialistId: service.specialist.id,
+        avatar: service.specialist.avatar || "placeholder.jpg",
         timestamp:Date.now(),
         messages: [userMessage],
         isAI: false,
@@ -76,21 +81,25 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="mx-auto px-4 sm:px-6 py-8">
-        {/* Service Page Content */}
-        <div className="h-24"/>
-        <ServicePageContent service={service} bookingSlots={bookingSlots}/>
-        <Mufi
-            onSearch={handleSearch}
-            showHeading={false}
-            dynamicWidth={false}
-            showPractice={false}
-            disableFileApply={true}
-            placeholder={ `Спроси у ${service.specialist?.name || "Alura"}`}
-            onCancelReply={() => {}}
-            chatTitle="Alura"
-        />
-      </div>
+      {isMobile ? (<>
+        <MobileServiceCard service={service} bookingSlots={bookingSlots}/>
+      </>) : (<>
+        <div className="mx-auto px-4 sm:px-6 py-8">
+          {/* Service Page Content */}
+          <div className="h-24"/>
+          <ServicePageContent service={service} bookingSlots={bookingSlots}/>
+        </div>
+      </>)}
+      {/*<Mufi*/}
+      {/*    onSearch={handleSearch}*/}
+      {/*    showHeading={false}*/}
+      {/*    dynamicWidth={false}*/}
+      {/*    showPractice={false}*/}
+      {/*    disableFileApply={true}*/}
+      {/*    placeholder={ `Спроси у ${service.specialist?.name || "Alura"}`}*/}
+      {/*    onCancelReply={() => {}}*/}
+      {/*    chatTitle="Alura"*/}
+      {/*/>*/}
     </>
   )
 }

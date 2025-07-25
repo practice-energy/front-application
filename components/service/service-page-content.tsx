@@ -9,7 +9,6 @@ import { BackButton } from "@/components/ui/button-back"
 import { ServiceCard } from "@/components/service/service-card"
 import type { Service } from "@/types/common"
 import {Booking, BookingSlot} from "@/types/booking";
-import {FeedbackSection} from "@/components/service/feedback-section";
 import Image from "next/image";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import {useAuth} from "@/hooks/use-auth";
@@ -23,7 +22,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
-  const auth = useAuth()
+  // const { isAuthenticated } = useAuth()
 
   const specialist = service.specialist
 
@@ -105,7 +104,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
             </div>
 
             {/* Service Card */}
-            <ServiceCard service={service}  bookingSlots={bookingSlots} isAuthenticated={auth.isAuthenticated}/>
+            <ServiceCard service={service}  bookingSlots={bookingSlots} isAuthenticated={true}/>
           </div>
         </div>
       </main>
