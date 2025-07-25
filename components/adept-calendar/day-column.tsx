@@ -12,9 +12,8 @@ interface DayColumnProps {
   isSelectedDay: boolean
 }
 
-export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColumnProps) {
-  const halfhours = Array.from({ length: 48 }, (_, i) => i)
-
+// Выделяем компонент заголовка дня
+export function DayColumnHeader({ date, isSelectedDay }: Pick<DayColumnProps, "date" | "isSelectedDay">) {
   // Format day header
   function formatDate(date: Date) {
     const formatted = date
@@ -42,6 +41,17 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
       </div>
     )
   }
+
+  return (
+    <div className="w-full bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20">
+      <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
+    </div>
+  )
+}
+
+// Основной компонент содержимого колонки дня
+export function DayColumnContent({ date, bookings, slotHeight }: Omit<DayColumnProps, "isSelectedDay">) {
+  const halfhours = Array.from({ length: 48 }, (_, i) => i)
 
   // Get bookings for this date
   const getBookingsForDate = (date: Date) => {
@@ -74,30 +84,32 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
   }
 
   return (
+    <div className="flex-1 flex-shrink-1 bg-white border-l border-t border-gray-100">
+      {halfhours.map((halfHour) => {
+        const booking = getBookingForHalfHour(halfHour)
+
+        return (
+          <div key={halfHour} className="relative" style={{ height: `${slotHeight}px` }}>
+            <TimeSlot slotHeight={slotHeight} />
+
+            {booking && (
+              <div className="absolute w-full inset-0 z-10">
+                <BookingCard booking={booking} slotHeight={slotHeight} />
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// Оригинальный компонент DayColumn теперь просто для совместимости
+export function DayColumn(props: DayColumnProps) {
+  return (
     <div className="flex-1 flex-shrink-1 flex flex-col">
-      {/* Day header - fixed at top */}
-      <div className="sticky top-0 w-full bg-white border-r border-l border-b border-gray-100 p-3 text-center z-20">
-        <div className="text-sm font-medium text-gray-900">{formatDate(date)}</div>
-      </div>
-
-      {/* Time slots - scrollable */}
-      <div className="relative bg-white border-l border-t border-gray-100 flex-1">
-        {halfhours.map((halfHour) => {
-          const booking = getBookingForHalfHour(halfHour)
-
-          return (
-            <div key={halfHour} className="relative" style={{ height: `${slotHeight}px` }}>
-              <TimeSlot slotHeight={slotHeight} />
-
-              {booking && (
-                <div className="absolute w-full inset-0 z-10">
-                  <BookingCard booking={booking} slotHeight={slotHeight} />
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+      <DayColumnHeader date={props.date} isSelectedDay={props.isSelectedDay} />
+      <DayColumnContent date={props.date} bookings={props.bookings} slotHeight={props.slotHeight} />
     </div>
   )
 }
