@@ -32,7 +32,7 @@ export function DayColumn({ date, bookings, slotHeight, isSelectedDay }: DayColu
         {
           <div
             className={cn(
-              "p-0.5 mr-1 h-5 w-5 text-neutral-700",
+              "p-1 mr-1 h-5 w-5 text-neutral-700",
               isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square",
             )}
           >

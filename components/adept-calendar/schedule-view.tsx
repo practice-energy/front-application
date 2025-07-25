@@ -12,7 +12,7 @@ interface ScheduleViewProps {
 
 export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
   const isMobile = useIsMobile()
-  const slotHeight = 30
+  const slotHeight = 52
 
   // Calculate display dates
   const getDisplayDates = (baseDate: Date) => {
@@ -22,7 +22,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
     } else {
       // Desktop: show 5 days starting from selected date
       const dates = []
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 3; i++) {
         const date = new Date(baseDate)
         date.setDate(baseDate.getDate() + i)
         dates.push(date)
@@ -42,7 +42,7 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
           date={date}
           bookings={bookings}
           slotHeight={slotHeight}
-          isSelectedDay={date.toDateString() === selectedDate.toDateString()}
+          isSelectedDay={index === 0}
         />
       ))}
     </div>
