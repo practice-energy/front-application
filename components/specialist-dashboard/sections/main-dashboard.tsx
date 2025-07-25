@@ -110,7 +110,7 @@ export function MainDashboard() {
             <CardHeader>
               <CardTitle className="text-lg text-neutral-700">Ожидают внимания</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 h-[320px] relative">
+            <CardContent className="p-0 h-[316px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
@@ -171,7 +171,7 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent className="p-0 h-[750px] relative">
+            <CardContent className="p-0 h-[746px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />

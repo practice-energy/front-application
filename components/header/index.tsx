@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { X, PanelRightClose, CalendarDays } from "lucide-react"
+import {X, PanelRightClose, CalendarDays, CheckSquare, MessageSquareText, PentagonIcon} from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
@@ -15,6 +15,8 @@ import { NavigationButtons } from "./components/navigation-buttons"
 import { ProfileMenu } from "./components/profile-menu"
 import { MobileMenu } from "./components/mobile-menu"
 import { NotificationSystem } from "@/components/notification-system"
+import {UserSwitchIcon} from "@phosphor-icons/react";
+import {IconButton} from "@/components/icon-button";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -158,23 +160,42 @@ export function Header() {
             <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
         )}
 
-        <div className="p-4">
-          <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
-        </div>
+        <div className="flex items-center gap-[24px]">
+          {/* User switch icon */}
+          <IconButton
+              icon={PentagonIcon}
+              onClick={()=> {}}
+              disabled={true}
+          />
 
-        <div className="flex items-center gap-6">
+          <div className="p-4">
+            <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+          </div>
+
+          {/* User switch icon */}
+          <IconButton
+              icon={UserSwitchIcon}
+              onClick={handleRoleToggle}
+              disabled={false}
+          />
+
           {isAuthenticated && hat === "adept" && (
-              <div
-                  className={cn(
-                      "flex items-center aspect-square rounded-sm shadow-sm h-10 w-10 p-1",
-                      pathname === "/calendar" && "text-white bg-violet-600",
-                  )}
-              >
-                <button onClick={handleCalendarClick}>
-                  <CalendarDays className="h-8 w-8 bold" />
-                </button>
-              </div>
+            <IconButton
+                icon={CalendarDays}
+                onClick={handleCalendarClick}
+                disabled={false}
+                className={cn(
+                    pathname === "/calendar" && "text-white bg-violet-600",
+                )}
+            />
           )}
+
+          {/* User switch icon */}
+          <IconButton
+              icon={UserSwitchIcon}
+              onClick={handleRoleToggle}
+              disabled={false}
+          />
 
           <ProfileMenu
               isAuthenticated={isAuthenticated}

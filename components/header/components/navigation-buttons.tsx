@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {Calendar, MessageSquare, CheckSquare, BarChart3, CalendarDays, MessageSquareText} from "lucide-react"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import {cn} from "@/lib/utils";
+import {IconButton} from "@/components/icon-button";
 
 interface NavigationButtonsProps {
   isAuthenticated: boolean
@@ -40,42 +41,33 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
     <>
       {/* Navigation buttons for authenticated specialists only */}
       {hat === "master" && (
-        <div className="hidden md:flex items-center space-x-2 ml-4">
+        <div className="items-center gap-6">
           {/* Chat button */}
-          <div className={cn(
-              "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
-          )}>
-            <button onClick={handleChatsClick} disabled={true}>
-              <MessageSquareText className="h-[30px] w-[30px] bold disabled text-neutral-900 opacity-20" />
-            </button>
-          </div>
+          <IconButton
+              icon={MessageSquareText}
+              onClick={handleChatsClick}
+              disabled={true}
+          />
 
           {/* Calendar button */}
-          <div className={cn(
-              "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
-          )}>
-            <button onClick={handleCalendarClick}>
-              <CalendarDays className="h-[30px] w-[30px] bold text-neutral-900" />
-            </button>
-          </div>
+          <IconButton
+              icon={CalendarDays}
+              onClick={handleCalendarClick}
+          />
 
-          {/* Tasks button - inactive for specialists */}
-          <div className={cn(
-              "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
-          )}>
-            <button onClick={handleTasksClick}>
-              <CheckSquare className="h-[30px] w-[30px] bold disabled text-neutral-900 opacity-20" />
-            </button>
-          </div>
+          {/* Tasks button */}
+          <IconButton
+              icon={CheckSquare}
+              onClick={handleTasksClick}
+              disabled={true}
+          />
 
-          {/* Analytics button - inactive for specialists */}
-          <div className={cn(
-              "hidden md:flex items-center space-x-3 aspect-square rounded-sm shadow-sm h-10 w-10 p-1 pl-1 border",
-          )}>
-            <button onClick={handleAnalyticsClick}>
-              <BarChart3 className="h-[30px] w-[30px] bold text-neutral-900 opacity-20" />
-            </button>
-          </div>
+          {/* Analytics button */}
+          <IconButton
+              icon={BarChart3}
+              onClick={handleAnalyticsClick}
+              disabled={true}
+          />
         </div>
       )}
     </>
