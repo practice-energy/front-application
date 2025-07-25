@@ -10,7 +10,7 @@ import { ActionButtonsRow, ActionButtonsRowConfirmed, ActionButtonsRowFinalize }
 import {BookingFormatIcon} from "@/components/booking-format";
 import {BookingRepeatedIcon} from "@/components/booking-repeatable";
 
-interface UpcomingActivityCardProps {
+interface AwaitingActivityCardProps {
   startTime: string
   endTime: string
   client: {
@@ -24,15 +24,14 @@ interface UpcomingActivityCardProps {
     price: number
     description: string
   }
-  practiceCount: number
   duration: number
   format: "video" | "in-person"
   isBackToBack?: boolean
   isRepeat?: boolean
-  status?: "waiting" | "confirmed" | "request" | "declined" | "new" | undefined
+    date: Date
 }
 
-export function UpcomingActivityCard({
+export function AwaitingActivityCard({
                                        startTime,
                                        endTime,
                                        client,
@@ -41,13 +40,8 @@ export function UpcomingActivityCard({
                                        format,
                                        isBackToBack = false,
                                        isRepeat = false,
-                                       status = "waiting",
-                                       practiceCount
-                                     }: UpcomingActivityCardProps) {
-  const router = useRouter()
-  const now = new Date()
-  const endDateTime = new Date(endTime)
-  const isPastEvent = now > endDateTime
+    date,
+                                     }: AwaitingActivityCardProps) {
 
   const handleChatClick = () => {
     // Логика открытия чата
@@ -55,29 +49,29 @@ export function UpcomingActivityCard({
 
   return (
       <div className="flex flex-col w-full gap-1.5">
-        {/* Кнопки действий */}
-        {isPastEvent ? (
-            <ActionButtonsRowFinalize
-                onPractice={() => {}}
-                onBurn={() => {}}
-            />
-        ) : status === "waiting" ? (
-            <ActionButtonsRow
-                onRegenerate={() => {}}
-                onBurn={() => {}}
-                onConfirm={() => {}}
-            />
-        ) : status === "confirmed" ? (
-            <ActionButtonsRowConfirmed
-                onRegenerate={() => {}}
-                onBurn={() => {}}
-            />
-        ) : null}
+          {/* Строка с датой и кнопками действий */}
+          <div className="flex items-center gap-4">
+              {/* Дата слева */}
+              <div className="text-base font-semibold text-neutral-900 min-w-[100px]">
+                  {new Date(date).toLocaleDateString('ru-RU', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                  }).replace(/\//g, '.')}
+              </div>
+
+              {/* Кнопки действий справа */}
+              <div className="flex-1">
+                  <ActionButtonsRow
+                      onRegenerate={() => {}}
+                      onBurn={() => {}}
+                      onConfirm={() => {}}
+                  />
+              </div>
+          </div>
 
         {/* Карточка активности */}
-        <div className={`flex items-start gap-4 p-1 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5 w-full h-[88px] ${
-            isPastEvent ? "opacity-70" : ""
-        }`}>
+        <div className={`flex items-start gap-4 p-1 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5 w-full h-[88px]`}>
           {/* 1. Левая колонка - время и аватар (как было) */}
           <div className="flex flex-col items-center ">
             <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>
@@ -96,19 +90,15 @@ export function UpcomingActivityCard({
           </div>
 
           {/* 2. Центральная колонка - сервис и клиент */}
-          <div className="flex-1 ml-4 pt-0.5 min-w-0"> {/* ml-4 = 18px отступ */}
+          <div className="flex-1 ml-4 pt-2 min-w-0"> {/* ml-4 = 18px отступ */}
             {/* Название сервиса (2 строки максимум) */}
-            <div className="text-sm font-medium leading-tight line-clamp-2 h-10 mb-1">
+            <div className="text-sm font-medium leading-tight line-clamp-2 h-9 mb-1">
               {service.name}
             </div>
 
-            {/* Клиент и описание (2 строки) */}
-            <div className="flex items-start h-10">
-              <div className="text-sm text-gray-900 leading-tight w-1/3 line-clamp-2">
+            <div className="flex items-start h-8 p-1">
+              <div className="text-sm text-gray-900 leading-tight w-full line-clamp-1">
                 {client.name}
-              </div>
-              <div className="text-sm text-gray-600 leading-tight w-2/3 ml-3 line-clamp-2">
-                {service.description}
               </div>
             </div>
           </div>
@@ -117,14 +107,7 @@ export function UpcomingActivityCard({
           <div className="flex flex-col items-end w-[100px] gap-1">
             {/* 1 строка - статус или практики */}
             <div className="w-full flex justify-end">
-              {isPastEvent ? (
-                  <div className="flex items-center text-sm">
-                    <span className="mr-1">+{practiceCount}</span>
-                    <IconPractice width={18} height={18} />
-                  </div>
-              ) : (
-                  <ActivityStatus status={status} />
-              )}
+                <ActivityStatus status={"waiting"} showTitle={false}/>
             </div>
 
             {/* 2 строка - кнопка чата и цена */}

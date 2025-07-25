@@ -19,7 +19,6 @@ const mockDashboardStats: DashboardStats = {
     fillRate: 78,
     totalEarningsPredict: 12500
   },
-  awaitingAttention: {},
   upcomingActivities: {
     activities: [
       {
@@ -52,15 +51,16 @@ const mockDashboardStats: DashboardStats = {
         isRepeat: true,
         client: {
           id: uuidv4(),
-          name: "Иван Петров",
+          name: "Иван ПетроИван ПетровИван ПетровИван ПетровИван Петровв",
           avatar: "/placeholder.jpg"
         },
         service: {
           id: uuidv4(),
-          name: "Консультация по тревожности",
+          name: "Консультация по тревожностиБоль моя дырка задница Боль моя дырка задница Боль моя дырка задница",
           price: 3500,
-          description: "Боль моя дырка задница"
-        }
+          description: "Боль моя дырка задница Боль моя дырка задница Боль моя дырка задница"
+        },
+        practiceCount: 1,
       },
       {
         id: uuidv4(),
@@ -80,7 +80,29 @@ const mockDashboardStats: DashboardStats = {
           name: "Консультация по тревожности",
           price: 3500,
           description: "Боль моя дырка задница"
-        }
+        },
+        practiceCount: 1,
+      },
+      {
+        id: uuidv4(),
+        start: new Date("2023-05-16T09:00:00"),
+        end: new Date("2023-05-16T09:50:00"),
+        duration: 50,
+        format: "video",
+        status: "request",
+        isRepeat: false,
+        client: {
+          id: uuidv4(),
+          name: "Иван ПетровИван ПетровИван Петров",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожности",
+          price: 3500,
+          description: "Боль моя дырка задница"
+        },
+        practiceCount: 1,
       },
       {
         id: uuidv4(),
@@ -100,27 +122,8 @@ const mockDashboardStats: DashboardStats = {
           name: "Консультация по тревожности",
           price: 3500,
           description: "Боль моя дырка задница"
-        }
-      },
-      {
-        id: uuidv4(),
-        start: new Date("2023-05-16T09:00:00"),
-        end: new Date("2023-05-16T09:50:00"),
-        duration: 50,
-        format: "video",
-        status: "request",
-        isRepeat: false,
-        client: {
-          id: uuidv4(),
-          name: "Иван Петров",
-          avatar: "/placeholder.jpg"
         },
-        service: {
-          id: uuidv4(),
-          name: "Консультация по тревожности",
-          price: 3500,
-          description: "Боль моя дырка задница"
-        }
+        practiceCount: 1,
       },
       {
         id: uuidv4(),

@@ -47,8 +47,4 @@ export interface DashboardStats {
   upcomingActivities: {
     activities: UpcomingActivity[]
   }
-  awaitingAttention: {
-    activities: UpcomingActivity[]
-  }
-
 }

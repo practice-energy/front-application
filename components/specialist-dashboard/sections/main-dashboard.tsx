@@ -6,6 +6,7 @@ import { mockDashboardStats } from "@/services/mock-dash"
 import { OverviewStatCard } from "../overview-stat-card"
 import { UpcomingActivityCard } from "../upcoming-activity-card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {AwaitingActivityCard} from "@/components/specialist-dashboard/awaiting-activity-card";
 
 export function MainDashboard() {
   const stats = mockDashboardStats
@@ -115,33 +116,36 @@ export function MainDashboard() {
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
                   <ScrollArea className="h-full px-6">
                     <div className="space-y-2 py-4">
-                      {stats.upcomingActivities.activities.map((activity, index) => {
-                        const isBackToBack =
-                          index > 0 &&
-                          stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
+                      {stats.upcomingActivities.activities
+                          .filter(activity => activity.status === "waiting")
+                          .map((activity, index) => {
+                            const isBackToBack =
+                                index > 0 &&
+                                stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
 
-                        return (
-                          <div key={activity.id} className="pb-1">
-                            <UpcomingActivityCard
-                              startTime={activity.start.toLocaleTimeString("ru-RU", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                              endTime={activity.end.toLocaleTimeString("ru-RU", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                              client={activity.client}
-                              service={activity.service}
-                              duration={`${activity.duration} мин`}
-                              format={activity.format}
-                              isBackToBack={isBackToBack}
-                              isRepeat={activity.isRepeat}
-                              status={activity.status}
-                            />
-                          </div>
-                        )
-                      })}
+                            return (
+                                <div key={activity.id} className="pb-1">
+                                  <AwaitingActivityCard
+                                      startTime={activity.start.toLocaleTimeString("ru-RU", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                      endTime={activity.end.toLocaleTimeString("ru-RU", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                      client={activity.client}
+                                      service={activity.service}
+                                      duration={activity.duration}
+                                      format={activity.format}
+                                      isBackToBack={isBackToBack}
+                                      isRepeat={activity.isRepeat}
+                                      status={activity.status}
+                                      date={activity.start}
+                                  />
+                                </div>
+                            )
+                          })}
                     </div>
                   </ScrollArea>
                   <div className="absolute -bottom-1 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
@@ -191,12 +195,12 @@ export function MainDashboard() {
                               })}
                               client={activity.client}
                               service={activity.service}
-                              duration={`${activity.duration} мин`}
+                              duration={activity.duration}
                               format={activity.format}
                               isBackToBack={isBackToBack}
                               isRepeat={activity.isRepeat}
                               status={activity.status}
-                              practiceCount={activity.practiceCount}
+                              practiceCount={activity.practiceCount || 0}
                             />
                           </div>
                         )
