@@ -7,15 +7,15 @@ import {
   Users,
   MessagesSquare,
   Share,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import React, {useRef} from "react"
-import { useState } from "react"
+import type React from "react"
+import { useRef, useState, useEffect } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { FeedbackSection } from "@/components/service/feedback-section"
@@ -26,9 +26,8 @@ import { BackButton } from "@/components/ui/button-back"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
-import {Skills} from "@/components/specialist/skills";
-import {cn} from "@/lib/utils";
-import {Included} from "@/components/service/included";
+import { cn } from "@/lib/utils"
+import { Included } from "@/components/service/included"
 
 interface MobileServiceCardProps {
   service: Service
@@ -45,10 +44,17 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
   const [contentHeight, setContentHeight] = useState(0)
   const expRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    if (expRef.current) {
+      const fullHeight = expRef.current.scrollHeight
+      setContentHeight(fullHeight)
+      setShouldShowToggle(fullHeight > 130)
+    }
+  }, [service.includes])
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded)
   }
-
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -195,15 +201,13 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
       <div className="bg-colors-neutral-150 pt-2">
         <div className="relative">
           {/* Секция "Опыт" */}
-          <div className="overflow-hidden transition-all duration-500 ease-in-out flex"
-               style={{
-                 height: isExpanded
-                     ? `${contentHeight}px`
-                     : shouldShowToggle
-                         ? `130px`
-                         : 'auto'
-               }}
-               ref={expRef}>
+          <div
+            className="overflow-hidden transition-all duration-500 ease-in-out flex"
+            style={{
+              height: isExpanded ? `${contentHeight}px` : shouldShowToggle ? `130px` : "auto",
+            }}
+            ref={expRef}
+          >
             <div className="mt-4 px-4">
               <Included title="Опыт" items={service.includes} />
             </div>
@@ -211,20 +215,21 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
 
           {/* Fade overlay when collapsed */}
           {shouldShowToggle && !isExpanded && (
-              <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-from-neutral-150 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-to-t from-colors-neutral-150 to-transparent pointer-events-none" />
           )}
 
           {shouldShowToggle && (
-              <button
-                  onClick={handleToggle}
-                  className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
-              >
-                {isExpanded ? "Свернуть" : "Раскрыть больше"}
-                <ChevronDown width={24} height={24} className={cn(
-                    "transition-transform duration-300",
-                    isExpanded ? "rotate-180" : ""
-                )} />
-              </button>
+            <button
+              onClick={handleToggle}
+              className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
+            >
+              {isExpanded ? "Свернуть" : "Раскрыть больше"}
+              <ChevronDown
+                width={24}
+                height={24}
+                className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")}
+              />
+            </button>
           )}
         </div>
 
