@@ -49,7 +49,6 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
     setIsExpanded(!isExpanded)
   }
 
-
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
     // Implement share functionality
@@ -189,7 +188,9 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
           </div>
         </div>
 
-        <AboutContentsSection description={service.description} contents={service.includes} />
+        <div className="relative">
+          <AboutContentsSection description={service.description} contents={service.includes} />
+        </div>
       </div>
 
       <div className="bg-colors-neutral-150 pt-2">
@@ -200,7 +201,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
                  height: isExpanded
                      ? `${contentHeight}px`
                      : shouldShowToggle
-                         ? `130px`
+                         ? `80px`
                          : 'auto'
                }}
                ref={expRef}>

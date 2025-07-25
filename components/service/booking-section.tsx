@@ -199,7 +199,7 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
                             })}
                         </div>
                     </ScrollArea>
-                    {/*<div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />*/}
+                    <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </div>
             )}
         </div>

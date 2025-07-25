@@ -22,7 +22,6 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
-  // const { isAuthenticated } = useAuth()
 
   const specialist = service.specialist
 

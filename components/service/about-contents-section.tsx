@@ -26,7 +26,7 @@ export function AboutContentsSection({ description, contents }: AboutContentsSec
         if (targetElement) {
             const height = targetElement.scrollHeight
             setContentHeight(height)
-            setShouldShowToggle(height > (isMobile ? 130 : 130))
+            setShouldShowToggle(height > 80)
         }
     }, [description, contents, isMobile]) // Добавили isMobile в зависимости
 
@@ -61,7 +61,7 @@ export function AboutContentsSection({ description, contents }: AboutContentsSec
                         "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
                         isMobile ? "text-mobilebase" : "text-base",)}
                     >
-                        О мастере
+                        О практис
                     </div>
                     <div
                         className={cn(
@@ -91,7 +91,7 @@ export function AboutContentsSection({ description, contents }: AboutContentsSec
             {shouldShowToggle && (
                 <button
                     onClick={handleToggle}
-                    className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
+                    className="text-violet-600 hover:text-violet-700 h-auto ml-1 transition-colors duration-300 flex items-center gap-1 group"
                 >
                     {isExpanded ? "Свернуть" : "Раскрыть больше"}
                     <ChevronDown width={24} height={24} className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")} />
