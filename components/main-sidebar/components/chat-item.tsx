@@ -37,8 +37,9 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
       <div
           className={cn(
-              "relative rounded-sm transition-colors cursor-pointer w-[390px]",
+              "relative rounded-sm transition-colors cursor-pointer",
               "pl-0 py-0.5 px-2",
+              isMobile ? "w-full" : "w-[390px]",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
               isCollapsed && !isMobile
                   ? ""

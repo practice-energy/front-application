@@ -15,6 +15,12 @@ import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {mockSavedSpecialists} from "@/services/mock-specialists";
+import {Link, PanelRightClose } from "lucide-react"
+import {cn} from "@/lib/utils";
+import Image from "next/image";
+import {PracticePlaceholder} from "@/components/practice-placeholder";
+import {useSidebar} from "@/contexts/sidebar-context";
+import {useAuth} from "@/hooks/use-auth";
 
 export default function SearchPage() {
   const params = useParams()
@@ -22,13 +28,14 @@ export default function SearchPage() {
   const [currentChat, setCurrentChat] = useState<Chat | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [isAnimating] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
   const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
+  const { isCollapsed, toggleSidebar } = useSidebar()
+  const { isAuthenticated, user, logout } = useAuth()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -176,12 +183,52 @@ export default function SearchPage() {
 
   return (
       <div className="relative h-screen bg-white dark:bg-gray-900">
-        {!isMobile && <ChatNewButton />}
+        {isMobile && isCollapsed ? (<>
+          <header className="fixed top-0 left-0 right-0 h-24 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-50 px-4 flex items-center justify-between">
+            {/* Левая часть - кнопка сайдбара (если нужно) */}
+            <div className="flex-1">
+              <button
+                  onClick={toggleSidebar}
+                  className="h-full px-3 flex items-center"
+              >
+                <PanelRightClose width={24} height={24} />
+              </button>
+            </div>
 
-        {isMobile ? (<>
+            {/* Центральная часть - название чата */}
+            <div className="flex-1 text-center font-medium text-gray-900 dark:text-white truncate px-2 line-clamp-1">
+              {currentChat?.description || currentChat?.title || "Чат"}
+            </div>
+
+            {/* Правая часть - иконка профиля */}
+            <div className="flex-1 flex justify-end">
+              <button
+                  // onClick={toggleProfileMenu}
+                  className={cn(
+                      "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10 mt-2",
+                      // showProfileMenu
+                      //     ? "ring-0 ring-violet-600"
+                      //     : "ring-0  hover:bg-violet-50",
+                  )}
+                  aria-label="Profile menu"
+              >
+                {user?.avatar ? (<Image
+                    width={36}
+                    height={36}
+                    src={user?.avatar}
+                    alt={user?.name}
+                    className="overflow-hidden mr-[1px]"
+                />) : (<PracticePlaceholder width={50} height={50} className="bg-violet-50"/>)}
+              </button>
+            </div>
+          </header>
+
           {/* Прокручиваемая область сообщений */}
           <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
-            <div className="h-24 w-full"/>
+            <div className={cn(
+                "w-full",
+                isMobile ? "h-12" :"h-24",
+            )}/>
             {currentChat && currentChat.messages.length === 0 && !isLoading ? (
                 <ChatEmptyState />
             ) : (
@@ -240,7 +287,7 @@ export default function SearchPage() {
                   onSearch={handleSearch}
                   showHeading={false}
                   dynamicWidth={false}
-                  showPractice={currentChat?.isAI}
+                  showPractice={currentChat?.isAI === true}
                   disableFileApply={true}
                   placeholder={ `Спроси у ${currentChat?.title || "Alura"}`}
                   onCancelReply={() => {}}

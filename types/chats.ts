@@ -27,4 +27,5 @@ export type Chat = {
   createdAt: number,
   hasNew?: boolean
   footerContent?: string
+  description?: string
 }

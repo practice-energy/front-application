@@ -16,9 +16,9 @@ interface SidebarLayoutProps {
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   const { isAuthenticated } = useAuth()
-  const { isCollapsed } = useSidebar()
   const pathname = usePathname()
   const isMobile = useIsMobile()
+  const { isCollapsed } = useSidebar()
 
   // Определяем нужно ли показывать header
   const shouldShowHeader = () => {
