@@ -109,7 +109,7 @@ export function MainDashboard() {
             <CardHeader>
               <CardTitle className="text-lg text-neutral-700">Ожидают внимания</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 h-[400px] relative">
+            <CardContent className="p-0 h-[320px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
@@ -144,7 +144,7 @@ export function MainDashboard() {
                       })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -203,7 +203,7 @@ export function MainDashboard() {
                       })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
