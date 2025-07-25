@@ -23,7 +23,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
   const router = useRouter()
   const [isAnimating] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
-  const isAuthenticated = useAuth()
+  const auth = useAuth()
 
   const specialist = service.specialist
 
@@ -46,7 +46,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
 
   return (
     <>
-      <main className="min-h-screen relative pl-8">
+      <main className="min-h-screen relative">
         <div
           className="flex-1 overflow-hidden"
           style={{
@@ -105,7 +105,7 @@ export function ServicePageContent({ service, bookingSlots }: ServicePageContent
             </div>
 
             {/* Service Card */}
-            <ServiceCard service={service}  bookingSlots={bookingSlots} isAuthenticated={isAuthenticated}/>
+            <ServiceCard service={service}  bookingSlots={bookingSlots} isAuthenticated={auth.isAuthenticated}/>
           </div>
         </div>
       </main>

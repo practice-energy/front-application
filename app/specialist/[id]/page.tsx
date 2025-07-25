@@ -111,16 +111,16 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
             <DesctopSpecialistProfile specialist={specialist} />
           </>)}
 
-      <Mufi
-          onSearch={handleSearch}
-          showHeading={false}
-          dynamicWidth={false}
-          showPractice={false}
-          disableFileApply={true}
-          placeholder={`Спроси у ${specialist?.name || "Alura"}`}
-          onCancelReply={() => {}}
-          chatTitle="Alura"
-      />
+      {/*<Mufi*/}
+      {/*    onSearch={handleSearch}*/}
+      {/*    showHeading={false}*/}
+      {/*    dynamicWidth={false}*/}
+      {/*    showPractice={false}*/}
+      {/*    disableFileApply={true}*/}
+      {/*    placeholder={`Спроси у ${specialist?.name || "Alura"}`}*/}
+      {/*    onCancelReply={() => {}}*/}
+      {/*    chatTitle="Alura"*/}
+      {/*/>*/}
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
 

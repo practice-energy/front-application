@@ -109,7 +109,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
               className="h-6 w-6 p-0 flex items-center justify-center transition-transform duration-200"
             >
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${isCollapsed ? "-rotate-90" : "rotate-0"}`}
+                className={`h-6 w-6 transition-transform duration-200 ${isCollapsed ? "rotate-180" : "rotate-0"}`}
               />
             </button>
           )}
@@ -117,7 +117,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
             {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
           </div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 text-violet-600">
           <button onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
             <ChevronLeft className="h-6 w-6" />
           </button>
