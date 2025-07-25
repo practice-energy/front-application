@@ -47,11 +47,11 @@ export function MainDashboard() {
 
   return (
     <div className="flex justify-center w-full pt-16">
-      <div className="flex gap-6 p-2 w-[1150px] pb-32 h-[850px]">
+      <div className="flex gap-6 p-2 w-[1150px] pb-32">
         {/* Left column - Top Stats and left section */}
-        <div className="flex flex-col flex-1 gap-6 w-[450px] flex-shrink-0 h-full">
+        <div className="flex flex-col flex-1 gap-6 w-[450px] flex-shrink-0 h-[850px]">
           {/* Top Stats Card with Add button */}
-          <Card className="border-0 shadow-md flex-shrink-0">
+          <Card className="border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between p-4">
               <div className="flex items-center gap-3">
                 <LayoutGrid size={24} className="text-neutral-600" />
@@ -71,7 +71,7 @@ export function MainDashboard() {
           </Card>
 
           {/* Overview Stats Card */}
-          <Card className="border-0 shadow-md flex-shrink-0">
+          <Card className="border-0 shadow-md">
             <CardHeader>
               <div className="flex items-center">
                 <CardTitle className="text-lg text-black">Обзор практик</CardTitle>
@@ -105,17 +105,17 @@ export function MainDashboard() {
           </Card>
 
           {/* Upcoming Activities block for left section */}
-          <Card className="border-0 shadow-md flex-1 rounded-sm overflow-hidden">
-            <CardHeader className="flex-shrink-0">
+          <Card className="border-0 shadow-md flex-1 rounded-sm">
+            <CardHeader>
               <CardTitle className="text-lg text-neutral-700">Ожидают внимания</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 flex-1 overflow-hidden">
+            <CardContent className="p-0 h-[400px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
-                <div className="relative h-full">
+                <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
                   <ScrollArea className="h-full px-6">
-                    <div className="space-y-2 py-2">
-                      {stats.upcomingActivities.activities.slice(0, 5).map((activity, index) => {
+                    <div className="space-y-2 py-4">
+                      {stats.upcomingActivities.activities.map((activity, index) => {
                         const isBackToBack =
                           index > 0 &&
                           stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
@@ -145,7 +145,7 @@ export function MainDashboard() {
                     </div>
                   </ScrollArea>
                   <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-                </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <Calendar className="w-12 h-12 mb-2" />
@@ -157,9 +157,9 @@ export function MainDashboard() {
         </div>
 
         {/* Right column - Upcoming Activities */}
-        <div className="flex-1 h-full">
-          <Card className="border-0 shadow-md h-full overflow-hidden">
-            <CardHeader className="flex-shrink-0">
+        <div className="flex-1 h-[850px]">
+          <Card className="border-0 shadow-md h-full">
+            <CardHeader>
               <div className="flex items-center">
                 <CardTitle className="text-lg text-black">
                   Предстоящие активности на {weekday} {day} {month}
@@ -167,12 +167,12 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent className="p-0 flex-1 overflow-hidden">
+            <CardContent className="p-0 h-[750px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
-                <div className="relative h-full">
+                <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
                   <ScrollArea className="h-full px-6">
-                    <div className="space-y-2 py-2">
+                    <div className="space-y-2 py-4">
                       {stats.upcomingActivities.activities.map((activity, index) => {
                         const isBackToBack =
                           index > 0 &&
@@ -204,7 +204,7 @@ export function MainDashboard() {
                     </div>
                   </ScrollArea>
                   <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-                </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <Calendar className="w-12 h-12 mb-2" />
