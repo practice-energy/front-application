@@ -1,18 +1,15 @@
 "use client"
 
-import { useState } from "react"
-
-import type React from "react"
+import { useMemo } from "react"
 import { mockServices } from "@/services/mock-services"
 import { ServicePageContent } from "@/components/service/service-page-content"
-import {mockBookingSlots} from "@/services/booking-slot-data";
-import {Mufi} from "@/components/mufi";
-import type {Chat, Message} from "@/types/chats";
-import {v4 as uuidv4} from "uuid";
-import {router} from "next/client";
-import {useAdeptChats} from "@/stores/chat-store";
-import {useIsMobile} from "@/components/ui/use-mobile";
-import {MobileServiceCard} from "@/components/service/mobile-service-card";
+import { mockBookingSlots } from "@/services/booking-slot-data"
+import type { Chat, Message } from "@/types/chats"
+import { v4 as uuidv4 } from "uuid"
+import { router } from "next/client"
+import { useAdeptChats } from "@/stores/chat-store"
+import { useIsMobile } from "@/components/ui/use-mobile"
+import { MobileServiceCard } from "@/components/service/mobile-service-card"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const { id } = params
@@ -20,9 +17,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
 
-  // Find the service by ID
-  const service = mockServices.find((s) => s.id === id) || mockServices[0]
-  const bookingSlots = mockBookingSlots
+  // Мемоизируем сервис чтобы избежать ререндеринга дочерних компонентов
+  const service = useMemo(() => {
+    return mockServices.find((s) => s.id === id) || mockServices[0]
+  }, [id])
+
+  // Мемоизируем booking slots
+  const bookingSlots = useMemo(() => mockBookingSlots, [])
 
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
     if (!query.trim() && files.length === 0) return
@@ -54,7 +55,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         title: service.specialist.name,
         specialistId: service.specialist.id,
         avatar: service.specialist.avatar || "placeholder.jpg",
-        timestamp:Date.now(),
+        timestamp: Date.now(),
         messages: [userMessage],
         isAI: false,
         hasNew: false,
@@ -64,15 +65,15 @@ export default function ServicePage({ params }: { params: { id: string } }) {
       addChat(newChat)
 
       window.dispatchEvent(
-          new CustomEvent("addNewChatToSidebar", {
-            detail: {
-              chat: {
-                ...newChat,
-                description: query,
-                isPractice: isPractice,
-              },
+        new CustomEvent("addNewChatToSidebar", {
+          detail: {
+            chat: {
+              ...newChat,
+              description: query,
+              isPractice: isPractice,
             },
-          }),
+          },
+        }),
       )
 
       router.push(`/search/${newChatId}`)
@@ -81,15 +82,15 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {isMobile ? (<>
-        <MobileServiceCard service={service} bookingSlots={bookingSlots}/>
-      </>) : (<>
+      {isMobile ? (
+        <MobileServiceCard service={service} bookingSlots={bookingSlots} />
+      ) : (
         <div className="mx-auto px-4 sm:px-6 py-8">
           {/* Service Page Content */}
-          <div className="h-24"/>
-          <ServicePageContent service={service} bookingSlots={bookingSlots}/>
+          <div className="h-24" />
+          <ServicePageContent service={service} bookingSlots={bookingSlots} />
         </div>
-      </>)}
+      )}
       {/*<Mufi*/}
       {/*    onSearch={handleSearch}*/}
       {/*    showHeading={false}*/}

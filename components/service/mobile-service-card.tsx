@@ -1,20 +1,13 @@
 "use client"
 
-import {
-  MapPin,
-  TimerReset,
-  MonitorPlayIcon as TvMinimalPlay,
-  Users,
-  MessagesSquare,
-  Share,
-} from "lucide-react"
+import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
 import type React from "react"
-import { useRef, useState, useEffect } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { FeedbackSection } from "@/components/service/feedback-section"
@@ -37,29 +30,48 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const specialist = service.specialist
 
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    // Implement share functionality
-    if (navigator.share) {
-      navigator
-        .share({
-          title: service.title,
-          text: service.description,
-          url: window.location.href,
-        })
-        .catch(console.error)
-    }
-  }
+  // Мемоизируем обработчики событий чтобы избежать ререндеринга
+  const handleShare = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      // Implement share functionality
+      if (navigator.share) {
+        navigator
+          .share({
+            title: service.title,
+            text: service.description,
+            url: window.location.href,
+          })
+          .catch(console.error)
+      }
+    },
+    [service.title, service.description],
+  )
 
-  const handleReply = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    router.push(`/search/${specialist.id}`)
-  }
+  const handleReply = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      router.push(`/search/${specialist.id}`)
+    },
+    [router, specialist.id],
+  )
 
-  const handleToProfile = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    router.push(`/specialist/${specialist.id}`)
-  }
+  const handleToProfile = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      router.push(`/specialist/${specialist.id}`)
+    },
+    [router, specialist.id],
+  )
+
+  // Мемоизируем вычисления для избежания ненужных пересчетов
+  const memoizedImages = useMemo(() => {
+    return service.images && service.images.length > 0 ? service.images : []
+  }, [service.images])
+
+  const memoizedIncludes = useMemo(() => {
+    return service.includes || []
+  }, [service.includes])
 
   return (
     <div>
@@ -107,10 +119,10 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
 
         {/* Image Swiper */}
         <div className="w-full bg-neutral-800">
-          {service.images && service.images.length > 0 ? (
+          {memoizedImages.length > 0 ? (
             <Swiper spaceBetween={0} slidesPerView={1} className="w-full">
-              {service.images.map((image, index) => (
-                <SwiperSlide key={index}>
+              {memoizedImages.map((image, index) => (
+                <SwiperSlide key={`${image}-${index}`}>
                   <div className="aspect-square w-full relative">
                     <Image
                       src={image || "/placeholder.svg"}
@@ -177,7 +189,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
         </div>
 
         <div className="relative">
-          <AboutContentsSection description={service.description} contents={service.includes} />
+          <AboutContentsSection description={service.description} contents={memoizedIncludes} />
         </div>
       </div>
 
@@ -186,7 +198,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
           {/* Секция "Опыт" */}
           <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
             <div className="mt-4 px-4">
-              <Included title="Опыт" items={service.includes} />
+              <Included title="Опыт" items={memoizedIncludes} />
             </div>
           </div>
         </div>
