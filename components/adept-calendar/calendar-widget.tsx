@@ -99,7 +99,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
   const days = getDaysInMonth(currentMonth)
 
   return (
-    <div className="bg-none rounded-sm aspect-square mt-5">
+    <div className={`bg-none rounded-sm mt-5 ${isCollapsed ? "" : "aspect-square"}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -128,38 +128,36 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
       </div>
 
       {/* Calendar content with smooth animation */}
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isCollapsed ? "max-h-0 opacity-0" : "max-h-96 opacity-100"
-        }`}
-      >
-        {/* Day names */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {dayNames.map((day) => (
-            <div key={day} className="text-xs text-gray-500 text-center py-1">
-              {day}
-            </div>
-          ))}
-        </div>
+      {!isCollapsed && (
+        <div className="transition-all duration-300 ease-in-out">
+          {/* Day names */}
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {dayNames.map((day) => (
+              <div key={day} className="text-xs text-gray-500 text-center py-1">
+                {day}
+              </div>
+            ))}
+          </div>
 
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-1">
-          {days.map((day, index) => (
-            <button
-              key={index}
-              onClick={() => onDateSelect(day.fullDate)}
-              className={`
-                aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
-                ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
-                ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
-                ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
-              `}
-            >
-              {day.date}
-            </button>
-          ))}
+          {/* Calendar grid */}
+          <div className="grid grid-cols-7 gap-1">
+            {days.map((day, index) => (
+              <button
+                key={index}
+                onClick={() => onDateSelect(day.fullDate)}
+                className={`
+                  aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
+                  ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
+                  ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
+                  ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
+                `}
+              >
+                {day.date}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
