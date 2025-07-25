@@ -10,6 +10,9 @@ import {Mufi} from "@/components/mufi";
 import type {Chat, Message} from "@/types/chats";
 import {v4 as uuidv4} from "uuid";
 import {router} from "next/client";
+import {useAdeptChats} from "@/stores/chat-store";
+import {useIsMobile} from "@/hooks/use-mobile";
+import {MobileServiceCard} from "@/components/service/mobile-service-card";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const { id } = params
@@ -18,11 +21,14 @@ export default function ServicePage({ params }: { params: { id: string } }) {
   // Find the service by ID
   const service = mockServices.find((s) => s.id === id) || mockServices[0]
   const bookingSlots = mockBookingSlots
+  const isMobile = useIsMobile()
+
+  const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
 
   const handleSearch = (query: string, title?: string, files: File[] = [], isPractice?: boolean) => {
     if (!query.trim() && files.length === 0) return
 
-    const existingChat = findChatBySpecialistId(specialist.id)
+    const existingChat = findChatBySpecialistId(service.specialist.id)
 
     if (existingChat) {
       const userMessage: Omit<Message, "id"> = {
@@ -46,9 +52,9 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
       const newChat: Chat = {
         id: newChatId,
-        title: specialist.name,
-        specialistId: specialist.id,
-        avatar: specialist.avatar || "placeholder.jpg",
+        title: service.specialist.name,
+        specialistId: service.specialist.id,
+        avatar: service.specialist.avatar || "placeholder.jpg",
         timestamp:Date.now(),
         messages: [userMessage],
         isAI: false,
@@ -76,8 +82,13 @@ export default function ServicePage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="mx-auto px-4 sm:px-6 py-8">
-        {/* Service Page Content */}
+    {isMobile ? (
+        <MobileServiceCard
+          service={service}
+          bookingSlots={bookingSlots}
+    />
+    ) : (<>
+        <div className="mx-auto px-4 sm:px-6 py-8"/>
         <div className="h-24"/>
         <ServicePageContent service={service} bookingSlots={bookingSlots}/>
         <Mufi
@@ -90,7 +101,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
             onCancelReply={() => {}}
             chatTitle="Alura"
         />
-      </div>
+        </>)
+    }
     </>
-  )
-}
+  )}

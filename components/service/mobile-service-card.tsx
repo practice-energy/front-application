@@ -16,7 +16,7 @@ import { formatNumber } from "@/utils/format"
 import { useRouter } from "next/navigation"
 import { BackButton } from "@/components/ui/button-back"
 import { useAuth } from "@/hooks/use-auth"
-// import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
 interface MobileServiceCardProps {
@@ -27,7 +27,7 @@ interface MobileServiceCardProps {
 export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardProps) {
     const router = useRouter()
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-    const isAuthenticated = useAuth()
+    const { isAuthenticated } = useAuth()
     const specialist = service.specialist
 
     const handleShare = (e: React.MouseEvent) => {
@@ -94,31 +94,31 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
 
             {/* Image Swiper */}
             <div className="w-full bg-neutral-800">
-                {/*{service.images?.length > 0 ? (*/}
-                {/*    // <Swiper*/}
-                {/*    //     spaceBetween={0}*/}
-                {/*    //     slidesPerView={1}*/}
-                {/*    //     className="w-full"*/}
-                {/*    // >*/}
-                {/*    //     {service.images.map((image, index) => (*/}
-                {/*    //         <SwiperSlide key={index}>*/}
-                {/*    //             <div className="aspect-square w-full relative">*/}
-                {/*    //                 <Image*/}
-                {/*    //                     src={image}*/}
-                {/*    //                     alt={`${service.title} ${index + 1}`}*/}
-                {/*    //                     fill*/}
-                {/*    //                     className="object-cover"*/}
-                {/*    //                     priority={index === 0}*/}
-                {/*    //                 />*/}
-                {/*    //             </div>*/}
-                {/*    //         </SwiperSlide>*/}
-                {/*    //     ))}*/}
-                {/*    // </Swiper>*/}
-                {/*) : (*/}
+                {service.images?.length > 0 ? (
+                    <Swiper
+                        spaceBetween={0}
+                        slidesPerView={1}
+                        className="w-full"
+                    >
+                        {service.images.map((image, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="aspect-square w-full relative">
+                                    <Image
+                                        src={image}
+                                        alt={`${service.title} ${index + 1}`}
+                                        fill
+                                        className="object-cover"
+                                        priority={index === 0}
+                                    />
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                ) : (
                     <div className="aspect-square w-full relative">
                         <PracticePlaceholder className="w-full h-full" width={600} height={600} />
                     </div>
-                {/*)}*/}
+                )}
             </div>
 
             {/* Content Section */}
