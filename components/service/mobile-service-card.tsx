@@ -7,7 +7,6 @@ import {
   Users,
   MessagesSquare,
   Share,
-  ChevronDown,
 } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Service } from "@/types/common"
@@ -26,7 +25,6 @@ import { BackButton } from "@/components/ui/button-back"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
-import { cn } from "@/lib/utils"
 import { Included } from "@/components/service/included"
 
 interface MobileServiceCardProps {
@@ -38,23 +36,6 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const specialist = service.specialist
-
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [shouldShowToggle, setShouldShowToggle] = useState(false)
-  const [contentHeight, setContentHeight] = useState(0)
-  const expRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (expRef.current) {
-      const fullHeight = expRef.current.scrollHeight
-      setContentHeight(fullHeight)
-      setShouldShowToggle(fullHeight > 130)
-    }
-  }, [service.includes])
-
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded)
-  }
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -203,38 +184,11 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
       <div className="bg-colors-neutral-150 pt-2">
         <div className="relative">
           {/* Секция "Опыт" */}
-          <div className="overflow-hidden transition-all duration-500 ease-in-out flex"
-               style={{
-                 height: isExpanded
-                     ? `${contentHeight}px`
-                     : shouldShowToggle
-                         ? `80px`
-                         : 'auto'
-               }}
-               ref={expRef}>
+          <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
             <div className="mt-4 px-4">
               <Included title="Опыт" items={service.includes} />
             </div>
           </div>
-
-          {/* Fade overlay when collapsed */}
-          {shouldShowToggle && !isExpanded && (
-            <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-to-t from-colors-neutral-150 to-transparent pointer-events-none" />
-          )}
-
-          {shouldShowToggle && (
-            <button
-              onClick={handleToggle}
-              className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
-            >
-              {isExpanded ? "Свернуть" : "Раскрыть больше"}
-              <ChevronDown
-                width={24}
-                height={24}
-                className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")}
-              />
-            </button>
-          )}
         </div>
 
         <div className="mb-4 px-4">

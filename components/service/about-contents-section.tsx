@@ -11,7 +11,6 @@ interface AboutContentsSectionProps {
     contents: string[]
 }
 
-
 export function AboutContentsSection({ description, contents }: AboutContentsSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
@@ -26,7 +25,7 @@ export function AboutContentsSection({ description, contents }: AboutContentsSec
         if (targetElement) {
             const height = targetElement.scrollHeight
             setContentHeight(height)
-            setShouldShowToggle(height > 80)
+            setShouldShowToggle(height > 130)
         }
     }, [description, contents, isMobile]) // Добавили isMobile в зависимости
 
