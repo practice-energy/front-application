@@ -1,13 +1,14 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import {User} from "@/types/user";
-import {mockUser} from "@/services/mock-user";
+import type { User } from "@/types/user"
+import { mockUser } from "@/services/mock-user"
+import { useProfileStore } from "@/stores/profile-store"
 
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
-  login: (user: User) => void
+  login: (user: User) => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
 }
@@ -15,8 +16,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
-  login: () => {
-    return mockUser
+  login: async () => {
+    return Promise.resolve()
   },
   logout: () => {},
   updateUser: () => {},
@@ -33,9 +34,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = (userData: User) => {
-    setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
+  const login = async (userData: User) => {
+    // Simulate backend request
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // Use mockUser instead of userData
+    const user = mockUser
+    setUser(user)
+    localStorage.setItem("user", JSON.stringify(user))
+
+    // Store user in profileStore
+    useProfileStore.getState().setUser(user)
   }
 
   const logout = () => {
