@@ -99,12 +99,12 @@ export function UpcomingActivityCard({
           {/* 2. Центральная колонка - сервис и клиент */}
           <div className="flex-1 ml-4 pt-0.5 min-w-0"> {/* ml-4 = 18px отступ */}
             {/* Название сервиса (2 строки максимум) */}
-            <div className="text-sm font-medium leading-tight line-clamp-2 h-10 mb-1">
+            <div className="text-sm font-medium leading-tight line-clamp-2 h-9 mb-1">
               {service.name}
             </div>
 
             {/* Клиент и описание (2 строки) */}
-            <div className="flex items-start h-10">
+            <div className="flex items-start h-10 mb-1">
               <div className="text-sm text-gray-900 leading-tight w-1/3 line-clamp-2">
                 {client.name}
               </div>
