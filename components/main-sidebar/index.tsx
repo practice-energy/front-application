@@ -134,20 +134,20 @@ export function MainSidebar() {
                   handleChatClick={handleChatClick}
               />
           ) : (<>
-            {/*{hat === "adept" || hat === undefined && (*/}
-            {/*    <ChatsAdeptSections*/}
-            {/*        groupedChats={groupedChats}*/}
-            {/*        sectionVisibility={sectionVisibility}*/}
-            {/*        toggleSection={toggleSection}*/}
-            {/*        isCollapsed={isCollapsed}*/}
-            {/*        isMobile={isMobile}*/}
-            {/*        isActiveChat={isActiveChat}*/}
-            {/*        hasNewMessages={hasNewMessages}*/}
-            {/*        handleChatClick={handleChatClick}*/}
-            {/*    />*/}
-            {/*)}*/}
+            {hat === "adept" || hat === undefined && (
+                <ChatsAdeptSections
+                    groupedChats={groupedChats}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                    isActiveChat={isActiveChat}
+                    hasNewMessages={hasNewMessages}
+                    handleChatClick={handleChatClick}
+                />
+            )}
 
-            {/*{hat === "master" && (*/}
+            {hat === "master" && (
                <DashboardMasterSections
                    activities={mockDashboardStats.upcomingActivities.activities}
                    sectionVisibility={sectionVisibility}
@@ -158,7 +158,7 @@ export function MainSidebar() {
                    hasNewMessages={hasNewMessages}
                    handleChatClick={handleChatClick}
                />
-            {/*)}*/}
+            )}
           </>
           )}
         </div>
