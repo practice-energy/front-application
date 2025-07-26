@@ -10,7 +10,6 @@ export interface User {
   name: string
   location: string
   avatar?: string
-  images: string[]
   timezone: string
   createdAt: Date
   preferences?: {

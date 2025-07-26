@@ -4,13 +4,11 @@ import {v4 as uuidv4} from "uuid";
 
 export const mockUser: User = {
     id: uuidv4(),
-    first_name: "Ivan",
-    last_name: "Ivanov",
+    name: "Снежанна Шлюхтенбург",
     email: {
         address: "ivan.ivanov@example.com",
         verified: true,
     },
-    images: [],
     location: "",
     timezone: "GMT+3",
     createdAt: new Date(2023, 6, 10, 11, 0),
