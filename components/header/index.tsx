@@ -28,17 +28,12 @@ export function Header() {
   const { isCollapsed, toggleSidebar } = useSidebar()
 
   const {
-    showBurgerMenu,
-    setShowBurgerMenu,
     showProfileMenu,
     setShowProfileMenu,
-    role,
-    setRole,
-    burgerMenuRef,
     profileMenuRef,
     hat,
     setHat,
-  } = useHeaderState(user)
+  } = useHeaderState()
 
   const shouldShowSidebar = useMemo(() => {
     return isAuthenticated
@@ -51,14 +46,7 @@ export function Header() {
   const isHomePage = pathname === "/"
 
   useEffect(() => {
-    setRole(user?.isSpecialist ? "specialist" : "user")
-  }, [user?.isSpecialist, setRole])
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (burgerMenuRef.current && !burgerMenuRef.current.contains(event.target as Node)) {
-        setShowBurgerMenu(false)
-      }
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setShowProfileMenu(false)
       }
@@ -68,7 +56,7 @@ export function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [burgerMenuRef, profileMenuRef, setShowBurgerMenu, setShowProfileMenu])
+  }, [profileMenuRef, setShowProfileMenu])
 
   const handleAuthSuccess = () => {
     setIsAuthModalOpen(false)
@@ -77,7 +65,6 @@ export function Header() {
   const openAuthModal = (mode: "login" | "signup" = "login") => {
     setAuthMode(mode)
     setIsAuthModalOpen(true)
-    setShowBurgerMenu(false)
     setIsMobileMenuOpen(false)
   }
 
@@ -87,7 +74,6 @@ export function Header() {
 
   const handleLogout = () => {
     logout()
-    setShowBurgerMenu(false)
     setShowProfileMenu(false)
     setIsMobileMenuOpen(false)
     router.push("/")
@@ -95,7 +81,6 @@ export function Header() {
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu)
-    setShowBurgerMenu(false)
   }
 
   const handleBecomeSpecialist = () => {
@@ -108,14 +93,14 @@ export function Header() {
       router.push("/")
     } else {
       setHat("adept")
-      router.push("/specialist-dashboard")
+      router.push("/dashboard")
     }
     setShowProfileMenu(false)
   }
 
   const handleLogoClick = () => {
     if (hat === "master") {
-      router.push("/specialist-dashboard")
+      router.push("/dashboard")
     } else {
       router.push("/")
     }
@@ -192,7 +177,6 @@ export function Header() {
               toggleProfileMenu={toggleProfileMenu}
               setShowProfileMenu={setShowProfileMenu}
               handleLogout={handleLogout}
-              role={role}
               handleRoleToggle={handleRoleToggle}
               isSpecialist={isSpecialist}
           />

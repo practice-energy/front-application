@@ -32,7 +32,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
   }
 
   const handleCalendarClick = () => {
-    router.push("/specialist-dashboard")
+    router.push("/dashboard")
   }
 
   if (!isAuthenticated) return null

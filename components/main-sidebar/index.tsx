@@ -2,28 +2,24 @@
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
-  Search, PanelRightOpen, SparklesIcon,
+  SparklesIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
-import { v4 as uuidv4 } from "uuid"
 
 import { useSidebarData } from "./hooks/use-sidebar-data"
 import { useSidebarSearch } from "./hooks/use-sidebar-search"
-import { SectionHeader } from "./components/section-header"
-import { SectionContent } from "./components/section-content"
-import { ChatItem } from "./components/chat-item"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
 import { useProfileStore } from "@/stores/profile-store"
-import {Pentagram} from "@/components/icons/icon-pentagram";
-import {UserSwitch} from "@/components/icons/icon-user-switch";
 import {ChatsAdeptSections} from "@/components/main-sidebar/components/chat-adept-sections";
 import {Topper} from "@/components/main-sidebar/components/topper";
 import {ChatsSearchSection} from "@/components/main-sidebar/components/chats-search-section";
+import {DashboardMasterSections} from "@/components/main-sidebar/components/dashboard-master-sections";
+import {mockDashboardStats} from "@/services/mock-dash";
+import {useHeaderState} from "@/components/header/hooks/use-header-state";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -52,6 +48,10 @@ export function MainSidebar() {
   const { logout } = useAuth()
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
+  const {
+    hat,
+    setHat,
+  } = useHeaderState()
 
   const {
     allChats,
@@ -61,7 +61,9 @@ export function MainSidebar() {
     updateLastReadTimestamp,
     hasNewMessages,
     isActiveChat,
-  } = useSidebarData(pathname, user?.hat)
+  } = useSidebarData(pathname, hat)
+
+  console.log(hat)
 
   const { searchQuery, searchResults, isSearching, handleSearch } = useSidebarSearch(allChats)
 
@@ -79,55 +81,8 @@ export function MainSidebar() {
     }
   }
 
-  const handleNewSearch = () => {
-    const newSearchId = uuidv4()
-    router.push(`/search/${newSearchId}`)
-
-    if (isMobile) {
-      toggleSidebar()
-    }
-  }
-
-  const setHat = () => {
-    if (user === null) {
-      logout()
-    }
-
-    if (user?.hat === "adept") {
-      setUser({ ...user, hat: "master" })
-    } else {
-      setUser({ ...user, hat: "adept" })
-    }
-  }
-
-  const handleCalendarClick = () => {
-    router.push("/calendar")
-    if (isMobile) {
-      toggleSidebar()
-    }
-  }
-
-  const handleSavedClick = () => {
-    router.push("/profile?section=saved")
-    if (isMobile) {
-      toggleSidebar()
-    }
-  }
-
-  const handleSpecialistClick = () => {
-    if (!user?.isSpecialist) {
-      router.push("/become-specialist")
-    } else {
-      setHat()
-    }
-    if (isMobile) {
-      toggleSidebar()
-    }
-  }
-
   // Определяем тип контента в зависимости от роли пользователя
   const isSpecialist = user?.isSpecialist || false
-  const hat = user?.hat || "adept"
 
   const getSpecialistButtonText = () => {
     if (!isSpecialist) return "Стать мастером"
@@ -178,17 +133,33 @@ export function MainSidebar() {
                   hasNewMessages={hasNewMessages}
                   handleChatClick={handleChatClick}
               />
-          ) : (
-            <ChatsAdeptSections
-                groupedChats={groupedChats}
-                sectionVisibility={sectionVisibility}
-                toggleSection={toggleSection}
-                isCollapsed={isCollapsed}
-                isMobile={isMobile}
-                isActiveChat={isActiveChat}
-                hasNewMessages={hasNewMessages}
-                handleChatClick={handleChatClick}
-            />
+          ) : (<>
+            {hat === "adept" || hat === undefined && (
+                <ChatsAdeptSections
+                    groupedChats={groupedChats}
+                    sectionVisibility={sectionVisibility}
+                    toggleSection={toggleSection}
+                    isCollapsed={isCollapsed}
+                    isMobile={isMobile}
+                    isActiveChat={isActiveChat}
+                    hasNewMessages={hasNewMessages}
+                    handleChatClick={handleChatClick}
+                />
+            )}
+
+            {hat === "master" && (
+               <DashboardMasterSections
+                   activities={mockDashboardStats.upcomingActivities.activities}
+                   sectionVisibility={sectionVisibility}
+                   toggleSection={toggleSection}
+                   isCollapsed={isCollapsed}
+                   isMobile={isMobile}
+                   isActiveChat={isActiveChat}
+                   hasNewMessages={hasNewMessages}
+                   handleChatClick={handleChatClick}
+               />
+            )}
+          </>
           )}
         </div>
 

@@ -75,7 +75,7 @@ export default function BecomeSpecialistPage() {
 
   useEffect(() => {
     if (user?.isSpecialist) {
-      router.push("/specialist-dashboard")
+      router.push("/dashboard")
     }
   }, [user, router])
 

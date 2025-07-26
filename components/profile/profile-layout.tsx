@@ -6,7 +6,6 @@ import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useProfileStore } from "@/stores/profile-store"
 import type { ProfileSection } from "@/types/profile"
-import {mockUser} from "@/services/mock-user";
 import {mockSavedSpecialists} from "@/services/mock-specialists";
 
 interface ProfileLayoutProps {
@@ -17,20 +16,9 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
   const searchParams = useSearchParams()
   const {
     activeSection,
-    user,
-    stats,
     setActiveSection,
     setIsMobile,
-    setUser,
-    setStats,
-    setSavedSpecialists,
   } = useProfileStore()
-
-  // Initialize data
-  useEffect(() => {
-    if (!user) setUser(mockUser)
-    setSavedSpecialists(mockSavedSpecialists)
-  }, [user, stats, setUser, setStats, setSavedSpecialists])
 
   // Handle URL section parameter
   useEffect(() => {
@@ -52,7 +40,7 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
   }, [setIsMobile])
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       {/* Main Content */}
       <div className="w-full">
         <div className="p-6 max-w-7xl mx-auto">{children}</div>

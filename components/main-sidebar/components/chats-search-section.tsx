@@ -22,9 +22,7 @@ interface ChatsSearchSectionProps {
 }
 
 export const ChatsSearchSection = ({
-                                       isSearching,
                                        searchResults,
-                                       groupedChats,
                                        sectionVisibility,
                                        toggleSection,
                                        isCollapsed,

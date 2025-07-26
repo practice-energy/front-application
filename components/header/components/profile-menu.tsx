@@ -18,9 +18,6 @@ export function ProfileMenu({
   setShowProfileMenu,
   handleLogout,
   isMobile = false,
-  role,
-  handleRoleToggle,
-  isSpecialist,
 }: ProfileMenuProps) {
   if (!isAuthenticated) return null
 
@@ -58,20 +55,6 @@ export function ProfileMenu({
           <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.name || "User"}</p>
           </div>
-
-          {/* Role toggle button */}
-          {user?.specialistProfile !== null && handleRoleToggle && isSpecialist && (
-              <button
-                  onClick={() => {
-                    handleRoleToggle()
-                    setShowProfileMenu(false)
-                  }}
-                  className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors w-full"
-              >
-                <UserSwitch className="mr-3 h-4 w-4" />
-                {role === "specialist" ? "Инициант" : "Мастер"}
-              </button>
-          )}
 
           <div>
             <Link

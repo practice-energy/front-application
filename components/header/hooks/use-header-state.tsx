@@ -1,28 +1,28 @@
 "use client"
 
-import { useState, useRef } from "react"
+import {useState, useRef, useEffect} from "react"
 import type { User } from "@/types/user"
+import {useProfileStore} from "@/stores/profile-store";
 
-export function useHeaderState(user: User | null) {
-  const [isLanguageSwitching, setIsLanguageSwitching] = useState(false)
-  const [showBurgerMenu, setShowBurgerMenu] = useState(false)
+export function useHeaderState() {
   const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const [role, setRole] = useState<"user" | "specialist">(user?.isSpecialist ? "specialist" : "user")
-  const [hat, setHat] = useState<"adept" | "master" | "superviser">("adept")
+  const {user, setUser} = useProfileStore()
+  const [hat, setHat] = useState<"adept" | "master" | "superviser">(user?.hat || "adept")
 
-  const burgerMenuRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    console.log("wip", user, hat)
+    if (user) {
+      setUser({
+        ...user, hat: hat,
+      })
+    }
+  }, [setHat]);
+
   const profileMenuRef = useRef<HTMLDivElement>(null)
 
   return {
-    isLanguageSwitching,
-    setIsLanguageSwitching,
-    showBurgerMenu,
-    setShowBurgerMenu,
     showProfileMenu,
     setShowProfileMenu,
-    role,
-    setRole,
-    burgerMenuRef,
     profileMenuRef,
     hat,
     setHat,

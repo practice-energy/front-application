@@ -23,7 +23,7 @@ export interface User {
   experience: Experience[]
   specialistProfile?: Specialist
   isSpecialist: boolean
-  hat: "master" | "adept"
+  hat: "master" | "adept" | "superviser"
   tier: "unlimited" | "premium" | "basic"
 }
 
