@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
+  CalendarDays, MessageSquareText,
   SparklesIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,8 @@ import {ChatsSearchSection} from "@/components/main-sidebar/components/chats-sea
 import {DashboardMasterSections} from "@/components/main-sidebar/components/dashboard-master-sections";
 import {mockDashboardStats} from "@/services/mock-dash";
 import {useHeaderState} from "@/components/header/hooks/use-header-state";
+import {BigProfileButtons} from "@/components/big-profile-buttons";
+import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -45,7 +48,7 @@ export function MainSidebar() {
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const { logout } = useAuth()
+  const { logout, isAuthenticated } = useAuth()
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
   const hat = user?.hat
@@ -102,6 +105,32 @@ export function MainSidebar() {
           searchQuery={searchQuery}
           handleSearch={handleSearch}
           isMobile={isMobile}
+      />
+
+      <BigProfileButtons
+          user={user}
+          actions={{
+            onCalendar: () => console.log('Calendar clicked'),
+            onChats: () => console.log('Chats clicked'),
+            onSwitchRole: () => console.log('Switch role clicked'),
+            onFavorites: () => console.log('Favorites clicked'),
+            onBecomeMaster: () => console.log('Become master clicked'),
+            onInitiatePractice: () => console.log('Initiate practice clicked'),
+          }}
+          icons={{
+            calendar: CalendarDays,
+            chat: MessageSquareText,
+            switch: UserSwitchIcon,
+            pentagram: PentagramIcon,
+          }}
+          show={{
+            calendar: true,
+            chat: true,
+            switchRole: isAuthenticated,
+            favorites: user?.hat === "adept",
+            initiatePractice: !isAuthenticated,
+            becomeMaster: user?.isSpecialist !== true && isAuthenticated,
+          }}
       />
 
       {/* Область скролла - общая для всех устройств */}
