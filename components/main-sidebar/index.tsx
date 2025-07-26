@@ -48,10 +48,7 @@ export function MainSidebar() {
   const { logout } = useAuth()
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
-  const {
-    hat,
-    setHat,
-  } = useHeaderState()
+  const hat = user?.hat
 
   const {
     allChats,
@@ -62,8 +59,6 @@ export function MainSidebar() {
     hasNewMessages,
     isActiveChat,
   } = useSidebarData(pathname, hat)
-
-  console.log(hat)
 
   const { searchQuery, searchResults, isSearching, handleSearch } = useSidebarSearch(allChats)
 

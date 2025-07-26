@@ -17,22 +17,23 @@ import { MobileMenu } from "./components/mobile-menu"
 import { NotificationSystem } from "@/components/notification-system"
 import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
 import {IconButton} from "@/components/icon-button";
+import {useProfileStore} from "@/stores/profile-store";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [authMode, setAuthMode] = useState<"login" | "signup">("login")
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, logout, updateUser } = useAuth()
+  const { user } = useProfileStore()
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
+  const hat = user?.hat
 
   const {
     showProfileMenu,
     setShowProfileMenu,
     profileMenuRef,
-    hat,
-    setHat,
   } = useHeaderState()
 
   const shouldShowSidebar = useMemo(() => {
@@ -88,14 +89,12 @@ export function Header() {
   }
 
   const handleRoleToggle = () => {
-    if (hat === "adept") {
-      setHat("master")
-      router.push("/")
-    } else {
-      setHat("adept")
-      router.push("/dashboard")
-    }
-    setShowProfileMenu(false)
+    updateUser({
+     hat: hat === "adept" ? "master" : "adept"
+    })
+
+    console.log(user)
+    setShowProfileMenu(!showProfileMenu)
   }
 
   const handleLogoClick = () => {

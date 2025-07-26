@@ -8,7 +8,7 @@ import { useProfileStore } from "@/stores/profile-store"
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
-  login: (user: User) => Promise<void>
+  login: () => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
 }
@@ -25,26 +25,26 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const setProfileUser = useProfileStore(state => state.setUser)
 
   // Check for saved user on mount
   useEffect(() => {
     const savedUser = localStorage.getItem("user")
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const parsedUser = JSON.parse(savedUser)
+      setUser(parsedUser)
+      setProfileUser(parsedUser)
     }
-  }, [])
+  }, []) // Убрали setProfileUser из зависимостей
 
-  const login = async (userData: User) => {
+  const login = async () => {
     // Simulate backend request
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    // Use mockUser instead of userData
-    const user = mockUser
-    setUser(user)
-    localStorage.setItem("user", JSON.stringify(user))
-
-    // Store user in profileStore
-    useProfileStore.getState().setUser(user)
+    const newUser = mockUser
+    setUser(newUser)
+    localStorage.setItem("user", JSON.stringify(newUser))
+    setProfileUser(newUser)
   }
 
   const logout = () => {
@@ -57,13 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const updatedUser = { ...user, ...updates }
       setUser(updatedUser)
       localStorage.setItem("user", JSON.stringify(updatedUser))
+      setProfileUser(updatedUser)
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser }}>
+        {children}
+      </AuthContext.Provider>
   )
 }
 
