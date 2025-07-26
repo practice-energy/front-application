@@ -120,7 +120,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                 <div className="bg-white relative">
                     {/* Аватар */}
                     <div className="relative">
-                        <div className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5] w-full">
+                        <div className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5]">
                             <img
                                 src={specialist.avatar || "/placeholder.svg"}
                                 alt={specialist.name}

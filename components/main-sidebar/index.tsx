@@ -53,7 +53,7 @@ export function MainSidebar() {
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
   const hat = user?.hat
-  const [showMasterChats, setShowMasterChats] = useState<boolean>(false)
+  const [showMasterChats, setShowMasterChats] = useState<boolean>(true)
 
   const {
     allChats,

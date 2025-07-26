@@ -43,7 +43,7 @@ export const ChatHeader = ({
 
             {/* Правая часть - иконка профиля */}
             <div className="flex-1 flex justify-end opacity-100">
-                {isAuthenticated && user && (
+                {isAuthenticated && (
                     <button
                         onClick={toggleProfileMenu}
                         className={cn(
