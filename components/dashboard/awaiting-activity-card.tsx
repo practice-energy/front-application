@@ -9,6 +9,7 @@ import { IconPractice } from "@/components/icons/icon-practice"
 import { ActionButtonsRow, ActionButtonsRowConfirmed, ActionButtonsRowFinalize } from "@/components/action-button"
 import {BookingFormatIcon} from "@/components/booking-format";
 import {BookingRepeatedIcon} from "@/components/booking-repeatable";
+import {formatNumber} from "@/utils/format";
 
 interface AwaitingActivityCardProps {
   startTime: string
@@ -119,7 +120,7 @@ export function AwaitingActivityCard({
                 <MessagesSquare size={16} />
               </button>
               <div className="flex items-center text-base">
-                <span>{service.price}</span>
+                <span>{formatNumber(service.price)}</span>
                 <RubleIcon size={16} bold={false} />
               </div>
             </div>

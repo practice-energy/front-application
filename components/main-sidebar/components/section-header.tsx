@@ -24,7 +24,7 @@ export function SectionHeader({
         <button
             className={cn(
                 "flex items-center w-full py-3 px-1 pl-2 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
-                "hover:bg-violet-50 rounded-sm",
+                "md:hover:bg-violet-50 rounded-sm",
                 isCollapsed && !isMobile ? "hidden" : "flex",
             )}
             onClick={(e) => {

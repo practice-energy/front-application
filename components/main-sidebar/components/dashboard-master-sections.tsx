@@ -71,39 +71,41 @@ export const DashboardMasterSections = ({
                                 icon={section.icon}
                                 iconStyle={section.iconStyle}
                             />
-                            <SectionContent
-                                sectionKey={section.key}
-                                sectionVisibility={sectionVisibility}
-                            >
-                                {section.activities.map((activity, index) => {
-                                    const isBackToBack =
-                                        index > 0 &&
-                                        section.activities[index - 1].end.getTime() === activity.start.getTime()
+                            <div className="py-1">
+                                <SectionContent
+                                    sectionKey={section.key}
+                                    sectionVisibility={sectionVisibility}
+                                >
+                                    {section.activities.map((activity, index) => {
+                                        const isBackToBack =
+                                            index > 0 &&
+                                            section.activities[index - 1].end.getTime() === activity.start.getTime()
 
-                                    return (
-                                        <div key={activity.id} className="pb-1">
-                                            <UpcomingActivityCard
-                                                startTime={activity.start.toLocaleTimeString("ru-RU", {
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
-                                                })}
-                                                endTime={activity.end.toLocaleTimeString("ru-RU", {
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
-                                                })}
-                                                client={activity.client}
-                                                service={activity.service}
-                                                duration={activity.duration}
-                                                format={activity.format}
-                                                isBackToBack={isBackToBack}
-                                                isRepeat={activity.isRepeat}
-                                                status={activity.status}
-                                                practiceCount={activity.practiceCount || 0}
-                                            />
-                                        </div>
-                                    )
-                                })}
-                            </SectionContent>
+                                        return (
+                                            <div key={activity.id} className="pb-1">
+                                                <UpcomingActivityCard
+                                                    startTime={activity.start.toLocaleTimeString("ru-RU", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                    })}
+                                                    endTime={activity.end.toLocaleTimeString("ru-RU", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                    })}
+                                                    client={activity.client}
+                                                    service={activity.service}
+                                                    duration={activity.duration}
+                                                    format={activity.format}
+                                                    isBackToBack={isBackToBack}
+                                                    isRepeat={activity.isRepeat}
+                                                    status={activity.status}
+                                                    practiceCount={activity.practiceCount || 0}
+                                                />
+                                            </div>
+                                        )
+                                    })}
+                                </SectionContent>
+                            </div>
                         </div>
                     ) : (<>
 

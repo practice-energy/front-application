@@ -21,7 +21,6 @@ type PasswordStrength = "weak" | "medium" | "strong"
 
 export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthModalProps) {
     const {login} = useAuth()
-    const {t} = useTranslations()
 
     // State management
     const [currentStep, setCurrentStep] = useState<AuthStep>(1)
