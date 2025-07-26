@@ -6,7 +6,7 @@ import { mockDashboardStats } from "@/services/mock-dash"
 import { OverviewStatCard } from "../overview-stat-card"
 import { UpcomingActivityCard } from "../upcoming-activity-card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {AwaitingActivityCard} from "@/components/specialist-dashboard/awaiting-activity-card";
+import {AwaitingActivityCard} from "@/components/dashboard/awaiting-activity-card";
 
 export function MainDashboard() {
   const stats = mockDashboardStats

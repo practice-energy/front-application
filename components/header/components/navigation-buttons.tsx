@@ -16,7 +16,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
 
   const handleChatsClick = () => {
     // if (hat === "master") {
-    //   router.push("/specialist-dashboard?section=chats")
+    //   router.push("/dashboard?section=chats")
     // }
   }
 
@@ -27,7 +27,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
 
   const handleAnalyticsClick = () => {
     // if (hat === "master") {
-    //   router.push("/specialist-dashboard?section=analytics")
+    //   router.push("/dashboard?section=analytics")
     // }
   }
 
@@ -41,7 +41,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
     <>
       {/* Navigation buttons for authenticated specialists only */}
       {hat === "master" && (
-        <div className="items-center gap-6">
+        <div className="items-center gap-6 flex flex-row">
           {/* Chat button */}
           <IconButton
               icon={MessageSquareText}

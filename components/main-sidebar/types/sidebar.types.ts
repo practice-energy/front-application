@@ -2,16 +2,6 @@ import type React from "react"
 import {Icon} from "@/components/icons/icon-types";
 import { Chat } from "@/types/chats";
 
-export interface SearchResult {
-  id: string
-  title: string
-  description: string
-  avatar?: string
-  type: "specialist" | "service" | "chat"
-  rating?: number
-  price?: string
-}
-
 export interface ChatItemProps {
   chat: Chat
   onChatClick: (chatId: string) => void
@@ -28,7 +18,7 @@ export interface SectionHeaderProps {
   toggleSection: (s: string) => void
   isCollapsed: boolean
   isMobile: boolean
-  icon: Icon
+  icon?: Icon
   iconStyle: string
   sectionKey: string
   sectionVisibility: boolean

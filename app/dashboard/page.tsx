@@ -2,20 +2,15 @@
 
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { MainDashboard } from "@/components/specialist-dashboard/sections/main-dashboard"
-import Overview from "@/components/specialist-dashboard/sections/overview";
+import { MainDashboard } from "@/components/dashboard/sections/main-dashboard"
+import Overview from "@/components/dashboard/sections/overview";
 
-function SpecialistDashboardContent() {
+function DashboardContent() {
   const searchParams = useSearchParams()
   const section = searchParams.get("section") || "main"
 
   const renderSection = () => {
     switch (section) {
-      case "main":
-      case "":
-        return <MainDashboard />
-      case "overview":
-        return <Overview />
       default:
         return <MainDashboard />
     }
@@ -29,7 +24,7 @@ function SpecialistDashboardContent() {
 export default function SpecialistDashboardPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SpecialistDashboardContent />
+      <DashboardContent />
     </Suspense>
   )
 }

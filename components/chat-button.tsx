@@ -1,19 +1,21 @@
-import { TvMinimalPlay, Users } from "lucide-react"
+import {MessagesSquareIcon, TvMinimalPlay, Users} from "lucide-react"
+import {cn} from "@/lib/utils";
 
 interface ChatButtonProps {
-    format: "in-person" | "video" // или другие возможные форматы
+    onClick: () => {} // или другие возможные форматы
     className?: string
     size?: number
+    hasUpdates: boolean
 }
 
-export function ChatButtonProps({ format, className = "", size = 16 }:ChatButtonProps) {
+export function ChatButton({ onClick, className = "", size = 16, hasUpdates = false }:ChatButtonProps) {
     return (
-        <div className={`h-5 w-5 shadow-sm items-center rounded-sm bg-white ${className}`}>
-            {format === "in-person" ? (
-                <TvMinimalPlay size={size} className="font-normal ml-0.5 mt-0.5" />
-            ) : (
-                <Users size={size} className="font-normal ml-0.5 mt-0.5" />
-            )}
+        <div className={cn(
+            `h-5 w-5 shadow-sm items-center rounded-sm`,
+            hasUpdates ? "bg-violet-600 text-white" : "bg-white text-neutral-700",
+            className,
+        )}>
+            <MessagesSquareIcon size={size} className="font-normal ml-0.5 mt-0.5" />
         </div>
     )
 }

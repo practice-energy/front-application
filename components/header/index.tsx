@@ -15,7 +15,7 @@ import { NavigationButtons } from "./components/navigation-buttons"
 import { ProfileMenu } from "./components/profile-menu"
 import { MobileMenu } from "./components/mobile-menu"
 import { NotificationSystem } from "@/components/notification-system"
-import {UserSwitchIcon} from "@phosphor-icons/react";
+import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
 import {IconButton} from "@/components/icon-button";
 
 export function Header() {
@@ -93,20 +93,9 @@ export function Header() {
     router.push("/")
   }
 
-  const toggleBurgerMenu = () => {
-    setShowBurgerMenu(!showBurgerMenu)
-    setShowProfileMenu(false)
-  }
-
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu)
     setShowBurgerMenu(false)
-  }
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-    setShowBurgerMenu(false)
-    setShowProfileMenu(false)
   }
 
   const handleBecomeSpecialist = () => {
@@ -138,6 +127,8 @@ export function Header() {
     }
   }
 
+  console.log(user)
+
   return (
     <>
       <div>
@@ -156,39 +147,36 @@ export function Header() {
              zIndex: 60,
            }}
       >
-        {isAuthenticated && !user?.isSpecialist && (
-            <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>
-        )}
-
         <div className="flex items-center gap-[24px]">
-          {/* User switch icon */}
+          {isAuthenticated && !user?.isSpecialist && (
+              <Button
+                  onClick={handleBecomeSpecialist}
+              >Стать мастером
+              </Button>
+          )}
+
+          {isAuthenticated && hat === "adept" && (
+              <IconButton
+                  icon={CalendarDays}
+                  onClick={handleCalendarClick}
+                  disabled={false}
+                  className={cn(
+                      pathname === "/calendar" && " bg-violet-600",
+                  )}
+                  iconClassName={cn(
+                      pathname === "/calendar" && " text-white",
+                  )}
+              />
+          )}
+
+          <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+
+          {/* User likes icon */}
           <IconButton
-              icon={PentagonIcon}
+              icon={PentagramIcon}
               onClick={()=> {}}
               disabled={true}
           />
-
-          <div className="p-4">
-            <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
-          </div>
-
-          {/* User switch icon */}
-          <IconButton
-              icon={UserSwitchIcon}
-              onClick={handleRoleToggle}
-              disabled={false}
-          />
-
-          {isAuthenticated && hat === "adept" && (
-            <IconButton
-                icon={CalendarDays}
-                onClick={handleCalendarClick}
-                disabled={false}
-                className={cn(
-                    pathname === "/calendar" && "text-white bg-violet-600",
-                )}
-            />
-          )}
 
           {/* User switch icon */}
           <IconButton
@@ -226,7 +214,7 @@ export function Header() {
             style={{
               position: "fixed",
               top: "0",
-              left: "364px",
+              left: "340px",
               zIndex: 60,
             }}
           >

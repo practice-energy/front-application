@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react"
 import type { Chat } from "@/types/chats"
 import type { LastReadTimestamps, SectionVisibility } from "@/components/main-sidebar/types/sidebar.types"
-import { useAdeptChats } from "@/stores/chat-store"
+import {useAdeptChats, useMasterChats} from "@/stores/chat-store"
 
 const getLastReadTimestamps = (): LastReadTimestamps => {
   if (typeof window === "undefined") return {}
@@ -20,8 +20,8 @@ const saveLastReadTimestamps = (timestamps: LastReadTimestamps) => {
   localStorage.setItem("lastReadTimestamps", JSON.stringify(timestamps))
 }
 
-export function useSidebarData(pathname: string) {
-  const { chats: storeChats } = useAdeptChats()
+export function useSidebarData(pathname: string, hat: string = "adept") {
+  const { chats: storeChats } = hat === "adept" ? useAdeptChats() : useMasterChats()
   const [lastReadTimestamps, setLastReadTimestamps] = useState<LastReadTimestamps>(getLastReadTimestamps())
 
   // Section visibility state - each section maintains its own state
