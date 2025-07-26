@@ -23,6 +23,7 @@ import {mockDashboardStats} from "@/services/mock-dash";
 import {useHeaderState} from "@/components/header/hooks/use-header-state";
 import {BigProfileButtons} from "@/components/big-profile-buttons";
 import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
+import {IconPractice} from "@/components/icons/icon-practice";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -48,10 +49,11 @@ export function MainSidebar() {
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const { logout, isAuthenticated } = useAuth()
+  const { logout, isAuthenticated, updateUser } = useAuth()
   const { user, setUser } = useProfileStore()
   const isMobile = useMediaQuery("(max-width: 768px)")
   const hat = user?.hat
+  const [showMasterChats, setShowMasterChats] = useState<boolean>(false)
 
   const {
     allChats,
@@ -82,11 +84,6 @@ export function MainSidebar() {
   // Определяем тип контента в зависимости от роли пользователя
   const isSpecialist = user?.isSpecialist || false
 
-  const getSpecialistButtonText = () => {
-    if (!isSpecialist) return "Стать мастером"
-    return hat === "adept" ? "Мастер" : "Инициант"
-  }
-
   return (
     <div
       id="main-sidebar"
@@ -107,31 +104,49 @@ export function MainSidebar() {
           isMobile={isMobile}
       />
 
-      <BigProfileButtons
-          user={user}
-          actions={{
-            onCalendar: () => console.log('Calendar clicked'),
-            onChats: () => console.log('Chats clicked'),
-            onSwitchRole: () => console.log('Switch role clicked'),
-            onFavorites: () => console.log('Favorites clicked'),
-            onBecomeMaster: () => console.log('Become master clicked'),
-            onInitiatePractice: () => console.log('Initiate practice clicked'),
-          }}
-          icons={{
-            calendar: CalendarDays,
-            chat: MessageSquareText,
-            switch: UserSwitchIcon,
-            pentagram: PentagramIcon,
-          }}
-          show={{
-            calendar: true,
-            chat: true,
-            switchRole: isAuthenticated,
-            favorites: user?.hat === "adept",
-            initiatePractice: !isAuthenticated,
-            becomeMaster: user?.isSpecialist !== true && isAuthenticated,
-          }}
-      />
+      {isMobile && (<BigProfileButtons
+              user={user}
+              actions={{
+                onCalendar: () => {
+                  router.push('/calendar')
+                  toggleSidebar()
+                },
+                onChats: () => {
+                  setShowMasterChats(true)
+                },
+                onSwitchRole: () => {
+                  updateUser({
+                    hat: hat === "adept" ? "master" : "adept"
+                  })
+                },
+                onFavorites: () => console.log('Favorites clicked'),
+                onBecomeMaster: () => {
+                  toggleSidebar()
+                  router.push("/become-specialist")
+                },
+                onInitiatePractice: () => console.log('Initiate practice clicked'),
+                onDashboard: () => {
+                  setShowMasterChats(false)
+                }
+              }}
+              icons={{
+                calendar: CalendarDays,
+                chat: MessageSquareText,
+                switch: UserSwitchIcon,
+                pentagram: PentagramIcon,
+                dashboard: IconPractice,
+              }}
+              show={{
+                calendar: true,
+                chat: true,
+                switchRole: isAuthenticated,
+                favorites: user?.hat === "adept",
+                initiatePractice: !isAuthenticated,
+                becomeMaster: user?.isSpecialist !== true && isAuthenticated,
+                dashboard: user?.hat === "master" && showMasterChats,
+              }}
+          />
+      )}
 
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className={cn("flex-1 relative")}>
@@ -158,7 +173,7 @@ export function MainSidebar() {
                   handleChatClick={handleChatClick}
               />
           ) : (<>
-            {hat === "master" &&  isMobile ? (
+            {hat === "master" &&  isMobile && showMasterChats? (
                <DashboardMasterSections
                    activities={mockDashboardStats.upcomingActivities.activities}
                    sectionVisibility={sectionVisibility}

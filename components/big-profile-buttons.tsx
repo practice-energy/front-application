@@ -1,18 +1,20 @@
 "use client"
 
-import type { ComponentType } from "react"
+import React, { ComponentType } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import {cn} from "@/lib/utils";
+import {IconPractice} from "@/components/icons/icon-practice";
 
 interface ButtonConfig {
   id: string
-  Icon: ComponentType<{ className?: string }>
+  Icon: ComponentType<{ className?: string; width?: number; height?: number}>
   topText?: string
   bottomText?: string
   singleText?: string
-  variant: "two-lines" | "single-line"
+  variant: "two-lines" | "single-line" | "practice"
   onClick: () => void
   show: boolean
 }
@@ -26,12 +28,14 @@ interface BigProfileButtonsProps {
     onFavorites: () => void
     onBecomeMaster: () => void
     onInitiatePractice: () => void
+    onDashboard: () => void
   }
   icons: {
     calendar: ComponentType<{ className?: string }>
     chat: ComponentType<{ className?: string }>
     pentagram: ComponentType<{ className?: string }>
     switch: ComponentType<{ className?: string }>
+    practice: ComponentType<{ className?: string; width: number; height: number}>
   }
   show: {
     calendar: boolean
@@ -40,6 +44,7 @@ interface BigProfileButtonsProps {
     favorites: boolean
     becomeMaster: boolean
     initiatePractice: boolean
+    dashboard: boolean
   }
 }
 
@@ -64,7 +69,7 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
     {
       id: "switch-role",
       Icon: icons.switch,
-      topText: "Инициант",
+      topText: user?.hat === "master" ? "Инициант" : "Мастер",
       variant: "two-lines" as const,
       onClick: actions.onSwitchRole,
       show: show.switchRole,
@@ -93,13 +98,21 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onInitiatePractice,
       show: show.initiatePractice,
     },
+    {
+      id: "dash",
+      Icon: IconPractice,
+      singleText: "Панель Практис",
+      variant: "practice" as const,
+      onClick: actions.onDashboard,
+      show: show.dashboard,
+    },
   ].filter((button) => button.show)
 
   return (
     <div className="flex items-center justify-center w-full pl-4">
-      <div className="flex items-center gap-3 w-full max-w-md">
+      <div className="flex items-center w-full max-w-md">
         {/* Аватарка */}
-        <div className="flex-shrink-0 rounded-sm overflow-hidden w-20 h-20 flex items-center justify-center">
+        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center">
           {user?.avatar ? (
             <Image
               src={user.avatar || "/placeholder.svg"}
@@ -128,13 +141,19 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
                 <div className="w-2" />
               </CarouselItem>
               {buttons.map((button) => (
-                <CarouselItem key={button.id} className="pl-2 md:pl-4 basis-auto">
+                <CarouselItem key={button.id} className="pl-2 pt-3 md:pl-4 basis-auto">
                   <button
                     onClick={button.onClick}
                     className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
                   >
                     <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                      <button.Icon className="w-full h-full text-gray-700" />
+                      {button.variant === "practice" ? (
+                        <button.Icon
+                            className="w-full h-full text-gray-700"
+                            width={36}
+                            height={36}
+                        />
+                      ) : (<button.Icon className="w-full h-full text-gray-700"/>)}
                     </div>
 
                     {button.variant === "two-lines" ? (
@@ -152,6 +171,12 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
               ))}
             </CarouselContent>
           </Carousel>
+          <div
+              className={cn(
+                  "sticky  right-0 h-3 bg-gradient-to-l to-transparent pointer-events-none z-10",
+                  "from-white via-white/80 to-transparent",
+              )}
+          />
         </div>
       </div>
     </div>

@@ -6,10 +6,17 @@ import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 import { useAdeptChats } from "@/stores/chat-store"
 import {IconPractice} from "@/components/icons/icon-practice";
+import {MainMobileHeader} from "@/components/header/components/main-mobile-header";
+import {useProfileStore} from "@/stores/profile-store";
+import {useSidebar} from "@/contexts/sidebar-context";
+import {useAuth} from "@/hooks/use-auth";
 
 export default function HomePage() {
   const router = useRouter()
   const { addChat, clearChats } = useAdeptChats()
+  const { user } = useProfileStore()
+  const {toggleSidebar, isCollapsed} = useSidebar()
+  const {isAuthenticated} = useAuth()
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
@@ -42,6 +49,15 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-900 transition-all duration-300">
+      {isCollapsed && (
+          <MainMobileHeader
+              user={user}
+              toggleSidebar={toggleSidebar}
+              toggleProfileMenu={() => {router.push("/profile")}}
+              isAuthenticated={isAuthenticated}
+          />
+      )}
+
       {/* Основной контент */}
       <div className="flex-1 relative min-h-screen">
         {/* Скроллящийся контент с логотипом */}

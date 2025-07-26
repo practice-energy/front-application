@@ -28,8 +28,9 @@ export function useSidebarData(pathname: string, hat: string = "adept") {
   const [sectionVisibility, setSectionVisibility] = useState<SectionVisibility>({
     today: true,
     last7Days: true,
-    older: true,
+    older: false,
     search: true,
+    awaiting: true,
   })
 
   const groupChatsByTime = (chats: Chat[]) => {

@@ -93,7 +93,6 @@ export function Header() {
      hat: hat === "adept" ? "master" : "adept"
     })
 
-    console.log(user)
     setShowProfileMenu(!showProfileMenu)
   }
 
@@ -155,31 +154,35 @@ export function Header() {
 
           <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
 
-          {/* User likes icon */}
-          <IconButton
-              icon={PentagramIcon}
-              onClick={()=> {}}
-              disabled={true}
-          />
 
-          {/* User switch icon */}
-          <IconButton
-              icon={UserSwitchIcon}
-              onClick={handleRoleToggle}
-              disabled={false}
-          />
+          {isAuthenticated && (<>
+            {/* User likes icon */}
+            <IconButton
+                icon={PentagramIcon}
+                onClick={()=> {}}
+                disabled={true}
+            />
 
-          <ProfileMenu
-              isAuthenticated={isAuthenticated}
-              user={user}
-              showProfileMenu={showProfileMenu}
-              toggleProfileMenu={toggleProfileMenu}
-              setShowProfileMenu={setShowProfileMenu}
-              handleLogout={handleLogout}
-              handleRoleToggle={handleRoleToggle}
-              isSpecialist={isSpecialist}
-          />
-          {isAuthenticated && <NotificationSystem />}
+            {/* User switch icon */}
+            <IconButton
+                icon={UserSwitchIcon}
+                onClick={handleRoleToggle}
+                disabled={false}
+            />
+
+            <ProfileMenu
+                isAuthenticated={isAuthenticated}
+                user={user}
+                showProfileMenu={showProfileMenu}
+                toggleProfileMenu={toggleProfileMenu}
+                setShowProfileMenu={setShowProfileMenu}
+                handleLogout={handleLogout}
+                handleRoleToggle={handleRoleToggle}
+                isSpecialist={isSpecialist}
+            />
+
+            <NotificationSystem />
+          </>)}
         </div>
       </div>
 

@@ -2,8 +2,6 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi/index"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { ShareModal } from "@/components/modals/share-modal"
 import { v4 as uuidv4 } from "uuid"
@@ -11,16 +9,14 @@ import type { Chat, Message } from "@/types/chats"
 import { useAdeptChats } from "@/stores/chat-store"
 
 import { MessageList } from "@/components/chat/message-list"
-import { ChatNewButton } from "@/components/chat/chat-new-button"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {mockSavedSpecialists} from "@/services/mock-specialists";
-import {Link, PanelRightClose } from "lucide-react"
 import {cn} from "@/lib/utils";
-import Image from "next/image";
-import {PracticePlaceholder} from "@/components/practice-placeholder";
 import {useSidebar} from "@/contexts/sidebar-context";
 import {useAuth} from "@/hooks/use-auth";
+import { ChatHeader } from "@/components/header/components/chat-header"
+import {useProfileStore} from "@/stores/profile-store";
 
 export default function SearchPage() {
   const params = useParams()
@@ -35,7 +31,8 @@ export default function SearchPage() {
   const isMobile = useIsMobile()
   const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, logout } = useAuth()
+  const { user } = useProfileStore()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -181,47 +178,21 @@ export default function SearchPage() {
     [params.id, getChatDataById, addChat, addMessageToChat],
   )
 
+  console.log("wip", user, currentChat, isAuthenticated)
+  if (!user || !isAuthenticated) {
+    router.push("/")
+  }
+
   return (
       <div className="relative h-screen bg-white dark:bg-gray-900">
         {isMobile && isCollapsed ? (<>
-          <header className="fixed top-0 left-0 right-0 h-24 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-50 px-4 flex items-center justify-between">
-            {/* Левая часть - кнопка сайдбара (если нужно) */}
-            <div className="flex-1">
-              <button
-                  onClick={toggleSidebar}
-                  className="h-full px-3 flex items-center"
-              >
-                <PanelRightClose width={24} height={24} />
-              </button>
-            </div>
-
-            {/* Центральная часть - название чата */}
-            <div className="flex-1 text-center font-medium text-gray-900 dark:text-white truncate px-2 line-clamp-1">
-              {currentChat?.description || currentChat?.title || "Чат"}
-            </div>
-
-            {/* Правая часть - иконка профиля */}
-            <div className="flex-1 flex justify-end">
-              <button
-                  // onClick={toggleProfileMenu}
-                  className={cn(
-                      "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10 mt-2",
-                      // showProfileMenu
-                      //     ? "ring-0 ring-violet-600"
-                      //     : "ring-0  hover:bg-violet-50",
-                  )}
-                  aria-label="Profile menu"
-              >
-                {user?.avatar ? (<Image
-                    width={36}
-                    height={36}
-                    src={user?.avatar}
-                    alt={user?.name}
-                    className="overflow-hidden mr-[1px]"
-                />) : (<PracticePlaceholder width={50} height={50} className="bg-violet-50"/>)}
-              </button>
-            </div>
-          </header>
+          <ChatHeader
+              user={user!}
+              currentChat={currentChat!}
+              toggleSidebar={toggleSidebar}
+              toggleProfileMenu={toggleSidebar}
+              isAuthenticated={isAuthenticated}
+          />
 
           {/* Прокручиваемая область сообщений */}
           <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
