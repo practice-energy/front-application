@@ -284,8 +284,8 @@ export function OverviewSection() {
                 {/* Блок под шапкой с двумя колонками */}
                 <AboutSection
                   description={currentData.bio}
-                  isEditMode={isEditMode}
                   onInputChange={handleInputChange}
+                  isEditMode={isEditMode}
                   errors={errors}
                 />
               </div>

@@ -6,12 +6,11 @@ import { ChevronDown } from "lucide-react"
 import { useIsMobile } from "@/components/ui/use-mobile"
 import { EnhancedInput } from "@/components/enhanced-input"
 import type { ProfileData } from "@/components/profile/types/common"
-import type { Experience, Education } from "@/components/profile/types/common"
 
 interface AboutSectionProps {
   description: string
   isEditMode: boolean
-  onInputChange: (field: keyof ProfileData, value: string | string[] | File[] | Experience[] | Education[]) => void
+  onInputChange: (field: keyof ProfileData, value: string | string[] | File[]) => void
   errors: Record<string, string>
 }
 
