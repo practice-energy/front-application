@@ -61,7 +61,9 @@ export function AboutSection({ description, isEditMode, onInputChange, errors }:
               error={errors.bio}
               required
               showEditIcon
-              rows={4}
+              rows={3}
+              type = "textarea"
+              className="max-h-[90px]"
             />
           ) : (
             <div className={cn("ml-1 text-neutral-700 transition-opacity duration-300")}>{description}</div>

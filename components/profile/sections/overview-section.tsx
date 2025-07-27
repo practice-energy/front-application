@@ -18,6 +18,7 @@ import { BackButton } from "@/components/ui/button-back"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import type { ProfileData } from "@/components/profile/types/common"
+import {cn} from "@/lib/utils";
 
 export function OverviewSection() {
   // TODO get with request
@@ -32,16 +33,6 @@ export function OverviewSection() {
   const expRef = useRef<HTMLDivElement>(null)
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
-  useEffect(() => {
-    // Рассчитываем высоту только для описания на мобильных устройствах
-    const targetElement = expRef.current
-    if (targetElement) {
-      const height = targetElement.scrollHeight
-      setContentHeight(height)
-      setShouldShowToggle(height > 130)
-    }
-  })
-
   const handleToggle = () => {
     setIsExpanded(!isExpanded)
   }
@@ -53,6 +44,7 @@ export function OverviewSection() {
     location: "",
     experience: [],
     education: [],
+    certificates: [],
   })
 
   // Draft data (what's being edited in Edit mode)
@@ -62,6 +54,7 @@ export function OverviewSection() {
     location: "",
     experience: [],
     education: [],
+    certificates: [],
   })
 
   // Validation errors
@@ -77,6 +70,7 @@ export function OverviewSection() {
         // avatar: user.avatar,
         experience: user.experience || [],
         education: user.education || [],
+        certificates: user.certifcates || [],
       }
       setSavedData(userData)
       setDraftData(userData)
@@ -90,6 +84,25 @@ export function OverviewSection() {
   }, [draftData, savedData])
 
   const currentData = isEditMode ? draftData : savedData
+
+  useEffect(() => {
+    const targetElement = expRef.current
+    if (!targetElement) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const height = entry.contentRect.height
+        setContentHeight(height)
+        setShouldShowToggle(height > 130)
+      }
+    })
+
+    resizeObserver.observe(targetElement)
+
+    return () => {
+      resizeObserver.unobserve(targetElement)
+    }
+  }, [currentData.experience])
 
   const handleInputChange = (
     field: keyof ProfileData,
@@ -178,6 +191,26 @@ export function OverviewSection() {
     setShareModalOpen(true)
   }
 
+  const handleSkillChange = (index: number, value: string) => {
+    const updatedItems = [...currentData.experience]
+    updatedItems[index] = {
+      description: value
+    }
+    handleInputChange("experience", updatedItems)
+  }
+
+  const handleAddSkill = () => {
+    const updatedItems = [...currentData.experience, {
+      description: "",
+    }]
+    handleInputChange("experience", updatedItems)
+  }
+
+  const handleRemoveSkill = (index: number) => {
+    const updatedItems = currentData.experience.filter((_, i) => i !== index)
+    handleInputChange("experience", updatedItems)
+  }
+
   return (
     <main className="min-h-screen  relative">
       <div className="w-full mx-auto px-4 sm:px-6 py-8 md:w-[845px]">
@@ -236,7 +269,7 @@ export function OverviewSection() {
                     <div className="w-[250px] h-[312.5px] rounded-sm shadow-md overflow-hidden">
                       <img
                         src={user.avatar || "/placeholder.svg"}
-                        alt={user.name}
+                        alt={currentData.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -260,10 +293,10 @@ export function OverviewSection() {
                         <div className="text-xl font-bold text-neutral-900 leading-relaxed">{user.name}</div>
                       )}
 
-                      {user.location && !isEditMode && (
+                      {currentData.location && !isEditMode && (
                         <div className="flex items-center mt-4 text-neutral-600">
                           <MapPin className="w-4 h-4 mr-1" />
-                          <span>{user.location}</span>
+                          <span>{currentData.location}</span>
                         </div>
                       )}
 
@@ -302,19 +335,31 @@ export function OverviewSection() {
                   <div className="relative">
                     {/* Секция "Опыт" */}
                     <div
-                      className="overflow-hidden transition-all duration-500 ease-in-out flex"
-                      style={{
-                        height: isExpanded ? `${contentHeight}px` : shouldShowToggle ? `130px` : "auto",
-                      }}
-                      ref={expRef}
+                        className={cn(
+                            "transition-all duration-500 ease-in-out flex",
+                            !isEditMode ? "overflow-hidden" : "overflow-visible"
+                        )}
+                        style={{
+                          height: isEditMode
+                              ? "auto" // В режиме редактирования всегда показываем полную высоту
+                              : isExpanded
+                                  ? `${contentHeight}px`
+                                  : shouldShowToggle
+                                      ? `130px`
+                                      : "auto",
+                        }}
+                        ref={expRef}
                     >
                       <div className="mt-4">
                         <Skills
                             title="Опыт"
-                            items={user.experience.map((exp) => exp.description)}
+                            items={currentData.experience.map((exp) => exp.description)}
                             isEditMode={isEditMode}
-                            onInputChange={handleInputChange}
+                            onSkillChange={handleSkillChange}
+                            onAddSkill={handleAddSkill}
+                            onRemoveSkill={handleRemoveSkill}
                             errors={errors}
+                            fieldKey="experience"
                         />
                       </div>
                     </div>
@@ -323,7 +368,7 @@ export function OverviewSection() {
                   {/* Секция "Образование и сертификаты" */}
                   <div className="mt-6">
                     {/* Секция "Образование и сертификаты" */}
-                    {(user.education.length === 0 || user?.certifcates.length === 0) && (
+                    {(currentData.education.length === 0 || currentData?.certificates.length === 0) && !isEditMode && (
                       <div className="mx-6 mb-2 items-center justify-center flex flex-col">
                         <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
                         <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
@@ -331,25 +376,63 @@ export function OverviewSection() {
                     )}
 
                     {/* Определяем, какие секции нужно показывать */}
-                    {user.education?.length > 0 || user?.certifcates.length > 0 ? (
+                    {(currentData.education?.length > 0 || currentData?.certificates.length > 0) && !isEditMode && (
                       <div
-                        className={`grid ${!user.education?.length || !user?.certifcates.length ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-6`}
+                        className={`grid ${!currentData.education?.length || !currentData?.certificates.length ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-6`}
                       >
                         {/* Образование - показываем если есть данные */}
-                        {user.education?.length > 0 && (
-                          <div className={!user?.certifcates?.length ? "w-full" : ""}>
-                            <Certificates title="Образование" items={user.education} />
+                        {currentData.education?.length > 0 && (
+                          <div className={!currentData?.certificates?.length ? "w-full" : ""}>
+                            <Certificates
+                                title="Образование"
+                                items={currentData.education}
+                                isEditMode={false}
+                                onInputChange={handleInputChange}
+                                errors={errors}
+                            />
                           </div>
                         )}
 
                         {/* Сертификаты - показываем если есть данные */}
-                        {user?.certifcates.length > 0 && (
-                          <div className={!user.education?.length ? "w-full" : ""}>
-                            <Certificates title="Сертификаты" items={user.certifcates} />
+                        {currentData?.certificates.length > 0 && (
+                          <div className={!currentData.education?.length ? "w-full" : ""}>
+                            <Certificates
+                                title="Сертификаты"
+                                items={currentData.certificates}
+                                isEditMode={false}
+                                onInputChange={handleInputChange}
+                                errors={errors}
+                            />
                           </div>
                         )}
                       </div>
-                    ) : null}
+                    )}
+
+                    {isEditMode && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <Certificates
+                                title="Образование"
+                                items={currentData.education}
+                                isEditMode={isEditMode}
+                                onInputChange={handleInputChange}
+                                errors={errors}
+                                fieldKey={"education"}
+                            />
+                          </div>
+
+                          <div>
+                            <Certificates
+                                title="Сертификаты"
+                                items={currentData.certificates}
+                                isEditMode={isEditMode}
+                                onInputChange={handleInputChange}
+                                errors={errors}
+                                fieldKey={"certificates"}
+                            />
+                          </div>
+                        </div>
+                    )}
                   </div>
                 </div>
               </div>

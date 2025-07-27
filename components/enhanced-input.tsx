@@ -101,7 +101,7 @@ export const EnhancedInput = forwardRef<HTMLInputElement | HTMLTextAreaElement, 
               disabled={disabled}
               className={cn(
                   inputClasses,
-                  "resize-none",
+                  "resize-none w-full",
                   "outline-none focus:outline-none",
               )}
               {...props}

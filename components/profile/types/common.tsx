@@ -7,4 +7,5 @@ export interface ProfileData {
     avatar?: File
     experience: Experience[]
     education: Education[]
+    certificates: Education[]
 }

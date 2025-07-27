@@ -14,9 +14,9 @@ export function AddEntityButton({
     return (
         <button
             onClick={onClick}
-            className={`flex rounded-sm w-6 h-6 items-center justify-center bg-violet-600 ${className}`}
+            className={`flex rounded-sm w-6 h-6 items-center aspect-square justify-center bg-violet-600 hover:bg-violet-700 ${className}`}
         >
-            <SquarePlus className={`w-4 h-4 text-white ${iconClassName}`} />
+            <SquarePlus className={`text-white ${iconClassName}`} size={18}/>
         </button>
     );
 }
