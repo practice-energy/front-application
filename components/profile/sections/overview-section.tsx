@@ -1,12 +1,13 @@
 "use client"
 
 import type React from "react"
+import type { ChangeEvent } from "react"
 import { useState, useEffect, useRef } from "react"
 import { useProfileStore } from "@/stores/profile-store"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MapPin, Share } from "lucide-react"
+import {ImageUp, MapPin, Share} from "lucide-react"
 import { formatNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { AboutSection } from "@/components/profile/about-section"
@@ -21,7 +22,6 @@ import type { ProfileData } from "@/components/profile/types/common"
 import {cn} from "@/lib/utils";
 
 export function OverviewSection() {
-  // TODO get with request
   const { user } = useProfileStore()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -32,12 +32,10 @@ export function OverviewSection() {
   const [contentHeight, setContentHeight] = useState(0)
   const expRef = useRef<HTMLDivElement>(null)
   const [shareModalOpen, setShareModalOpen] = useState(false)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [isHoveringAvatar, setIsHoveringAvatar] = useState(false)
+  const avatarInputRef = useRef<HTMLInputElement>(null)
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded)
-  }
-
-  // Saved data (what's displayed in View mode)
   const [savedData, setSavedData] = useState<ProfileData>({
     name: "",
     bio: "",
@@ -45,9 +43,9 @@ export function OverviewSection() {
     experience: [],
     education: [],
     certificates: [],
+    avatar: "",
   })
 
-  // Draft data (what's being edited in Edit mode)
   const [draftData, setDraftData] = useState<ProfileData>({
     name: "",
     bio: "",
@@ -55,19 +53,18 @@ export function OverviewSection() {
     experience: [],
     education: [],
     certificates: [],
+    avatar: "",
   })
 
-  // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Initialize data when user loads
   useEffect(() => {
     if (user) {
       const userData = {
         name: user.name || "",
         bio: user.bio || "",
         location: user.location || "",
-        // avatar: user.avatar,
+        avatar: user.avatar || "",
         experience: user.experience || [],
         education: user.education || [],
         certificates: user.certifcates || [],
@@ -77,7 +74,6 @@ export function OverviewSection() {
     }
   }, [user])
 
-  // Check for changes
   useEffect(() => {
     const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
     setHasChanges(changed)
@@ -85,24 +81,42 @@ export function OverviewSection() {
 
   const currentData = isEditMode ? draftData : savedData
 
-  useEffect(() => {
-    const targetElement = expRef.current
-    if (!targetElement) return
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const height = entry.contentRect.height
-        setContentHeight(height)
-        setShouldShowToggle(height > 130)
-      }
-    })
-
-    resizeObserver.observe(targetElement)
-
-    return () => {
-      resizeObserver.unobserve(targetElement)
+  const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setAvatarFile(file)
+      // Update draft data with temporary URL
+      const tempUrl = URL.createObjectURL(file)
+      handleInputChange("avatar", tempUrl)
     }
-  }, [currentData.experience])
+  }
+
+  const handleAvatarDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsHoveringAvatar(false)
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0]
+      if (file.type.startsWith('image/')) {
+        setAvatarFile(file)
+        const tempUrl = URL.createObjectURL(file)
+        handleInputChange("avatar", tempUrl)
+      }
+    }
+  }
+
+  const handleAvatarDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsHoveringAvatar(true)
+  }
+
+  const handleAvatarDragLeave = () => {
+    setIsHoveringAvatar(false)
+  }
+
+  const triggerAvatarInput = () => {
+    avatarInputRef.current?.click()
+  }
 
   const handleInputChange = (
     field: keyof ProfileData,
@@ -129,20 +143,22 @@ export function OverviewSection() {
   const handlePublish = async () => {
     setIsSaving(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Simulate avatar upload if new file was selected
+      if (avatarFile) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        // In a real app, you would upload the file here and get the permanent URL
+        const mockFileUrl = URL.createObjectURL(avatarFile)
+        handleInputChange("avatar", mockFileUrl)
+        setAvatarFile(null)
+      }
 
-      // Update saved data to new published state
+      // Update saved data
       setSavedData(draftData)
       setHasChanges(false)
-
       setIsTransitioning(true)
       setIsEditMode(false)
 
-      console.log("Saving profile data:", draftData)
-
-      // Small delay for smoother transition
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsTransitioning(false)
     } catch (error) {
       console.error("Failed to save profile:", error)
@@ -211,6 +227,20 @@ export function OverviewSection() {
     handleInputChange("experience", updatedItems)
   }
 
+  useEffect(() => {
+    // Рассчитываем высоту только для описания на мобильных устройствах
+    const targetElement = expRef.current
+    if (targetElement) {
+      const height = targetElement.scrollHeight
+      setContentHeight(height)
+      setShouldShowToggle(height > 130)
+    }
+  }, [currentData.experience]) // Добавили isMobile в зависимости
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded)
+  }
+
   return (
     <main className="min-h-screen  relative">
       <div className="w-full mx-auto px-4 sm:px-6 py-8 md:w-[845px]">
@@ -240,7 +270,6 @@ export function OverviewSection() {
                 </div>
 
                 <div className="flex flex-row gap-6 items-center pt-2.5 mr-6">
-                  {/* Message Button */}
                   <ModeToggleBar isEditMode={isEditMode} onModeToggle={handleModeToggle} onPublish={handlePublish} />
 
                   {/* Share Button */}
@@ -264,14 +293,39 @@ export function OverviewSection() {
 
                 {/* Основной контент */}
                 <div className="relative px-6 pt-6">
-                  {/* Аватар, накладывающийся на шапку */}
                   <div className="absolute -top-20 left-6">
-                    <div className="w-[250px] h-[312.5px] rounded-sm shadow-md overflow-hidden">
-                      <img
-                        src={user.avatar || "/placeholder.svg"}
-                        alt={currentData.name}
-                        className="w-full h-full object-cover"
+                    <div
+                        className="w-[250px] h-[312.5px] rounded-sm shadow-md overflow-hidden relative"
+                        onClick={isEditMode ? triggerAvatarInput : undefined}
+                        onDragOver={isEditMode ? handleAvatarDragOver : undefined}
+                        onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
+                        onDrop={isEditMode ? handleAvatarDrop : undefined}
+                        onMouseEnter={isEditMode ? () => setIsHoveringAvatar(true) : undefined}
+                        onMouseLeave={isEditMode ? () => setIsHoveringAvatar(false) : undefined}
+                    >
+                      <input
+                          type="file"
+                          ref={avatarInputRef}
+                          onChange={handleAvatarChange}
+                          className="hidden"
+                          accept="image/*"
                       />
+
+                      <img
+                          src={currentData.avatar || "/placeholder.svg"}
+                          alt={currentData.name}
+                          className={cn(
+                              "w-full h-full object-cover transition-opacity",
+                          )}
+                      />
+
+                      {isEditMode && isHoveringAvatar && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="flex flex-col items-center">
+                              <ImageUp className="w-12 h-12 text-colors-neutral-150 opacity-50" />
+                            </div>
+                          </div>
+                      )}
                     </div>
                   </div>
 
@@ -358,8 +412,6 @@ export function OverviewSection() {
                             onSkillChange={handleSkillChange}
                             onAddSkill={handleAddSkill}
                             onRemoveSkill={handleRemoveSkill}
-                            errors={errors}
-                            fieldKey="experience"
                         />
                       </div>
                     </div>
@@ -389,6 +441,7 @@ export function OverviewSection() {
                                 isEditMode={false}
                                 onInputChange={handleInputChange}
                                 errors={errors}
+                                fieldKey={"education"}
                             />
                           </div>
                         )}
@@ -402,6 +455,7 @@ export function OverviewSection() {
                                 isEditMode={false}
                                 onInputChange={handleInputChange}
                                 errors={errors}
+                                fieldKey={"certificates"}
                             />
                           </div>
                         )}

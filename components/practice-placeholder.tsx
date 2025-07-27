@@ -30,7 +30,7 @@ export function PracticePlaceholder({
                     width={iconSize}
                     height={iconSize}
                     className={cn(
-                        "rounded-sm object-cover",
+                        "rounded-sm object-cover text-neutral-400",
                         "block", // Убедимся, что это блочный элемент
                         iconClassName
                     )}

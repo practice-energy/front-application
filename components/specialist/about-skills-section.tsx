@@ -4,15 +4,31 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Skills } from "./skills"
 import { cn } from "@/lib/utils"
-import {ChevronDown} from "lucide-react";
-import {useIsMobile} from "@/components/ui/use-mobile";
+import { ChevronDown } from "lucide-react"
+import { useIsMobile } from "@/components/ui/use-mobile"
+import { EnhancedInput } from "@/components/enhanced-input"
 
 interface AboutSkillsSectionProps {
     description: string
     skills: string[]
+    isEditMode?: boolean
+    onDescriptionChange?: (value: string) => void
+    onSkillChange: (index: number, value: string) => void
+    onAddSkill: () => void
+    onRemoveSkill: (index: number) => void
+    errors?: Record<string, string>
 }
 
-export function AboutSkillsSection({ description, skills }: AboutSkillsSectionProps) {
+export function AboutSkillsSection({
+                                       description,
+                                       skills,
+                                       isEditMode = false,
+                                       onDescriptionChange,
+                                       onSkillChange,
+                                       onAddSkill,
+                                       onRemoveSkill,
+                                       errors
+                                   }: AboutSkillsSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
     const [contentHeight, setContentHeight] = useState(0)
@@ -21,14 +37,13 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
     const isMobile = useIsMobile()
 
     useEffect(() => {
-        // Рассчитываем высоту только для описания на мобильных устройствах
-        const targetElement = isMobile ? descriptionRef.current : contentRef.current;
+        const targetElement = isMobile ? descriptionRef.current : contentRef.current
         if (targetElement) {
             const height = targetElement.scrollHeight
             setContentHeight(height)
             setShouldShowToggle(height > 130)
         }
-    }, [description, skills, isMobile]) // Добавили isMobile в зависимости
+    }, [description, skills, isMobile, isEditMode]) // Добавили isEditMode в зависимости
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded)
@@ -41,62 +56,101 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
         )}>
             <div
                 ref={contentRef}
-                className="overflow-hidden transition-all duration-500 ease-in-out flex"
+                className={cn(
+                    "overflow-hidden transition-all duration-500 ease-in-out flex",
+                    !isEditMode && !isExpanded && shouldShowToggle ? "max-h-[130px]" : ""
+                )}
                 style={{
-                    height: isExpanded
-                        ? `${contentHeight}px`
-                        : shouldShowToggle
-                            ? `130px`
-                            : 'auto'
+                    height: isEditMode
+                        ? "auto"
+                        : isExpanded
+                            ? `${contentHeight}px`
+                            : shouldShowToggle
+                                ? `130px`
+                                : 'auto'
                 }}
             >
                 {/* Колонка "О мастере" (2/3 ширины) */}
                 <div
                     ref={isMobile ? descriptionRef : null}
                     className={cn(
-                        isMobile ? "w-full": "w-2/3 pr-6",
+                        isMobile ? "w-full" : "w-2/3 pr-6",
                     )}
                 >
                     <div className={cn(
                         "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
-                         isMobile ? "text-mobilebase" : "text-base",)}
-                    >
+                        isMobile ? "text-mobilebase" : "text-base",
+                    )}>
                         О мастере
                     </div>
-                    <div
-                        className={cn(
+
+                    {isEditMode ? (
+                        <EnhancedInput
+                            value={description}
+                            onChange={(e) => onDescriptionChange?.(e.target.value)}
+                            placeholder="Расскажите о себе"
+                            type="textarea"
+                            rows={4}
+                            error={errors?.description}
+                            showEditIcon
+                        />
+                    ) : (
+                        <div className={cn(
                             "ml-1 text-neutral-700 transition-opacity duration-300",
-                            // !isExpanded && "line-clamp-3"
-                        )}
-                    >
-                        {description}
-                    </div>
+                        )}>
+                            {description || (isEditMode ? "" : "Нет описания")}
+                        </div>
+                    )}
                 </div>
 
                 {/* Колонка "Навыки" (1/3 ширины) */}
                 {!isMobile && (
                     <div className="w-1/3">
-                        <Skills title="Навыки" items={skills} />
+                        <Skills
+                            title="Навыки"
+                            items={skills}
+                            isEditMode={isEditMode}
+                            onSkillChange={onSkillChange}
+                            onAddSkill={onAddSkill}
+                            onRemoveSkill={onRemoveSkill}
+                        />
                     </div>
                 )}
             </div>
 
             {/* Fade overlay when collapsed */}
-            {shouldShowToggle && !isExpanded && (
+            {!isEditMode && shouldShowToggle && !isExpanded && (
                 <div className={cn(
-                    "absolute w-full h-14  left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
+                    "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
                     "bottom-[50px]"
                 )}/>
             )}
 
-            {shouldShowToggle && (
+            {!isEditMode && shouldShowToggle && (
                 <button
                     onClick={handleToggle}
                     className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
                 >
                     {isExpanded ? "Свернуть" : "Раскрыть больше"}
-                    <ChevronDown width={24} height={24} className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")} />
+                    <ChevronDown width={24} height={24} className={cn(
+                        "transition-transform duration-300",
+                        isExpanded ? "rotate-180" : ""
+                    )} />
                 </button>
+            )}
+
+            {/* Для мобильных: навыки под описанием */}
+            {isMobile && (
+                <div className="mt-6">
+                    <Skills
+                        title="Навыки"
+                        items={skills}
+                        isEditMode={isEditMode}
+                        onSkillChange={onSkillChange}
+                        onAddSkill={onAddSkill}
+                        onRemoveSkill={onRemoveSkill}
+                    />
+                </div>
             )}
         </div>
     )

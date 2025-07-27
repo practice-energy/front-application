@@ -57,7 +57,7 @@ export function AboutSection({ description, isEditMode, onInputChange, errors }:
             <EnhancedInput
               value={description}
               onChange={(e) => onInputChange("bio", e.target.value)}
-              placeholder="Обо мне"
+              placeholder="..."
               error={errors.bio}
               required
               showEditIcon

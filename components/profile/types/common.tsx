@@ -4,7 +4,7 @@ export interface ProfileData {
     name: string
     bio: string
     location: string
-    avatar?: File
+    avatar?: string
     experience: Experience[]
     education: Education[]
     certificates: Education[]
