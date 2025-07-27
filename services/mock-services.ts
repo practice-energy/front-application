@@ -23,6 +23,29 @@ export const mockServices: Service[] = [
         includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
         format: "video",
         practice: "30 минут",
+        location: "Бибирево, Большая Ленина",
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+            },
+        ]
     },
     {
         id: service2Id,

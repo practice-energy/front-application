@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import {useState, useRef, use} from "react"
 import { useRouter } from "next/navigation"
 import { AuthModal } from "@/components/modals/auth-modal"
 import { useTranslations } from "@/hooks/use-translations"
@@ -15,16 +15,15 @@ import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
 import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-profile";
 import {useIsMobile} from "@/components/ui/use-mobile";
 
+
+
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { t } = useTranslations()
-  const { id } = params
+  const unwrappedParams = use(params)
+  const { id } = unwrappedParams
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const isMobile = useIsMobile()
-
-  // Refs for scrolling
-  const servicesRef = useRef<HTMLDivElement>(null)
-  const searchRef = useRef<HTMLDivElement>(null)
 
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
@@ -34,11 +33,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
   // If specialist not found, show not-found page
   if (!specialist) {
     notFound()
-  }
-
-  // Handle service card click - navigate to service page
-  const handleServiceCardClick = (service: any) => {
-    router.push(`/service/${service.id}`)
   }
 
   const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
@@ -100,7 +94,9 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {isMobile ? (<MobileSpecialistProfile specialist={specialist} />) :
+      {isMobile ? (
+          <MobileSpecialistProfile specialist={specialist} />
+          ) :
           (<>
             <div className="h-24"/>
             <DesctopSpecialistProfile specialist={specialist} />

@@ -15,7 +15,7 @@ import { useSidebarData } from "./hooks/use-sidebar-data"
 import { useSidebarSearch } from "./hooks/use-sidebar-search"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "./utils/sidebar.utils"
 import { useProfileStore } from "@/stores/profile-store"
-import {ChatsAdeptSections} from "@/components/main-sidebar/components/chat-adept-sections";
+import {ChatsSections} from "@/components/main-sidebar/components/chat-adept-sections";
 import {Topper} from "@/components/main-sidebar/components/topper";
 import {ChatsSearchSection} from "@/components/main-sidebar/components/chats-search-section";
 import {DashboardMasterSections} from "@/components/main-sidebar/components/dashboard-master-sections";
@@ -185,7 +185,8 @@ export function MainSidebar() {
                    handleChatClick={handleChatClick}
                />
             ) : (
-                <ChatsAdeptSections
+                <ChatsSections
+                  hasChats={allChats.length > 0}
                   groupedChats={groupedChats}
                   sectionVisibility={sectionVisibility}
                   toggleSection={toggleSection}

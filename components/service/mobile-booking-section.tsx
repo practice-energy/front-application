@@ -109,7 +109,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                     <span>Нет доступных слотов для бронирования</span>
                 </div>
             ) : (
-                <div className="w-full pt-6">
+                <div className="w-full pt-6 h-2/3">
                     {/* Days header */}
                     <div className="grid grid-cols-[50px_1fr_1fr_1fr] mb-2">
                         <div className="text-sm w-[50px] text-gray-500"></div>

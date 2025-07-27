@@ -42,7 +42,7 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <div className="w-full">
+      <div className="w-full pt-24">
         <div className="p-6 max-w-7xl mx-auto">{children}</div>
       </div>
     </div>

@@ -6,10 +6,10 @@ import type { Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import type React from "react"
+import React, {use} from "react"
 import { useState, useCallback, useMemo } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
-import type { BookingSlot } from "@/types/booking"
+import type {Booking, BookingSlot} from "@/types/booking"
 import { FeedbackSection } from "@/components/service/feedback-section"
 import { PracticePlaceholder } from "../practice-placeholder"
 import { formatNumber } from "@/utils/format"
@@ -19,6 +19,9 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
 import { Included } from "@/components/service/included"
+import {useAuth} from "@/hooks/use-auth";
+import {BookingCard} from "@/components/service/booking-card";
+import {MobileBookingCard} from "@/components/service/mobile-booking-card";
 
 interface MobileServiceCardProps {
   service: Service
@@ -29,6 +32,8 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const specialist = service.specialist
+  const booked = service.bookings
+  const { isAuthenticated } = useAuth()
 
   // Мемоизируем обработчики событий чтобы избежать ререндеринга
   const handleShare = useCallback(
@@ -75,7 +80,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
 
   return (
     <div>
-      <div className="w-full bg-white">
+      <div className="w-full bg-colors-neutral-150">
         {/* Header with Back Button and Action Buttons */}
         <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-10 border-b">
           <BackButton className="text-neutral-700 opacity-80" text="назад" />
@@ -143,7 +148,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
         </div>
 
         {/* Content Section */}
-        <div className="bg-white p-4 space-y-4">
+        <div className="bg-colors-neutral-150 p-4 space-y-4">
           <div className="flex items-start justify-between">
             <h1 className="text-xl font-bold text-gray-900 flex-1 pr-2">{service.title}</h1>
             <div className="flex items-center text-2xl font-bold text-gray-900">
@@ -154,38 +159,66 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
 
           <p className="text-gray-700">{service.description}</p>
 
-          {service.location && (
-            <div className="flex items-center text-gray-600">
-              <MapPin className="h-5 w-5 mr-2" />
-              <span>{service.location}</span>
-            </div>
+          {booked?.length === 0 && (
+              <div className="flex flex-wrap gap-2">
+                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
+                  <TimerReset size={14} />
+                  <span className="text-sm text-gray-600">{service.duration}</span>
+                </div>
+
+                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
+                  {service.format === "video" ? (
+                      <>
+                        <TvMinimalPlay size={14} />
+                        <span className="text-sm text-gray-600">Видео</span>
+                      </>
+                  ) : (
+                      <>
+                        <Users size={14} />
+                        <span className="text-sm text-gray-600">Очная</span>
+                      </>
+                  )}
+                </div>
+
+                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
+                  <IconPractice width={16} height={14} />
+                  <span className="text-sm">{service.practice}</span>
+                </div>
+              </div>
           )}
 
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-              <TimerReset size={14} />
-              <span className="text-sm text-gray-600">{service.duration}</span>
-            </div>
+          {service.location && booked?.length === 0 && (
+              <div className="flex items-center text-gray-600">
+                <MapPin className="h-5 w-5 mr-2" />
+                <span>{service.location}</span>
+              </div>
+          )}
 
-            <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-              {service.format === "video" ? (
-                <>
-                  <TvMinimalPlay size={14} />
-                  <span className="text-sm text-gray-600">Видео</span>
-                </>
-              ) : (
-                <>
-                  <Users size={14} />
-                  <span className="text-sm text-gray-600">Очная</span>
-                </>
-              )}
-            </div>
-
-            <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
-              <IconPractice width={16} height={14} />
-              <span className="text-sm">{service.practice}</span>
-            </div>
-          </div>
+          {booked?.map((booking) => (
+                <MobileBookingCard
+                    startTime={booking.startTime.toLocaleTimeString("ru-RU", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    endTime={booking.endTime.toLocaleTimeString("ru-RU", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    specialist={{
+                  id: specialist.id,
+                  name: specialist.name,
+                  avatar: specialist.avatar
+                }} service={{
+                  id: service.id,
+                  name: service.title,
+                  price: service.price,
+                  description: service.description,
+                }}
+                    duration={booking.duration}
+                    format={service.format}
+                    location={service.location}
+                />
+          ))}
         </div>
 
         <div className="relative">
@@ -198,15 +231,19 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
           {/* Секция "Опыт" */}
           <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
             <div className="mt-4 px-4">
-              <Included title="Опыт" items={memoizedIncludes} />
+              <Included title="Наполнение" items={memoizedIncludes} />
             </div>
           </div>
         </div>
 
-        <div className="mb-4 px-4">
-          <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
-        </div>
-        <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+        {
+          isAuthenticated && booked?.length === 0 && (<>
+              <div className="mb-4 px-4">
+                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
+              </div>
+              <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+          </>)
+        }
 
         <div className="bg-colors-neutral-150 pt-4">
           <FeedbackSection feedbacks={service.reviews} />

@@ -52,7 +52,7 @@ export const mockBookings: Booking[] = [
     id: uuidv4(),
     service: {
       id: uuidv4(),
-      title: "Таро расклад на судьбу",
+      title: "Таро расклад на судьбуТаро расклад на судьбуТаро расклад на судьбу",
       description: "Подробный расклад на жизненный путь",
       price: 3000,
       duration: 60,

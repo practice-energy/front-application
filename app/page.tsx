@@ -10,6 +10,7 @@ import {MainMobileHeader} from "@/components/header/components/main-mobile-heade
 import {useProfileStore} from "@/stores/profile-store";
 import {useSidebar} from "@/contexts/sidebar-context";
 import {useAuth} from "@/hooks/use-auth";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 export default function HomePage() {
   const router = useRouter()
@@ -17,6 +18,7 @@ export default function HomePage() {
   const { user } = useProfileStore()
   const {toggleSidebar, isCollapsed} = useSidebar()
   const {isAuthenticated} = useAuth()
+  const isMobile = useIsMobile()
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
@@ -49,7 +51,7 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-900 transition-all duration-300">
-      {isCollapsed && (
+      {isCollapsed && isMobile &&(
           <MainMobileHeader
               user={user}
               toggleSidebar={toggleSidebar}

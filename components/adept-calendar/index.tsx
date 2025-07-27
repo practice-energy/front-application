@@ -17,19 +17,6 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const isMobile = useIsMobile()
 
-  // Calculate display dates for mobile: selected day only
-  const getDisplayDates = (baseDate: Date) => {
-    const dates = []
-    for (let i = 0; i < 3; i++) {
-      const date = new Date(baseDate)
-      date.setDate(baseDate.getDate() + i)
-      dates.push(date)
-    }
-    return dates
-  }
-
-  const displayDates = getDisplayDates(selectedDate)
-
   if (isMobile) {
     return (
       <div className="h-full flex flex-col">

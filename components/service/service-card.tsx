@@ -13,6 +13,9 @@ import { BookingSection } from "@/components/service/booking-section"
 import {FeedbackSection} from "@/components/service/feedback-section";
 import { PracticePlaceholder } from "../practice-placeholder"
 import {formatNumber} from "@/utils/format";
+import {useAuth} from "@/hooks/use-auth";
+import {MobileBookingCard} from "@/components/service/mobile-booking-card";
+import {BookingCard} from "@/components/service/booking-card";
 
 interface ServiceCardProps {
     service: Service
@@ -25,6 +28,8 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
     const thumbnails = service.images
     const mainImage = thumbnails[selectedImageIndex]
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+    const booked = service.bookings
+    const specialist = service.specialist
 
     const handleThumbnailClick = (index: number) => {
         setSelectedImageIndex(index)
@@ -35,7 +40,7 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
             <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
                 <div className="rounded-b-sm bg-white md:w-[845px]">
                     {/* Black background photo section */}
-                    <div className="bg-neutral-800 p-6 flex gap-6 rounded-t-sm">
+                    <div className="bg-neutral-800 p-6 flex gap-2 rounded-sm">
                         {/* Main image */}
                         <div className="flex-1">
                             {mainImage ? (
@@ -100,7 +105,7 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
                         <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{service.description}</p>
 
                         {/* Location */}
-                        {service.location && (
+                        {service.location && booked?.length === 0 && (
                             <div className="flex items-center text-gray-600 dark:text-gray-400">
                                 <MapPin className="h-5 w-5 mr-2" />
                                 <span>{service.location}</span>
@@ -108,34 +113,62 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
                         )}
 
                         {/* Tags row */}
-                        <div className="flex items-center gap-3 flex-wrap">
-                            <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
-                                <TimerReset size={16} />
-                                <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
+                        {booked?.length === 0 && (
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
+                                    <TimerReset size={16} />
+                                    <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
+                                </div>
+                                <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                                    {service.format === "video" ? (
+                                        <>
+                                            <TvMinimalPlay size={16} />
+                                            <p className="text-gray-600">Видео</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Users size={16} />
+                                            <p className="text-gray-600">Очная</p>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                                    <IconPractice width={20} height={18} />
+                                    {service.practice}
+                                </div>
                             </div>
-                            <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                                {service.format === "video" ? (
-                                    <>
-                                        <TvMinimalPlay size={16} />
-                                        <p className="text-gray-600">Видео</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Users size={16} />
-                                        <p className="text-gray-600">Очная</p>
-                                    </>
-                                )}
-                            </div>
-                            <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                                <IconPractice width={20} height={18} />
-                                {service.practice}
-                            </div>
-                        </div>
+                        )}
+
+                        {booked?.map((booking) => (
+                            <BookingCard
+                                startTime={booking.startTime.toLocaleTimeString("ru-RU", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })}
+                                endTime={booking.endTime.toLocaleTimeString("ru-RU", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })}
+                                specialist={{
+                                    id: specialist.id,
+                                    name: specialist.name,
+                                    avatar: specialist.avatar
+                                }} service={{
+                                id: service.id,
+                                name: service.title,
+                                price: service.price,
+                                description: service.description,
+                            }}
+                                duration={booking.duration}
+                                format={service.format}
+                                location={service.location}
+                            />
+                        ))}
                     </div>
                     <AboutContentsSection description={service.description} contents={service.includes} />
 
                     {/* Bookings section */}
-                    {isAuthenticated && (<div className=" relative flex flex-row px-6 pb-3">
+                    {isAuthenticated && booked?.length === 0 && (<div className=" relative flex flex-row px-6 pb-3">
                         <div className="w-80 flex-shrink-0">
                             <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                         </div>

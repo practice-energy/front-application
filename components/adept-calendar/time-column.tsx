@@ -9,7 +9,7 @@ interface TimeColumnProps {
 // Выделяем компонент заголовка времени
 export function TimeColumnHeader() {
   return (
-    <div className="bg-white p-3 text-center z-10 border-b border-gray-200 w-full">
+    <div className="bg-white p-3 text-center z-10 border-b border-r border-gray-100 w-full">
       <div className="text-sm font-medium text-transparent h-[50px]">Time</div>
     </div>
   )

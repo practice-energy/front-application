@@ -5,6 +5,7 @@ import {Calendar, MessageSquare, CheckSquare, BarChart3, CalendarDays, MessageSq
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import {cn} from "@/lib/utils";
 import {IconButton} from "@/components/icon-button";
+import {usePathname} from "next/navigation";
 
 interface NavigationButtonsProps {
   isAuthenticated: boolean
@@ -13,6 +14,7 @@ interface NavigationButtonsProps {
 }
 
 export function NavigationButtons({ isAuthenticated, hat, router }: NavigationButtonsProps) {
+  const pathname = usePathname()
 
   const handleChatsClick = () => {
     // if (hat === "master") {
@@ -32,7 +34,7 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
   }
 
   const handleCalendarClick = () => {
-    router.push("/dashboard")
+    router.push("/calendar")
   }
 
   if (!isAuthenticated) return null
@@ -53,6 +55,12 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
           <IconButton
               icon={CalendarDays}
               onClick={handleCalendarClick}
+              className={cn(
+                  pathname === "/calendar" && " bg-violet-600 border-0 shadow-md",
+              )}
+              iconClassName={cn(
+                  pathname === "/calendar" && " text-white",
+              )}
           />
 
           {/* Tasks button */}

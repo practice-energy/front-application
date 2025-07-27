@@ -25,20 +25,22 @@ export function ProfileMenu({
     <button
       onClick={toggleProfileMenu}
       className={cn(
-        "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10 mt-2",
-        showProfileMenu
-          ? "ring-0 ring-violet-600"
-          : "ring-0  hover:bg-violet-50",
+        "w-[50px] h-[50px] rounded-sm transition-all shadow-sm duration-200 z-10 mt-2",
       )}
       aria-label="Profile menu"
     >
       {user?.avatar ? (<Image
-          width={24}
-          height={24}
+          width={50}
+          height={50}
           src={user?.avatar}
           alt={user?.name}
-          className="overflow-hidden mr-[1px]"
-      />) : (<PracticePlaceholder width={50} height={50} className="bg-violet-50"/>)}
+          className="overflow-hidden rounded-sm"
+      />) : (<PracticePlaceholder
+          width={50}
+          height={50}
+          className="bg-colors-neutral-150"
+          iconClassName="text-gray-400"
+      />)}
     </button>
   )
 
@@ -100,15 +102,6 @@ export function ProfileMenu({
             >
               <CreditCard className="mr-3 h-4 w-4" />
               Баланс
-            </Link>
-
-            <Link
-              href="/profile?section=preferences"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <LucideSettings2 className="mr-3 h-4 w-4" />
-              Настройки
             </Link>
           </div>
 

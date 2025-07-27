@@ -13,11 +13,10 @@ import { useHeaderState } from "./hooks/use-header-state"
 import { Logo } from "./components/logo"
 import { NavigationButtons } from "./components/navigation-buttons"
 import { ProfileMenu } from "./components/profile-menu"
-import { MobileMenu } from "./components/mobile-menu"
-import { NotificationSystem } from "@/components/notification-system"
 import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
 import {IconButton} from "@/components/icon-button";
 import {useProfileStore} from "@/stores/profile-store";
+import {EasyNotifications} from "@/components/easy-notifications";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -89,11 +88,16 @@ export function Header() {
   }
 
   const handleRoleToggle = () => {
+    const newHat = hat === "adept" ? "master" : "adept"
     updateUser({
-     hat: hat === "adept" ? "master" : "adept"
+     hat: newHat,
     })
 
-    setShowProfileMenu(!showProfileMenu)
+    if (newHat === "master") {
+      router.push("/dashboard")
+    } else {
+      router.push("/")
+    }
   }
 
   const handleLogoClick = () => {
@@ -116,7 +120,7 @@ export function Header() {
     <>
       <div>
         {/* Логотип - фиксированная позиция */}
-        {pathname !== "/" && (
+        {!isHomePage && (
             <Logo onClick={handleLogoClick} />
         )}
       </div>
@@ -144,7 +148,7 @@ export function Header() {
                   onClick={handleCalendarClick}
                   disabled={false}
                   className={cn(
-                      pathname === "/calendar" && " bg-violet-600",
+                      pathname === "/calendar" && "  bg-violet-600 border-0 shadow-md",
                   )}
                   iconClassName={cn(
                       pathname === "/calendar" && " text-white",
@@ -153,7 +157,6 @@ export function Header() {
           )}
 
           <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
-
 
           {isAuthenticated && (<>
             {/* User likes icon */}
@@ -181,7 +184,7 @@ export function Header() {
                 isSpecialist={isSpecialist}
             />
 
-            <NotificationSystem />
+            <EasyNotifications hat={user?.hat || "adept"}/>
           </>)}
         </div>
       </div>
@@ -200,7 +203,7 @@ export function Header() {
             style={{
               position: "fixed",
               top: "0",
-              left: "340px",
+              left: isHomePage ? "30px" : "340px",
               zIndex: 60,
             }}
           >

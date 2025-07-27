@@ -1,10 +1,12 @@
-import { Activity, Archive } from "lucide-react";
+import {Activity, Archive, Search} from "lucide-react";
 import { Chat } from "@/types/chats";
 import { SectionHeader } from "./section-header";
 import { SectionContent } from "./section-content";
 import { ChatItem } from "./chat-item";
+import {IconPractice} from "@/components/icons/icon-practice";
 
-interface ChatsAdeptSectionProps {
+interface ChatsSectionProps {
+    hasChats: boolean;
     groupedChats: {
         today: Chat[];
         last7Days: Chat[];
@@ -19,7 +21,8 @@ interface ChatsAdeptSectionProps {
     handleChatClick: (chatId: string) => void
 }
 
-export const ChatsAdeptSections = ({
+export const ChatsSections = ({
+                                        hasChats,
                                       groupedChats,
                                       sectionVisibility,
                                       toggleSection,
@@ -28,7 +31,7 @@ export const ChatsAdeptSections = ({
                                       isActiveChat,
                                       hasNewMessages,
                                       handleChatClick,
-                                  }: ChatsAdeptSectionProps) => {
+                                  }: ChatsSectionProps) => {
     const sections = [
         {
             key: "today",
@@ -55,6 +58,10 @@ export const ChatsAdeptSections = ({
 
     return (
         <>
+            {!hasChats && (<div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                <IconPractice className="mx-auto mb-2 opacity-50" width={32} height={32}/>
+                Начни свой путь
+            </div>)}
             {sections.map(
                 (section) =>
                     section.chats.length > 0 && (

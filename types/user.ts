@@ -24,6 +24,8 @@ export interface User {
   isSpecialist: boolean
   hat: "master" | "adept" | "superviser"
   tier: "unlimited" | "premium" | "basic"
+  practice: number
+  stats: UserStats
 }
 
 export interface UserStats {

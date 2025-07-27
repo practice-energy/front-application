@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import {use, useMemo} from "react"
 import { mockServices } from "@/services/mock-services"
 import { ServicePageContent } from "@/components/service/service-page-content"
 import { mockBookingSlots } from "@/services/booking-slot-data"
@@ -12,7 +12,8 @@ import { useIsMobile } from "@/components/ui/use-mobile"
 import { MobileServiceCard } from "@/components/service/mobile-service-card"
 
 export default function ServicePage({ params }: { params: { id: string } }) {
-  const { id } = params
+  const unwrappedParams = use(params)
+  const { id } = unwrappedParams
   const isMobile = useIsMobile()
 
   const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()

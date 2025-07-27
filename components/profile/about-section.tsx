@@ -1,34 +1,35 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Skills } from "./skills"
 import { cn } from "@/lib/utils"
 import {ChevronDown} from "lucide-react";
 import {useIsMobile} from "@/components/ui/use-mobile";
+import {EnhancedInput} from "@/components/enhanced-input";
+import {ProfileData} from "@/components/profile/types/common";
 
-interface AboutSkillsSectionProps {
+interface AboutSectionProps {
     description: string
-    skills: string[]
+    isEditMode: boolean
+    onInputChange: (field: keyof ProfileData, value: string | string[] | File[]) => void
+    errors: Record<string, string>
 }
 
-export function AboutSkillsSection({ description, skills }: AboutSkillsSectionProps) {
+export function AboutSection({ description, isEditMode, onInputChange, errors }: AboutSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
     const [contentHeight, setContentHeight] = useState(0)
     const contentRef = useRef<HTMLDivElement>(null)
-    const descriptionRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
 
     useEffect(() => {
         // Рассчитываем высоту только для описания на мобильных устройствах
-        const targetElement = isMobile ? descriptionRef.current : contentRef.current;
+        const targetElement = contentRef.current;
         if (targetElement) {
             const height = targetElement.scrollHeight
             setContentHeight(height)
             setShouldShowToggle(height > 130)
         }
-    }, [description, skills, isMobile]) // Добавили isMobile в зависимости
+    }, [description]) // Добавили isMobile в зависимости
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded)
@@ -50,46 +51,41 @@ export function AboutSkillsSection({ description, skills }: AboutSkillsSectionPr
                             : 'auto'
                 }}
             >
-                {/* Колонка "О мастере" (2/3 ширины) */}
                 <div
-                    ref={isMobile ? descriptionRef : null}
-                    className={cn(
-                        isMobile ? "w-full": "w-2/3 pr-6",
+                    className={cn("w-full"
                     )}
                 >
                     <div className={cn(
                         "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
-                         isMobile ? "text-mobilebase" : "text-base",)}
+                        isMobile ? "text-mobilebase" : "text-base",)}
                     >
-                        О мастере
+                        Обо мне
                     </div>
-                    <div
-                        className={cn(
-                            "ml-1 text-neutral-700 transition-opacity duration-300",
-                            // !isExpanded && "line-clamp-3"
-                        )}
-                    >
-                        {description}
-                    </div>
+                    {isEditMode ? (
+                        <EnhancedInput
+                            value={description}
+                            onChange={(e) => onInputChange("bio", e.target.value)}
+                            placeholder="Обо мне"
+                            error={errors.name}
+                            required
+                            showEditIcon
+                            rows={3}
+                        />
+                    ) : (<div className={cn("ml-1 text-neutral-700 transition-opacity duration-300",)}>
+                            {description}
+                    </div>)}
                 </div>
-
-                {/* Колонка "Навыки" (1/3 ширины) */}
-                {!isMobile && (
-                    <div className="w-1/3">
-                        <Skills title="Навыки" items={skills} />
-                    </div>
-                )}
             </div>
 
             {/* Fade overlay when collapsed */}
-            {shouldShowToggle && !isExpanded && (
+            {shouldShowToggle && !isExpanded && !isEditMode && (
                 <div className={cn(
                     "absolute w-full h-14  left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
                     "bottom-[50px]"
                 )}/>
             )}
 
-            {shouldShowToggle && (
+            {shouldShowToggle && !isEditMode && (
                 <button
                     onClick={handleToggle}
                     className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"

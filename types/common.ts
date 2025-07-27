@@ -45,9 +45,18 @@ export interface Service {
         title: string
         avatar: string
     }
-    bookings: Booking[]
     tags: string[]
     reviews: Feedback[]
+    bookings?: {
+        id: string
+        startTime: Date
+        endTime: Date
+        status?: "waiting" | "confirmed" | "request"
+        createdAt: Date
+        updatedAt: Date
+        isRepeat?: boolean
+        duration: number
+    }[]
 }
 
 export interface Feedback {
