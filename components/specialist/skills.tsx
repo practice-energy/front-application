@@ -2,13 +2,18 @@
 
 import {useIsMobile} from "@/hooks/use-mobile";
 import {cn} from "@/lib/utils";
+import type {ProfileData} from "@/components/profile/types/common";
+import {EnhancedInput} from "@/components/enhanced-input";
 
 interface SkillsProps {
   title: string
   items: string[]
+  isEditMode: boolean
+  onInputChange: (field: keyof ProfileData, value: string | string[] | File[]) => void
+  errors: Record<string, string>
 }
 
-export function Skills({ title, items }: SkillsProps) {
+export function Skills({ title, items, isEditMode, onInputChange, errors }: SkillsProps) {
   const isMobile = useIsMobile()
 
   if (!items || items.length === 0) return null
@@ -23,7 +28,9 @@ export function Skills({ title, items }: SkillsProps) {
         {items.map((item, index) => (
           <li key={index} className="flex items-start gap-3">
             <div className="w-3 h-3 bg-violet-500 dark:bg-violet-600 rounded-sm mt-1.5 flex-shrink-0" />
-            <span className="text-gray-700 dark:text-gray-300">{item}</span>
+            {isEditMode ? (<>
+                {/*Enchanced input here*/}
+            </>) : (<span className="text-gray-700 dark:text-gray-300">{item}</span>)}
           </li>
         ))}
       </ul>

@@ -20,6 +20,7 @@ import { EnhancedInput } from "@/components/enhanced-input"
 import type { ProfileData } from "@/components/profile/types/common"
 
 export function OverviewSection() {
+  // TODO get with request
   const { user } = useProfileStore()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -121,9 +122,15 @@ export function OverviewSection() {
       // Update saved data to new published state
       setSavedData(draftData)
       setHasChanges(false)
-      handleModeToggle("view")
+
+      setIsTransitioning(true)
+      setIsEditMode(false)
 
       console.log("Saving profile data:", draftData)
+
+      // Small delay for smoother transition
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      setIsTransitioning(false)
     } catch (error) {
       console.error("Failed to save profile:", error)
     } finally {
@@ -302,7 +309,13 @@ export function OverviewSection() {
                       ref={expRef}
                     >
                       <div className="mt-4">
-                        <Skills title="Опыт" items={user.experience.map((exp) => exp.description)} />
+                        <Skills
+                            title="Опыт"
+                            items={user.experience.map((exp) => exp.description)}
+                            isEditMode={isEditMode}
+                            onInputChange={handleInputChange}
+                            errors={errors}
+                        />
                       </div>
                     </div>
                   </div>
