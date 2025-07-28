@@ -22,7 +22,7 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
     const router = useRouter()
 
     const handleAddService = () => {
-        const updatedServices = [...services, {
+        const newService: Service = {
             id: uuidv4(),
             title: "",
             format: "video",
@@ -40,42 +40,42 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
             },
             tags: [],
             reviews: []
-        }]
+        }
+        onInputChange("services", [...services, newService])
+    }
+
+    const handleRemoveService = (id: string) => {
+        const updatedServices = services.filter(service => service.id !== id)
         onInputChange("services", updatedServices)
     }
 
-    const handleRemoveService = (index: number) => {
-        const updatedServices = services.filter((_, i) => i !== index)
-        onInputChange("services", updatedServices)
-    }
+    const handleCopyService = (id: string) => {
+        const serviceToCopy = services.find(service => service.id === id)
+        if (!serviceToCopy) return
 
-    const handleCopyService = (index: number) => {
-        const updatedServices = [...services, services[index]]
-        onInputChange("services", updatedServices)
+        const copiedService = {
+            ...serviceToCopy,
+            id: uuidv4() // Генерируем новый ID для копии
+        }
+        onInputChange("services", [...services, copiedService])
     }
 
     const handleEdit = (service: Service) => {
-        router.push(`/service/${service.id}?mode=edit`)
+        router.push(`/service/${service.id}?mode=${isEditMode ? "edit" : "view"}`)
     }
 
     return (
         <div className={cn("w-full ", className)}>
-            <div className="flex flex-row gap-2">
-                {isEditMode ? (<>
-                    <div className="text-base font-semibold text-neutral-900 mb-3 md:mb-4 line-clamp-1 leading-relaxed">
+            <div className="flex flex-row gap-2 items-center pb-1">
+                {(isEditMode || services?.length > 0) && (
+                    <div className="text-base font-semibold text-neutral-900 line-clamp-1 leading-relaxed">
                         Практис
                     </div>
-                    <AddEntityButton onClick={handleAddService}/>
-                </>) : (<>
-                    {services && services.length > 0 && (
-                        <div className="text-base font-semibold text-neutral-900 mb-3 md:mb-4 line-clamp-1 leading-relaxed">
-                            Практис
-                        </div>
-                    )}
-                </>)}
+                )}
+                {isEditMode && <AddEntityButton onClick={handleAddService}/>}
             </div>
 
-            {!services || services.length === 0 && (
+            {(!services || services.length === 0) && (
                 <div className="mx-6 mb-2 items-center justify-center flex flex-col">
                     <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
                     <div className="text-gray-400 text-center">Практис не добавлены</div>
@@ -83,14 +83,14 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
             )}
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 w-full">
-                {services.map((service, index) => (
+                {services?.map((service) => (
                     <InstagramServiceCard
                         key={service.id}
                         service={service}
                         isEditMode={isEditMode}
-                        onCopy={() => handleCopyService(index)}
+                        onCopy={() => handleCopyService(service.id)}
                         onEdit={() => handleEdit(service)}
-                        onBurn={() => handleRemoveService(index)}
+                        onBurn={() => handleRemoveService(service.id)}
                     />
                 ))}
             </div>
