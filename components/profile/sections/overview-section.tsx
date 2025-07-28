@@ -388,23 +388,7 @@ export function OverviewSection() {
                 <div className="relative px-6 pb-4">
                   <div className="relative">
                     {/* Секция "Опыт" */}
-                    <div
-                        className={cn(
-                            "transition-all duration-500 ease-in-out flex",
-                            !isEditMode ? "overflow-hidden" : "overflow-visible"
-                        )}
-                        style={{
-                          height: isEditMode
-                              ? "auto" // В режиме редактирования всегда показываем полную высоту
-                              : isExpanded
-                                  ? `${contentHeight}px`
-                                  : shouldShowToggle
-                                      ? `130px`
-                                      : "auto",
-                        }}
-                        ref={expRef}
-                    >
-                      <div className="mt-4">
+                      <div className="pt-4">
                         <Skills
                             title="Опыт"
                             items={currentData.experience.map((exp) => exp.description)}
@@ -414,7 +398,6 @@ export function OverviewSection() {
                             onRemoveSkill={handleRemoveSkill}
                         />
                       </div>
-                    </div>
                   </div>
 
                   {/* Секция "Образование и сертификаты" */}

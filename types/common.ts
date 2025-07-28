@@ -1,5 +1,3 @@
-import {Booking} from "@/types/booking";
-
 export interface Education {
     title: string;
     description: string;

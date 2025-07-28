@@ -3,13 +3,12 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {Copy, Share, Reply, MapPinHouse} from "lucide-react"
+import { Share, Reply, MapPinHouse} from "lucide-react"
 import { useDoubleTap } from "@/hooks/use-double-tap"
 import { useLikes } from "@/hooks/use-likes"
 import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
-import Image from "next/image.js"
 import {IconPractice} from "@/components/icons/icon-practice";
 
 interface InstagramSpecialistCardProps {
@@ -29,14 +28,6 @@ export function InstagramSpecialistCard({
   const [shareModalOpen, setShareModalOpen] = useState(false)
 
   const liked = isLiked(specialist.id)
-
-  const handleDoubleTap = () => {
-    toggleLike(specialist.id)
-    setShowLikeAnimation(true)
-    setTimeout(() => setShowLikeAnimation(false), 1000)
-  }
-
-  const doubleTapHandler = useDoubleTap({ onDoubleTap: handleDoubleTap })
 
   const handleCardClick = () => {
     if (onClick) {
@@ -69,7 +60,6 @@ export function InstagramSpecialistCard({
           <div
               className="bg-colors-neutral-150 w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
               onClick={handleCardClick}
-              onTouchEnd={doubleTapHandler}
           >
             {/* Image Container */}
             <div className="relative overflow-hidden">
@@ -78,15 +68,6 @@ export function InstagramSpecialistCard({
                   alt={specialist.name}
                   className="w-full h-[340px] object-cover"
               />
-
-              {/* Double Tap Like Animation */}
-              {showLikeAnimation && (
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="bg-violet-600 rounded-sm p-2">
-                      <PentagramIcon size={64} weight="fill" className="text-white animate-ping" />
-                    </div>
-                  </div>
-              )}
             </div>
 
             <div className="px-2 pt-3.5 h-[158px] w-[300px]">

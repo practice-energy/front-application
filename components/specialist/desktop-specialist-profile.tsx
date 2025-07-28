@@ -4,7 +4,7 @@ import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp } from "lucide-react"
 import { BackButton } from "@/components/ui/button-back"
-import type { Education, Experience, Specialist } from "@/types/common"
+import type {Education, Experience, Service, Specialist} from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -15,14 +15,13 @@ import { AboutSkillsSection } from "./about-skills-section"
 import { cn } from "@/lib/utils"
 import { useProfileStore } from "@/stores/profile-store"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
-import type { ProfileData } from "@/components/profile/types/common"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
 import {SpecialistData} from "@/components/specialist/types/common";
 import {LocationInput} from "@/components/location-input";
-import {ServicesSection} from "@/components/specialist/practice";
+import {PracticeBlockSection} from "@/components/specialist/practice";
 
 interface SpecialistProfileProps {
   specialist: Specialist
@@ -152,7 +151,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
 
   const handleInputChange = (
       field: keyof SpecialistData,
-      value: string | string[] | Experience[] | Education[] | any
+      value: string | string[] | Experience[] | Education[] | Service[] | any
   ) => {
     setDraftData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
@@ -287,7 +286,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                       <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
                     </div>
 
-                    <div className="flex flex-row gap-3 items-center pt-2.5">
+                    <div className="flex flex-row gap-3 items-center pt-2.5 mr-6">
                       {isEditable ? (
                           <>
                             <ModeToggleBar
@@ -322,17 +321,17 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                             >
                               <MessagesSquare size={24} />
                             </button>
+
+                            <button
+                                type="button"
+                                onClick={handleShare}
+                                className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                title="Написать специалисту"
+                            >
+                              <Share size={24} />
+                            </button>
                           </>
                       )}
-
-                      <button
-                          type="button"
-                          onClick={handleShare}
-                          className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                          title="Написать специалисту"
-                      >
-                        <Share size={24} />
-                      </button>
                     </div>
                   </div>
 
@@ -464,8 +463,12 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                   {/* Experience and Certificates Section */}
                   <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md">
                     <div className="relative px-6 pt-6 pb-4">
-                      <ServicesSection
-                          services={specialist.services}
+                      <PracticeBlockSection
+                          services={currentData.services}
+                          isEditMode={isEditMode}
+                          errors={errors}
+                          onInputChange={handleInputChange}
+                          specialist={specialist}
                       />
 
                       {/* Experience */}

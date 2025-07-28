@@ -31,19 +31,38 @@ export function AboutSkillsSection({
                                    }: AboutSkillsSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
-    const [contentHeight, setContentHeight] = useState(0)
+    const [contentHeight, setContentHeight] = useState<number | string>('auto')
     const contentRef = useRef<HTMLDivElement>(null)
     const descriptionRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
 
-    useEffect(() => {
+    // Функция для расчета высоты контента
+    const calculateContentHeight = () => {
         const targetElement = isMobile ? descriptionRef.current : contentRef.current
         if (targetElement) {
+            // Сохраняем текущую высоту перед расчетом, чтобы избежать скачков
+            const prevHeight = targetElement.style.height
+            targetElement.style.height = 'auto'
+
             const height = targetElement.scrollHeight
-            setContentHeight(height)
-            setShouldShowToggle(height > 130)
+            targetElement.style.height = prevHeight
+
+            return height
         }
-    }, [description, skills, isMobile, isEditMode]) // Добавили isEditMode в зависимости
+        return 0
+    }
+
+    // Эффект для обновления высоты при изменении контента или режима
+    useEffect(() => {
+        const newHeight = calculateContentHeight()
+        setContentHeight(newHeight)
+        setShouldShowToggle(newHeight > 130 && !isEditMode)
+
+        // Если включен режим редактирования, автоматически разворачиваем
+        if (isEditMode) {
+            setIsExpanded(true)
+        }
+    }, [description, skills, isMobile, isEditMode])
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded)
@@ -58,15 +77,14 @@ export function AboutSkillsSection({
                 ref={contentRef}
                 className={cn(
                     "overflow-hidden transition-all duration-500 ease-in-out flex",
-                    !isEditMode && !isExpanded && shouldShowToggle ? "max-h-[130px]" : ""
                 )}
                 style={{
                     height: isEditMode
-                        ? "auto"
+                        ? 'auto'
                         : isExpanded
                             ? `${contentHeight}px`
                             : shouldShowToggle
-                                ? `130px`
+                                ? '130px'
                                 : 'auto'
                 }}
             >
@@ -121,7 +139,7 @@ export function AboutSkillsSection({
             </div>
 
             {/* Fade overlay when collapsed */}
-            {!isEditMode && shouldShowToggle && !isExpanded &&(
+            {!isEditMode && shouldShowToggle && !isExpanded && (
                 <div className={cn(
                     "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
                     "bottom-[50px]"

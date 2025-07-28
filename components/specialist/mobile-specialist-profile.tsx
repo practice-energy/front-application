@@ -16,7 +16,7 @@ import { Skills } from "./skills"
 import { AboutSkillsSection } from "./about-skills-section"
 import Image from "next/image";
 import {cn} from "@/lib/utils";
-import {ServicesSection} from "@/components/specialist/practice";
+import {PracticeBlockSection} from "@/components/specialist/practice";
 import {ModeToggleBar} from "@/components/profile/mode-toggle-bar";
 import {SpecialistData} from "@/components/specialist/types/common";
 
@@ -285,7 +285,10 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                 {/* Services, Experience and Certificates */}
                 <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
 
-                    <ServicesSection services={specialist.services} />
+                    <PracticeBlockSection
+                        services={specialist.services}
+                        isEditMode={isEditMode}
+                    />
 
                     <div className="relative">
                         {/* Секция "Опыт" */}
