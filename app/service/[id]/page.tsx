@@ -1,6 +1,6 @@
 "use client"
 
-import {use, useMemo} from "react"
+import {use, useMemo, useState} from "react"
 import { mockServices } from "@/services/mock-services"
 import { ServicePageContent } from "@/components/service/service-page-content"
 import { mockBookingSlots } from "@/services/booking-slot-data"
@@ -10,11 +10,14 @@ import { router } from "next/client"
 import { useAdeptChats } from "@/stores/chat-store"
 import { useIsMobile } from "@/components/ui/use-mobile"
 import { MobileServiceCard } from "@/components/service/mobile-service-card"
+import {useSearchParams} from "next/navigation";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const unwrappedParams = use(params)
   const { id } = unwrappedParams
   const isMobile = useIsMobile()
+
+  const isEditable = true //user?.specialistProfile?.id === specialist.id
 
   const { getChatDataById, findChatBySpecialistId, addMessageToChat, addChat } = useAdeptChats()
 
@@ -55,7 +58,7 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         id: newChatId,
         title: service.specialist.name,
         specialistId: service.specialist.id,
-        avatar: service.specialist.avatar || "placeholder.jpg",
+        avatar: service.specialist.avatar || "",
         timestamp: Date.now(),
         messages: [userMessage],
         isAI: false,
@@ -89,19 +92,9 @@ export default function ServicePage({ params }: { params: { id: string } }) {
         <div className="mx-auto px-4 sm:px-6 py-8">
           {/* Service Page Content */}
           <div className="h-24" />
-          <ServicePageContent service={service} bookingSlots={bookingSlots} />
+          <ServicePageContent service={service} bookingSlots={bookingSlots} isEditable={isEditable}/>
         </div>
       )}
-      {/*<Mufi*/}
-      {/*    onSearch={handleSearch}*/}
-      {/*    showHeading={false}*/}
-      {/*    dynamicWidth={false}*/}
-      {/*    showPractice={false}*/}
-      {/*    disableFileApply={true}*/}
-      {/*    placeholder={ `Спроси у ${service.specialist?.name || "Alura"}`}*/}
-      {/*    onCancelReply={() => {}}*/}
-      {/*    chatTitle="Alura"*/}
-      {/*/>*/}
     </>
   )
 }

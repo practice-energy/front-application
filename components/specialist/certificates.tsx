@@ -152,7 +152,7 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
         <>
             <div className="flex flex-row gap-2">
                 <div className={cn(
-                    "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+                    "font-semibold text-neutral-900 md:mb-4 line-clamp-1 leading-relaxed",
                     isMobile ? "text-mobilebase" : "text-base",
                 )}>{title}</div>
                 {isEditMode && (
@@ -165,7 +165,7 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
                     </motion.div>
                 )}
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
                 <AnimatePresence>
                     {items.map((item, index) => (
                         <motion.div

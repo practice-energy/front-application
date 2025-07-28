@@ -13,7 +13,6 @@ export const mockServices: Service[] = [
         price: 3500,
         duration: "90 минут",
         images: [
-            // "/placeholder.jpg",
             "/placeholder.jpg",
             "/placeholder.jpg",
         ],
@@ -21,7 +20,7 @@ export const mockServices: Service[] = [
         tags: ["астрология", "натальная карта", "личность"],
         reviews: mockFeedbacks,
         includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
-        format: "video",
+        format: ["video"],
         practice: "30 минут",
         location: "Бибирево, Большая Ленина",
         bookings: [
@@ -58,7 +57,7 @@ export const mockServices: Service[] = [
         tags: ["коучинг", "цели", "развитие"],
         reviews: mockFeedbacks,
         includes: ["Wipes", "Pencils", "Markers"],
-        format: "video",
+        format: ["video"],
         practice: "30 минут",
     },
     {
@@ -82,7 +81,7 @@ export const mockServices: Service[] = [
         },
         tags: ["натальная карта", "астрология", "индивидуальная консультация"],
         reviews: [],
-        format: "video",
+        format: ["video", "in-person"],
         practice: "30 минут",
     },
     {
@@ -101,7 +100,7 @@ export const mockServices: Service[] = [
         },
         tags: ["таро", "гадание", "предсказание"],
         reviews: [],
-        format: "in-person",
+        format: ["video", "in-person"],
         practice: "30 минут",
     },
     {
@@ -125,7 +124,7 @@ export const mockServices: Service[] = [
         },
         tags: ["карьера", "коучинг", "профессиональное развитие"],
         reviews: [],
-        format: "video",
+        format: ["video", "in-person"],
         practice: "30 минут",
     },
     {
@@ -144,7 +143,7 @@ export const mockServices: Service[] = [
         },
         tags: ["пакет", "коучинг", "личное развитие"],
         reviews: [],
-        format: "video",
+        format: ["video", "in-person"],
         practice: "30 минут",
     },
 ]

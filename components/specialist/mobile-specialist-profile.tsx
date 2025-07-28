@@ -1,9 +1,8 @@
 "use client"
 
-import React, {useEffect, useRef} from "react"
-import { useState } from "react"
+import React, {useEffect, useRef, useState} from "react"
 import { useRouter } from "next/navigation"
-import {MapPin, Share, MessagesSquare, ChevronDown} from "lucide-react"
+import {MapPin, Share, MessagesSquare, ChevronDown, ImageUp} from "lucide-react"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { BackButton } from "@/components/ui/button-back"
 import type { Specialist } from "@/types/common"
@@ -19,6 +18,11 @@ import {cn} from "@/lib/utils";
 import {PracticeBlockSection} from "@/components/specialist/practice";
 import {ModeToggleBar} from "@/components/profile/mode-toggle-bar";
 import {SpecialistData} from "@/components/specialist/types/common";
+import { EnhancedInput } from "@/components/enhanced-input"
+import { motion, AnimatePresence } from "framer-motion"
+import { Skeleton } from "@/components/ui/skeleton"
+import {PracticePlaceholder} from "@/components/practice-placeholder";
+import {LocationInput} from "@/components/location-input";
 
 interface MobileSpecialistProfileProps {
     specialist: Specialist
@@ -36,7 +40,11 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     const isEditable = true //user?.specialistProfile?.id === specialist.id
     const [isEditMode, setIsEditMode] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
+    const [isTransitioning, setIsTransitioning] = useState(false)
     const [hasChanges, setHasChanges] = useState(false)
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
+    const [isHoveringAvatar, setIsHoveringAvatar] = useState(false)
+    const avatarInputRef = useRef<HTMLInputElement>(null)
 
     // Saved data (what's displayed in View mode)
     const [savedData, setSavedData] = useState<SpecialistData>({
@@ -67,6 +75,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     })
 
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const currentData = isEditMode ? draftData : savedData
 
     useEffect(() => {
         const targetElement = expRef.current
@@ -78,18 +87,9 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     }, [draftData.experience])
 
     useEffect(() => {
-        // Рассчитываем высоту только для описания на мобильных устройствах
-        const targetElement = expRef.current;
-        if (targetElement) {
-            const height = targetElement.scrollHeight
-            setContentHeight(height)
-            setShouldShowToggle(height > 130)
-        }
-    },)
-
-    const handleToggle = () => {
-        setIsExpanded(!isExpanded)
-    }
+        const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
+        setHasChanges(changed)
+    }, [draftData, savedData])
 
     const liked = isLiked(specialist.id)
 
@@ -108,30 +108,119 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
         router.push(`/search/${specialist.id}`)
     }
 
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0]
+            setAvatarFile(file)
+            const tempUrl = URL.createObjectURL(file)
+            handleInputChange("avatar", tempUrl)
+        }
+    }
+
+    const handleAvatarDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        setIsHoveringAvatar(false)
+
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0]
+            if (file.type.startsWith('image/')) {
+                setAvatarFile(file)
+                const tempUrl = URL.createObjectURL(file)
+                handleInputChange("avatar", tempUrl)
+            }
+        }
+    }
+
+    const handleAvatarDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        setIsHoveringAvatar(true)
+    }
+
+    const handleAvatarDragLeave = () => {
+        setIsHoveringAvatar(false)
+    }
+
+    const triggerAvatarInput = () => {
+        avatarInputRef.current?.click()
+    }
+
+    const handleInputChange = (
+        field: keyof SpecialistData,
+        value: string | string[] | any
+    ) => {
+        setDraftData((prev) => ({ ...prev, [field]: value }))
+        if (errors[field]) {
+            setErrors((prev) => ({ ...prev, [field]: "" }))
+        }
+    }
+
+    const handleSkillChange = (index: number, value: string) => {
+        const updatedSkills = [...currentData.skills]
+        updatedSkills[index] = value
+        handleInputChange("skills", updatedSkills)
+    }
+
+    const handleAddSkill = () => {
+        const updatedSkills = [...currentData.skills, ""]
+        handleInputChange("skills", updatedSkills)
+    }
+
+    const handleRemoveSkill = (index: number) => {
+        const updatedSkills = currentData.skills.filter((_, i) => i !== index)
+        handleInputChange("skills", updatedSkills)
+    }
+
+    const handleExperienceChange = (index: number, value: string) => {
+        const updatedExp = [...currentData.experience]
+        updatedExp[index] = { ...updatedExp[index], description: value }
+        handleInputChange("experience", updatedExp)
+    }
+
+    const handleAddExperience = () => {
+        const updatedExp = [...currentData.experience, { description: "" }]
+        handleInputChange("experience", updatedExp)
+    }
+
+    const handleRemoveExperience = (index: number) => {
+        const updatedExp = currentData.experience.filter((_, i) => i !== index)
+        handleInputChange("experience", updatedExp)
+    }
+
+    const validateForm = () => {
+        const newErrors: Record<string, string> = {}
+
+        if (!draftData.name.trim()) {
+            newErrors.name = "Name is required"
+        }
+
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
+    }
+
     const handlePublish = async () => {
-        // setIsSaving(true)
-        // try {
-        //     // Simulate avatar upload if new file was selected
-        //     if (avatarFile) {
-        //         await new Promise(resolve => setTimeout(resolve, 1000))
-        //         const mockFileUrl = URL.createObjectURL(avatarFile)
-        //         handleInputChange("avatar", mockFileUrl)
-        //         setAvatarFile(null)
-        //     }
-        //
-        //     // Update saved data
-        //     setSavedData(draftData)
-        //     setHasChanges(false)
-        //     setIsTransitioning(true)
-        //     setIsEditMode(false)
-        //
-        //     await new Promise(resolve => setTimeout(resolve, 300))
-        //     setIsTransitioning(false)
-        // } catch (error) {
-        //     console.error("Failed to save profile:", error)
-        // } finally {
-        //     setIsSaving(false)
-        // }
+        setIsSaving(true)
+        try {
+            // Simulate avatar upload if new file was selected
+            if (avatarFile) {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                const mockFileUrl = URL.createObjectURL(avatarFile)
+                handleInputChange("avatar", mockFileUrl)
+                setAvatarFile(null)
+            }
+
+            // Update saved data
+            setSavedData(draftData)
+            setHasChanges(false)
+            setIsTransitioning(true)
+            setIsEditMode(false)
+
+            await new Promise(resolve => setTimeout(resolve, 300))
+            setIsTransitioning(false)
+        } catch (error) {
+            console.error("Failed to save profile:", error)
+        } finally {
+            setIsSaving(false)
+        }
     }
 
     const handleModeToggle = async (mode: "view" | "edit") => {
@@ -156,163 +245,263 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
         setIsTransitioning(false)
     }
 
+    if (!specialist) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-pulse text-muted-foreground">Loading...</div>
+            </div>
+        )
+    }
+
     return (
         <main className="min-h-screen w-full relative">
-            <div className="w-full">
-                {/* Header with Back Button and Action Buttons */}
-                <div className="flex items-center justify-between mb-4 px-4 relative">
-                    <div className="flex-1">
-                        <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
-                    </div>
+            <AnimatePresence mode="wait">
+                {isTransitioning ? (
+                    <motion.div
+                        key="loading"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="space-y-6"
+                    >
+                        <Skeleton className="h-[900px] w-full rounded-sm" />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="content"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {/* Header with Back Button and Action Buttons */}
+                        <div className="flex items-center justify-between mb-4 px-4 relative">
+                            <div className="flex-1">
+                                <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
+                            </div>
 
-                    <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
-                        {isEditable ? (
-                            <>
-                                <ModeToggleBar
-                                    isEditMode={isEditMode}
-                                    onModeToggle={handleModeToggle}
-                                    onPublish={handlePublish}
-                                    isSaving={isSaving}
-                                    hasChanges={hasChanges}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                {/* Star Button */}
-                                <button
-                                    type="button"
-                                    onClick={handleLikeClick}
-                                    className={`
-                rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
-                ${
-                                        liked
-                                            ? "bg-violet-600 hover:bg-violet-700 text-white"
-                                            : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
-                                    }
-                active:bg-violet-600 dark:active:bg-violet-600
-                active:text-white dark:active:text-white
-                active:border-violet-600 dark:active:border-violet-600
-                text-black dark:text-white
-                focus:outline-none
-            `}
-                                    title="Сохранить в избранное"
+                            <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
+                                {isEditable ? (
+                                    <>
+                                        <ModeToggleBar
+                                            isEditMode={isEditMode}
+                                            onModeToggle={handleModeToggle}
+                                            onPublish={handlePublish}
+                                            isSaving={isSaving}
+                                            hasChanges={hasChanges}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={handleLikeClick}
+                                            className={`
+                                                rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
+                                                ${
+                                                liked
+                                                    ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                                    : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
+                                            }
+                                            `}
+                                            title="Сохранить в избранное"
+                                        >
+                                            <PentagramIcon size={24} />
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleReply}
+                                            className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                            title="Написать специалисту"
+                                        >
+                                            <MessagesSquare size={24} />
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={handleShare}
+                                            className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                            title="Поделиться"
+                                        >
+                                            <Share size={24} />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Main Content Card */}
+                        <div className="bg-white relative">
+                            {/* Avatar */}
+                            <div className="relative">
+                                <div
+                                    className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5]"
+                                    onClick={isEditMode ? triggerAvatarInput : undefined}
+                                    onDragOver={isEditMode ? handleAvatarDragOver : undefined}
+                                    onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
+                                    onDrop={isEditMode ? handleAvatarDrop : undefined}
+                                    onMouseEnter={isEditMode ? () => setIsHoveringAvatar(true) : undefined}
+                                    onMouseLeave={isEditMode ? () => setIsHoveringAvatar(false) : undefined}
                                 >
-                                    <PentagramIcon size={24} />
-                                </button>
+                                    <input
+                                        type="file"
+                                        ref={avatarInputRef}
+                                        onChange={handleAvatarChange}
+                                        className="hidden"
+                                        accept="image/*"
+                                    />
 
-                                {/* Message Button */}
-                                <button
-                                    type="button"
-                                    onClick={handleReply}
-                                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                                    title="Написать специалисту"
-                                >
-                                    <MessagesSquare size={24} />
-                                </button>
+                                    <img
+                                        src={currentData.avatar || "/placeholder.svg"}
+                                        alt={currentData.name}
+                                        className="w-full h-full rounded-sm object-cover"
+                                    />
 
-                                {/* Share Button */}
-                                <button
-                                    type="button"
-                                    onClick={handleShare}
-                                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                                    title="Написать специалисту"
-                                >
-                                    <Share size={24} />
-                                </button>
-                            </>
-                        )}
+                                    {isEditMode && isHoveringAvatar && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                                            <div className="flex flex-col items-center">
+                                                <ImageUp className="w-12 h-12 text-colors-neutral-150" />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
 
-                        <button
-                            type="button"
-                            onClick={handleShare}
-                            className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                            title="Написать специалисту"
-                        >
-                            <Share size={24} />
-                        </button>
-                    </div>
-                </div>
+                                {/* Stats block */}
+                                {!isEditMode && (
+                                    <div className="absolute bottom-3 right-3 bg-colors-neutral-150 rounded-sm p-1 w-[78px] h-[84px] gap-3">
+                                        <div className="flex flex-row items-center gap-1 text-violet-600 w-full border p-1 rounded-sm h-[36px]">
+                                            <PentagramIcon size={24} />
+                                            <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
+                                        </div>
 
-                {/* Main Content Card */}
-                <div className="bg-white relative">
-                    {/* Аватар */}
-                    <div className="relative">
-                        <div className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5]">
-                            <img
-                                src={specialist.avatar || "/placeholder.svg"}
-                                alt={specialist.name}
-                                className="w-full h-full rounded-sm object-cover"
+                                        <div className="flex flex-row items-center gap-1 w-full border h-[36px] p-1 rounded-sm mt-1">
+                                            <IconPractice width={22} height={20} />
+                                            <div className="ml-auto text-sm">{formatCompactNumber(specialist.practices)}</div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Info block */}
+                            <div className="px-4 pt-2">
+                                {isEditMode ? (
+                                    <>
+                                        <EnhancedInput
+                                            value={currentData.name}
+                                            onChange={(e) => handleInputChange("name", e.target.value)}
+                                            error={errors.name}
+                                            required
+                                            placeholder="Введите имя"
+                                            showEditIcon
+                                        />
+                                        <EnhancedInput
+                                            value={currentData.title}
+                                            onChange={(e) => handleInputChange("title", e.target.value)}
+                                            placeholder="Введите описание"
+                                            type="input"
+                                            className="mt-4 text-sm"
+                                            showEditIcon
+                                        />
+                                        <div className="mt-4">
+                                            <LocationInput
+                                                value={currentData.location}
+                                                onChange={(value) => handleInputChange("location", value)}
+                                                error={errors.location}
+                                            />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="text-mobilebase font-bold text-neutral-900 leading-relaxed">{currentData.name}</div>
+                                        <div className="text-mobilebase text-neutral-700 opacity-80 line-clamp-2 leading-relaxed mt-2">
+                                            {currentData.description}
+                                        </div>
+                                        {currentData.location && (
+                                            <div className="flex items-center mt-3 text-neutral-600">
+                                                <MapPin className="w-4 h-4 mr-1" />
+                                                <div className="text-base font-normal">{currentData.location}</div>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* About and Skills Section */}
+                        <div className="bg-white rounded-b-sm shadow-md">
+                            <AboutSkillsSection
+                                description={currentData.description}
+                                skills={currentData.skills}
+                                isEditMode={isEditMode}
+                                onDescriptionChange={(value) => handleInputChange("description", value)}
+                                onSkillChange={handleSkillChange}
+                                onAddSkill={handleAddSkill}
+                                onRemoveSkill={handleRemoveSkill}
+                                errors={errors}
                             />
                         </div>
 
-                        {/* Квадратный фрейм в нижнем правом углу фото */}
-                        <div className="absolute bottom-3 right-3 bg-colors-neutral-150 rounded-sm p-1 w-[78px] h-[84px] gap-3">
-                            {/* Блок лайков */}
-                            <div className="flex flex-row items-center gap-1 text-violet-600 w-full border p-1 rounded-sm h-[36px]">
-                                <PentagramIcon size={24} />
-                                <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
+                        {/* Services, Experience and Certificates */}
+                        <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
+                            <PracticeBlockSection
+                                services={currentData.services}
+                                isEditMode={isEditMode}
+                                onInputChange={handleInputChange}
+                                specialist={specialist}
+                            />
+
+                            <div className="relative">
+                                <div className="mt-4">
+                                    <Skills
+                                        title="Опыт"
+                                        items={currentData.experience.map(exp => exp.description)}
+                                        isEditMode={isEditMode}
+                                        onSkillChange={handleExperienceChange}
+                                        onAddSkill={handleAddExperience}
+                                        onRemoveSkill={handleRemoveExperience}
+                                    />
+                                </div>
                             </div>
 
-                            {/* Блок практик */}
-                            <div className="flex flex-row items-center gap-1 w-full border h-[36px] p-1 rounded-sm mt-1">
-                                <IconPractice width={22} height={20} />
-                                <div className="ml-auto text-sm">{formatCompactNumber(specialist.practices)}</div>
+                            {/* Education and Certificates */}
+                            <div className="mt-4 space-y-4">
+                                {(currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode && isEditable) ? (
+                                    <div className="mx-6 mb-2 items-center justify-center flex flex-col">
+                                        <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
+                                        <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        {currentData.education.length > 0 && (
+                                            <Certificates
+                                                title="Образование"
+                                                items={currentData.education}
+                                                isEditMode={isEditMode}
+                                                onInputChange={handleInputChange}
+                                                errors={errors}
+                                                fieldKey="education"
+                                            />
+                                        )}
+                                        {currentData.certificates.length > 0 && (
+                                            <Certificates
+                                                title="Сертификаты"
+                                                items={currentData.certificates}
+                                                isEditMode={isEditMode}
+                                                onInputChange={handleInputChange}
+                                                errors={errors}
+                                                fieldKey="certificates"
+                                            />
+                                        )}
+                                    </>
+                                )}
                             </div>
+
+                            <div className="h-24"/>
                         </div>
-                    </div>
-
-                    {/* Информация о специалисте */}
-                    <div className="px-4 pt-2">
-                        <div className="text-mobilebase font-bold text-neutral-900 leading-relaxed">{specialist.name}</div>
-                        <div className="text-mobilebase text-neutral-700 opacity-80 line-clamp-2 leading-relaxed mt-2">
-                            {specialist.description}
-                        </div>
-                        <div className="flex items-center mt-3 text-neutral-600">
-                            <MapPin className="w-4 h-4 mr-1" />
-                            <div className="text-base font-normal">{specialist.location}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* About and Skills Section */}
-                <div className="bg-white rounded-b-sm shadow-md">
-                    <AboutSkillsSection
-                        description={specialist.description}
-                        skills={specialist.skills}
-                    />
-                </div>
-
-                {/* Services, Experience and Certificates */}
-                <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
-
-                    <PracticeBlockSection
-                        services={specialist.services}
-                        isEditMode={isEditMode}
-                    />
-
-                    <div className="relative">
-                        {/* Секция "Опыт" */}
-                        <div className="mt-4">
-                            <Skills title="Опыт" items={specialist.experience.map((exp) => exp.description)} />
-                        </div>
-                    </div>
-
-                    {/* Секция "Образование и сертификаты" - вертикально друг за другом */}
-                    <div className="mt-4 space-y-4">
-                        {/* Образование - показываем если есть данные */}
-                        {specialist.education?.length > 0 && (
-                            <Certificates title="Образование" items={specialist.education} />
-                        )}
-
-                        {/* Сертификаты - показываем если есть данные */}
-                        {specialist.certificates?.length > 0 && (
-                            <Certificates title="Сертификаты" items={specialist.certificates} />
-                        )}
-                    </div>
-
-                    <div className="h-24"/>
-                </div>
-            </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </main>
     )
 }

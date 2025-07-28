@@ -26,10 +26,12 @@ export interface Specialist {
     likes: number
 }
 
+export type Format = "video" | "in-person"
+
 export interface Service {
     id: string
     title: string
-    format: "video" | "in-person"
+    format: Format[]
     location?: string
     description: string
     practice: string
@@ -54,6 +56,7 @@ export interface Service {
         updatedAt: Date
         isRepeat?: boolean
         duration: number
+        format: Format
     }[]
 }
 

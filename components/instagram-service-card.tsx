@@ -13,6 +13,7 @@ import {EditEntityButton} from "@/components/edit-entity-button";
 import {IconPractice} from "@/components/icons/icon-practice";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import { motion, AnimatePresence } from "framer-motion";
+import {cn} from "@/lib/utils";
 
 interface InstagramServiceCardProps {
     service: Service
@@ -89,9 +90,9 @@ export function InstagramServiceCard({
                             className="w-full h-full bg-white rounded-sm shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600"
                             onClick={handleCardClick}
                         >
-                            {/* Image Container - 4:5 aspect ratio */}
+                            {/* Image Container - фиксированный размер */}
                             <motion.div
-                                className="relative w-full overflow-hidden"
+                                className="relative w-full h-[225px] overflow-hidden" // Фиксированная высота как у SVG
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
                             >
@@ -106,18 +107,31 @@ export function InstagramServiceCard({
                                         exit={{ opacity: 0 }}
                                     />
                                 ) : (
-                                    <PracticePlaceholder
-                                        width={240}
-                                        height={240}
-                                        className="w-full h-full object-cover bg-neutral-100 rounded-b-none"
-                                    />
+                                    <motion.svg
+                                        viewBox="0 0 251 225"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={cn(
+                                            "w-full h-full object-cover bg-neutral-100 rounded-b-none stroke-current",
+                                            "text-gray-400",
+                                        )}
+                                        preserveAspectRatio="xMidYMid meet"
+                                    >
+                                        {/* Группа с трансформацией масштабирования и смещением вверх */}
+                                        <g transform="scale(0.33) translate(250, 240)"> {/* Уменьшили Y-координату с 340 до 240 */}
+                                            <path d="M44 224.421L44 0.999961" stroke="currentColor" stroke-width="30"/>
+                                            <line x1="8.60365" y1="32.7127" x2="241.415" y2="195.729" stroke="currentColor" stroke-width="30"/>
+                                            <line x1="241.415" y1="30.2873" x2="8.60355" y2="193.304" stroke="currentColor" stroke-width="30"/>
+                                            <path d="M206 224.421L206 0.999962" stroke="currentColor" stroke-width="30"/>
+                                        </g>
+                                    </motion.svg>
                                 )}
                             </motion.div>
 
                             {/* Content */}
                             {service.title !== "" ? (
                                 <motion.div
-                                    className="px-1.5 pb-1.5 bg-colors-neutral-150 h-full"
+                                    className="px-1.5 pb-1.5 min-h-[65px] bg-colors-neutral-150 h-full"
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.1, duration: 0.3 }}
@@ -176,7 +190,7 @@ export function InstagramServiceCard({
                                     transition={{ duration: 0.3 }}
                                     exit={{ scale: 0.8, opacity: 0 }}
                                 >
-                                    <div className={"flex flex-col items-center justify-center gap-1 md:w-[240px] text-gray-400 md:h-[65px] text-sm"}/>
+                                    <div className={"flex flex-col items-center justify-center gap-1 md:w-[240px] min-h-[65px] text-gray-400 md:h-[65px] text-sm"}/>
                                 </motion.div>
                             )}
                         </motion.div>

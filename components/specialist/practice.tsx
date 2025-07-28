@@ -9,6 +9,7 @@ import React from "react";
 import {v4 as uuidv4} from "uuid";
 import {SpecialistData} from "@/components/specialist/types/common";
 import {useRouter} from "next/navigation";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 interface PracticeBlockSectionProps {
     services: Service[]
@@ -20,14 +21,15 @@ interface PracticeBlockSectionProps {
 
 export function PracticeBlockSection({ services, className, isEditMode, onInputChange, specialist }: PracticeBlockSectionProps) {
     const router = useRouter()
+    const isMobile = useIsMobile()
 
     const handleAddService = () => {
         const newService: Service = {
             id: uuidv4(),
             title: "",
-            format: "video",
+            format: [],
             description: "",
-            practice: 0,
+            practice: "",
             price: 0,
             duration: "",
             images: [],
@@ -68,7 +70,10 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
         <div className={cn("w-full ", className)}>
             <div className="flex flex-row gap-2 items-center pb-1">
                 {(isEditMode || services?.length > 0) && (
-                    <div className="text-base font-semibold text-neutral-900 line-clamp-1 leading-relaxed">
+                    <div className={cn(
+                        "font-semibold text-neutral-900 line-clamp-1 leading-relaxed",
+                        isMobile ? "text-mobilebase" : "text-base",
+                    )}>
                         Практис
                     </div>
                 )}

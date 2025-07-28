@@ -6,7 +6,6 @@ import type { Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import React, {use} from "react"
 import { useState, useCallback, useMemo } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type {Booking, BookingSlot} from "@/types/booking"
@@ -20,7 +19,6 @@ import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
 import { Included } from "@/components/service/included"
 import {useAuth} from "@/hooks/use-auth";
-import {BookingCard} from "@/components/service/booking-card";
 import {MobileBookingCard} from "@/components/service/mobile-booking-card";
 
 interface MobileServiceCardProps {
@@ -167,17 +165,19 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
                 </div>
 
                 <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-                  {service.format === "video" ? (
-                      <>
-                        <TvMinimalPlay size={14} />
-                        <span className="text-sm text-gray-600">Видео</span>
-                      </>
-                  ) : (
-                      <>
-                        <Users size={14} />
-                        <span className="text-sm text-gray-600">Очная</span>
-                      </>
-                  )}
+                  {service.format.map((f) => {
+                    return f === "video" ? (
+                        <>
+                          <TvMinimalPlay size={14} />
+                          <p className="text-gray-600">Видео</p>
+                        </>
+                    ) : (
+                        <>
+                          <Users size={14} />
+                          <p className="text-gray-600">Очная</p>
+                        </>
+                    )
+                  })}
                 </div>
 
                 <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
@@ -215,7 +215,7 @@ export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardPr
                   description: service.description,
                 }}
                     duration={booking.duration}
-                    format={service.format}
+                    format={booking.format}
                     location={service.location}
                 />
           ))}

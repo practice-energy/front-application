@@ -17,11 +17,15 @@ interface AboutSkillsSectionProps {
     onAddSkill?: () => void
     onRemoveSkill?: (index: number) => void
     errors?: Record<string, string>
+    descriptionTitle?: string
+    skillsTitle?: string
 }
 
 export function AboutSkillsSection({
                                        description,
                                        skills,
+                                       descriptionTitle = "О мастере",
+                                       skillsTitle = "Навыки",
                                        isEditMode = false,
                                        onDescriptionChange,
                                        onSkillChange,
@@ -99,7 +103,7 @@ export function AboutSkillsSection({
                         "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
                         isMobile ? "text-mobilebase" : "text-base",
                     )}>
-                        О мастере
+                        {descriptionTitle}
                     </div>
 
                     {isEditMode ? (
@@ -126,7 +130,7 @@ export function AboutSkillsSection({
                     <div className="w-1/3">
                         {skills && (
                             <Skills
-                                title="Навыки"
+                                title={skillsTitle}
                                 items={skills}
                                 isEditMode={isEditMode}
                                 onSkillChange={onSkillChange}

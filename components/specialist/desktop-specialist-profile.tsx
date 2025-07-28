@@ -236,10 +236,6 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
 
       setIsTransitioning(true)
 
-      if (hasChanges) {
-        await handlePublish()
-      }
-
       await new Promise(resolve => setTimeout(resolve, 300))
       setIsTransitioning(false)
     }
@@ -288,15 +284,13 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
 
                     <div className="flex flex-row gap-3 items-center pt-2.5 mr-6">
                       {isEditable ? (
-                          <>
-                            <ModeToggleBar
-                                isEditMode={isEditMode}
-                                onModeToggle={handleModeToggle}
-                                onPublish={handlePublish}
-                                isSaving={isSaving}
-                                hasChanges={hasChanges}
-                            />
-                          </>
+                          <ModeToggleBar
+                              isEditMode={isEditMode}
+                              onModeToggle={handleModeToggle}
+                              onPublish={handlePublish}
+                              isSaving={isSaving}
+                              hasChanges={hasChanges}
+                          />
                       ) : (
                           <>
                             <button

@@ -1,8 +1,8 @@
 "use client"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from "lucide-react"
+import {MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, RussianRuble} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-import type { Service } from "@/types/common"
+import type {Format, Service} from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -16,14 +16,23 @@ import {formatNumber} from "@/utils/format";
 import {useAuth} from "@/hooks/use-auth";
 import {MobileBookingCard} from "@/components/service/mobile-booking-card";
 import {BookingCard} from "@/components/service/booking-card";
+import {ServiceData} from "@/components/service/types/common";
+import {LocationInput} from "@/components/location-input";
+import {EnhancedInput} from "@/components/enhanced-input";
 
 interface ServiceCardProps {
     service: Service
     bookingSlots: BookingSlot[]
     isAuthenticated: boolean
+    isEditMode: boolean
+    onInputChange: (
+        field: keyof ServiceData,
+        value: string | string[] | Format[] | any
+    ) => void
+    errors?: Record<string, string>
 }
 
-export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceCardProps) {
+export function ServiceCard({ service, bookingSlots, isAuthenticated, isEditMode, onInputChange, errors }: ServiceCardProps) {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
     const thumbnails = service.images
     const mainImage = thumbnails[selectedImageIndex]
@@ -35,10 +44,26 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
         setSelectedImageIndex(index)
     }
 
+    const handleIncludedChange = (index: number, value: string) => {
+        const updatedSkills = [...service.includes]
+        updatedSkills[index] = value
+        onInputChange("includes", updatedSkills)
+    }
+
+    const handleAddIncluded = () => {
+        const updatedSkills = [...service.includes, ""]
+        onInputChange("includes", updatedSkills)
+    }
+
+    const handleRemoveIncluded = (index: number) => {
+        const updatedSkills = service.includes.filter((_, i) => i !== index)
+        onInputChange("includes", updatedSkills)
+    }
+
     return (
         <div className="rounded-sm shadow-md overflow-hidden">
             <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
-                <div className="rounded-b-sm bg-white md:w-[845px]">
+                <div className="rounded-b-sm bg-white ">
                     {/* Black background photo section */}
                     <div className="bg-neutral-800 p-6 flex gap-2 rounded-sm">
                         {/* Main image */}
@@ -94,81 +119,136 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
                     <div className="bg-white dark:bg-gray-800 p-6 space-y-4">
                         {/* Title and price row */}
                         <div className="flex items-center justify-between">
-                            <h1 className="text-2xl font-bold text-gray-900  flex-1">{service.title}</h1>
-                            <div className="flex items-center text-[36px] font-bold text-gray-900 ">
-                                {formatNumber(service.price)}
-                                <RubleIcon size={48} bold={false} className="mb-0.5 ml-1" />
+                            {isEditMode ? (
+                                <EnhancedInput
+                                    value={service.title}
+                                    onChange={(e) => onInputChange("title", e.target.value)}
+                                    placeholder="Название"
+                                    type="input"
+                                    className="text-2xl text-neutral-900 flex-1"
+                                    showEditIcon
+                                />
+                            ) : (
+                                <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
+                            )}
+
+                            <div className="flex items-center text-[36px] font-bold text-neutral-900 ">
+                                {isEditMode ? (
+                                    <div className="flex flex-row items-center gap-2 justify-center">
+                                        {/* Currency input here*/}
+                                        <EnhancedInput
+                                            value={service.price}
+                                            onChange={(e) => onInputChange("price", e.target.value)}
+                                            placeholder="Цена"
+                                            type="input"
+                                            className="text-4xl text-neutral-900 flex-1 ml-auto border-none justify-end"
+                                        />
+                                    </div>
+                                    ) : (
+                                    <>
+                                        {formatNumber(service.price)}
+                                        <RubleIcon size={48} bold={false} className="mb-0.5 ml-1" />
+                                    </>
+                                )}
                             </div>
                         </div>
 
                         {/* Description */}
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{service.description}</p>
+                        {isEditMode ? (<EnhancedInput
+                            value={service.description || ""}
+                            onChange={(e) => onInputChange("description", e.target.value)}
+                            placeholder="Введите описание"
+                            type="input"
+                            className="mt-4 text-sm"
+                            showEditIcon
+                        />) : (
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{service.description}</p>
+                        )}
 
                         {/* Location */}
-                        {service.location && booked?.length === 0 && (
-                            <div className="flex items-center text-gray-600 dark:text-gray-400">
+                        {service.location && booked?.length === 0 && !isEditMode && (
+                            <div className="flex items-center text-neutral-600">
                                 <MapPin className="h-5 w-5 mr-2" />
                                 <span>{service.location}</span>
                             </div>
                         )}
 
+                        {isEditMode && (
+                            <LocationInput
+                                value={service.location || ""}
+                                onChange={(value) => onInputChange("location", value)}
+                                error={errors.location}
+                            />
+                        )}
+
                         {/* Tags row */}
-                        {booked?.length === 0 && (
+                        {!isEditMode && (
                             <div className="flex items-center gap-3 flex-wrap">
                                 <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
                                     <TimerReset size={16} />
                                     <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
                                 </div>
                                 <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                                    {service.format === "video" ? (
-                                        <>
-                                            <TvMinimalPlay size={16} />
-                                            <p className="text-gray-600">Видео</p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Users size={16} />
-                                            <p className="text-gray-600">Очная</p>
-                                        </>
-                                    )}
+                                    {service.format.map((f) => {
+                                        return f === "video" ? (
+                                            <>
+                                                <TvMinimalPlay size={16} />
+                                                <p className="text-gray-600">Видео</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Users size={16} />
+                                                <p className="text-gray-600">Очная</p>
+                                            </>
+                                        )
+                                    })}
                                 </div>
-                                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 ml-auto bg-white">
                                     <IconPractice width={20} height={18} />
                                     {service.practice}
                                 </div>
                             </div>
                         )}
 
-                        {booked?.map((booking) => (
-                            <BookingCard
-                                startTime={booking.startTime.toLocaleTimeString("ru-RU", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
-                                endTime={booking.endTime.toLocaleTimeString("ru-RU", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
-                                specialist={{
-                                    id: specialist.id,
-                                    name: specialist.name,
-                                    avatar: specialist.avatar
-                                }} service={{
-                                id: service.id,
-                                name: service.title,
-                                price: service.price,
-                                description: service.description,
-                            }}
-                                duration={booking.duration}
-                                format={service.format}
-                                location={service.location}
-                            />
-                        ))}
+                        {!isEditMode && (<>
+                            {booked?.map((booking) => (
+                                <BookingCard
+                                    startTime={booking.startTime.toLocaleTimeString("ru-RU", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                    endTime={booking.endTime.toLocaleTimeString("ru-RU", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                                    specialist={{
+                                        id: specialist.id,
+                                        name: specialist.name,
+                                        avatar: specialist.avatar
+                                    }} service={{
+                                    id: service.id,
+                                    name: service.title,
+                                    price: service.price,
+                                    description: service.description,
+                                }}
+                                    duration={booking.duration}
+                                    format={booking.format}
+                                    location={service.location}
+                                />
+                            ))}
+                        </>)}
                     </div>
-                    <AboutContentsSection description={service.description} contents={service.includes} />
+                    <AboutContentsSection
+                        contents={service.description}
+                        included={service.includes}
+                        onAddIncluded={handleAddIncluded}
+                        onIncludedChange={handleIncludedChange}
+                        onRemoveIncluded={handleRemoveIncluded}
+                        isEditMode={isEditMode}
+                    />
 
                     {/* Bookings section */}
-                    {isAuthenticated && booked?.length === 0 && (<div className=" relative flex flex-row px-6 pb-3">
+                    {isAuthenticated && booked?.length === 0 && !isEditMode && (<div className=" relative flex flex-row px-6 pb-3">
                         <div className="w-80 flex-shrink-0">
                             <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                         </div>
@@ -177,9 +257,11 @@ export function ServiceCard({ service, bookingSlots, isAuthenticated }: ServiceC
                     </div>)}
                 </div>
 
-                <div className="relative px-2 pt-6 pb-4">
+                {!isEditMode && (
+                    <div className="relative px-2 pt-6 pb-4">
                     <FeedbackSection feedbacks={service.reviews}/>
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     )
