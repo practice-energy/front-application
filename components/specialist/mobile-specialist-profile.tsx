@@ -16,6 +16,9 @@ import { Skills } from "./skills"
 import { AboutSkillsSection } from "./about-skills-section"
 import Image from "next/image";
 import {cn} from "@/lib/utils";
+import {ServicesSection} from "@/components/specialist/practice";
+import {ModeToggleBar} from "@/components/profile/mode-toggle-bar";
+import {SpecialistData} from "@/components/specialist/types/common";
 
 interface MobileSpecialistProfileProps {
     specialist: Specialist
@@ -30,6 +33,49 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
     const [contentHeight, setContentHeight] = useState(0)
     const expRef = useRef<HTMLDivElement>(null)
+    const isEditable = true //user?.specialistProfile?.id === specialist.id
+    const [isEditMode, setIsEditMode] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [hasChanges, setHasChanges] = useState(false)
+
+    // Saved data (what's displayed in View mode)
+    const [savedData, setSavedData] = useState<SpecialistData>({
+        name: specialist.name || "",
+        description: specialist.description || "",
+        title: specialist.title || "",
+        location: specialist.location || "",
+        avatar: specialist.avatar || "",
+        experience: specialist.experience || [],
+        education: specialist.education || [],
+        certificates: specialist.certificates || [],
+        skills: specialist.skills || [],
+        services: specialist.services || [],
+    })
+
+    // Draft data (what's being edited in Edit mode)
+    const [draftData, setDraftData] = useState<SpecialistData>({
+        name: specialist.name || "",
+        description: specialist.description || "",
+        title: specialist.title || "",
+        location: specialist.location || "",
+        avatar: specialist.avatar || "",
+        experience: specialist.experience || [],
+        education: specialist.education || [],
+        certificates: specialist.certificates || [],
+        skills: specialist.skills || [],
+        services: specialist.services || [],
+    })
+
+    const [errors, setErrors] = useState<Record<string, string>>({})
+
+    useEffect(() => {
+        const targetElement = expRef.current
+        if (targetElement) {
+            const height = targetElement.scrollHeight
+            setContentHeight(height)
+            setShouldShowToggle(height > 130)
+        }
+    }, [draftData.experience])
 
     useEffect(() => {
         // Рассчитываем высоту только для описания на мобильных устройствах
@@ -62,6 +108,54 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
         router.push(`/search/${specialist.id}`)
     }
 
+    const handlePublish = async () => {
+        // setIsSaving(true)
+        // try {
+        //     // Simulate avatar upload if new file was selected
+        //     if (avatarFile) {
+        //         await new Promise(resolve => setTimeout(resolve, 1000))
+        //         const mockFileUrl = URL.createObjectURL(avatarFile)
+        //         handleInputChange("avatar", mockFileUrl)
+        //         setAvatarFile(null)
+        //     }
+        //
+        //     // Update saved data
+        //     setSavedData(draftData)
+        //     setHasChanges(false)
+        //     setIsTransitioning(true)
+        //     setIsEditMode(false)
+        //
+        //     await new Promise(resolve => setTimeout(resolve, 300))
+        //     setIsTransitioning(false)
+        // } catch (error) {
+        //     console.error("Failed to save profile:", error)
+        // } finally {
+        //     setIsSaving(false)
+        // }
+    }
+
+    const handleModeToggle = async (mode: "view" | "edit") => {
+        if (mode === "view") {
+            if (!validateForm()) {
+                return
+            }
+
+            setIsTransitioning(true)
+
+            if (hasChanges) {
+                await handlePublish()
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 300))
+            setIsTransitioning(false)
+        }
+
+        setIsTransitioning(true)
+        setIsEditMode(mode === "edit")
+        await new Promise(resolve => setTimeout(resolve, 300))
+        setIsTransitioning(false)
+    }
+
     return (
         <main className="min-h-screen w-full relative">
             <div className="w-full">
@@ -71,40 +165,63 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                         <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
                     </div>
 
-                    <div className="flex flex-row gap-3 items-center pt-2.5">
-                        {/* Star Button */}
-                        <button
-                            type="button"
-                            onClick={handleLikeClick}
-                            className={`
+                    <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
+                        {isEditable ? (
+                            <>
+                                <ModeToggleBar
+                                    isEditMode={isEditMode}
+                                    onModeToggle={handleModeToggle}
+                                    onPublish={handlePublish}
+                                    isSaving={isSaving}
+                                    hasChanges={hasChanges}
+                                />
+                            </>
+                        ) : (
+                            <>
+                                {/* Star Button */}
+                                <button
+                                    type="button"
+                                    onClick={handleLikeClick}
+                                    className={`
                 rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
                 ${
-                                liked
-                                    ? "bg-violet-600 hover:bg-violet-700 text-white"
-                                    : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
-                            }
+                                        liked
+                                            ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                            : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
+                                    }
                 active:bg-violet-600 dark:active:bg-violet-600
                 active:text-white dark:active:text-white
                 active:border-violet-600 dark:active:border-violet-600
                 text-black dark:text-white
                 focus:outline-none
             `}
-                            title="Сохранить в избранное"
-                        >
-                            <PentagramIcon size={24} />
-                        </button>
+                                    title="Сохранить в избранное"
+                                >
+                                    <PentagramIcon size={24} />
+                                </button>
 
-                        {/* Message Button */}
-                        <button
-                            type="button"
-                            onClick={handleReply}
-                            className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                            title="Написать специалисту"
-                        >
-                            <MessagesSquare size={24} />
-                        </button>
+                                {/* Message Button */}
+                                <button
+                                    type="button"
+                                    onClick={handleReply}
+                                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                    title="Написать специалисту"
+                                >
+                                    <MessagesSquare size={24} />
+                                </button>
 
-                        {/* Share Button */}
+                                {/* Share Button */}
+                                <button
+                                    type="button"
+                                    onClick={handleShare}
+                                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                    title="Написать специалисту"
+                                >
+                                    <Share size={24} />
+                                </button>
+                            </>
+                        )}
+
                         <button
                             type="button"
                             onClick={handleShare}
@@ -159,60 +276,22 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
 
                 {/* About and Skills Section */}
                 <div className="bg-white rounded-b-sm shadow-md">
-                    <AboutSkillsSection description={specialist.description} skills={specialist.skills} />
+                    <AboutSkillsSection
+                        description={specialist.description}
+                        skills={specialist.skills}
+                    />
                 </div>
 
                 {/* Services, Experience and Certificates */}
                 <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
-                    <Skills title="Навыки" items={specialist.skills} />
 
-                    {/* Секция "Практис" с карточками услуг */}
-                    {specialist.services?.length > 0 && (
-                        <>
-                            <div className="text-base font-semibold text-neutral-900 mb-3 mt-3 line-clamp-1 leading-relaxed">
-                                Практис
-                            </div>
-                            <div className="grid grid-cols-2 gap-3 w-full">
-                                {specialist.services?.map((service, index) => (
-                                    <InstagramServiceCard key={index} service={service} />
-                                ))}
-                            </div>
-                        </>
-                    )}
+                    <ServicesSection services={specialist.services} />
 
                     <div className="relative">
                         {/* Секция "Опыт" */}
-                        <div className="overflow-hidden transition-all duration-500 ease-in-out flex"
-                                 style={{
-                                     height: isExpanded
-                                         ? `${contentHeight}px`
-                                         : shouldShowToggle
-                                             ? `130px`
-                                             : 'auto'
-                                 }}
-                             ref={expRef}>
-                            <div className="mt-4">
-                                <Skills title="Опыт" items={specialist.experience.map((exp) => exp.description)} />
-                            </div>
+                        <div className="mt-4">
+                            <Skills title="Опыт" items={specialist.experience.map((exp) => exp.description)} />
                         </div>
-
-                        {/* Fade overlay when collapsed */}
-                        {shouldShowToggle && !isExpanded && (
-                            <div className="absolute inset-x-0 bottom-[20px] h-14 bg-gradient-from-neutral-150 to-transparent pointer-events-none" />
-                        )}
-
-                        {shouldShowToggle && (
-                            <button
-                                onClick={handleToggle}
-                                className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
-                            >
-                                {isExpanded ? "Свернуть" : "Раскрыть больше"}
-                                <ChevronDown width={24} height={24} className={cn(
-                                    "transition-transform duration-300",
-                                    isExpanded ? "rotate-180" : ""
-                                )} />
-                            </button>
-                        )}
                     </div>
 
                     {/* Секция "Образование и сертификаты" - вертикально друг за другом */}

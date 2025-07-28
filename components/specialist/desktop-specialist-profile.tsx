@@ -3,13 +3,12 @@
 import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp } from "lucide-react"
-import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { BackButton } from "@/components/ui/button-back"
 import type { Education, Experience, Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { formatCompactNumber, formatNumber } from "@/utils/format"
+import { formatNumber } from "@/utils/format"
 import { Certificates } from "./certificates"
 import { Skills } from "./skills"
 import { AboutSkillsSection } from "./about-skills-section"
@@ -23,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
 import {SpecialistData} from "@/components/specialist/types/common";
 import {LocationInput} from "@/components/location-input";
+import {ServicesSection} from "@/components/specialist/practice";
 
 interface SpecialistProfileProps {
   specialist: Specialist
@@ -448,7 +448,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                   </div>
 
                   {/* About and Skills Section */}
-                  <div className="bg-white rounded-b-sm shadow-md relative">
+                  <div className="bg-white rounded-b-sm shadow-md relative overflow-y-auto">
                     <AboutSkillsSection
                         description={currentData.description}
                         skills={currentData.skills}
@@ -464,67 +464,22 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                   {/* Experience and Certificates Section */}
                   <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md">
                     <div className="relative px-6 pt-6 pb-4">
-                      {/* Services */}
-                      {currentData.services?.length > 0 && (
-                          <>
-                            <div className="text-base font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed">
-                              Практис
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 w-full">
-                              {currentData.services?.map((service, index) => (
-                                  <InstagramServiceCard key={index} service={service} />
-                              ))}
-                            </div>
-                          </>
-                      )}
+                      <ServicesSection
+                          services={specialist.services}
+                      />
 
                       {/* Experience */}
                       <div className="relative">
-                        <div
-                            className={cn(
-                                "transition-all duration-500 ease-in-out flex",
-                                !isEditMode ? "overflow-hidden" : "overflow-visible"
-                            )}
-                            style={{
-                              height: isEditMode
-                                  ? "auto"
-                                  : isExpanded
-                                      ? `${contentHeight}px`
-                                      : shouldShowToggle
-                                          ? `130px`
-                                          : "auto",
-                            }}
-                            ref={expRef}
-                        >
-                          <div className="mt-4">
-                            <Skills
-                                title="Опыт"
-                                items={currentData.experience.map(exp => exp.description)}
-                                isEditMode={isEditMode}
-                                onSkillChange={handleExperienceChange}
-                                onAddSkill={handleAddExperience}
-                                onRemoveSkill={handleRemoveExperience}
-                            />
-                          </div>
+                        <div className="mt-4">
+                          <Skills
+                              title="Опыт"
+                              items={currentData.experience.map(exp => exp.description)}
+                              isEditMode={isEditMode}
+                              onSkillChange={handleExperienceChange}
+                              onAddSkill={handleAddExperience}
+                              onRemoveSkill={handleRemoveExperience}
+                          />
                         </div>
-
-                        {shouldShowToggle && !isEditMode && (
-                            <>
-                              {!isExpanded && (
-                                  <div className="absolute inset-x-0 bottom-[35px] h-6 bg-gradient-from-neutral-150 to-transparent pointer-events-none" />
-                              )}
-                              <button
-                                  onClick={handleToggle}
-                                  className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-3 transition-colors duration-300 flex items-center gap-1 group"
-                              >
-                                {isExpanded ? "Свернуть" : "Раскрыть больше"}
-                                <ChevronDown width={24} height={24} className={cn(
-                                    "transition-transform duration-300",
-                                    isExpanded ? "rotate-180" : ""
-                                )} />
-                              </button>
-                            </>
-                        )}
                       </div>
 
                       {/* Education and Certificates */}

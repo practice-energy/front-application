@@ -10,12 +10,12 @@ import { EnhancedInput } from "@/components/enhanced-input"
 
 interface AboutSkillsSectionProps {
     description: string
-    skills: string[]
+    skills?: string[]
     isEditMode?: boolean
     onDescriptionChange?: (value: string) => void
-    onSkillChange: (index: number, value: string) => void
-    onAddSkill: () => void
-    onRemoveSkill: (index: number) => void
+    onSkillChange?: (index: number, value: string) => void
+    onAddSkill?: () => void
+    onRemoveSkill?: (index: number) => void
     errors?: Record<string, string>
 }
 
@@ -106,20 +106,22 @@ export function AboutSkillsSection({
                 {/* Колонка "Навыки" (1/3 ширины) */}
                 {!isMobile && (
                     <div className="w-1/3">
-                        <Skills
-                            title="Навыки"
-                            items={skills}
-                            isEditMode={isEditMode}
-                            onSkillChange={onSkillChange}
-                            onAddSkill={onAddSkill}
-                            onRemoveSkill={onRemoveSkill}
-                        />
+                        {skills && (
+                            <Skills
+                                title="Навыки"
+                                items={skills}
+                                isEditMode={isEditMode}
+                                onSkillChange={onSkillChange}
+                                onAddSkill={onAddSkill}
+                                onRemoveSkill={onRemoveSkill}
+                            />
+                        )}
                     </div>
                 )}
             </div>
 
             {/* Fade overlay when collapsed */}
-            {!isEditMode && shouldShowToggle && !isExpanded && (
+            {!isEditMode && shouldShowToggle && !isExpanded &&(
                 <div className={cn(
                     "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
                     "bottom-[50px]"
@@ -137,20 +139,6 @@ export function AboutSkillsSection({
                         isExpanded ? "rotate-180" : ""
                     )} />
                 </button>
-            )}
-
-            {/* Для мобильных: навыки под описанием */}
-            {isMobile && (
-                <div className="mt-6">
-                    <Skills
-                        title="Навыки"
-                        items={skills}
-                        isEditMode={isEditMode}
-                        onSkillChange={onSkillChange}
-                        onAddSkill={onAddSkill}
-                        onRemoveSkill={onRemoveSkill}
-                    />
-                </div>
             )}
         </div>
     )
