@@ -41,10 +41,6 @@ export function PhotoUpload({
     onPhotosChange(photos.filter((_, i) => i !== index))
   }
 
-  const clearAllPhotos = () => {
-    onPhotosChange([])
-  }
-
   const handleDragStart = (index: number) => {
     setDraggedIndex(index)
   }
@@ -96,7 +92,7 @@ export function PhotoUpload({
                     <>
                       <div
                           key={index}
-                          className="relative group cursor-move bg-card rounded-sm border border-border overflow-hidden hover:shadow-md transition-all duration-200"
+                          className="relative group cursor-move bg-card rounded-sm overflow-hidden hover:shadow-md transition-all duration-200"
                           draggable
                           onDragStart={() => handleDragStart(index)}
                           onDragOver={(e) => handleDragOver(e, index)}
@@ -128,7 +124,6 @@ export function PhotoUpload({
                         {/* Photo Info */}
                         <div className="p-3 bg-card">
                           <p className="text-xs text-muted-foreground truncate font-medium">{photo.name}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{(photo.size / 1024 / 1024).toFixed(1)} MB</p>
                         </div>
                       </div>
                     </>
