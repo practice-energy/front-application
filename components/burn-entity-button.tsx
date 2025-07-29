@@ -1,7 +1,8 @@
 import { Flame } from "lucide-react";
+import {MouseEventHandler} from "react";
 
 type BurnEntityButtonProps = {
-    onClick: () => void;
+    onClick: MouseEventHandler<HTMLButtonElement>;
     className?: string;
     iconClassName?: string;
     iconSize?: number

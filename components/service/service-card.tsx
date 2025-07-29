@@ -109,80 +109,63 @@ export function ServiceCard({
           {/* Black background photo section */}
           <div className="bg-neutral-800 p-6 flex gap-2 rounded-sm">
             {/* Main image */}
-            <div className="flex-1">
-              {mainImage ? (
-                <Image
-                  src={mainImage || "/placeholder.svg"}
-                  alt={service.title}
-                  className="object-cover rounded-sm"
-                  width={600}
-                  height={600}
-                />
-              ) : (
-                <PracticePlaceholder
-                  key={`placeholder-main`}
-                  width={600}
-                  height={600}
-                  className="object-cover rounded-sm"
-                />
-              )}
-            </div>
+            {!isEditMode && (
+                <div className="flex-1">
+                  {mainImage ? (
+                      <Image
+                          src={mainImage || "/placeholder.svg"}
+                          alt={service.title}
+                          className="object-cover rounded-sm"
+                          width={600}
+                          height={600}
+                      />
+                  ) : (
+                      <PracticePlaceholder
+                          key={`placeholder-main`}
+                          width={600}
+                          height={600}
+                          className="object-cover rounded-sm"
+                      />
+                  )}
+                </div>
+            )}
 
             {/* Thumbnails */}
-            <div className="flex flex-col justify-between">
-              {thumbnails.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleThumbnailClick(index)}
-                  className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-violet-600" : ""}`}
-                >
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`${service.title} ${index + 2}`}
-                    className="object-cover"
-                    width={160}
-                    height={160}
-                  />
-                </button>
-              ))}
+            {!isEditMode && (
+                <div className="flex flex-col justify-between">
+                  {thumbnails.map((image, index) => (
+                      <button
+                          key={index}
+                          onClick={() => handleThumbnailClick(index)}
+                          className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-violet-600" : ""}`}
+                      >
+                        <Image
+                            src={image || "/placeholder.svg"}
+                            alt={`${service.title} ${index + 2}`}
+                            className="object-cover"
+                            width={160}
+                            height={160}
+                        />
+                      </button>
+                  ))}
 
-              {Array.from({ length: Math.max(0, 3 - thumbnails.length) }).map((_, index) => (
-                <PracticePlaceholder key={`placeholder-${index}`} width={160} height={160} className="rounded-sm" />
-              ))}
-            </div>
-          </div>
-
-          {/* Photo Upload Section - только в режиме редактирования */}
-          {isEditMode && (
-            <div className="bg-white p-6 border-b">
-              <PhotoUpload
-                photos={editPhotos}
-                onPhotosChange={handlePhotosChange}
-                maxPhotos={4}
-                title="Редактировать фотографии"
-                description="Загрузите новые фотографии для замены текущих"
-                showTitle={true}
-              />
-              {editPhotos.length > 0 && (
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={handleSavePhotos}
-                    disabled={isUploadingPhotos}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isUploadingPhotos ? "Загрузка..." : "Сохранить фотографии"}
-                  </button>
-                  <button
-                    onClick={() => setEditPhotos([])}
-                    disabled={isUploadingPhotos}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-sm hover:bg-gray-400"
-                  >
-                    Отменить
-                  </button>
+                  {Array.from({ length: Math.max(0, 3 - thumbnails.length) }).map((_, index) => (
+                      <PracticePlaceholder key={`placeholder-${index}`} width={160} height={160} className="rounded-sm" />
+                  ))}
                 </div>
-              )}
-            </div>
-          )}
+            )}
+
+            {/* Photo Upload Section - только в режиме редактирования */}
+            {isEditMode && (
+                <PhotoUpload
+                    photos={editPhotos}
+                    onPhotosChange={handlePhotosChange}
+                    maxPhotos={3}
+                    description="Загрузите новые фотографии для замены текущих"
+                    showTitle={false}
+                />
+            )}
+          </div>
 
           {/* White background content section */}
           <div className="bg-white dark:bg-gray-800 p-6 space-y-4">
