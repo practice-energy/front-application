@@ -110,16 +110,16 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
 
   return (
     <div className="flex items-center justify-center w-full pl-4">
-      <div className="flex items-center w-full max-w-md">
+      <div className="flex items-center w-full">
         {/* Аватарка */}
-        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center">
+        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
           {user?.avatar ? (
             <Image
-              src={user.avatar || "/placeholder.svg"}
-              alt="Profile"
+              src={user.avatar}
+              alt={user.name}
               width={80}
               height={80}
-              className="object-cover w-full h-full"
+              className="object-cover"
             />
           ) : (
             <PracticePlaceholder width={80} height={80} />

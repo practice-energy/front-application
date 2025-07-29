@@ -197,14 +197,16 @@ export function ServicePageContent({
                 )}
 
                 {/* Share Button */}
-                <button
-                    type="button"
-                    onClick={handleShare}
-                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                    title="Написать специалисту"
-                >
-                  <Share size={24} />
-                </button>
+                {!isEditMode && (
+                    <button
+                        type="button"
+                        onClick={handleShare}
+                        className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                        title="Написать специалисту"
+                    >
+                      <Share size={24} />
+                    </button>
+                )}
               </div>
             </div>
 

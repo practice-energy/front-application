@@ -130,13 +130,14 @@ export function ServiceCard({
                 <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
               )}
 
-              <div className="flex items-center text-[36px] font-bold text-neutral-900 ">
+              <div className="flex items-center text-[36px] font-bold text-neutral-900 pb-2">
                 {isEditMode ? (
                   <CurrencyInput
                     value={service.price}
                     onChange={(value) => onInputChange("price", value)}
                     placeholder="0"
                     error={errors?.price}
+                    className="border border-gray-100"
                   />
                 ) : (
                   <>
