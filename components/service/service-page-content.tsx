@@ -123,6 +123,9 @@ export function ServicePageContent({
       if (onPublish) {
         await onPublish()
       }
+
+      // Закрываем режим редактирования после успешного сохранения
+      setIsEditMode(false)
     } finally {
       setIsTransitioning(false)
     }
