@@ -5,6 +5,7 @@ import { useState } from "react"
 import {ImageUp, Plus, X} from "lucide-react"
 import { Label } from "@/components/ui/label"
 import {BurnEntityButton} from "@/components/burn-entity-button";
+import {cn} from "@/lib/utils";
 
 interface PhotoUploadProps {
   photos: File[]
@@ -14,6 +15,7 @@ interface PhotoUploadProps {
   description?: string
   className?: string
   showTitle: boolean
+  bgClassName?: string
 }
 
 export function PhotoUpload({
@@ -23,6 +25,7 @@ export function PhotoUpload({
                               title = "Upload Photos",
                               description = "Add photos to showcase your practice and create a welcoming presence",
                               className = "",
+    bgClassName = "",
                               showTitle = true,
                             }: PhotoUploadProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
@@ -62,9 +65,13 @@ export function PhotoUpload({
   }
 
   return (
-      <div className={`space-y-6 ${className} w-full`}>
+      <div className={`space-y-6 bg-colors-neutral-150 ${className} w-full`}>
         <div>
-          <div className="border border-dashed bg-colors-neutral-150 border-muted-foreground/25 rounded-sm p-8 text-center cursor-pointer transition-colors">
+          <div className={cn(
+              "bg-colors-neutral-150 border-muted-foreground/25 rounded-sm p-8 text-center cursor-pointer transition-colors",
+              bgClassName
+          )}
+          >
             <input
                 type="file"
                 multiple
@@ -74,7 +81,7 @@ export function PhotoUpload({
                 id="photo-upload"
             />
             <label htmlFor="photo-upload" className="block cursor-pointer">
-              <div className="space-y-3 bg-colors-neutral-150">
+              <div className="space-y-3">
                 <div className="mx-auto w-12 h-12 bg-violet-50 rounded-sm flex items-center justify-center">
                   <ImageUp className="h-5 w-5 text-neutral-700" />
                 </div>

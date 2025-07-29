@@ -5,6 +5,7 @@ export interface ServiceData {
     format: Format[]
     location?: string
     description: string
+    contents: string
     price: number
     duration: string
     images: string[]

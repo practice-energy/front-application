@@ -34,6 +34,7 @@ export interface Service {
     format: Format[]
     location?: string
     description: string
+    contents: string
     practice: string
     price: number
     duration: string

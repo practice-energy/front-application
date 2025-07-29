@@ -2,253 +2,566 @@
 
 import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-import type { Service } from "@/types/common"
+import type { Service, Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { useState, useCallback, useMemo } from "react"
+import {useState, useCallback, useMemo, useEffect} from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type {Booking, BookingSlot} from "@/types/booking"
 import { FeedbackSection } from "@/components/service/feedback-section"
 import { PracticePlaceholder } from "../practice-placeholder"
 import { formatNumber } from "@/utils/format"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { BackButton } from "@/components/ui/button-back"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { MobileBookingSection } from "@/components/service/mobile-booking-section"
-import { Included } from "@/components/service/included"
-import {useAuth} from "@/hooks/use-auth";
-import {MobileBookingCard} from "@/components/service/mobile-booking-card";
+import {useAuth} from "@/hooks/use-auth"
+import {MobileBookingCard} from "@/components/service/mobile-booking-card"
+import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
+import { motion, AnimatePresence } from "framer-motion"
+import { Skeleton } from "@/components/ui/skeleton"
+import {CurrencyInput} from "@/components/currency-input";
+import {EnhancedInput} from "@/components/enhanced-input";
+import {LocationInput} from "@/components/location-input";
+import {Skills} from "@/components/specialist/skills";
+import {PhotoUpload} from "@/components/photo-upload";
 
 interface MobileServiceCardProps {
   service: Service
   bookingSlots: BookingSlot[]
+  onModeToggle?: (mode: "view" | "edit") => void
+  onPublish?: () => void
+  isSaving?: boolean
+  hasChanges?: boolean
+  isEditable: boolean
 }
 
-export function MobileServiceCard({ service, bookingSlots }: MobileServiceCardProps) {
+// Эмуляция загрузки файлов в хранилище
+const uploadPhotosToStorage = async (photos: File[]): Promise<string[]> => {
+  // Эмуляция задержки запроса
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+
+  // Эмуляция возврата URL-ов загруженных фотографий
+  return photos.map((photo, index) => `/uploaded-photos/${Date.now()}-${index}-${photo.name}`)
+}
+
+export function MobileServiceCard({
+                                    service,
+                                    bookingSlots,
+                                    onModeToggle,
+                                    onPublish,
+                                    isSaving,
+                                    hasChanges,
+                                    isEditable
+                                  }: MobileServiceCardProps) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const searchParams = useSearchParams()
+
+  const [isEditMode, setIsEditMode] = useState(searchParams.get("mode") === "edit" && isEditable)
+  const [savedData, setSavedData] = useState<Service>(service)
+  const [draftData, setDraftData] = useState<Service>(service)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
   const specialist = service.specialist
   const booked = service.bookings
   const { isAuthenticated } = useAuth()
 
-  // Мемоизируем обработчики событий чтобы избежать ререндеринга
-  const handleShare = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
-      // Implement share functionality
-      if (navigator.share) {
-        navigator
-          .share({
-            title: service.title,
-            text: service.description,
-            url: window.location.href,
-          })
-          .catch(console.error)
+  const [editPhotos, setEditPhotos] = useState<File[]>([])
+
+  // Инициализация editPhotos из service.images при входе в режим редактирования
+  useEffect(() => {
+    if (isEditMode && service.images.length > 0) {
+      const initializePhotos = async () => {
+        const photoFiles = await Promise.all(
+            service.images.map((url, index) => createFileFromUrl(url, `photo-${index}.jpg`)),
+        )
+        setEditPhotos(photoFiles)
       }
-    },
-    [service.title, service.description],
+      initializePhotos()
+    } else if (!isEditMode) {
+      setEditPhotos([])
+    }
+  }, [isEditMode, service.images])
+
+  const handlePhotosUpload = async (photos: File[]) => {
+    try {
+      // Загружаем фотографии в хранилище
+      const uploadedUrls = await uploadPhotosToStorage(photos)
+
+      // Обновляем draftData с новыми URL
+      setDraftData((prev) => ({ ...prev, images: uploadedUrls }))
+
+      console.log("Photos uploaded successfully:", uploadedUrls)
+    } catch (error) {
+      console.error("Failed to upload photos:", error)
+    }
+  }
+
+  // Передаем фотографии для загрузки на сервер через пропс
+  const handleUploadPhotos = async () => {
+    if (handlePhotosUpload && editPhotos.length > 0) {
+      await handlePhotosUpload(editPhotos)
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!draftData.title.trim()) {
+      newErrors.title = "Title is required"
+    }
+    if (!draftData.price || draftData.price <= 0) {
+      newErrors.price = "Price must be greater than 0"
+    }
+    if (!draftData.duration.trim()) {
+      newErrors.duration = "Duration is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handlePublish = async () => {
+    if (!validateForm()) return
+
+    setIsTransitioning(true)
+    try {
+      if (isEditMode && (window as any).uploadServicePhotos) {
+        await (window as any).uploadServicePhotos()
+      }
+
+      setSavedData(draftData)
+
+      if (onPublish) {
+        await onPublish()
+      }
+
+      setIsEditMode(false)
+    } finally {
+      setIsTransitioning(false)
+    }
+  }
+
+  const handleModeToggle = async (mode: "view" | "edit") => {
+    if (mode === "view") {
+      if (!validateForm()) {
+        return
+      }
+
+      setIsTransitioning(true)
+      await handlePublish()
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      setIsTransitioning(false)
+    }
+
+    setIsTransitioning(true)
+    setIsEditMode(mode === "edit")
+    if (onModeToggle) {
+      await onModeToggle(mode)
+    }
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    setIsTransitioning(false)
+  }
+
+  const handlePhotosChange = (photos: File[]) => {
+    setEditPhotos(photos)
+    // Обновляем состояние в service data - создаем временные URL для превью
+    const photoUrls = photos.map((photo) => URL.createObjectURL(photo))
+    handleInputChange("images", photoUrls)
+  }
+
+  const handleInputChange = (field: keyof Service, value: string | string[] | Format[] | any) => {
+    setDraftData((prev) => ({ ...prev, [field]: value }))
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }))
+    }
+  }
+
+  const handleShare = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (navigator.share) {
+          navigator
+              .share({
+                title: isEditMode ? draftData.title : savedData.title,
+                text: isEditMode ? draftData.description : savedData.description,
+                url: window.location.href,
+              })
+              .catch(console.error)
+        }
+      },
+      [isEditMode, draftData, savedData],
   )
 
   const handleReply = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
-      router.push(`/search/${specialist.id}`)
-    },
-    [router, specialist.id],
+      (e: React.MouseEvent) => {
+        e.stopPropagation()
+        router.push(`/search/${specialist.id}`)
+      },
+      [router, specialist.id],
   )
 
   const handleToProfile = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
-      router.push(`/specialist/${specialist.id}`)
-    },
-    [router, specialist.id],
+      (e: React.MouseEvent) => {
+        e.stopPropagation()
+        router.push(`/specialist/${specialist.id}`)
+      },
+      [router, specialist.id],
   )
 
-  // Мемоизируем вычисления для избежания ненужных пересчетов
-  const memoizedImages = useMemo(() => {
-    return service.images && service.images.length > 0 ? service.images : []
-  }, [service.images])
+  const handleIncludedChange = (index: number, value: string) => {
+    const updatedSkills = [...service.includes]
+    updatedSkills[index] = value
+    handleInputChange("includes", updatedSkills)
+  }
 
-  const memoizedIncludes = useMemo(() => {
-    return service.includes || []
-  }, [service.includes])
+  const handleAddIncluded = () => {
+    const updatedSkills = [...service.includes, ""]
+    handleInputChange("includes", updatedSkills)
+  }
+
+  const handleRemoveIncluded = (index: number) => {
+    const updatedSkills = service.includes.filter((_, i) => i !== index)
+    handleInputChange("includes", updatedSkills)
+  }
+
+  const memoizedImages = useMemo(() => {
+    const images = isEditMode ? draftData.images : savedData.images
+    return images && images.length > 0 ? images : []
+  }, [isEditMode, draftData.images, savedData.images])
+
+  const currentService = isEditMode ? draftData : savedData
 
   return (
-    <div>
-      <div className="w-full bg-colors-neutral-150">
-        {/* Header with Back Button and Action Buttons */}
-        <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-10 border-b">
-          <BackButton className="text-neutral-700 opacity-80" text="назад" />
+      <div>
+        <div className="w-full bg-colors-neutral-150">
+          {/* Header with Back Button and Action Buttons */}
+          <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-10 border-b">
+            <BackButton className="text-neutral-700 opacity-80" text="назад" />
 
-          <div className="flex gap-2">
-            <button
-              onClick={handleToProfile}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Профиль специалиста"
-            >
-              {specialist.avatar ? (
-                <Image
-                  src={specialist.avatar || "/placeholder.svg"}
-                  alt={specialist.name}
-                  width={36}
-                  height={36}
-                  className="rounded-sm"
-                />
-              ) : (
-                <PracticePlaceholder width={36} height={36} className="rounded-sm" />
+            <div className="flex gap-6">
+              {isEditable && (
+                  <ModeToggleBar
+                      isEditMode={isEditMode}
+                      onModeToggle={handleModeToggle}
+                      onPublish={handlePublish}
+                      isSaving={isSaving}
+                      hasChanges={hasChanges}
+                  />
               )}
-            </button>
 
-            <button
-              onClick={handleReply}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Написать специалисту"
-            >
-              <MessagesSquare size={20} />
-            </button>
+              {!isEditable && !isEditMode && (
+                  <button
+                      onClick={handleToProfile}
+                      className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                      title="Профиль специалиста"
+                  >
+                    {specialist.avatar ? (
+                        <Image
+                            src={specialist.avatar || "/placeholder.svg"}
+                            alt={specialist.name}
+                            width={36}
+                            height={36}
+                            className="rounded-sm"
+                        />
+                    ) : (
+                        <PracticePlaceholder width={36} height={36} className="rounded-sm" />
+                    )}
+                  </button>
+              )}
 
-            <button
-              onClick={handleShare}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Поделиться"
-            >
-              <Share size={20} />
-            </button>
+              {!isEditable && (
+                  <button
+                      onClick={handleReply}
+                      className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                      title="Написать специалисту"
+                  >
+                    <MessagesSquare size={20} />
+                  </button>
+              )}
+
+              {!isEditMode && (
+                  <button
+                      onClick={handleShare}
+                      className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                      title="Поделиться"
+                  >
+                    <Share size={20} />
+                  </button>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Image Swiper */}
-        <div className="w-full bg-neutral-800">
-          {memoizedImages.length > 0 ? (
-            <Swiper spaceBetween={0} slidesPerView={1} className="w-full">
-              {memoizedImages.map((image, index) => (
-                <SwiperSlide key={`${image}-${index}`}>
-                  <div className="aspect-square w-full relative">
-                    <Image
-                      src={image || "/placeholder.svg"}
-                      alt={`${service.title} ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      priority={index === 0}
-                    />
+          <AnimatePresence mode="wait">
+            {isTransitioning ? (
+                <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                  <div className="flex justify-center items-center h-[400px]">
+                    <Skeleton className="w-full h-full" />
                   </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <div className="aspect-square w-full relative">
-              <PracticePlaceholder className="w-full h-full" width={600} height={600} />
-            </div>
-          )}
-        </div>
-
-        {/* Content Section */}
-        <div className="bg-colors-neutral-150 p-4 space-y-4">
-          <div className="flex items-start justify-between">
-            <h1 className="text-xl font-bold text-gray-900 flex-1 pr-2">{service.title}</h1>
-            <div className="flex items-center text-2xl font-bold text-gray-900">
-              {formatNumber(service.price)}
-              <RubleIcon size={28} className="mb-0.5 ml-1" />
-            </div>
-          </div>
-
-          <p className="text-gray-700">{service.description}</p>
-
-          {booked?.length === 0 && (
-              <div className="flex flex-wrap gap-2">
-                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-                  <TimerReset size={14} />
-                  <span className="text-sm text-gray-600">{service.duration}</span>
-                </div>
-
-                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-                  {service.format.map((f) => {
-                    return f === "video" ? (
-                        <>
-                          <TvMinimalPlay size={14} />
-                          <p className="text-gray-600">Видео</p>
-                        </>
+                </motion.div>
+            ) : (
+                <motion.div
+                    key="content"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                >
+                  {/* Image Swiper */}
+                  <div className="w-full bg-neutral-700">
+                    {isEditMode ? (
+                        <div className="p-2">
+                          <PhotoUpload
+                              photos={editPhotos}
+                              onPhotosChange={handlePhotosChange}
+                              maxPhotos={3}
+                              description="Загрузите новые фотографии для замены текущих"
+                              showTitle={false}
+                              className="bg-neutral-700 rounded-none rounded-b-sm"
+                              bgClassName="bg-neutral-700 rounded-none rounded-b-sm text-neutral-100"
+                          />
+                        </div>
                     ) : (
                         <>
-                          <Users size={14} />
-                          <p className="text-gray-600">Очная</p>
+                          {memoizedImages.length > 0 ? (
+                              <Swiper spaceBetween={0} slidesPerView={1} className="w-full">
+                                {memoizedImages.map((image, index) => (
+                                    <SwiperSlide key={`${image}-${index}`}>
+                                      <div className="aspect-square w-full relative">
+                                        <Image
+                                            src={image || "/placeholder.svg"}
+                                            alt={`${currentService.title} ${index + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            priority={index === 0}
+                                        />
+                                      </div>
+                                    </SwiperSlide>
+                                ))}
+                              </Swiper>
+                          ) : (
+                              <div className="aspect-square w-full relative">
+                                <PracticePlaceholder className="w-full h-full" width={600} height={600} />
+                              </div>
+                          )}
                         </>
-                    )
-                  })}
-                </div>
+                    )}
+                  </div>
 
-                <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
-                  <IconPractice width={16} height={14} />
-                  <span className="text-sm">{service.practice}</span>
-                </div>
-              </div>
-          )}
+                  {/* Content Section */}
+                  <div className="bg-colors-neutral-150 p-4 space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="text-gray-900 flex-1 pr-2">
+                        {isEditMode ? (
+                            <EnhancedInput
+                                value={currentService.title}
+                                onChange={(e) => handleInputChange("title", e.target.value)}
+                                placeholder="Название"
+                                type="input"
+                                className="text-neutral-900 flex-1 w-min-2/3"
+                                showEditIcon
+                            />
+                        ) : (
+                            <div className="text-2xl font-semibold">{currentService.title}</div>
+                        )}
+                      </div>
+                      <div className="flex items-center font-bold text-gray-900">
+                        {isEditMode ? (
+                            <div className="mt-2">
+                              <CurrencyInput
+                                  value={service.price}
+                                  onChange={(value) => handleInputChange("price", value)}
+                                  placeholder="0"
+                                  error={errors?.price}
+                                  className="border border-gray-100 text-mobilebase max-w-1/3"
+                                  iconSize={24}
+                              />
+                            </div>
+                        ) : (
+                            <div className="text-2xl">
+                            {formatNumber(currentService.price)}
+                              <RubleIcon size={28} className="mb-1 ml-1" bold={false}/>
+                            </div>
+                        )}
+                      </div>
+                    </div>
 
-          {service.location && booked?.length === 0 && (
-              <div className="flex items-center text-gray-600">
-                <MapPin className="h-5 w-5 mr-2" />
-                <span>{service.location}</span>
-              </div>
-          )}
+                    {isEditMode ? (
+                        <EnhancedInput
+                            value={service.description || ""}
+                            onChange={(e) => handleInputChange("description", e.target.value)}
+                            placeholder="Введите описание"
+                            type="input"
+                            className="mt-4 text-sm"
+                            showEditIcon
+                        />
+                    ) : (
+                        <p className="text-gray-700">{currentService.description}</p>
+                    )}
 
-          {booked?.map((booking) => (
-                <MobileBookingCard
-                    startTime={booking.startTime.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    endTime={booking.endTime.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    specialist={{
-                  id: specialist.id,
-                  name: specialist.name,
-                  avatar: specialist.avatar
-                }} service={{
-                  id: service.id,
-                  name: service.title,
-                  price: service.price,
-                  description: service.description,
-                }}
-                    duration={booking.duration}
-                    format={booking.format}
-                    location={service.location}
-                />
-          ))}
+                    {booked?.length === 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
+                            <TimerReset size={14} />
+                            {isEditMode ? (
+                                <input
+                                    type="text"
+                                    value={draftData.duration}
+                                    onChange={(e) => handleInputChange("duration", e.target.value)}
+                                    className="w-24 p-1 border rounded"
+                                />
+                            ) : (
+                                <span className="text-sm text-gray-600">{currentService.duration}</span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
+                            {!isEditMode && (
+                                <>
+                                  {
+                                    currentService.format.map((f) => {
+                                      return f === "video" ? (
+                                          <>
+                                            <TvMinimalPlay size={14} />
+                                            <p className="text-gray-600">Видео</p>
+                                          </>
+                                      ) : (
+                                          <>
+                                            <Users size={14} />
+                                            <p className="text-gray-600">Очная</p>
+                                          </>
+                                      )
+                                    })
+                                  }
+                                </>
+                            )}
+                          </div>
+
+                          <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
+                            <IconPractice width={16} height={14} />
+                            <span className="text-sm">{currentService.practice}</span>
+                          </div>
+                        </div>
+                    )}
+
+                    {currentService.location && booked?.length === 0 && (
+                        <div className="flex items-center text-gray-600">
+                          <MapPin className="h-5 w-5 mr-2" />
+                          {isEditMode ? (
+                              <input
+                                  type="text"
+                                  value={draftData.location || ""}
+                                  onChange={(e) => handleInputChange("location", e.target.value)}
+                                  className="w-full p-1 border rounded"
+                              />
+                          ) : (
+                              <span>{currentService.location}</span>
+                          )}
+                        </div>
+                    )}
+
+                    {isEditMode && (
+                        <LocationInput
+                            value={service.location || ""}
+                            onChange={(value) => handleInputChange("location", value)}
+                            error={errors?.location}
+                        />
+                    )}
+
+                    {!isEditMode && (
+                        <>
+                          {booked?.map((booking) => (
+                              <MobileBookingCard
+                                  startTime={booking.startTime.toLocaleTimeString("ru-RU", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                  endTime={booking.endTime.toLocaleTimeString("ru-RU", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                  specialist={{
+                                    id: specialist.id,
+                                    name: specialist.name,
+                                    avatar: specialist.avatar
+                                  }}
+                                  service={{
+                                    id: currentService.id,
+                                    name: currentService.title,
+                                    price: currentService.price,
+                                    description: currentService.description,
+                                  }}
+                                  duration={booking.duration}
+                                  format={booking.format}
+                                  location={currentService.location}
+                              />
+                          ))}
+                        </>
+                    )}
+                  </div>
+
+                  <div className="relative">
+                    <AboutContentsSection
+                        contents={currentService.contents}
+                        included={currentService.includes}
+                        onContentsChange={(e) => {handleInputChange("contents", e)}}
+                        onAddIncluded={handleAddIncluded}
+                        onIncludedChange={handleIncludedChange}
+                        onRemoveIncluded={handleRemoveIncluded}
+                        isEditMode={isEditMode}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    {/* Секция "Опыт" */}
+                    <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
+                      <div className="px-4">
+                        <Skills
+                            title="Наполнение"
+                            items={currentService.includes}
+                            isEditMode={isEditMode}
+                            onSkillChange={handleIncludedChange}
+                            onAddSkill={handleAddIncluded}
+                            onRemoveSkill={handleRemoveIncluded}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <div className="relative">
-          <AboutContentsSection description={service.description} contents={memoizedIncludes} />
-        </div>
-      </div>
+        {!isTransitioning && (
+            <div className="bg-colors-neutral-150 pt-2">
+              {isAuthenticated && booked?.length === 0 && (
+                  <>
+                    <div className="mb-4 px-4">
+                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
+                    </div>
+                    <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+                  </>
+              )}
 
-      <div className="bg-colors-neutral-150 pt-2">
-        <div className="relative">
-          {/* Секция "Опыт" */}
-          <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
-            <div className="mt-4 px-4">
-              <Included title="Наполнение" items={memoizedIncludes} />
+              {!isEditMode && (
+                  <div className="relative px-2 pt-6 pb-4">
+                    <FeedbackSection feedbacks={service.reviews} />
+                  </div>
+              )}
+
+              <div className="h-4"></div>
             </div>
-          </div>
-        </div>
-
-        {
-          isAuthenticated && booked?.length === 0 && (<>
-              <div className="mb-4 px-4">
-                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
-              </div>
-              <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-          </>)
-        }
-
-        <div className="bg-colors-neutral-150 pt-4">
-          <FeedbackSection feedbacks={service.reviews} />
-        </div>
+        )}
       </div>
-    </div>
   )
 }

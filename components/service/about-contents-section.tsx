@@ -112,7 +112,7 @@ export function AboutContentsSection({
                             placeholder="..."
                             type="textarea"
                             rows={4}
-                            error={errors?.description}
+                            error={errors?.contents}
                             showEditIcon
                         />
                     ) : (

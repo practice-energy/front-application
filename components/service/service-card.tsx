@@ -30,18 +30,6 @@ interface ServiceCardProps {
   errors?: Record<string, string>
 }
 
-// Функция для создания File объектов из URL
-const createFileFromUrl = async (url: string, filename: string): Promise<File> => {
-  try {
-    const response = await fetch(url)
-    const blob = await response.blob()
-    return new File([blob], filename, { type: blob.type })
-  } catch (error) {
-    // Если не удается загрузить, создаем пустой файл
-    return new File([""], filename, { type: "image/jpeg" })
-  }
-}
-
 export function ServiceCard({
   service,
   bookingSlots,
@@ -183,7 +171,7 @@ export function ServiceCard({
           </div>
 
           {/* White background content section */}
-          <div className="bg-white dark:bg-gray-800 p-6 space-y-4">
+          <div className="p-6 space-y-4">
             {/* Title and price row */}
             <div className="flex items-center justify-between">
               {isEditMode ? (
@@ -192,7 +180,7 @@ export function ServiceCard({
                   onChange={(e) => onInputChange("title", e.target.value)}
                   placeholder="Название"
                   type="input"
-                  className="text-2xl text-neutral-900 flex-1"
+                  className="text-neutral-900 flex-1"
                   showEditIcon
                 />
               ) : (
@@ -313,8 +301,9 @@ export function ServiceCard({
             )}
           </div>
           <AboutContentsSection
-            contents={service.description}
+            contents={service.contents}
             included={service.includes}
+            onContentsChange={(e) => {onInputChange("contents", e)}}
             onAddIncluded={handleAddIncluded}
             onIncludedChange={handleIncludedChange}
             onRemoveIncluded={handleRemoveIncluded}

@@ -13,10 +13,11 @@ interface CurrencyInputProps {
     disabled?: boolean
     className?: string
     error?: string
+    iconSize?: number
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
-    ({ value = "", onChange, placeholder = "0", disabled = false, className, error, ...props }, ref) => {
+    ({ value = "", onChange, placeholder = "0", disabled = false, className, error, iconSize = 48, ...props }, ref) => {
         const [displayValue, setDisplayValue] = useState("")
         const [inputWidth, setInputWidth] = useState("auto")
 
@@ -47,6 +48,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const inputValue = e.target.value
             const cleanValue = getCleanNumber(inputValue)
+
+            // Проверяем, не превышает ли введенное значение максимально допустимое
+            if (cleanValue.length > 9) return // 999,999,999 - 9 цифр
+
             const formatted = formatNumber(cleanValue)
 
             setDisplayValue(formatted)
@@ -88,7 +93,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
 
                     {/* Иконка рубля справа */}
                     <div className="flex items-center pointer-events-none">
-                        <RubleIcon size={48} className="text-neutral-900 mb-0.5" bold={false} />
+                        <RubleIcon size={iconSize} className="text-neutral-900 mb-0.5" bold={false} />
                     </div>
                 </div>
 
