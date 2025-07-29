@@ -65,10 +65,10 @@ export function PhotoUpload({
   }
 
   return (
-      <div className={`space-y-6 bg-colors-neutral-150 ${className} w-full`}>
+      <div className={`space-y-6 ${className} w-full`}>
         <div>
           <div className={cn(
-              "bg-colors-neutral-150 border-muted-foreground/25 rounded-sm p-8 text-center cursor-pointer transition-colors",
+              "bg-colors-neutral-150 md:rounded-sm border-muted-foreground/25 rounded-sm p-8 text-center cursor-pointer transition-colors",
               bgClassName
           )}
           >
@@ -86,7 +86,7 @@ export function PhotoUpload({
                   <ImageUp className="h-5 w-5 text-neutral-700" />
                 </div>
                 <p className="font-medium">Загрузите фото вашей практис</p>
-                <p className="text-xs text-muted-foreground">Поддерживаемые форматы: JPG, PNG, WebP до 5MB</p>
+                {/*<p className="text-xs text-muted-foreground">Поддерживаемые форматы: JPG, PNG, WebP до 5MB</p>*/}
               </div>
             </label>
           </div>
@@ -94,7 +94,7 @@ export function PhotoUpload({
 
         {photos.length > 0 && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-rows-3 gap-4">
                 {photos.map((photo, index) => (
                     <>
                       <div

@@ -166,6 +166,7 @@ export function ServiceCard({
                 maxPhotos={3}
                 description="Загрузите новые фотографии для замены текущих"
                 showTitle={false}
+                className="rounded-sm"
               />
             )}
           </div>

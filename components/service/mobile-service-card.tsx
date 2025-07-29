@@ -74,18 +74,27 @@ export function MobileServiceCard({
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
-    if (isEditMode && service.images.length > 0) {
+    if (isEditMode && service.images.length > 0 && editPhotos.length === 0) {
       const initializePhotos = async () => {
-        const photoFiles = await Promise.all(
-            service.images.map((url, index) => createFileFromUrl(url, `photo-${index}.jpg`)),
-        )
-        setEditPhotos(photoFiles)
-      }
-      initializePhotos()
+        try {
+          const photoFiles = await Promise.all(
+              service.images.map((url, index) =>
+                  createFileFromUrl(url, `photo-${index}.jpg`)
+              )
+          );
+          setEditPhotos(photoFiles);
+        } catch (error) {
+          console.error("Failed to initialize photos:", error);
+          // Если не удалось загрузить, просто оставляем пустой массив
+          setEditPhotos([]);
+        }
+      };
+
+      initializePhotos();
     } else if (!isEditMode) {
-      setEditPhotos([])
+      setEditPhotos([]);
     }
-  }, [isEditMode, service.images])
+  }, [isEditMode, service.images]);
 
   const handlePhotosUpload = async (photos: File[]) => {
     try {
@@ -102,12 +111,6 @@ export function MobileServiceCard({
   }
 
   // Передаем фотографии для загрузки на сервер через пропс
-  const handleUploadPhotos = async () => {
-    if (handlePhotosUpload && editPhotos.length > 0) {
-      await handlePhotosUpload(editPhotos)
-    }
-  }
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
