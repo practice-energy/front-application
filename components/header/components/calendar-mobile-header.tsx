@@ -1,44 +1,31 @@
 "use client"
 
 import type { User } from "@/types/user"
-import {SidebarToggleButton} from "@/components/open-sidebar";
-import {ProfileIcon} from "@/components/profile-icon";
-import {SettingsButton} from "@/components/calendar-settings-button";
+import { ProfileIcon } from "@/components/profile-icon"
+import { SettingsButton } from "@/components/calendar-settings-button"
 
 interface CalendarMobileHeaderProps {
-    user: User | null
-    toggleSidebar?: () => void
-    toggleProfileMenu?: () => void
-    onSettings: () => void
-    isAuthenticated: boolean
+  user: User | null
+  onSettings: () => void
+  isAuthenticated: boolean
 }
 
-export const CalendarMobileHeader = ({
-                               user,
-                               toggleSidebar = () => {},
-                               toggleProfileMenu = () => {},
-                               onSettings= () => {},
-                               isAuthenticated,
-                           }: CalendarMobileHeaderProps) => {
+export function CalendarMobileHeader({ user, onSettings, isAuthenticated }: CalendarMobileHeaderProps) {
+  return (
+    <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+      <div className="flex items-center gap-3">
+        {user && <ProfileIcon user={user} size="sm" showOnlineStatus={false} />}
+        <div>
+          <h1 className="font-semibold text-lg">Календарь</h1>
+          {user && <p className="text-sm text-gray-500">{user.name}</p>}
+        </div>
+      </div>
 
-    return (
-        <header className="top-0 left-0 right-0 h-24 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-50 px-4 flex items-center justify-between">
-            <SidebarToggleButton
-                toggleSidebar={toggleSidebar}
-                className="mr-2"
-            />
-
-            <div className="gap-6 flex flex-row items-center justify-center">
-                <SettingsButton onClick={onSettings} className="flex"/>
-
-                <ProfileIcon
-                    isAuthenticated={isAuthenticated}
-                    toggleProfileMenu={toggleProfileMenu}
-                    user={user}
-                    iconSize={50}
-                    className="mb-2"
-                />
-            </div>
-        </header>
-    )
+      <SettingsButton
+        onClick={onSettings}
+        className="bg-gray-100 hover:bg-gray-200"
+        iconClassName="w-5 h-5 text-gray-600"
+      />
+    </div>
+  )
 }
