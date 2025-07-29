@@ -159,7 +159,7 @@ export function ServicePageContent({
                     />
                 )}
 
-                {!isEditable && (
+                {!isEditable && !isEditMode && (
                     <button
                         type="button"
                         onClick={handleToProfile}

@@ -19,7 +19,7 @@ interface PhotoUploadProps {
 export function PhotoUpload({
                               photos,
                               onPhotosChange,
-                              maxPhotos = 5,
+                              maxPhotos = 3,
                               title = "Upload Photos",
                               description = "Add photos to showcase your practice and create a welcoming presence",
                               className = "",
@@ -66,7 +66,7 @@ export function PhotoUpload({
   }
 
   return (
-      <div className={`space-y-6 ${className}`}>
+      <div className={`space-y-6 ${className} w-full`}>
         <div>
           <div className="border border-dashed bg-colors-neutral-150 border-muted-foreground/25 rounded-sm p-8 text-center cursor-pointer transition-colors">
             <input

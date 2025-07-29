@@ -6,7 +6,7 @@ import type { Format, Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
@@ -50,6 +50,13 @@ export function ServiceCard({
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
+
+  // Эффект для инициализации editPhotos
+  useEffect(() => {
+    if (isEditMode && service.images.length > 0) {
+      setEditPhotos(service.images.map((url) => new File([url], url, { type: "image/jpeg" })))
+    }
+  }, [isEditMode, service.images]);
 
   const thumbnails = service.images
   const mainImage = thumbnails[selectedImageIndex]
