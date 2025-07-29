@@ -6,7 +6,7 @@ import type { Format, Service } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
@@ -26,16 +26,20 @@ interface ServiceCardProps {
   isAuthenticated: boolean
   isEditMode: boolean
   onInputChange: (field: keyof ServiceData, value: string | string[] | Format[] | any) => void
+  onPhotosUpload?: (photos: File[]) => Promise<void>
   errors?: Record<string, string>
 }
 
-// Эмуляция загрузки файлов в хранилище
-const uploadPhotosToStorage = async (photos: File[]): Promise<string[]> => {
-  // Эмуляция задержки запроса
-  await new Promise((resolve) => setTimeout(resolve, 1500))
-
-  // Эмуляция возврата URL-ов загруженных фотографий
-  return photos.map((photo, index) => `/uploaded-photos/${Date.now()}-${index}-${photo.name}`)
+// Функция для создания File объектов из URL
+const createFileFromUrl = async (url: string, filename: string): Promise<File> => {
+  try {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return new File([blob], filename, { type: blob.type })
+  } catch (error) {
+    // Если не удается загрузить, создаем пустой файл
+    return new File([""], filename, { type: "image/jpeg" })
+  }
 }
 
 export function ServiceCard({
@@ -44,19 +48,27 @@ export function ServiceCard({
   isAuthenticated,
   isEditMode,
   onInputChange,
+  onPhotosUpload,
   errors,
 }: ServiceCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
-  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
 
-  // Эффект для инициализации editPhotos
+  // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
     if (isEditMode && service.images.length > 0) {
-      setEditPhotos(service.images.map((url) => new File([url], url, { type: "image/jpeg" })))
+      const initializePhotos = async () => {
+        const photoFiles = await Promise.all(
+          service.images.map((url, index) => createFileFromUrl(url, `photo-${index}.jpg`)),
+        )
+        setEditPhotos(photoFiles)
+      }
+      initializePhotos()
+    } else if (!isEditMode) {
+      setEditPhotos([])
     }
-  }, [isEditMode, service.images]);
+  }, [isEditMode, service.images])
 
   const thumbnails = service.images
   const mainImage = thumbnails[selectedImageIndex]
@@ -85,29 +97,25 @@ export function ServiceCard({
 
   const handlePhotosChange = (photos: File[]) => {
     setEditPhotos(photos)
+    // Обновляем состояние в service data - создаем временные URL для превью
+    const photoUrls = photos.map((photo) => URL.createObjectURL(photo))
+    onInputChange("images", photoUrls)
   }
 
-  const handleSavePhotos = async () => {
-    if (editPhotos.length === 0) return
-
-    setIsUploadingPhotos(true)
-    try {
-      // Загружаем фотографии в хранилище
-      const uploadedUrls = await uploadPhotosToStorage(editPhotos)
-
-      // Обновляем images в ServiceData
-      onInputChange("images", uploadedUrls)
-
-      // Очищаем временные файлы
-      setEditPhotos([])
-
-      console.log("Photos uploaded successfully:", uploadedUrls)
-    } catch (error) {
-      console.error("Failed to upload photos:", error)
-    } finally {
-      setIsUploadingPhotos(false)
+  // Передаем фотографии для загрузки на сервер через пропс
+  const handleUploadPhotos = async () => {
+    if (onPhotosUpload && editPhotos.length > 0) {
+      await onPhotosUpload(editPhotos)
     }
   }
+
+  // Экспортируем функцию для использования в родительском компоненте
+  useEffect(() => {
+    if (isEditMode && onPhotosUpload) {
+      // Сохраняем ссылку на функцию загрузки в глобальном объекте для доступа из родителя
+      ;(window as any).uploadServicePhotos = handleUploadPhotos
+    }
+  }, [editPhotos, onPhotosUpload, isEditMode])
 
   return (
     <div className="rounded-sm shadow-md overflow-hidden">
@@ -117,60 +125,60 @@ export function ServiceCard({
           <div className="bg-neutral-800 p-6 flex gap-2 rounded-sm">
             {/* Main image */}
             {!isEditMode && (
-                <div className="flex-1">
-                  {mainImage ? (
-                      <Image
-                          src={mainImage || "/placeholder.svg"}
-                          alt={service.title}
-                          className="object-cover rounded-sm"
-                          width={600}
-                          height={600}
-                      />
-                  ) : (
-                      <PracticePlaceholder
-                          key={`placeholder-main`}
-                          width={600}
-                          height={600}
-                          className="object-cover rounded-sm"
-                      />
-                  )}
-                </div>
+              <div className="flex-1">
+                {mainImage ? (
+                  <Image
+                    src={mainImage || "/placeholder.svg"}
+                    alt={service.title}
+                    className="object-cover rounded-sm"
+                    width={600}
+                    height={600}
+                  />
+                ) : (
+                  <PracticePlaceholder
+                    key={`placeholder-main`}
+                    width={600}
+                    height={600}
+                    className="object-cover rounded-sm"
+                  />
+                )}
+              </div>
             )}
 
             {/* Thumbnails */}
             {!isEditMode && (
-                <div className="flex flex-col justify-between">
-                  {thumbnails.map((image, index) => (
-                      <button
-                          key={index}
-                          onClick={() => handleThumbnailClick(index)}
-                          className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-violet-600" : ""}`}
-                      >
-                        <Image
-                            src={image || "/placeholder.svg"}
-                            alt={`${service.title} ${index + 2}`}
-                            className="object-cover"
-                            width={160}
-                            height={160}
-                        />
-                      </button>
-                  ))}
+              <div className="flex flex-col justify-between">
+                {thumbnails.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleThumbnailClick(index)}
+                    className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-violet-600" : ""}`}
+                  >
+                    <Image
+                      src={image || "/placeholder.svg"}
+                      alt={`${service.title} ${index + 2}`}
+                      className="object-cover"
+                      width={160}
+                      height={160}
+                    />
+                  </button>
+                ))}
 
-                  {Array.from({ length: Math.max(0, 3 - thumbnails.length) }).map((_, index) => (
-                      <PracticePlaceholder key={`placeholder-${index}`} width={160} height={160} className="rounded-sm" />
-                  ))}
-                </div>
+                {Array.from({ length: Math.max(0, 3 - thumbnails.length) }).map((_, index) => (
+                  <PracticePlaceholder key={`placeholder-${index}`} width={160} height={160} className="rounded-sm" />
+                ))}
+              </div>
             )}
 
             {/* Photo Upload Section - только в режиме редактирования */}
             {isEditMode && (
-                <PhotoUpload
-                    photos={editPhotos}
-                    onPhotosChange={handlePhotosChange}
-                    maxPhotos={3}
-                    description="Загрузите новые фотографии для замены текущих"
-                    showTitle={false}
-                />
+              <PhotoUpload
+                photos={editPhotos}
+                onPhotosChange={handlePhotosChange}
+                maxPhotos={3}
+                description="Загрузите новые фотографии для замены текущих"
+                showTitle={false}
+              />
             )}
           </div>
 
