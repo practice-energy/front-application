@@ -2,7 +2,17 @@
 
 import type React from "react"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
+import {
+  MapPin,
+  TimerReset,
+  MonitorPlayIcon as TvMinimalPlay,
+  Users,
+  MessagesSquare,
+  Share,
+  Edit,
+  X,
+  Check,
+} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Format, Service } from "@/types/common"
 import Image from "next/image"
@@ -34,7 +44,10 @@ interface MobileServiceCardProps {
   isEditMode?: boolean
   onInputChange?: (field: keyof ServiceData, value: string | string[] | Format[] | any) => void
   onPhotosUpload?: (photos: File[]) => Promise<void>
+  onEditToggle?: () => void
+  onSave?: () => void
   errors?: Record<string, string>
+  isOwner?: boolean
 }
 
 // Функция для создания File объектов из URL
@@ -55,7 +68,10 @@ export function MobileServiceCard({
   isEditMode = false,
   onInputChange,
   onPhotosUpload,
+  onEditToggle,
+  onSave,
   errors,
+  isOwner = false,
 }: MobileServiceCardProps) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -111,6 +127,30 @@ export function MobileServiceCard({
       router.push(`/specialist/${specialist.id}`)
     },
     [router, specialist.id],
+  )
+
+  const handleEdit = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      onEditToggle?.()
+    },
+    [onEditToggle],
+  )
+
+  const handleCancel = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      onEditToggle?.()
+    },
+    [onEditToggle],
+  )
+
+  const handleSave = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      onSave?.()
+    },
+    [onSave],
   )
 
   // Мемоизируем вычисления для избежания ненужных пересчетов
@@ -173,39 +213,73 @@ export function MobileServiceCard({
           <BackButton className="text-neutral-700 opacity-80" text="назад" />
 
           <div className="flex gap-2">
-            <button
-              onClick={handleToProfile}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Профиль специалиста"
-            >
-              {specialist.avatar ? (
-                <Image
-                  src={specialist.avatar || "/placeholder.svg"}
-                  alt={specialist.name}
-                  width={36}
-                  height={36}
-                  className="rounded-sm"
-                />
-              ) : (
-                <PracticePlaceholder width={36} height={36} className="rounded-sm" />
-              )}
-            </button>
+            {!isEditMode ? (
+              // View mode buttons
+              <>
+                <button
+                  onClick={handleToProfile}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                  title="Профиль специалиста"
+                >
+                  {specialist.avatar ? (
+                    <Image
+                      src={specialist.avatar || "/placeholder.svg"}
+                      alt={specialist.name}
+                      width={36}
+                      height={36}
+                      className="rounded-sm"
+                    />
+                  ) : (
+                    <PracticePlaceholder width={36} height={36} className="rounded-sm" />
+                  )}
+                </button>
 
-            <button
-              onClick={handleReply}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Написать специалисту"
-            >
-              <MessagesSquare size={20} />
-            </button>
+                <button
+                  onClick={handleReply}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                  title="Написать специалисту"
+                >
+                  <MessagesSquare size={20} />
+                </button>
 
-            <button
-              onClick={handleShare}
-              className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
-              title="Поделиться"
-            >
-              <Share size={20} />
-            </button>
+                <button
+                  onClick={handleShare}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                  title="Поделиться"
+                >
+                  <Share size={20} />
+                </button>
+
+                {isOwner && (
+                  <button
+                    onClick={handleEdit}
+                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm"
+                    title="Редактировать"
+                  >
+                    <Edit size={20} />
+                  </button>
+                )}
+              </>
+            ) : (
+              // Edit mode buttons
+              <>
+                <button
+                  onClick={handleCancel}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-red-50 shadow-sm"
+                  title="Отменить"
+                >
+                  <X size={20} />
+                </button>
+
+                <button
+                  onClick={handleSave}
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-green-50 shadow-sm"
+                  title="Сохранить"
+                >
+                  <Check size={20} />
+                </button>
+              </>
+            )}
           </div>
         </div>
 
