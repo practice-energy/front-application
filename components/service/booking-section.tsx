@@ -83,10 +83,14 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
 
         return (
             <>
-                <span className={cn("px-1 py-0.5 mr-1", isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square")}>
+                <div className="flex flex-row items-center justify-center">
+                    <span className={cn("px-1 py-0.5")}>
                     {weekday.replace(/^./, (letter) => letter.toUpperCase())}
                 </span>
-                {day}
+                    <div className={cn("px-1 py-0.5", isSelectedDay && "bg-violet-600 w-[24px] text-white rounded-sm aspect-square items-center")}>
+                        {day}
+                    </div>
+                </div>
             </>
         )
     }

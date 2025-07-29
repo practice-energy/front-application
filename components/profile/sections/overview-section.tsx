@@ -12,7 +12,7 @@ import { formatNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { AboutSection } from "@/components/profile/about-section"
 import type { Education, Experience } from "@/types/common"
-import { Skills } from "@/components/specialist/skills"
+import { Bullets } from "@/components/specialist/bullets"
 import { Certificates } from "@/components/specialist/certificates"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
 import { BackButton } from "@/components/ui/button-back"
@@ -389,13 +389,13 @@ export function OverviewSection() {
                   <div className="relative">
                     {/* Секция "Опыт" */}
                       <div className="pt-4">
-                        <Skills
+                        <Bullets
                             title="Опыт"
                             items={currentData.experience.map((exp) => exp.description)}
                             isEditMode={isEditMode}
-                            onSkillChange={handleSkillChange}
-                            onAddSkill={handleAddSkill}
-                            onRemoveSkill={handleRemoveSkill}
+                            onChange={handleSkillChange}
+                            onAdd={handleAddSkill}
+                            onRemove={handleRemoveSkill}
                         />
                       </div>
                   </div>

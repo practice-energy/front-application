@@ -11,7 +11,7 @@ import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
 import {formatCompactNumber, formatNumber} from "@/utils/format"
 import { Certificates } from "./certificates"
-import { Skills } from "./skills"
+import { Bullets } from "./bullets"
 import { AboutSkillsSection } from "./about-skills-section"
 import Image from "next/image";
 import {cn} from "@/lib/utils";
@@ -75,7 +75,6 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     })
 
     const [errors, setErrors] = useState<Record<string, string>>({})
-    const currentData = isEditMode ? draftData : savedData
 
     useEffect(() => {
         const targetElement = expRef.current
@@ -155,34 +154,34 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     }
 
     const handleSkillChange = (index: number, value: string) => {
-        const updatedSkills = [...currentData.skills]
+        const updatedSkills = [...draftData.skills]
         updatedSkills[index] = value
         handleInputChange("skills", updatedSkills)
     }
 
     const handleAddSkill = () => {
-        const updatedSkills = [...currentData.skills, ""]
+        const updatedSkills = [...draftData.skills, ""]
         handleInputChange("skills", updatedSkills)
     }
 
     const handleRemoveSkill = (index: number) => {
-        const updatedSkills = currentData.skills.filter((_, i) => i !== index)
+        const updatedSkills = draftData.skills.filter((_, i) => i !== index)
         handleInputChange("skills", updatedSkills)
     }
 
     const handleExperienceChange = (index: number, value: string) => {
-        const updatedExp = [...currentData.experience]
+        const updatedExp = [...draftData.experience]
         updatedExp[index] = { ...updatedExp[index], description: value }
         handleInputChange("experience", updatedExp)
     }
 
     const handleAddExperience = () => {
-        const updatedExp = [...currentData.experience, { description: "" }]
+        const updatedExp = [...draftData.experience, { description: "" }]
         handleInputChange("experience", updatedExp)
     }
 
     const handleRemoveExperience = (index: number) => {
-        const updatedExp = currentData.experience.filter((_, i) => i !== index)
+        const updatedExp = draftData.experience.filter((_, i) => i !== index)
         handleInputChange("experience", updatedExp)
     }
 
@@ -353,8 +352,8 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                     />
 
                                     <img
-                                        src={currentData.avatar || "/placeholder.svg"}
-                                        alt={currentData.name}
+                                        src={draftData.avatar || "/placeholder.svg"}
+                                        alt={draftData.name}
                                         className="w-full h-full rounded-sm object-cover"
                                     />
 
@@ -388,7 +387,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                 {isEditMode ? (
                                     <>
                                         <EnhancedInput
-                                            value={currentData.name}
+                                            value={draftData.name}
                                             onChange={(e) => handleInputChange("name", e.target.value)}
                                             error={errors.name}
                                             required
@@ -396,7 +395,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                             showEditIcon
                                         />
                                         <EnhancedInput
-                                            value={currentData.title}
+                                            value={draftData.title}
                                             onChange={(e) => handleInputChange("title", e.target.value)}
                                             placeholder="Введите описание"
                                             type="input"
@@ -405,7 +404,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                         />
                                         <div className="mt-4">
                                             <LocationInput
-                                                value={currentData.location}
+                                                value={draftData.location}
                                                 onChange={(value) => handleInputChange("location", value)}
                                                 error={errors.location}
                                             />
@@ -413,14 +412,14 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                     </>
                                 ) : (
                                     <>
-                                        <div className="text-mobilebase font-bold text-neutral-900 leading-relaxed">{currentData.name}</div>
+                                        <div className="text-mobilebase font-bold text-neutral-900 leading-relaxed">{draftData.name}</div>
                                         <div className="text-mobilebase text-neutral-700 opacity-80 line-clamp-2 leading-relaxed mt-2">
-                                            {currentData.description}
+                                            {draftData.description}
                                         </div>
-                                        {currentData.location && (
+                                        {draftData.location && (
                                             <div className="flex items-center mt-3 text-neutral-600">
                                                 <MapPin className="w-4 h-4 mr-1" />
-                                                <div className="text-base font-normal">{currentData.location}</div>
+                                                <div className="text-base font-normal">{draftData.location}</div>
                                             </div>
                                         )}
                                     </>
@@ -431,8 +430,8 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                         {/* About and Skills Section */}
                         <div className="bg-white rounded-b-sm shadow-md">
                             <AboutSkillsSection
-                                description={currentData.description}
-                                skills={currentData.skills}
+                                description={draftData.description}
+                                skills={draftData.skills}
                                 isEditMode={isEditMode}
                                 onDescriptionChange={(value) => handleInputChange("description", value)}
                                 onSkillChange={handleSkillChange}
@@ -445,7 +444,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                         {/* Services, Experience and Certificates */}
                         <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
                             <PracticeBlockSection
-                                services={currentData.services}
+                                services={draftData.services}
                                 isEditMode={isEditMode}
                                 onInputChange={handleInputChange}
                                 specialist={specialist}
@@ -453,40 +452,40 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
 
                             <div className="relative">
                                 <div className="mt-4">
-                                    <Skills
+                                    <Bullets
                                         title="Опыт"
-                                        items={currentData.experience.map(exp => exp.description)}
+                                        items={draftData.experience.map(exp => exp.description)}
                                         isEditMode={isEditMode}
-                                        onSkillChange={handleExperienceChange}
-                                        onAddSkill={handleAddExperience}
-                                        onRemoveSkill={handleRemoveExperience}
+                                        onChange={handleExperienceChange}
+                                        onAdd={handleAddExperience}
+                                        onRemove={handleRemoveExperience}
                                     />
                                 </div>
                             </div>
 
                             {/* Education and Certificates */}
                             <div className="mt-4 space-y-4">
-                                {(currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode && isEditable) ? (
+                                {(draftData.education.length === 0 && draftData.certificates.length === 0 && !isEditMode && isEditable) ? (
                                     <div className="mx-6 mb-2 items-center justify-center flex flex-col">
                                         <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
                                         <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
                                     </div>
                                 ) : (
                                     <>
-                                        {currentData.education.length > 0 && (
+                                        {draftData.education.length > 0 && (
                                             <Certificates
                                                 title="Образование"
-                                                items={currentData.education}
+                                                items={draftData.education}
                                                 isEditMode={isEditMode}
                                                 onInputChange={handleInputChange}
                                                 errors={errors}
                                                 fieldKey="education"
                                             />
                                         )}
-                                        {currentData.certificates.length > 0 && (
+                                        {draftData.certificates.length > 0 && (
                                             <Certificates
                                                 title="Сертификаты"
-                                                items={currentData.certificates}
+                                                items={draftData.certificates}
                                                 isEditMode={isEditMode}
                                                 onInputChange={handleInputChange}
                                                 errors={errors}

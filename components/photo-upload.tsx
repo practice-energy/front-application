@@ -94,7 +94,7 @@ export function PhotoUpload({
 
         {photos.length > 0 && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 sm:grid-rows-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 sm:grid-rows-1 gap-4">
                 {photos.map((photo, index) => (
                     <>
                       <div

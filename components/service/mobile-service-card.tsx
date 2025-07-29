@@ -25,7 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {CurrencyInput} from "@/components/currency-input";
 import {EnhancedInput} from "@/components/enhanced-input";
 import {LocationInput} from "@/components/location-input";
-import {Skills} from "@/components/specialist/skills";
+import {Bullets} from "@/components/specialist/bullets";
 import {PhotoUpload} from "@/components/photo-upload";
 
 interface MobileServiceCardProps {
@@ -74,11 +74,11 @@ export function MobileServiceCard({
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
-    if (isEditMode && service.images.length > 0 && editPhotos.length === 0) {
+    if (isEditMode && draftData.images.length > 0 && editPhotos.length === 0) {
       const initializePhotos = async () => {
         try {
           const photoFiles = await Promise.all(
-              service.images.map((url, index) =>
+              draftData.images.map((url, index) =>
                   createFileFromUrl(url, `photo-${index}.jpg`)
               )
           );
@@ -94,7 +94,7 @@ export function MobileServiceCard({
     } else if (!isEditMode) {
       setEditPhotos([]);
     }
-  }, [isEditMode, service.images]);
+  }, [isEditMode, draftData.images]);
 
   const handlePhotosUpload = async (photos: File[]) => {
     try {
@@ -217,18 +217,18 @@ export function MobileServiceCard({
   )
 
   const handleIncludedChange = (index: number, value: string) => {
-    const updatedSkills = [...service.includes]
+    const updatedSkills = [...draftData.includes]
     updatedSkills[index] = value
     handleInputChange("includes", updatedSkills)
   }
 
   const handleAddIncluded = () => {
-    const updatedSkills = [...service.includes, ""]
+    const updatedSkills = [...draftData.includes, ""]
     handleInputChange("includes", updatedSkills)
   }
 
   const handleRemoveIncluded = (index: number) => {
-    const updatedSkills = service.includes.filter((_, i) => i !== index)
+    const updatedSkills = draftData.includes.filter((_, i) => i !== index)
     handleInputChange("includes", updatedSkills)
   }
 
@@ -236,8 +236,6 @@ export function MobileServiceCard({
     const images = isEditMode ? draftData.images : savedData.images
     return images && images.length > 0 ? images : []
   }, [isEditMode, draftData.images, savedData.images])
-
-  const currentService = isEditMode ? draftData : savedData
 
   return (
       <div>
@@ -343,7 +341,7 @@ export function MobileServiceCard({
                                       <div className="aspect-square w-full relative">
                                         <Image
                                             src={image || "/placeholder.svg"}
-                                            alt={`${currentService.title} ${index + 1}`}
+                                            alt={`${draftData.title} ${index + 1}`}
                                             fill
                                             className="object-cover"
                                             priority={index === 0}
@@ -367,7 +365,7 @@ export function MobileServiceCard({
                       <div className="text-gray-900 flex-1 pr-2">
                         {isEditMode ? (
                             <EnhancedInput
-                                value={currentService.title}
+                                value={draftData.title}
                                 onChange={(e) => handleInputChange("title", e.target.value)}
                                 placeholder="Название"
                                 type="input"
@@ -375,14 +373,14 @@ export function MobileServiceCard({
                                 showEditIcon
                             />
                         ) : (
-                            <div className="text-2xl font-semibold">{currentService.title}</div>
+                            <div className="text-2xl font-semibold">{draftData.title}</div>
                         )}
                       </div>
                       <div className="flex items-center font-bold text-gray-900">
                         {isEditMode ? (
                             <div className="mt-2">
                               <CurrencyInput
-                                  value={service.price}
+                                  value={draftData.price}
                                   onChange={(value) => handleInputChange("price", value)}
                                   placeholder="0"
                                   error={errors?.price}
@@ -392,7 +390,7 @@ export function MobileServiceCard({
                             </div>
                         ) : (
                             <div className="text-2xl">
-                            {formatNumber(currentService.price)}
+                            {formatNumber(draftData.price)}
                               <RubleIcon size={28} className="mb-1 ml-1" bold={false}/>
                             </div>
                         )}
@@ -401,7 +399,7 @@ export function MobileServiceCard({
 
                     {isEditMode ? (
                         <EnhancedInput
-                            value={service.description || ""}
+                            value={draftData.description || ""}
                             onChange={(e) => handleInputChange("description", e.target.value)}
                             placeholder="Введите описание"
                             type="input"
@@ -409,7 +407,7 @@ export function MobileServiceCard({
                             showEditIcon
                         />
                     ) : (
-                        <p className="text-gray-700">{currentService.description}</p>
+                        <p className="text-gray-700">{draftData.description}</p>
                     )}
 
                     {booked?.length === 0 && (
@@ -424,7 +422,7 @@ export function MobileServiceCard({
                                     className="w-24 p-1 border rounded"
                                 />
                             ) : (
-                                <span className="text-sm text-gray-600">{currentService.duration}</span>
+                                <span className="text-sm text-gray-600">{draftData.duration}</span>
                             )}
                           </div>
 
@@ -432,7 +430,7 @@ export function MobileServiceCard({
                             {!isEditMode && (
                                 <>
                                   {
-                                    currentService.format.map((f) => {
+                                    draftData.format.map((f) => {
                                       return f === "video" ? (
                                           <>
                                             <TvMinimalPlay size={14} />
@@ -452,12 +450,12 @@ export function MobileServiceCard({
 
                           <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
                             <IconPractice width={16} height={14} />
-                            <span className="text-sm">{currentService.practice}</span>
+                            <span className="text-sm">{draftData.practice}</span>
                           </div>
                         </div>
                     )}
 
-                    {currentService.location && booked?.length === 0 && (
+                    {draftData.location && booked?.length === 0 && (
                         <div className="flex items-center text-gray-600">
                           <MapPin className="h-5 w-5 mr-2" />
                           {isEditMode ? (
@@ -468,14 +466,14 @@ export function MobileServiceCard({
                                   className="w-full p-1 border rounded"
                               />
                           ) : (
-                              <span>{currentService.location}</span>
+                              <span>{draftData.location}</span>
                           )}
                         </div>
                     )}
 
                     {isEditMode && (
                         <LocationInput
-                            value={service.location || ""}
+                            value={draftData.location || ""}
                             onChange={(value) => handleInputChange("location", value)}
                             error={errors?.location}
                         />
@@ -499,24 +497,24 @@ export function MobileServiceCard({
                                     avatar: specialist.avatar
                                   }}
                                   service={{
-                                    id: currentService.id,
-                                    name: currentService.title,
-                                    price: currentService.price,
-                                    description: currentService.description,
+                                    id: service.id,
+                                    name: service.title,
+                                    price: service.price,
+                                    description: service.description,
                                   }}
                                   duration={booking.duration}
                                   format={booking.format}
-                                  location={currentService.location}
+                                  location={service.location}
                               />
                           ))}
                         </>
                     )}
                   </div>
 
-                  <div className="relative">
+                  <div>
                     <AboutContentsSection
-                        contents={currentService.contents}
-                        included={currentService.includes}
+                        contents={draftData.contents}
+                        included={draftData.includes}
                         onContentsChange={(e) => {handleInputChange("contents", e)}}
                         onAddIncluded={handleAddIncluded}
                         onIncludedChange={handleIncludedChange}
@@ -529,13 +527,13 @@ export function MobileServiceCard({
                     {/* Секция "Опыт" */}
                     <div className="overflow-hidden transition-all duration-500 ease-in-out flex">
                       <div className="px-4">
-                        <Skills
+                        <Bullets
                             title="Наполнение"
-                            items={currentService.includes}
+                            items={draftData.includes}
                             isEditMode={isEditMode}
-                            onSkillChange={handleIncludedChange}
-                            onAddSkill={handleAddIncluded}
-                            onRemoveSkill={handleRemoveIncluded}
+                            onChange={handleIncludedChange}
+                            onAdd={handleAddIncluded}
+                            onRemove={handleRemoveIncluded}
                         />
                       </div>
                     </div>
@@ -547,7 +545,10 @@ export function MobileServiceCard({
 
         {!isTransitioning && (
             <div className="bg-colors-neutral-150 pt-2">
-              {isAuthenticated && booked?.length === 0 && (
+              {isAuthenticated &&
+                  // TODO
+                  // booked?.length === 0 &&
+                  !isEditMode && (
                   <>
                     <div className="mb-4 px-4">
                       <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />

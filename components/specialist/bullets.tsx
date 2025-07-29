@@ -14,18 +14,18 @@ interface SkillsProps {
     title: string
     items: string[]
     isEditMode: boolean
-    onSkillChange: (index: number, value: string) => void
-    onAddSkill: () => void
-    onRemoveSkill: (index: number) => void
+    onChange: (index: number, value: string) => void
+    onAdd: () => void
+    onRemove: (index: number) => void
 }
 
-export function Skills({
+export function Bullets({
                            title,
                            items,
                            isEditMode,
-                           onSkillChange,
-                           onAddSkill,
-                           onRemoveSkill,
+                           onChange,
+                           onAdd,
+                           onRemove,
                        }: SkillsProps) {
     const isMobile = useIsMobile()
 
@@ -33,24 +33,26 @@ export function Skills({
 
     return (
         <div className="flex flex-col">
-            <div className="flex flex-row gap-2">
-                <div
+            <div className="flex flex-row gap-2 items-center mb-4 ">
+                <span
                     className={cn(
-                        "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+                        "font-semibold text-neutral-900 line-clamp-1 leading-relaxed ",
                         isMobile ? "text-mobilebase" : "text-base",
                     )}
                 >
                     {title}
+                </span>
+                <div>
+                    {isEditMode && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <AddEntityButton onClick={onAdd} />
+                        </motion.div>
+                    )}
                 </div>
-                {isEditMode && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <AddEntityButton onClick={onAddSkill} />
-                    </motion.div>
-                )}
             </div>
 
             {isEditMode ? (
@@ -69,7 +71,7 @@ export function Skills({
                                     <div className="flex-1">
                                         <EnhancedInput
                                             value={item}
-                                            onChange={(e) => onSkillChange(index, e.target.value)}
+                                            onChange={(e) => onChange(index, e.target.value)}
                                             placeholder="..."
                                             className="w-full"
                                         />
@@ -80,7 +82,7 @@ export function Skills({
                                         transition={{ delay: 0.1 }}
                                     >
                                         <BurnEntityButton
-                                            onClick={() => onRemoveSkill(index)}
+                                            onClick={() => onRemove(index)}
                                             className="mb-2 w-9 h-9"
                                             iconSize={24}
                                         />

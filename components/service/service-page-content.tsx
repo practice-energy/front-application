@@ -255,7 +255,7 @@ export function ServicePageContent({
                 transition={{ duration: 0.3 }}
               >
                 <ServiceCard
-                  service={isEditMode ? draftData : savedData}
+                  service={draftData}
                   bookingSlots={bookingSlots}
                   isAuthenticated={true}
                   isEditMode={isEditMode}

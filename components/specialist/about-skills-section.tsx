@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Skills } from "./skills"
+import { Bullets } from "./bullets"
 import { cn } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
 import { useIsMobile } from "@/components/ui/use-mobile"
@@ -129,13 +129,13 @@ export function AboutSkillsSection({
                 {!isMobile && (
                     <div className="w-1/3">
                         {skills && (
-                            <Skills
+                            <Bullets
                                 title={skillsTitle}
                                 items={skills}
                                 isEditMode={isEditMode}
-                                onSkillChange={onSkillChange}
-                                onAddSkill={onAddSkill}
-                                onRemoveSkill={onRemoveSkill}
+                                onChange={onSkillChange}
+                                onAdd={onAddSkill}
+                                onRemove={onRemoveSkill}
                             />
                         )}
                     </div>

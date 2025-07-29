@@ -312,7 +312,10 @@ export function ServiceCard({
           />
 
           {/* Bookings section */}
-          {isAuthenticated && booked?.length === 0 && !isEditMode && (
+          {isAuthenticated &&
+              // TODO
+              // booked?.length === 0 &&
+              !isEditMode && (
             <div className=" relative flex flex-row px-6 pb-3">
               <div className="w-80 flex-shrink-0">
                 <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />

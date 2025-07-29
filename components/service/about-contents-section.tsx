@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
 import { useIsMobile } from "@/components/ui/use-mobile"
 import { EnhancedInput } from "@/components/enhanced-input"
-import {Skills} from "@/components/specialist/skills";
+import {Bullets} from "@/components/specialist/bullets";
 
 interface AboutContentsSectionProps {
     contents: string
@@ -41,7 +41,7 @@ export function AboutContentsSection({
 
     // Функция для расчета высоты контента
     const calculateContentHeight = () => {
-        const targetElement = isMobile ? descriptionRef.current : contentRef.current
+        const targetElement = contentRef.current
         if (targetElement) {
             // Сохраняем текущую высоту перед расчетом, чтобы избежать скачков
             const prevHeight = targetElement.style.height
@@ -128,13 +128,13 @@ export function AboutContentsSection({
                 {!isMobile && (
                     <div className="w-1/3">
                         {included && (
-                            <Skills
+                            <Bullets
                                 title={includedTitle}
                                 items={included}
                                 isEditMode={isEditMode}
-                                onSkillChange={onIncludedChange}
-                                onAddSkill={onAddIncluded}
-                                onRemoveSkill={onRemoveIncluded}
+                                onChange={onIncludedChange}
+                                onAdd={onAddIncluded}
+                                onRemove={onRemoveIncluded}
                             />
                         )}
                     </div>
@@ -144,8 +144,8 @@ export function AboutContentsSection({
             {/* Fade overlay when collapsed */}
             {!isEditMode && shouldShowToggle && !isExpanded && (
                 <div className={cn(
-                    "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
-                    "bottom-[50px]"
+                    "absolute w-full h-14 left-0 right-0 to-transparent pointer-events-none transition-opacity duration-500",
+                    "bottom-[50px]", isMobile ? "bg-gradient-from-neutral-150" : "bg-gradient-to-t from-white via-white/80"
                 )}/>
             )}
 
