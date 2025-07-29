@@ -18,6 +18,7 @@ import type { ServiceData } from "@/components/service/types/common"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { CurrencyInput } from "@/components/currency-input"
+import { PhotoUpload } from "@/components/photo-upload"
 
 interface ServiceCardProps {
   service: Service
@@ -26,6 +27,15 @@ interface ServiceCardProps {
   isEditMode: boolean
   onInputChange: (field: keyof ServiceData, value: string | string[] | Format[] | any) => void
   errors?: Record<string, string>
+}
+
+// Эмуляция загрузки файлов в хранилище
+const uploadPhotosToStorage = async (photos: File[]): Promise<string[]> => {
+  // Эмуляция задержки запроса
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+
+  // Эмуляция возврата URL-ов загруженных фотографий
+  return photos.map((photo, index) => `/uploaded-photos/${Date.now()}-${index}-${photo.name}`)
 }
 
 export function ServiceCard({
@@ -37,9 +47,12 @@ export function ServiceCard({
   errors,
 }: ServiceCardProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [editPhotos, setEditPhotos] = useState<File[]>([])
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
+
   const thumbnails = service.images
   const mainImage = thumbnails[selectedImageIndex]
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const booked = service.bookings
   const specialist = service.specialist
 
@@ -61,6 +74,32 @@ export function ServiceCard({
   const handleRemoveIncluded = (index: number) => {
     const updatedSkills = service.includes.filter((_, i) => i !== index)
     onInputChange("includes", updatedSkills)
+  }
+
+  const handlePhotosChange = (photos: File[]) => {
+    setEditPhotos(photos)
+  }
+
+  const handleSavePhotos = async () => {
+    if (editPhotos.length === 0) return
+
+    setIsUploadingPhotos(true)
+    try {
+      // Загружаем фотографии в хранилище
+      const uploadedUrls = await uploadPhotosToStorage(editPhotos)
+
+      // Обновляем images в ServiceData
+      onInputChange("images", uploadedUrls)
+
+      // Очищаем временные файлы
+      setEditPhotos([])
+
+      console.log("Photos uploaded successfully:", uploadedUrls)
+    } catch (error) {
+      console.error("Failed to upload photos:", error)
+    } finally {
+      setIsUploadingPhotos(false)
+    }
   }
 
   return (
@@ -112,6 +151,38 @@ export function ServiceCard({
               ))}
             </div>
           </div>
+
+          {/* Photo Upload Section - только в режиме редактирования */}
+          {isEditMode && (
+            <div className="bg-white p-6 border-b">
+              <PhotoUpload
+                photos={editPhotos}
+                onPhotosChange={handlePhotosChange}
+                maxPhotos={4}
+                title="Редактировать фотографии"
+                description="Загрузите новые фотографии для замены текущих"
+                showTitle={true}
+              />
+              {editPhotos.length > 0 && (
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={handleSavePhotos}
+                    disabled={isUploadingPhotos}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isUploadingPhotos ? "Загрузка..." : "Сохранить фотографии"}
+                  </button>
+                  <button
+                    onClick={() => setEditPhotos([])}
+                    disabled={isUploadingPhotos}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-sm hover:bg-gray-400"
+                  >
+                    Отменить
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* White background content section */}
           <div className="bg-white dark:bg-gray-800 p-6 space-y-4">

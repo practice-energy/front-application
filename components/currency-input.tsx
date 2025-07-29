@@ -1,101 +1,73 @@
 "use client"
 
 import type React from "react"
-
-import { forwardRef, useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
+import { formatNumber } from "@/utils/format"
+import { cn } from "@/lib/utils"
 
 interface CurrencyInputProps {
-  value?: string | number
-  onChange?: (value: string) => void
+  value: number
+  onChange: (value: number) => void
   placeholder?: string
-  disabled?: boolean
-  className?: string
   error?: string
+  className?: string
 }
 
-export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ value = "", onChange, placeholder = "0", disabled = false, className, error, ...props }, ref) => {
-    const [displayValue, setDisplayValue] = useState("")
-    const [inputWidth, setInputWidth] = useState("auto")
+export function CurrencyInput({ value, onChange, placeholder = "0", error, className }: CurrencyInputProps) {
+  const [displayValue, setDisplayValue] = useState("")
+  const [isFocused, setIsFocused] = useState(false)
 
-    // Функция для форматирования числа с запятыми
-    const formatNumber = (num: string | number): string => {
-      if (!num) return ""
-      const numStr = num.toString().replace(/[^\d]/g, "")
-      if (!numStr) return ""
-      return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  useEffect(() => {
+    if (!isFocused) {
+      setDisplayValue(value ? formatNumber(value) : "")
     }
+  }, [value, isFocused])
 
-    // Функция для получения чистого числа без форматирования
-    const getCleanNumber = (formatted: string): string => {
-      return formatted.replace(/[^\d]/g, "")
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, "")
+    const numericValue = rawValue ? Number.parseInt(rawValue, 10) : 0
 
-    // Обновляем отображаемое значение при изменении value
-    useEffect(() => {
-      const formatted = formatNumber(value)
-      setDisplayValue(formatted)
+    setDisplayValue(rawValue ? formatNumber(numericValue) : "")
+    onChange(numericValue)
+  }
 
-      // Вычисляем ширину на основе длины текста
-      const textLength = formatted.length || placeholder.length
-      const minWidth = Math.max(textLength * 24, 80) // 24px на символ, минимум 80px
-      setInputWidth(`${minWidth}px`)
-    }, [value, placeholder])
+  const handleFocus = () => {
+    setIsFocused(true)
+    // Show raw number when focused
+    setDisplayValue(value ? value.toString() : "")
+  }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target.value
-      const cleanValue = getCleanNumber(inputValue)
-      const formatted = formatNumber(cleanValue)
+  const handleBlur = () => {
+    setIsFocused(false)
+    // Format with commas when not focused
+    setDisplayValue(value ? formatNumber(value) : "")
+  }
 
-      setDisplayValue(formatted)
+  // Calculate dynamic width based on text length
+  const textLength = displayValue.length || placeholder.length
+  const dynamicWidth = Math.max(80, textLength * 24) // 24px per character, minimum 80px
 
-      // Вычисляем новую ширину
-      const textLength = formatted.length || placeholder.length
-      const minWidth = Math.max(textLength * 24, 80)
-      setInputWidth(`${minWidth}px`)
-
-      if (onChange) {
-        onChange(cleanValue)
-      }
-    }
-
-    return (
-      <div className="flex items-center justify-end ml-auto">
-        <div className="relative flex items-center">
-          <input
-            ref={ref}
-            type="text"
-            value={displayValue}
-            onChange={handleChange}
-            placeholder={placeholder}
-            disabled={disabled}
-            style={{ width: inputWidth }}
-            className={cn(
-              "text-[36px] font-bold text-neutral-900",
-              "bg-transparent border-none outline-none",
-              "text-right pr-2", // Выравнивание по правому краю с отступом для иконки
-              "placeholder:text-gray-400",
-              "transition-all duration-200 ease-in-out",
-              "focus:outline-none focus:ring-0",
-              disabled && "opacity-50 cursor-not-allowed",
-              error && "text-red-500",
-              className,
-            )}
-            {...props}
-          />
-
-          {/* Иконка рубля справа */}
-          <div className="flex items-center pointer-events-none">
-            <RubleIcon size={48} className="text-neutral-900 mb-0.5" bold={false} />
-          </div>
-        </div>
-
-        {error && <p className="absolute top-full left-0 mt-1 text-sm text-red-500">{error}</p>}
+  return (
+    <div className="flex items-center ml-auto">
+      <div className="relative flex items-center transition-all duration-200" style={{ width: `${dynamicWidth}px` }}>
+        <input
+          type="text"
+          value={displayValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className={cn(
+            "w-full text-right pr-12 text-4xl font-bold text-neutral-900 bg-transparent border-0 outline-none focus:ring-0",
+            "placeholder:text-gray-400",
+            error && "text-red-500",
+            className,
+          )}
+        />
+        <RubleIcon size={48} bold={false} className="absolute right-0 mb-0.5 pointer-events-none" />
       </div>
-    )
-  },
-)
-
-CurrencyInput.displayName = "CurrencyInput"
+      {error && <p className="absolute top-full left-0 mt-1 text-sm text-red-500">{error}</p>}
+    </div>
+  )
+}
