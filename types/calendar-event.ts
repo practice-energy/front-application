@@ -1,13 +1,27 @@
-export interface CalendarEvent {
-    id: string;
-    specialist: {
-        name: string;
-        photo: string;
-    };
-    date: Date;
-    duration: number;
-    type: "video" | "voice" | string; // Add other possible types if needed
-    status: "upcoming" | "completed" | string; // Add other possible statuses if needed
-    title: string;
-    price: number;
+import {Format} from "@/types/common";
+
+export interface CalendarRestirctions {
+    gmt: number
+    commons: {
+        Mon: Restriction
+        Tue: Restriction
+        Wed: Restriction
+        Thu: Restriction
+        Fri: Restriction
+        Sat: Restriction
+        Sun: Restriction
+    }
+    restrictions: Restriction[]
+}
+
+export interface Restriction {
+    date?: Date
+    isActive: boolean
+    intervals: Interval[]
+}
+
+export interface Interval {
+    start: Date
+    end: Date
+    formats: Format[]
 }

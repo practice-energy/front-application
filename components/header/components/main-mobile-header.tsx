@@ -44,8 +44,8 @@ export const MainMobileHeader = ({
                     >
                         {user?.avatar ? (
                             <Image
-                                width={36}
-                                height={36}
+                                width={50}
+                                height={50}
                                 src={user.avatar}
                                 alt={user.name || "User avatar"}
                                 className="overflow-hidden mr-[1px] rounded-sm"

@@ -33,7 +33,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
   if (isMobile) {
     return (
       <div
-        className="bg-violet-600 rounded-sm cursor-pointer flex items-center justify-center text-white font-medium"
+        className="bg-violet-600 rounded-sm cursor-pointer flex items-center justify-center text-white font-medium p-1"
         style={{ height: `${booking.slots * slotHeight}px` }}
         onClick={() => setIsModalOpen(true)}
       >

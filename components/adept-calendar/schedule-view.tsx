@@ -17,25 +17,20 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
 
   // Calculate display dates
   const getDisplayDates = (baseDate: Date) => {
-    if (isMobile) {
-      // Mobile: show only selected day
-      return [baseDate]
-    } else {
-      // Desktop: show 3 days starting from selected date
-      const dates = []
-      for (let i = 0; i < 3; i++) {
-        const date = new Date(baseDate)
-        date.setDate(baseDate.getDate() + i)
-        dates.push(date)
-      }
-      return dates
+    // Desktop: show 3 days starting from selected date
+    const dates = []
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(baseDate)
+      date.setDate(baseDate.getDate() + i)
+      dates.push(date)
     }
+    return dates
   }
 
   const displayDates = getDisplayDates(selectedDate)
 
   return (
-    <div className="flex-1 flex flex-col pr-[30px]">
+    <div className="flex-1 flex flex-col md:pr-[30px]">
       {/* Фиксированные заголовки */}
       <div className="flex border border-gray-100 border-b-0">
         <div className="w-16 flex-shrink-0">
