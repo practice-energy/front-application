@@ -9,7 +9,7 @@ type SettingsButtonProps = {
 
 export function SettingsButton({
                                  onClick,
-                                 className = "",
+                                 className = "flex",
                                  iconClassName = "",
                              }: SettingsButtonProps) {
     return (<IconButton

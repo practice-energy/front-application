@@ -50,7 +50,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
             const cleanValue = getCleanNumber(inputValue)
 
             // Проверяем, не превышает ли введенное значение максимально допустимое
-            if (cleanValue.length > 9) return // 999,999,999 - 9 цифр
+            if (cleanValue.length > 7) return // 9,999,999 - 9 цифр
 
             const formatted = formatNumber(cleanValue)
 

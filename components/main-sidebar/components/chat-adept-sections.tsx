@@ -22,9 +22,8 @@ interface ChatsSectionProps {
 }
 
 export const ChatsSections = ({
-                                        hasChats,
-                                      groupedChats,
-                                      sectionVisibility,
+                                  groupedChats,
+                                  sectionVisibility,
                                       toggleSection,
                                       isCollapsed,
                                       isMobile,
@@ -58,13 +57,9 @@ export const ChatsSections = ({
 
     return (
         <>
-            {!hasChats && (<div className="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-                <IconPractice className="mx-auto mb-2 opacity-50" width={32} height={32}/>
-                Начни свой путь
-            </div>)}
             {sections.map(
-                (section) =>
-                    section.chats.length > 0 && (
+                (section) => {
+                    return (
                         <div key={section.key} className="px-1.5">
                             <SectionHeader
                                 title={section.title}
@@ -95,6 +90,7 @@ export const ChatsSections = ({
                             </SectionContent>
                         </div>
                     )
+                }
             )}
         </>
     );

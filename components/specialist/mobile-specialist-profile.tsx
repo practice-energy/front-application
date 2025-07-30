@@ -33,7 +33,6 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
     const [shareModalOpen, setShareModalOpen] = useState(false)
     const { isLiked, toggleLike } = useLikes()
 
-    const [isExpanded, setIsExpanded] = useState(false)
     const [shouldShowToggle, setShouldShowToggle] = useState(false)
     const [contentHeight, setContentHeight] = useState(0)
     const expRef = useRef<HTMLDivElement>(null)
