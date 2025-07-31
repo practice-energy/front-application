@@ -288,7 +288,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                 />
               </div>
             </button>
-            {editingRestrictionId === null && (<AddEntityButton onClick={() => {
+            {editingRestrictionId === null && !showDatePicker && (<AddEntityButton onClick={() => {
               setShowDatePicker(true)
               if (!showExceptionalSlots) {
                 setShowExceptionalSlots(true)
@@ -301,7 +301,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
               <div className="space-y-4">
                 {showDatePicker && (
                     <div>
-                      <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} />
+                      <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} isCollapsible={true}/>
                     </div>
                 )}
 
