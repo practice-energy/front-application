@@ -336,7 +336,7 @@ export function RestrictionItem({
                   initial="hidden"
                   animate="visible"
                   variants={scaleUp}
-                  className="flex flex-col justify-between gap-2 my-6 mb-4"
+                  className="flex flex-col justify-between gap-3 py-6"
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <BurnEntityButton onClick={removeInterval}/>
