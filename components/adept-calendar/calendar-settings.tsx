@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { CalendarRestirctions, Restriction } from "@/types/calendar-event"
 import { RestrictionItem } from "./restriction-item"
 import { CalendarWidget } from "./calendar-widget"
@@ -37,6 +36,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   const [showExceptionalSlots, setShowExceptionalSlots] = useState(false)
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
+  const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
   const isMobile = useIsMobile()
 
   const handleDayToggle = (dayKey: string) => {
@@ -63,6 +63,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
   const handleDateSelect = (date: Date) => {
     const newRestriction: Restriction = {
+      id: Date.now().toString(), // Add unique ID
       date,
       isActive: true,
       intervals: [],
@@ -88,7 +89,6 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
     const sourceDaySettings = restrictions.commons[selectedDay as keyof typeof restrictions.commons]
     const updatedCommons = { ...restrictions.commons }
 
-    // Apply settings to all active days
     Object.keys(updatedCommons).forEach(dayKey => {
       const day = updatedCommons[dayKey as keyof typeof updatedCommons]
       if (day.isActive && dayKey !== selectedDay) {
@@ -119,6 +119,45 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
     onUpdate({
       ...restrictions,
       commons: updatedCommons
+    })
+  }
+
+  const handleRestrictionUpdate = (updatedRestriction: Restriction) => {
+    if (updatedRestriction.id) {
+      // Update exceptional restriction
+      const updatedRestrictions = restrictions.restrictions.map(r =>
+          r.id === updatedRestriction.id ? updatedRestriction : r
+      )
+      onUpdate({
+        ...restrictions,
+        restrictions: updatedRestrictions
+      })
+    } else {
+      // Update common day restriction
+      if (!selectedDay) return
+      onUpdate({
+        ...restrictions,
+        commons: {
+          ...restrictions.commons,
+          [selectedDay]: updatedRestriction
+        }
+      })
+    }
+    setEditingRestrictionId(null)
+  }
+
+  const startEditing = (restriction: Restriction) => {
+    setEditingRestrictionId(restriction.id || selectedDay)
+  }
+
+  const cancelEditing = () => {
+    setEditingRestrictionId(null)
+  }
+
+  const deleteRestriction = (id: string) => {
+    onUpdate({
+      ...restrictions,
+      restrictions: restrictions.restrictions.filter(r => r.id !== id)
     })
   }
 
@@ -196,14 +235,14 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                     <div className="mt-4">
                       <RestrictionItem
                           restriction={restrictions.commons[selectedDay as keyof typeof restrictions.commons]}
-                          onUpdate={(updatedRestriction) => {
-                            onUpdate({
-                              ...restrictions,
-                              commons: {
-                                ...restrictions.commons,
-                                [selectedDay]: updatedRestriction,
-                              },
-                            })
+                          onUpdate={handleRestrictionUpdate}
+                          isEditMode={editingRestrictionId === selectedDay}
+                          onEditToggle={() => {
+                            if (editingRestrictionId === selectedDay) {
+                              cancelEditing()
+                            } else {
+                              startEditing(restrictions.commons[selectedDay as keyof typeof restrictions.commons])
+                            }
                           }}
                       />
 
@@ -212,7 +251,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                         <span className="text-sm text-gray-600">Повторить для всех активных</span>
                         <div className="flex gap-6">
                           <RepeatEntityButton onClick={repeatSettingsToAllActive}/>
-                          <EditEntityButton onClick={() => {}}/>
+                          <EditEntityButton onClick={() => startEditing(restrictions.commons[selectedDay as keyof typeof restrictions.commons])}/>
                           <BurnEntityButton onClick={burnDaySettings}/>
                         </div>
                       </div>
@@ -257,7 +296,6 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
           {showExceptionalSlots && (
               <div className="space-y-4">
-
                 {showDatePicker && (
                     <div>
                       <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} />
@@ -266,20 +304,22 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
                 {/* Exceptional restrictions */}
                 <div className="space-y-4">
-                  {restrictions.restrictions.map((restriction, index) => (
+                  {restrictions.restrictions.map((restriction) => (
                       <RestrictionItem
-                          key={index}
+                          key={restriction.id}
                           restriction={restriction}
-                          onUpdate={(updatedRestriction) => {
-                            const updatedRestrictions = [...restrictions.restrictions]
-                            updatedRestrictions[index] = updatedRestriction
-                            onUpdate({
-                              ...restrictions,
-                              restrictions: updatedRestrictions,
-                            })
-                          }}
+                          onUpdate={handleRestrictionUpdate}
                           showDate={true}
                           date={restriction.date ? formatDate(restriction.date) : undefined}
+                          isEditMode={editingRestrictionId === restriction.id}
+                          onEditToggle={() => {
+                            if (editingRestrictionId === restriction.id) {
+                              cancelEditing()
+                            } else {
+                              startEditing(restriction)
+                            }
+                          }}
+                          onDelete={() => deleteRestriction(restriction.id!)}
                       />
                   ))}
                 </div>

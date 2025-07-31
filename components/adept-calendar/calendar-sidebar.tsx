@@ -4,7 +4,7 @@ import { CalendarWidget } from "./calendar-widget"
 import {SettingsButton} from "@/components/calendar-settings-button";
 import {useState} from "react";
 import {CalendarSettings} from "@/components/adept-calendar/calendar-settings";
-import { CalendarRestirctions } from "@/types/calendar-event";
+import { CalendarRestrictions } from "@/types/calendar-event";
 
 interface CalendarSidebarProps {
     selectedDate: Date
@@ -14,7 +14,7 @@ interface CalendarSidebarProps {
 
 export function CalendarSidebar({selectedDate, onDateSelect, timezone}: CalendarSidebarProps) {
     const [showSettings, setShowSettings] = useState(false)
-    const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestirctions>({
+    const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt: 3,
         commons: {
             Mon: { isActive: true, intervals: [] },
@@ -29,11 +29,12 @@ export function CalendarSidebar({selectedDate, onDateSelect, timezone}: Calendar
     })
 
     return (
-        <div className="w-80">
-            <div className="fixed mt-24 w-80 p-3 top-0 z-30 border-t border-gray-100">
-                {showSettings ? (
+        <div className="w-96">
+            <div className="fixed mt-16 w-96 p-3 top-0 z-30 border-t border-gray-100">
+                {!showSettings ? (
                     <>
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={timezone}/>
+                        <div className="h-16 bottom-0"/>
                         <SettingsButton onClick={() => {setShowSettings(true)}}/>
                     </>
                 ) : (

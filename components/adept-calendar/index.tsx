@@ -12,7 +12,7 @@ import {useProfileStore} from "@/stores/profile-store";
 import {router} from "next/client";
 import {useRouter} from "next/navigation";
 import {useAuth} from "@/hooks/use-auth";
-import {CalendarRestirctions} from "@/types/calendar-event";
+import {CalendarRestrictions} from "@/types/calendar-event";
 
 interface AdeptCalendarProps {
   bookings: Booking[]

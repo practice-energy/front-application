@@ -102,7 +102,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
   return (
     <div className={cn(
         "bg-none rounded-sm mt-5",
-        isCollapsed ? "" : "md:aspect-square sm:h-full"
+        isCollapsed ? "" : "sm:h-full"
     )}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

@@ -1,6 +1,6 @@
 import {Format} from "@/types/common";
 
-export interface CalendarRestirctions {
+export interface CalendarRestrictions {
     gmt: number
     commons: {
         Mon: Restriction
@@ -15,6 +15,8 @@ export interface CalendarRestirctions {
 }
 
 export interface Restriction {
+    id: string
+    name: string
     date?: Date
     isActive: boolean
     intervals: Interval[]
