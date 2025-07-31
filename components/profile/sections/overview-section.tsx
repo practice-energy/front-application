@@ -402,12 +402,12 @@ export function OverviewSection() {
                   {/* Секция "Образование и сертификаты" */}
                   <div className="mt-6">
                     {/* Секция "Образование и сертификаты" */}
-                    {(currentData.education.length === 0 || currentData?.certificates.length === 0) && !isEditMode && (
-                      <div className="mx-6 mb-2 items-center justify-center flex flex-col">
-                        <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
-                        <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
-                      </div>
-                    )}
+                    {/*{(currentData.education.length === 0 || currentData?.certificates.length === 0) && !isEditMode && (*/}
+                    {/*  <div className="mx-6 mb-2 items-center justify-center flex flex-col">*/}
+                    {/*    <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />*/}
+                    {/*    <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>*/}
+                    {/*  </div>*/}
+                    {/*)}*/}
 
                     {/* Определяем, какие секции нужно показывать */}
                     {(currentData.education?.length > 0 || currentData?.certificates.length > 0) && !isEditMode && (

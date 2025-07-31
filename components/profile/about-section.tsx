@@ -52,62 +52,64 @@ export function AboutSection({ description, isEditMode, onInputChange, errors }:
     setIsExpanded(!isExpanded)
   }
 
-  return (
-      <div className={cn("relative pt-6 pb-6", isMobile ? "px-4" : "px-6")}>
-        <div
-            ref={contentRef}
-            className="overflow-hidden transition-all duration-500 ease-in-out"
-            style={{
-              height: isEditMode ? 'auto' : isExpanded ? `${contentHeight}px` : shouldShowToggle ? '130px' : 'auto'
-            }}
-        >
-          <div className={cn("w-full")}>
-            <div className={cn(
-                "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
-                isMobile ? "text-mobilebase" : "text-base",
-            )}>
-              Обо мне
+  if (isEditMode || description.length !== 0) {
+    return (
+        <div className={cn("relative pt-6 pb-6", isMobile ? "px-4" : "px-6")}>
+          <div
+              ref={contentRef}
+              className="overflow-hidden transition-all duration-500 ease-in-out"
+              style={{
+                height: isEditMode ? 'auto' : isExpanded ? `${contentHeight}px` : shouldShowToggle ? '130px' : 'auto'
+              }}
+          >
+            <div className={cn("w-full")}>
+              <div className={cn(
+                  "font-semibold text-neutral-900 mb-4 line-clamp-1 leading-relaxed",
+                  isMobile ? "text-mobilebase" : "text-base",
+              )}>
+                Обо мне
+              </div>
+
+              {isEditMode ? (
+                  <EnhancedInput
+                      value={description}
+                      onChange={(e) => onInputChange("bio", e.target.value)}
+                      placeholder="Расскажите о себе..."
+                      error={errors.bio}
+                      required
+                      rows={3}
+                      type="textarea"
+                  />
+              ) : (
+                  <div className={cn("ml-1 text-neutral-700 transition-opacity duration-300")}>
+                    {description || "Нет описания"}
+                  </div>
+              )}
             </div>
-
-            {isEditMode ? (
-                <EnhancedInput
-                    value={description}
-                    onChange={(e) => onInputChange("bio", e.target.value)}
-                    placeholder="Расскажите о себе..."
-                    error={errors.bio}
-                    required
-                    rows={3}
-                    type="textarea"
-                />
-            ) : (
-                <div className={cn("ml-1 text-neutral-700 transition-opacity duration-300")}>
-                  {description || "Нет описания"}
-                </div>
-            )}
           </div>
+
+          {/* Fade overlay when collapsed */}
+          {!isEditMode && shouldShowToggle && !isExpanded && (
+              <div className={cn(
+                  "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
+                  "bottom-[50px]"
+              )}/>
+          )}
+
+          {!isEditMode && shouldShowToggle && (
+              <button
+                  onClick={handleToggle}
+                  className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
+              >
+                {isExpanded ? "Свернуть" : "Раскрыть больше"}
+                <ChevronDown
+                    width={24}
+                    height={24}
+                    className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")}
+                />
+              </button>
+          )}
         </div>
-
-        {/* Fade overlay when collapsed */}
-        {!isEditMode && shouldShowToggle && !isExpanded && (
-            <div className={cn(
-                "absolute w-full h-14 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-500",
-                "bottom-[50px]"
-            )}/>
-        )}
-
-        {!isEditMode && shouldShowToggle && (
-            <button
-                onClick={handleToggle}
-                className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
-            >
-              {isExpanded ? "Свернуть" : "Раскрыть больше"}
-              <ChevronDown
-                  width={24}
-                  height={24}
-                  className={cn("transition-transform duration-300", isExpanded ? "rotate-180" : "")}
-              />
-            </button>
-        )}
-      </div>
-  )
+    )
+  }
 }
