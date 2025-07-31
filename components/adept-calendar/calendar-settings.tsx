@@ -37,6 +37,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+  const [repeatDatePickerId, setRepeatDatePickerId] = useState<string | null>(null)
   const isMobile = useIsMobile()
 
   const handleDayToggle = (dayKey: string) => {
@@ -62,17 +63,36 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   }
 
   const handleDateSelect = (date: Date) => {
-    const newRestriction: Restriction = {
-      id: Date.now().toString(), // Add unique ID
-      date,
-      isActive: true,
-      intervals: [],
+    if (repeatDatePickerId) {
+      // Repeat existing restriction to new date
+      const sourceRestriction = restrictions.restrictions.find(r => r.id === repeatDatePickerId)
+      if (sourceRestriction) {
+        const newRestriction: Restriction = {
+          id: Date.now().toString(),
+          date,
+          isActive: sourceRestriction.isActive,
+          intervals: [...sourceRestriction.intervals],
+        }
+        onUpdate({
+          ...restrictions,
+          restrictions: [...restrictions.restrictions, newRestriction],
+        })
+      }
+      setRepeatDatePickerId(null)
+    } else {
+      // Create new restriction
+      const newRestriction: Restriction = {
+        id: Date.now().toString(),
+        date,
+        isActive: true,
+        intervals: [],
+      }
+      onUpdate({
+        ...restrictions,
+        restrictions: [...restrictions.restrictions, newRestriction],
+      })
+      setShowDatePicker(false)
     }
-    onUpdate({
-      ...restrictions,
-      restrictions: [...restrictions.restrictions, newRestriction],
-    })
-    setShowDatePicker(false)
   }
 
   const formatDate = (date: Date) => {
@@ -159,6 +179,13 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
       ...restrictions,
       restrictions: restrictions.restrictions.filter(r => r.id !== id)
     })
+  }
+
+  const startRepeatForRestriction = (id: string) => {
+    setRepeatDatePickerId(id)
+    if (!showExceptionalSlots) {
+      setShowExceptionalSlots(true)
+    }
   }
 
   return (
@@ -249,7 +276,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                       />
 
                       {editingRestrictionId !== selectedDay && (
-                          <div className="mt-4 flex items-center gap-2 mr-2">
+                          <div className="mt-4 flex items-center gap-6 mr-2">
                             <span className="text-sm text-gray-600">Повторить для всех активных</span>
                             <div className="flex gap-6">
                               <RepeatEntityButton onClick={repeatSettingsToAllActive}/>
@@ -288,42 +315,67 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                 />
               </div>
             </button>
-            {editingRestrictionId === null && !showDatePicker && (<AddEntityButton onClick={() => {
-              setShowDatePicker(true)
-              if (!showExceptionalSlots) {
-                setShowExceptionalSlots(true)
-              }
-            }}
-            />)}
+            {editingRestrictionId === null && !showDatePicker && !repeatDatePickerId && (
+                <AddEntityButton onClick={() => {
+                  setShowDatePicker(true)
+                  if (!showExceptionalSlots) {
+                    setShowExceptionalSlots(true)
+                  }
+                }}/>
+            )}
           </div>
 
           {showExceptionalSlots && (
               <div className="space-y-4">
                 {showDatePicker && (
                     <div>
-                      <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} isCollapsible={true}/>
+                      <CalendarWidget
+                          selectedDate={new Date()}
+                          onDateSelect={handleDateSelect}
+                          isCollapsible={true}
+                      />
                     </div>
                 )}
 
                 {/* Exceptional restrictions */}
                 <div className="space-y-4">
                   {restrictions.restrictions.map((restriction) => (
-                      <RestrictionItem
-                          key={restriction.id}
-                          restriction={restriction}
-                          onUpdate={handleRestrictionUpdate}
-                          showDate={true}
-                          date={restriction.date ? formatDate(restriction.date) : undefined}
-                          isEditMode={editingRestrictionId === restriction.id}
-                          onEditToggle={() => {
-                            if (editingRestrictionId === restriction.id) {
-                              cancelEditing()
-                            } else {
-                              startEditing(restriction)
-                            }
-                          }}
-                          onDelete={() => deleteRestriction(restriction.id!)}
-                      />
+                      <div key={restriction.id} className="space-y-2">
+                        <RestrictionItem
+                            restriction={restriction}
+                            onUpdate={handleRestrictionUpdate}
+                            showDate={true}
+                            date={restriction.date ? formatDate(restriction.date) : undefined}
+                            isEditMode={editingRestrictionId === restriction.id}
+                            onEditToggle={() => {
+                              if (editingRestrictionId === restriction.id) {
+                                cancelEditing()
+                              } else {
+                                startEditing(restriction)
+                              }
+                            }}
+                            onDelete={() => deleteRestriction(restriction.id!)}
+                        />
+                        {editingRestrictionId !== restriction.id && (
+                            <div className="flex items-center gap-2 mr-2 justify-between">
+                              <span className="text-sm text-gray-600">Повторить для другой даты</span>
+                              <div className="flex gap-6 ml-auto">
+                                <RepeatEntityButton onClick={() => startRepeatForRestriction(restriction.id!)}/>
+                                <EditEntityButton onClick={() => startEditing(restriction)}/>
+                                <BurnEntityButton onClick={() => deleteRestriction(restriction.id!)}/>
+                              </div>
+                            </div>
+                        )}
+                        {repeatDatePickerId === restriction.id && (
+                            <div className="mt-4">
+                              <CalendarWidget
+                                  selectedDate={restriction.date!}
+                                  onDateSelect={handleDateSelect}
+                                  isCollapsible={true}
+                              />
+                            </div>
+                        )}
+                      </div>
                   ))}
                 </div>
               </div>

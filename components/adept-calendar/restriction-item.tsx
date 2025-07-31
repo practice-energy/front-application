@@ -322,8 +322,7 @@ export function RestrictionItem({
                   >
                     <ActivityStatus
                         status={restriction.isPractice ? 'activePractice' : 'outOfPractice'}
-                        // showTitle={intervalCount < 3}
-                        showTitle={false}
+                        showTitle={intervalCount < 2}
                         className="ml-auto items-start"
                     />
                   </motion.div>
