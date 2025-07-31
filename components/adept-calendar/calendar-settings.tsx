@@ -32,7 +32,7 @@ const dayNames = [
 ]
 
 export function CalendarSettings({ restrictions, onUpdate, disableSettings }: CalendarSettingsProps) {
-  const [selectedDay, setSelectedDay] = useState<string | null>("Tue")
+  const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [showExceptionalSlots, setShowExceptionalSlots] = useState(false)
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
@@ -189,11 +189,14 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   }
 
   return (
-      <ScrollArea className="space-y-6 overflow-y-auto">
+      <div className="flex flex-col h-full bg-white rounded-sm">
         <div className="flex flex-row items-center gap-2 ml-6">
-          <SettingsButton onClick={disableSettings} className="bg-violet-600 hover:bg-violet-700" iconClassName="text-white"/>
+          <SettingsButton onClick={disableSettings} className="bg-violet-600 hover:bg-violet-700 border-0" iconClassName="text-white"/>
           <div>Установки календаря</div>
         </div>
+
+        <ScrollArea className="flex-1">
+          <div className="space-y-6 p-4">
 
         {/* Periods and Formats Section */}
         <div className="space-y-4">
@@ -381,6 +384,8 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
               </div>
           )}
         </div>
-      </ScrollArea>
+          </div>
+        </ScrollArea>
+      </div>
   )
 }

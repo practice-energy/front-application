@@ -30,7 +30,7 @@ export function CalendarSidebar({selectedDate, onDateSelect, timezone}: Calendar
 
     return (
         <div className="w-[370px]">
-            <div className="fixed mt-16 w-[370px] p-3 top-0 z-30 border-t border-gray-100">
+            <div className="fixed mt-24 w-[370px] top-0 z-30 border-gray-100">
                 {!showSettings ? (
                     <>
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={timezone}/>
