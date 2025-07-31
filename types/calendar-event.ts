@@ -1,7 +1,7 @@
 import {Format} from "@/types/common";
 
 export interface CalendarRestrictions {
-    gmt: number
+    gmt: string
     commons: {
         Mon: Restriction
         Tue: Restriction
@@ -12,6 +12,7 @@ export interface CalendarRestrictions {
         Sun: Restriction
     }
     restrictions: Restriction[]
+    location?: string
 }
 
 export interface Restriction {

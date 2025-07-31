@@ -15,7 +15,7 @@ interface CalendarSidebarProps {
 export function CalendarSidebar({selectedDate, onDateSelect, timezone}: CalendarSidebarProps) {
     const [showSettings, setShowSettings] = useState(false)
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
-        gmt: 3,
+        gmt: "GMT+3",
         commons: {
             Mon: { isActive: true, intervals: [] },
             Tue: { isActive: true, intervals: [] },
@@ -30,13 +30,16 @@ export function CalendarSidebar({selectedDate, onDateSelect, timezone}: Calendar
 
     return (
         <div className="w-[370px]">
-            <div className="fixed mt-24 w-[370px] top-0 z-30 border-gray-100">
+            <div className="fixed mt-24 w-[370px] top-0 z-30border-gray-100">
                 {!showSettings ? (
-                    <>
+                    <div className="px-4 ">
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={timezone}/>
-                        <div className="h-16 bottom-0"/>
-                        <SettingsButton onClick={() => {setShowSettings(true)}}/>
-                    </>
+                        <div className="h-8 bottom-0"/>
+                        <SettingsButton
+                            onClick={() => {setShowSettings(true)}}
+                            className="shadow-md hover:bg-violet-50"
+                        />
+                    </div>
                 ) : (
                     <CalendarSettings
                         restrictions={calendarRestrictions}

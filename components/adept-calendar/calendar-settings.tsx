@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useRef, useState} from "react"
 import { Button } from "@/components/ui/button"
-import type { CalendarRestirctions, Restriction } from "@/types/calendar-event"
+import type { CalendarRestrictions, Restriction } from "@/types/calendar-event"
 import { RestrictionItem } from "./restriction-item"
 import { CalendarWidget } from "./calendar-widget"
 import { AddEntityButton } from "@/components/add-entity-button"
@@ -13,11 +13,11 @@ import {EditEntityButton} from "@/components/edit-entity-button";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {RepeatEntityButton} from "@/components/repeat-entity-button";
 import {BurnEntityButton} from "@/components/burn-entity-button";
-import {ScrollArea} from "@/components/ui/scroll-area";
+import {LocationInput} from "@/components/location-input";
 
 interface CalendarSettingsProps {
-  restrictions: CalendarRestirctions
-  onUpdate: (restrictions: CalendarRestirctions) => void
+  restrictions: CalendarRestrictions
+  onUpdate: (restrictions: CalendarRestrictions) => void
   disableSettings: () => void
 }
 
@@ -29,6 +29,14 @@ const dayNames = [
   { key: "Fri", label: "Пт" },
   { key: "Sat", label: "Сб" },
   { key: "Sun", label: "Вс" },
+]
+
+// Список доступных часовых поясов
+const timezones = [
+  "GMT", "GMT+1", "GMT+2", "GMT+3", "GMT+4", "GMT+5",
+  "GMT+6", "GMT+7", "GMT+8", "GMT+9", "GMT+10", "GMT+11", "GMT+12",
+  "GMT-1", "GMT-2", "GMT-3", "GMT-4", "GMT-5",
+  "GMT-6", "GMT-7", "GMT-8", "GMT-9", "GMT-10", "GMT-11", "GMT-12",
 ]
 
 export function CalendarSettings({ restrictions, onUpdate, disableSettings }: CalendarSettingsProps) {
@@ -188,6 +196,36 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
     }
   }
 
+  const [showTimezoneDropdown, setShowTimezoneDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const handleTimezoneSelect = (timezone: string) => {
+    onUpdate({
+      ...restrictions,
+      gmt: timezone
+    })
+    setShowTimezoneDropdown(false)
+  }
+
+  const handleLocationSelect = (location: string) => {
+    onUpdate({
+      ...restrictions,
+      location: location
+    })
+    setShowTimezoneDropdown(false)
+  }
+
+  // Закрываем dropdown при клике вне его области
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowTimezoneDropdown(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   return (
       <div className="flex flex-col h-full bg-white rounded-sm">
         <div className="flex flex-row items-center gap-2 ml-6">
@@ -195,8 +233,42 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           <div>Установки календаря</div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <div className="flex-1">
           <div className="space-y-6 p-4">
+              <div className="flex items-center justify-start">
+                <div className="font-semibold justify-start text-neutral-900">Часовой пояс</div>
+            </div>
+
+            <LocationInput
+                value={restrictions.location || ""}
+                onChange={handleLocationSelect}
+            />
+
+            <div className="relative" ref={dropdownRef}>
+              <button
+                  onClick={() => setShowTimezoneDropdown(!showTimezoneDropdown)}
+                  className="flex items-center gap-2 px-3 py-1 text-sm border rounded-sm hover:bg-gray-50 w-full h-10"
+              >
+                <span>{restrictions.gmt || "GMT+3"}</span>
+                <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${showTimezoneDropdown ? "rotate-180" : ""}`}/>
+              </button>
+
+              {showTimezoneDropdown && (
+                  <div className="absolute right-0 z-10 mt-1 w-32 max-h-60 overflow-y-auto bg-white border rounded-md shadow-lg">
+                    {timezones.map((tz) => (
+                        <div
+                            key={tz}
+                            onClick={() => handleTimezoneSelect(tz)}
+                            className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 ${
+                                restrictions.gmt === tz ? "bg-violet-50 text-violet-600" : ""
+                            }`}
+                        >
+                          {tz}
+                        </div>
+                    ))}
+                  </div>
+              )}
+            </div>
 
         {/* Periods and Formats Section */}
         <div className="space-y-4">
@@ -385,7 +457,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           )}
         </div>
           </div>
-        </ScrollArea>
+        </div>
       </div>
   )
 }
