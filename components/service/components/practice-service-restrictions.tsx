@@ -40,13 +40,15 @@ export function PracticeServiceRestrictions({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-2 gap-3">
       <div>
         <PeriodsFormatsSection
           restrictions={restrictions}
           onUpdate={onUpdate}
           editingRestrictionId={editingRestrictionId}
           setEditingRestrictionId={setEditingRestrictionId}
+          isCollapsable={false}
+          title={"Периоды и форматы для этой практис"}
         />
       </div>
       <div>
@@ -55,6 +57,8 @@ export function PracticeServiceRestrictions({
           onUpdate={onUpdate}
           editingRestrictionId={editingRestrictionId}
           setEditingRestrictionId={setEditingRestrictionId}
+          isCollapsable={false}
+          title={"Исключительные слоты для этой практис"}
         />
       </div>
     </div>

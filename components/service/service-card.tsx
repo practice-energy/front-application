@@ -361,7 +361,7 @@ export function ServiceCard({
 
           {/* Practice Service Restrictions - only in edit mode */}
           {isEditMode && (
-            <div className="mt-8 p-6 bg-white rounded-lg shadow-sm">
+            <div className="bg-white rounded-sm shadow-sm px-6 pb-4">
               <PracticeServiceRestrictions
                 restrictions={restrictions}
                 onUpdate={handleRestrictionsUpdate}
