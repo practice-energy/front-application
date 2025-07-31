@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi/index"
-import { AuthModal } from "@/components/modals/auth-modal"
 import { ShareModal } from "@/components/modals/share-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
@@ -24,14 +23,13 @@ export default function SearchPage() {
   const [currentChat, setCurrentChat] = useState<Chat | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [authModalOpen, setAuthModalOpen] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [messageToShare, setMessageToShare] = useState<Message | null>(null)
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
   const { getChatDataById, addMessageToChat, addChat } = useAdeptChats()
   const { isCollapsed, toggleSidebar } = useSidebar()
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated } = useAuth()
   const { user } = useProfileStore()
 
   useEffect(() => {
@@ -268,7 +266,6 @@ export default function SearchPage() {
           </div>
         </>)}
 
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
         <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
       </div>
   )

@@ -29,4 +29,5 @@ export type Chat = {
   hasNew?: boolean
   footerContent?: string
   description?: string
+  isSpecialChat?: "become-specialist"
 }

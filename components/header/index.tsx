@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {X, PanelRightClose, CalendarDays, CheckSquare, MessageSquareText, PentagonIcon} from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
-import { AuthModal } from "@/components/modals/auth-modal"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
 
@@ -17,17 +16,18 @@ import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
 import {IconButton} from "@/components/icon-button";
 import {useProfileStore} from "@/stores/profile-store";
 import {EasyNotifications} from "@/components/easy-notifications";
+import {useAdeptChats} from "@/stores/chat-store";
+import { v4 as uuidv4 } from "uuid"
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const [authMode, setAuthMode] = useState<"login" | "signup">("login")
-  const { isAuthenticated, logout, updateUser } = useAuth()
+  const { isAuthenticated, logout, updateUser, login } = useAuth()
   const { user } = useProfileStore()
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const hat = user?.hat
+  const { addChat } = useAdeptChats()
 
   const {
     showProfileMenu,
@@ -58,16 +58,6 @@ export function Header() {
     }
   }, [profileMenuRef, setShowProfileMenu])
 
-  const handleAuthSuccess = () => {
-    setIsAuthModalOpen(false)
-  }
-
-  const openAuthModal = (mode: "login" | "signup" = "login") => {
-    setAuthMode(mode)
-    setIsAuthModalOpen(true)
-    setIsMobileMenuOpen(false)
-  }
-
   const handleCalendarClick = () => {
     router.push("/calendar")
   }
@@ -84,7 +74,7 @@ export function Header() {
   }
 
   const handleBecomeSpecialist = () => {
-    router.push("/become-specialist")
+    //code here
   }
 
   const handleRoleToggle = () => {
@@ -186,12 +176,21 @@ export function Header() {
 
             <EasyNotifications hat={user?.hat || "adept"}/>
           </>)}
+
+          {!isAuthenticated && <button onClick={() => {
+            login()
+          }}>
+            <div className="flex flex-row gap-2 items-center border border-gray-200 px-3 rounded-sm p-2 bg-white shadow-sm shadow-violet-50 ml-auto">
+              <div className="font-medium">Инициировать практис</div>
+              <PentagramIcon size={36}/>
+            </div>
+          </button>}
         </div>
       </div>
 
       <header
         className={cn(
-          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg opacity-80 fixed",
+          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg opacity-80 fixed items-end",
             isCollapsed ? "w-full": "w-[calc(100%-400px)]"
         )}
       >
@@ -210,17 +209,7 @@ export function Header() {
             <PanelRightClose width={24} height={24} />
           </button>
         )}
-
-        {!isAuthenticated && <Button onClick={() => openAuthModal("login")}>Инициировать практис</Button>}
       </header>
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={handleAuthSuccess}
-        initialMode={authMode}
-        mode={"login"}
-      />
     </>
   )
 }

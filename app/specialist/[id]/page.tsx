@@ -2,7 +2,6 @@
 
 import {useState, useRef, use} from "react"
 import { useRouter } from "next/navigation"
-import { AuthModal } from "@/components/modals/auth-modal"
 import { useTranslations } from "@/hooks/use-translations"
 import { Mufi } from "@/components/mufi/index"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
@@ -15,14 +14,11 @@ import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
 import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-profile";
 import {useIsMobile} from "@/components/ui/use-mobile";
 
-
-
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { t } = useTranslations()
   const unwrappedParams = use(params)
   const { id } = unwrappedParams
-  const [authModalOpen, setAuthModalOpen] = useState(false)
   const isMobile = useIsMobile()
 
   const [shareModalOpen, setShareModalOpen] = useState(false)
@@ -112,8 +108,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
           onCancelReply={() => {}}
           chatTitle="Alura"
       />
-
-      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode="login" />
 
       <ShareSpecialistModal
         isOpen={shareModalOpen}
