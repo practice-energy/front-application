@@ -65,7 +65,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
 
                     {/* Mobile Schedule */}
                     <div className="flex-1 overflow-y-auto border-t border-gray-100">
-                        <div className="flex h-full px-4 justify-center">
+                        <div className="flex h-full px-2 justify-center">
                             <ScheduleView selectedDate={selectedDate} bookings={bookings} />
                         </div>
                     </div>
