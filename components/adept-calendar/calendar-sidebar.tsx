@@ -30,14 +30,14 @@ export function CalendarSidebar({selectedDate, onDateSelect, timezone}: Calendar
 
     return (
         <div className="w-[370px]">
-            <div className="fixed mt-24 w-[370px] top-0 z-30border-gray-100">
+            <div className="fixed mt-24 w-[370px] top-0 z-30 border-gray-100">
                 {!showSettings ? (
                     <div className="px-4 ">
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={timezone}/>
-                        <div className="h-8 bottom-0"/>
+                        <div className="h-8 bottom-0 ml-auto"/>
                         <SettingsButton
                             onClick={() => {setShowSettings(true)}}
-                            className="shadow-md hover:bg-violet-50"
+                            className="hover:bg-violet-50"
                         />
                     </div>
                 ) : (
