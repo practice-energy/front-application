@@ -20,6 +20,7 @@ export interface Restriction {
     date?: Date
     isActive: boolean
     intervals: Interval[]
+    isPractice: boolean
 }
 
 export interface Interval {

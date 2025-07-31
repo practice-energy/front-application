@@ -211,16 +211,18 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                                 size="sm"
                                 className={`w-[18px] h-[18px] p-0 border-none ${isActive ? "bg-teal-400 hover:bg-teal-500" : "bg-neutral-300 hover:bg-neutral-400"}`}
                                 onClick={() => handleDayToggle(day.key)}
+                                disabled={editingRestrictionId !== null}
                             >
                               {isDaySettedUp(day.key) && <Check className="w-2 h-2 bg-none rounded-sm text-white"/>}
                             </Button>
                             <button
                                 className={cn(
                                     "text-xs px-1.5 py-1 items-center rounded-sm w-7 h-7 aspect-square",
-                                    isMobile ? "" : "hover:bg-violet-50" ,
-                                    isSelected && "border border-violet-600"
+                                    isMobile || editingRestrictionId !== null ? "" : "hover:bg-violet-50" ,
+                                    isSelected && "border border-violet-600",
                                 )}
                                 onClick={() => handleDaySelect(day.key)}
+                                disabled={editingRestrictionId !== null}
                             >
                               {day.label}
                             </button>
@@ -246,15 +248,16 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                           }}
                       />
 
-                      {/* Repeat for all active button */}
-                      <div className="mt-4 flex items-center gap-2 mr-2">
-                        <span className="text-sm text-gray-600">Повторить для всех активных</span>
-                        <div className="flex gap-6">
-                          <RepeatEntityButton onClick={repeatSettingsToAllActive}/>
-                          <EditEntityButton onClick={() => startEditing(restrictions.commons[selectedDay as keyof typeof restrictions.commons])}/>
-                          <BurnEntityButton onClick={burnDaySettings}/>
-                        </div>
-                      </div>
+                      {editingRestrictionId !== selectedDay && (
+                          <div className="mt-4 flex items-center gap-2 mr-2">
+                            <span className="text-sm text-gray-600">Повторить для всех активных</span>
+                            <div className="flex gap-6">
+                              <RepeatEntityButton onClick={repeatSettingsToAllActive}/>
+                              <EditEntityButton onClick={() => startEditing(restrictions.commons[selectedDay as keyof typeof restrictions.commons])}/>
+                              <BurnEntityButton onClick={burnDaySettings}/>
+                            </div>
+                          </div>
+                      )}
                     </div>
                 )}
               </div>
@@ -285,13 +288,13 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
                 />
               </div>
             </button>
-            <AddEntityButton onClick={() => {
+            {editingRestrictionId === null && (<AddEntityButton onClick={() => {
               setShowDatePicker(true)
               if (!showExceptionalSlots) {
                 setShowExceptionalSlots(true)
               }
             }}
-            />
+            />)}
           </div>
 
           {showExceptionalSlots && (
