@@ -6,6 +6,7 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import {cn} from "@/lib/utils";
 import {IconButton} from "@/components/icon-button";
 import {usePathname} from "next/navigation";
+import {CalendarButton} from "@/components/calendar-button";
 
 interface NavigationButtonsProps {
   isAuthenticated: boolean
@@ -52,15 +53,9 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
           />
 
           {/* Calendar button */}
-          <IconButton
-              icon={CalendarDays}
+          <CalendarButton
               onClick={handleCalendarClick}
-              className={cn(
-                  pathname === "/calendar" && " bg-violet-600 border-0 shadow-md",
-              )}
-              iconClassName={cn(
-                  pathname === "/calendar" && " text-white",
-              )}
+              pathname={pathname}
           />
 
           {/* Tasks button */}

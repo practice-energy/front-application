@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import type { CalendarRestrictions, Restriction } from "@/types/calendar-event"
 import { RestrictionItem } from "./restriction-item"
@@ -249,17 +249,26 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   }, [])
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-sm">
-      <div className="flex flex-row items-center gap-2 ml-6 py-4 border-b">
+    <div className="flex flex-col h-screen bg-white rounded-sm">
+      <div className="flex flex-row items-center gap-3 ml-6 py-4">
         <SettingsButton
           onClick={disableSettings}
-          className="bg-violet-600 hover:bg-violet-700 border-0"
+          className="bg-violet-600 hover:bg-violet-700 border-0 flex"
           iconClassName="text-white"
         />
-        <div>Установки календаря</div>
+        <div className={cn(
+            "font-bold",
+            isMobile ? "text-mobilebase": "text-base"
+        )}>Установки календаря</div>
       </div>
+      <ScrollArea className="flex-1 flex h-screen">
+        <div
+            className={cn(
+                "sticky top-[-1px] left-0 right-0 h-2 bg-gradient-to-b to-transparent pointer-events-none z-50",
+                "from-white via-white/80 to-transparent",
+            )}
+        />
 
-      <ScrollArea className="flex-1">
         <div className="space-y-6 p-4">
           <div className="flex items-center justify-start">
             <div className="font-semibold justify-start text-neutral-900">Часовой пояс</div>
@@ -484,6 +493,8 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             )}
           </div>
         </div>
+
+        <div className="flex items-center justify-center h-24"/>
       </ScrollArea>
     </div>
   )

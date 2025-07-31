@@ -182,7 +182,7 @@ export function RestrictionItem({
                 variants={fadeIn}
                 className="flex justify-between items-center"
             >
-              <div className="text-sm text-gray-600">{date}</div>
+              <div className="text-base font-semibold text-neutral-900">{date}</div>
             </motion.div>
         )}
 
@@ -190,7 +190,7 @@ export function RestrictionItem({
           <motion.div
               layout // Анимация изменения layout
               transition={{ duration: 0.2 }}
-              className={cn("w-[314px]", !isEditMode && "w-full")}
+              className={cn("w-full")}
           >
             <Card className="p-2 w-full">
               <CardContent className="p-0">

@@ -13,6 +13,7 @@ import {router} from "next/client";
 import {useRouter} from "next/navigation";
 import {useAuth} from "@/hooks/use-auth";
 import {CalendarRestrictions} from "@/types/calendar-event";
+import {CalendarSettings} from "@/components/adept-calendar/calendar-settings";
 
 interface AdeptCalendarProps {
   bookings: Booking[]
@@ -25,25 +26,58 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const { user } = useProfileStore()
   const router = useRouter()
   const { isAuthenticated } = useAuth()
+  const [showSettings, setShowSettings] = useState(false)
 
-  if (isMobile) {
+    const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
+        gmt: "GMT+3",
+        commons: {
+            Mon: { isActive: true, intervals: [] },
+            Tue: { isActive: true, intervals: [] },
+            Wed: { isActive: true, intervals: [] },
+            Thu: { isActive: true, intervals: [] },
+            Fri: { isActive: true, intervals: [] },
+            Sat: { isActive: false, intervals: [] },
+            Sun: { isActive: false, intervals: [] },
+        },
+        restrictions: [],
+    })
+
+
+    if (isMobile) {
     return (
         <div className="h-full flex flex-col">
-          <CalendarMobileHeader user={user} onSettings={() => {router.push("/settings")}} isAuthenticated={isAuthenticated}/>
-          <div className="flex-shrink-0">
-            <div className="flex flex-col px-4 items-start justify-between">
-              <div className="flex-1 w-full">
-                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={isMobile}/>
-              </div>
-            </div>
-          </div>
+          <CalendarMobileHeader
+              user={user}
+              onSettings={() => {setShowSettings(true)}}
+              onCalendar={() => {setShowSettings(false)}}
+              isAuthenticated={isAuthenticated}
+              isSettingsOpen={showSettings}
+          />
+            {!showSettings ? (
+                <>
+                    <div className="flex-shrink-0">
+                        <div className="flex flex-col px-4 items-start justify-between">
+                            <div className="flex-1 w-full">
+                                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={isMobile}/>
+                            </div>
+                        </div>
+                    </div>
 
-          {/* Mobile Schedule */}
-          <div className="flex-1 overflow-y-auto border-t border-gray-100">
-            <div className="flex h-full px-4 justify-center">
-              <ScheduleView selectedDate={selectedDate} bookings={bookings} />
-            </div>
-          </div>
+                    {/* Mobile Schedule */}
+                    <div className="flex-1 overflow-y-auto border-t border-gray-100">
+                        <div className="flex h-full px-4 justify-center">
+                            <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <CalendarSettings
+                    restrictions={calendarRestrictions}
+                    onRestrictionsChange={setCalendarRestrictions}
+                    disableSettings={() => {setShowSettings(false)}}
+                    onUpdate={(r) => {setCalendarRestrictions(r)}}
+                />
+            )}
         </div>
     )
   }
@@ -51,7 +85,13 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   return (
       <div className="h-full flex flex-col">
         <div className="flex h-full mt-24">
-          <CalendarSidebar selectedDate={selectedDate} onDateSelect={setSelectedDate} timezone={timezone} />
+          <CalendarSidebar
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              timezone={timezone}
+              onSettings={() => {setShowSettings(!setShowSettings)}}
+              showSettings={showSettings}
+          />
           <ScheduleView selectedDate={selectedDate} bookings={bookings} />
         </div>
       </div>
