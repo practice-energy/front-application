@@ -7,7 +7,7 @@ import { useProfileStore } from "@/stores/profile-store"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
-import {ImageUp, MapPin, Share} from "lucide-react"
+import { ImageUp, MapPin, Share } from "lucide-react"
 import { formatNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { AboutSection } from "@/components/profile/about-section"
@@ -19,7 +19,8 @@ import { BackButton } from "@/components/ui/button-back"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import type { ProfileData } from "@/components/profile/types/common"
-import {cn} from "@/lib/utils";
+import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/components/ui/use-mobile"
 
 export function OverviewSection() {
   const { user } = useProfileStore()
@@ -35,6 +36,7 @@ export function OverviewSection() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false)
   const avatarInputRef = useRef<HTMLInputElement>(null)
+  const isMobile = useIsMobile()
 
   const [savedData, setSavedData] = useState<ProfileData>({
     name: "",
@@ -58,29 +60,6 @@ export function OverviewSection() {
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    if (user) {
-      const userData = {
-        name: user.name || "",
-        bio: user.bio || "",
-        location: user.location || "",
-        avatar: user.avatar || "",
-        experience: user.experience || [],
-        education: user.education || [],
-        certificates: user.certifcates || [],
-      }
-      setSavedData(userData)
-      setDraftData(userData)
-    }
-  }, [user])
-
-  useEffect(() => {
-    const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
-    setHasChanges(changed)
-  }, [draftData, savedData])
-
-  const currentData = isEditMode ? draftData : savedData
-
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
@@ -97,7 +76,7 @@ export function OverviewSection() {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0]
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith("image/")) {
         setAvatarFile(file)
         const tempUrl = URL.createObjectURL(file)
         handleInputChange("avatar", tempUrl)
@@ -145,7 +124,7 @@ export function OverviewSection() {
     try {
       // Simulate avatar upload if new file was selected
       if (avatarFile) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         // In a real app, you would upload the file here and get the permanent URL
         const mockFileUrl = URL.createObjectURL(avatarFile)
         handleInputChange("avatar", mockFileUrl)
@@ -158,7 +137,7 @@ export function OverviewSection() {
       setIsTransitioning(true)
       setIsEditMode(false)
 
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 300))
       setIsTransitioning(false)
     } catch (error) {
       console.error("Failed to save profile:", error)
@@ -194,38 +173,58 @@ export function OverviewSection() {
     setIsTransitioning(false)
   }
 
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
-      </div>
-    )
-  }
-
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
     setShareModalOpen(true)
   }
 
   const handleSkillChange = (index: number, value: string) => {
-    const updatedItems = [...currentData.experience]
+    const updatedItems = [...draftData.experience]
     updatedItems[index] = {
-      description: value
+      description: value,
     }
-    handleInputChange("experience", updatedItems)
+    setDraftData((prev) => ({ ...prev, experience: updatedItems }))
   }
 
   const handleAddSkill = () => {
-    const updatedItems = [...currentData.experience, {
-      description: "",
-    }]
-    handleInputChange("experience", updatedItems)
+    const updatedItems = [
+      ...draftData.experience,
+      {
+        description: "",
+      },
+    ]
+    setDraftData((prev) => ({ ...prev, experience: updatedItems }))
   }
 
   const handleRemoveSkill = (index: number) => {
-    const updatedItems = currentData.experience.filter((_, i) => i !== index)
-    handleInputChange("experience", updatedItems)
+    const updatedItems = draftData.experience.filter((_, i) => i !== index)
+    setDraftData((prev) => ({ ...prev, experience: updatedItems }))
   }
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded)
+  }
+
+  useEffect(() => {
+    if (user) {
+      const userData = {
+        name: user.name || "",
+        bio: user.bio || "",
+        location: user.location || "",
+        avatar: user.avatar || "",
+        experience: user.experience || [],
+        education: user.education || [],
+        certificates: user.certifcates || [],
+      }
+      setSavedData(userData)
+      setDraftData(userData)
+    }
+  }, [user])
+
+  useEffect(() => {
+    const changed = JSON.stringify(draftData) !== JSON.stringify(savedData)
+    setHasChanges(changed)
+  }, [draftData, savedData])
 
   useEffect(() => {
     // Рассчитываем высоту только для описания на мобильных устройствах
@@ -235,10 +234,216 @@ export function OverviewSection() {
       setContentHeight(height)
       setShouldShowToggle(height > 130)
     }
-  }, [currentData.experience]) // Добавили isMobile в зависимости
+  }, [draftData.experience]) // Добавили isMobile в зависимости
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded)
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    )
+  }
+
+  const currentData = isEditMode ? draftData : savedData
+
+  if (isMobile) {
+    return (
+      <main className="min-h-screen w-full relative">
+        <AnimatePresence mode="wait">
+          {isTransitioning ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-6"
+            >
+              <Skeleton className="h-[900px] w-full rounded-sm" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Header with Back Button and Action Buttons */}
+              <div className="flex items-center justify-between mb-4 px-4 relative">
+                <div className="flex-1">
+                  <BackButton className="text-neutral-700 opacity-80" text={"назад"} />
+                </div>
+
+                <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
+                  <ModeToggleBar
+                    isEditMode={isEditMode}
+                    onModeToggle={handleModeToggle}
+                    onPublish={handlePublish}
+                    isSaving={isSaving}
+                    hasChanges={hasChanges}
+                  />
+
+                  {/* Share Button */}
+                  {!isEditMode && (
+                    <button
+                      type="button"
+                      onClick={handleShare}
+                      className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                      title="Поделиться"
+                    >
+                      <Share size={24} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Main Content Card */}
+              <div className="bg-white relative">
+                {/* Avatar */}
+                <div className="relative">
+                  <div
+                    className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5]"
+                    onClick={isEditMode ? triggerAvatarInput : undefined}
+                    onDragOver={isEditMode ? handleAvatarDragOver : undefined}
+                    onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
+                    onDrop={isEditMode ? handleAvatarDrop : undefined}
+                    onMouseEnter={isEditMode ? () => setIsHoveringAvatar(true) : undefined}
+                    onMouseLeave={isEditMode ? () => setIsHoveringAvatar(false) : undefined}
+                  >
+                    <input
+                      type="file"
+                      ref={avatarInputRef}
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                      accept="image/*"
+                    />
+
+                    <img
+                      src={currentData.avatar || "/placeholder.svg"}
+                      alt={currentData.name}
+                      className="w-full h-full rounded-sm object-cover"
+                    />
+
+                    {isEditMode && isHoveringAvatar && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                        <div className="flex flex-col items-center">
+                          <ImageUp className="w-12 h-12 text-colors-neutral-150" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Stats block */}
+                  {!isEditMode && (
+                    <div className="absolute bottom-3 right-3 bg-colors-neutral-150 rounded-sm p-1 w-[78px] h-[84px] gap-3">
+                      <div className="flex flex-row items-center gap-1 w-full border h-[36px] p-1 rounded-sm mt-1">
+                        <IconPractice width={22} height={20} />
+                        <div className="ml-auto text-sm">{formatNumber(user.practice || 0)}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info block */}
+                <div className="px-4 pt-2">
+                  {isEditMode ? (
+                    <>
+                      <EnhancedInput
+                        value={currentData.name}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
+                        error={errors.name}
+                        required
+                        placeholder="Введите имя"
+                      />
+                      <div className="mt-4">
+                        <LocationInput
+                          value={currentData.location}
+                          onChange={(value) => handleInputChange("location", value)}
+                          error={errors.location}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-mobilebase font-bold text-neutral-900 leading-relaxed">
+                        {currentData.name}
+                      </div>
+                      {currentData.location && (
+                        <div className="flex items-center mt-3 text-neutral-600">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          <div className="text-base font-normal">{currentData.location}</div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* About Section */}
+              <div className="bg-white rounded-b-sm shadow-md">
+                <AboutSection
+                  description={currentData.bio}
+                  onInputChange={handleInputChange}
+                  isEditMode={isEditMode}
+                  errors={errors}
+                />
+              </div>
+
+              {/* Experience and Certificates */}
+              <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
+                <div className="relative">
+                  <div className="mt-4">
+                    <Bullets
+                      title="Опыт"
+                      items={currentData.experience.map((exp) => exp.description)}
+                      isEditMode={isEditMode}
+                      onChange={handleSkillChange}
+                      onAdd={handleAddSkill}
+                      onRemove={handleRemoveSkill}
+                    />
+                  </div>
+                </div>
+
+                {/* Education and Certificates */}
+                <div className="mt-4 space-y-4">
+                  {currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode ? (
+                    <div className="mx-6 mb-2 items-center justify-center flex flex-col">
+                      <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
+                      <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
+                    </div>
+                  ) : (
+                    <>
+                      {(currentData.education.length > 0 || isEditMode) && (
+                        <Certificates
+                          title="Образование"
+                          items={currentData.education}
+                          isEditMode={isEditMode}
+                          onInputChange={handleInputChange}
+                          errors={errors}
+                          fieldKey="education"
+                        />
+                      )}
+                      {(currentData.certificates.length > 0 || isEditMode) && (
+                        <Certificates
+                          title="Сертификаты"
+                          items={currentData.certificates}
+                          isEditMode={isEditMode}
+                          onInputChange={handleInputChange}
+                          errors={errors}
+                          fieldKey="certificates"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+
+                <div className="h-24" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    )
   }
 
   return (
@@ -295,36 +500,34 @@ export function OverviewSection() {
                 <div className="relative px-6 pt-6">
                   <div className="absolute -top-20 left-6">
                     <div
-                        className="w-[250px] h-[312.5px] rounded-sm shadow-md overflow-hidden relative"
-                        onClick={isEditMode ? triggerAvatarInput : undefined}
-                        onDragOver={isEditMode ? handleAvatarDragOver : undefined}
-                        onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
-                        onDrop={isEditMode ? handleAvatarDrop : undefined}
-                        onMouseEnter={isEditMode ? () => setIsHoveringAvatar(true) : undefined}
-                        onMouseLeave={isEditMode ? () => setIsHoveringAvatar(false) : undefined}
+                      className="w-[250px] h-[312.5px] rounded-sm shadow-md overflow-hidden relative"
+                      onClick={isEditMode ? triggerAvatarInput : undefined}
+                      onDragOver={isEditMode ? handleAvatarDragOver : undefined}
+                      onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
+                      onDrop={isEditMode ? handleAvatarDrop : undefined}
+                      onMouseEnter={isEditMode ? () => setIsHoveringAvatar(true) : undefined}
+                      onMouseLeave={isEditMode ? () => setIsHoveringAvatar(false) : undefined}
                     >
                       <input
-                          type="file"
-                          ref={avatarInputRef}
-                          onChange={handleAvatarChange}
-                          className="hidden"
-                          accept="image/*"
+                        type="file"
+                        ref={avatarInputRef}
+                        onChange={handleAvatarChange}
+                        className="hidden"
+                        accept="image/*"
                       />
 
                       <img
-                          src={currentData.avatar || "/placeholder.svg"}
-                          alt={currentData.name}
-                          className={cn(
-                              "w-full h-full object-cover transition-opacity",
-                          )}
+                        src={currentData.avatar || "/placeholder.svg"}
+                        alt={currentData.name}
+                        className={cn("w-full h-full object-cover transition-opacity")}
                       />
 
                       {isEditMode && isHoveringAvatar && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div className="flex flex-col items-center">
-                              <ImageUp className="w-12 h-12 text-colors-neutral-150 opacity-50" />
-                            </div>
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                          <div className="flex flex-col items-center">
+                            <ImageUp className="w-12 h-12 text-colors-neutral-150 opacity-50" />
                           </div>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -387,28 +590,20 @@ export function OverviewSection() {
                 <div className="relative px-6 pb-4">
                   <div className="relative">
                     {/* Секция "Опыт" */}
-                      <div className="pt-4">
-                        <Bullets
-                            title="Опыт"
-                            items={currentData.experience.map((exp) => exp.description)}
-                            isEditMode={isEditMode}
-                            onChange={handleSkillChange}
-                            onAdd={handleAddSkill}
-                            onRemove={handleRemoveSkill}
-                        />
-                      </div>
+                    <div className="pt-4">
+                      <Bullets
+                        title="Опыт"
+                        items={currentData.experience.map((exp) => exp.description)}
+                        isEditMode={isEditMode}
+                        onChange={handleSkillChange}
+                        onAdd={handleAddSkill}
+                        onRemove={handleRemoveSkill}
+                      />
+                    </div>
                   </div>
 
                   {/* Секция "Образование и сертификаты" */}
                   <div className="mt-6">
-                    {/* Секция "Образование и сертификаты" */}
-                    {/*{(currentData.education.length === 0 || currentData?.certificates.length === 0) && !isEditMode && (*/}
-                    {/*  <div className="mx-6 mb-2 items-center justify-center flex flex-col">*/}
-                    {/*    <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />*/}
-                    {/*    <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>*/}
-                    {/*  </div>*/}
-                    {/*)}*/}
-
                     {/* Определяем, какие секции нужно показывать */}
                     {(currentData.education?.length > 0 || currentData?.certificates.length > 0) && !isEditMode && (
                       <div
@@ -418,12 +613,12 @@ export function OverviewSection() {
                         {currentData.education?.length > 0 && (
                           <div className={!currentData?.certificates?.length ? "w-full" : ""}>
                             <Certificates
-                                title="Образование"
-                                items={currentData.education}
-                                isEditMode={false}
-                                onInputChange={handleInputChange}
-                                errors={errors}
-                                fieldKey={"education"}
+                              title="Образование"
+                              items={currentData.education}
+                              isEditMode={false}
+                              onInputChange={handleInputChange}
+                              errors={errors}
+                              fieldKey={"education"}
                             />
                           </div>
                         )}
@@ -432,12 +627,12 @@ export function OverviewSection() {
                         {currentData?.certificates.length > 0 && (
                           <div className={!currentData.education?.length ? "w-full" : ""}>
                             <Certificates
-                                title="Сертификаты"
-                                items={currentData.certificates}
-                                isEditMode={false}
-                                onInputChange={handleInputChange}
-                                errors={errors}
-                                fieldKey={"certificates"}
+                              title="Сертификаты"
+                              items={currentData.certificates}
+                              isEditMode={false}
+                              onInputChange={handleInputChange}
+                              errors={errors}
+                              fieldKey={"certificates"}
                             />
                           </div>
                         )}
@@ -445,29 +640,29 @@ export function OverviewSection() {
                     )}
 
                     {isEditMode && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <Certificates
-                                title="Образование"
-                                items={currentData.education}
-                                isEditMode={isEditMode}
-                                onInputChange={handleInputChange}
-                                errors={errors}
-                                fieldKey={"education"}
-                            />
-                          </div>
-
-                          <div>
-                            <Certificates
-                                title="Сертификаты"
-                                items={currentData.certificates}
-                                isEditMode={isEditMode}
-                                onInputChange={handleInputChange}
-                                errors={errors}
-                                fieldKey={"certificates"}
-                            />
-                          </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <Certificates
+                            title="Образование"
+                            items={currentData.education}
+                            isEditMode={isEditMode}
+                            onInputChange={handleInputChange}
+                            errors={errors}
+                            fieldKey={"education"}
+                          />
                         </div>
+
+                        <div>
+                          <Certificates
+                            title="Сертификаты"
+                            items={currentData.certificates}
+                            isEditMode={isEditMode}
+                            onInputChange={handleInputChange}
+                            errors={errors}
+                            fieldKey={"certificates"}
+                          />
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
