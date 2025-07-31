@@ -15,6 +15,9 @@ import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import type { ServiceData } from "@/components/service/types/common"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
+import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
+import type { CalendarRestrictions } from "@/types/calendar-event"
+import { FeedbackSection } from "@/components/service/feedback-section"
 
 interface ServicePageContentProps {
   service: Service
@@ -61,6 +64,21 @@ export function ServicePageContent({
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const specialist = service.specialist
+
+  // Mock calendar restrictions state
+  const [restrictions, setRestrictions] = useState<CalendarRestrictions>({
+    commons: {
+      Mon: { isActive: true, intervals: [] },
+      Tue: { isActive: true, intervals: [] },
+      Wed: { isActive: true, intervals: [] },
+      Thu: { isActive: true, intervals: [] },
+      Fri: { isActive: true, intervals: [] },
+      Sat: { isActive: false, intervals: [] },
+      Sun: { isActive: false, intervals: [] },
+    },
+    restrictions: [],
+  })
+  const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -263,6 +281,25 @@ export function ServicePageContent({
                   onPhotosUpload={handlePhotosUpload}
                   errors={errors}
                 />
+
+                {/* Practice Service Restrictions - only in edit mode */}
+                {isEditMode && (
+                  <div className="mt-8 p-6 bg-white rounded-lg shadow-sm">
+                    <PracticeServiceRestrictions
+                      restrictions={restrictions}
+                      onUpdate={setRestrictions}
+                      editingRestrictionId={editingRestrictionId}
+                      setEditingRestrictionId={setEditingRestrictionId}
+                    />
+                  </div>
+                )}
+
+                {/* Feedback Section - only in view mode */}
+                {!isEditMode && (
+                  <div className="mt-8">
+                    <FeedbackSection feedbacks={service.reviews} />
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
