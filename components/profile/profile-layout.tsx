@@ -7,6 +7,8 @@ import { useSearchParams } from "next/navigation"
 import { useProfileStore } from "@/stores/profile-store"
 import type { ProfileSection } from "@/types/profile"
 import {mockSavedSpecialists} from "@/services/mock-specialists";
+import {cn} from "@/lib/utils";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 interface ProfileLayoutProps {
   children: React.ReactNode
@@ -17,8 +19,8 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
   const {
     activeSection,
     setActiveSection,
-    setIsMobile,
   } = useProfileStore()
+  const isMobile = useIsMobile()
 
   // Handle URL section parameter
   useEffect(() => {
@@ -28,22 +30,11 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
     }
   }, [searchParams, setActiveSection])
 
-  // Handle responsive behavior
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
-    }
-
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [setIsMobile])
-
   return (
     <div className="min-h-screen">
       {/* Main Content */}
-      <div className="w-full pt-24">
-        <div className="p-6 max-w-7xl mx-auto">{children}</div>
+      <div className={cn("w-full", !isMobile && "pt-24")}>
+        <div className="mx-auto">{children}</div>
       </div>
     </div>
   )

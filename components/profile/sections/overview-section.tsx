@@ -201,10 +201,6 @@ export function OverviewSection() {
     setDraftData((prev) => ({ ...prev, experience: updatedItems }))
   }
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded)
-  }
-
   useEffect(() => {
     if (user) {
       const userData = {
@@ -248,7 +244,7 @@ export function OverviewSection() {
 
   if (isMobile) {
     return (
-      <main className="min-h-screen w-full relative">
+      <main className="min-h-screen w-full relative pt-3">
         <AnimatePresence mode="wait">
           {isTransitioning ? (
             <motion.div
@@ -256,7 +252,6 @@ export function OverviewSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="space-y-6"
             >
               <Skeleton className="h-[900px] w-full rounded-sm" />
             </motion.div>
@@ -271,10 +266,10 @@ export function OverviewSection() {
               {/* Header with Back Button and Action Buttons */}
               <div className="flex items-center justify-between mb-4 px-4 relative">
                 <div className="flex-1">
-                  <BackButton className="text-neutral-700 opacity-80" text={"назад"} />
+                  <BackButton className="text-neutral-700 opacity-80" />
                 </div>
 
-                <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
+                <div className="flex flex-row gap-6 items-center pr-6 ">
                   <ModeToggleBar
                     isEditMode={isEditMode}
                     onModeToggle={handleModeToggle}
@@ -302,7 +297,7 @@ export function OverviewSection() {
                 {/* Avatar */}
                 <div className="relative">
                   <div
-                    className="w-full rounded-sm p-1 overflow-hidden relative aspect-[4/5]"
+                    className="w-full rounded-sm overflow-hidden relative aspect-[4/5]"
                     onClick={isEditMode ? triggerAvatarInput : undefined}
                     onDragOver={isEditMode ? handleAvatarDragOver : undefined}
                     onDragLeave={isEditMode ? handleAvatarDragLeave : undefined}
@@ -321,7 +316,7 @@ export function OverviewSection() {
                     <img
                       src={currentData.avatar || "/placeholder.svg"}
                       alt={currentData.name}
-                      className="w-full h-full rounded-sm object-cover"
+                      className="w-full h-full object-cover"
                     />
 
                     {isEditMode && isHoveringAvatar && (
@@ -335,12 +330,10 @@ export function OverviewSection() {
 
                   {/* Stats block */}
                   {!isEditMode && (
-                    <div className="absolute bottom-3 right-3 bg-colors-neutral-150 rounded-sm p-1 w-[78px] h-[84px] gap-3">
-                      <div className="flex flex-row items-center gap-1 w-full border h-[36px] p-1 rounded-sm mt-1">
-                        <IconPractice width={22} height={20} />
-                        <div className="ml-auto text-sm">{formatNumber(user.practice || 0)}</div>
-                      </div>
-                    </div>
+                    <div className="absolute bottom-3 right-3 flex flex-row items-center gap-1  shadow-md  w-[100px] h-[36px] border rounded-sm  bg-colors-neutral-150  p-2">
+                    <IconPractice width={20} height={18} />
+                <div className="ml-auto">{formatNumber(user.practice || 0)}</div>
+              </div>
                   )}
                 </div>
 
@@ -407,10 +400,11 @@ export function OverviewSection() {
                 {/* Education and Certificates */}
                 <div className="mt-4 space-y-4">
                   {currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode ? (
-                    <div className="mx-6 mb-2 items-center justify-center flex flex-col">
-                      <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
-                      <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
-                    </div>
+                    // <div className="mx-6 mb-2 items-center justify-center flex flex-col">
+                    //   <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
+                    //   <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
+                    // </div>
+                      <></>
                   ) : (
                     <>
                       {(currentData.education.length > 0 || isEditMode) && (
@@ -436,8 +430,6 @@ export function OverviewSection() {
                     </>
                   )}
                 </div>
-
-                <div className="h-24" />
               </div>
             </motion.div>
           )}
