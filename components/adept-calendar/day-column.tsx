@@ -32,8 +32,8 @@ export function DayColumnHeader({ date, isSelectedDay }: Pick<DayColumnProps, "d
           </div>
           <div
               className={cn(
-                  "flex items-center justify-center h-[30px] w-[30px] text-neutral-700",
-                  isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square",
+                  "flex items-center justify-center text-neutral-700",
+                  isSelectedDay && "bg-violet-600 text-white rounded-sm aspect-square h-[30px] w-[30px]",
               )}
           >
             {day}
