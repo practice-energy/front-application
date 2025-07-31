@@ -9,11 +9,11 @@ import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/chats"
-import type { Service } from "@/types/common"
 import Image from "next/image"
 import {getSpecialistById} from "@/services/mock-specialists";
 import {IconAlura} from "@/components/icons/icon-alura";
 import {ActionButtonsRow} from "@/components/action-button";
+import {Service} from "@/types/service";
 
 interface MessageItemProps {
   specialistId: string

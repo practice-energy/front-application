@@ -1,4 +1,5 @@
-import {Education, Experience, Specialist} from "@/types/common";
+import {Education, Experience} from "@/types/common";
+import {Specialist} from "@/types/specialist";
 
 export interface User {
   id: string

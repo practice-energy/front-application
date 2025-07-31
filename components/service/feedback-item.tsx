@@ -1,8 +1,8 @@
 "use client"
-import type { Feedback } from "@/types/common"
 import { IconPractice } from "@/components/icons/icon-practice"
 import Image from "next/image";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
+import {Feedback} from "@/types/feedback";
 
 interface FeedbackItemProps {
   feedback: Feedback

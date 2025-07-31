@@ -2,7 +2,6 @@
 
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
-import {Service, Specialist} from "@/types/common";
 import {AddEntityButton} from "@/components/add-entity-button";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import React from "react";
@@ -10,6 +9,8 @@ import {v4 as uuidv4} from "uuid";
 import {SpecialistData} from "@/components/specialist/types/common";
 import {useRouter} from "next/navigation";
 import {useIsMobile} from "@/hooks/use-mobile";
+import {Service} from "@/types/service";
+import {Specialist} from "@/types/specialist";
 
 interface PracticeBlockSectionProps {
     services: Service[]

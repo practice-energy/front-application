@@ -1,5 +1,4 @@
 // Mock данные для специалистов (обновлены ID)
-import type {Specialist} from "@/types/common";
 import {v4 as uuidv4} from "uuid";
 import {
     service1Id, service2Id,
@@ -9,6 +8,7 @@ import {
     specialist4Id,
     specialist5Id
 } from "@/services/mock-data";
+import {Specialist} from "@/types/specialist";
 
 export const mockSpecialists: Specialist[] = [
     {

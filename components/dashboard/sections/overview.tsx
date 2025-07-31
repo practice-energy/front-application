@@ -16,8 +16,8 @@ import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
-import {Specialist} from "@/types/common";
 import {mockSpecialist} from "@/services/mock-specialists";
+import {Specialist} from "@/types/specialist";
 
 export default function Overview() {
   const router = useRouter()

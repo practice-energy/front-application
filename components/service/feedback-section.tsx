@@ -1,8 +1,8 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
-import type { Feedback } from "@/types/common"
 import { FeedbackItem } from "./feedback-item"
 import {Mufi} from "@/components/mufi";
+import {Feedback} from "@/types/feedback";
 
 interface FeedbackSectionProps {
   feedbacks: Feedback[]

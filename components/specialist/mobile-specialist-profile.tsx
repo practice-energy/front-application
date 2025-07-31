@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import {MapPin, Share, MessagesSquare, ChevronDown, ImageUp} from "lucide-react"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { BackButton } from "@/components/ui/button-back"
-import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -23,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import {LocationInput} from "@/components/location-input";
+import {Specialist} from "@/types/specialist";
 
 interface MobileSpecialistProfileProps {
     specialist: Specialist

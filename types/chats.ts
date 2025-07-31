@@ -1,4 +1,5 @@
-import type { Specialist, Service } from "./common"
+import {Service} from "@/types/service";
+import {Specialist} from "@/types/specialist";
 
 export interface Message {
   id: string

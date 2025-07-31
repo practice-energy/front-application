@@ -5,7 +5,6 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {TimerReset} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-import type { Service } from "@/types/common"
 import {formatNumber} from "@/utils/format";
 import {BurnEntityButton} from "@/components/burn-entity-button";
 import {RepeatEntityButton} from "@/components/repeat-entity-button";
@@ -14,6 +13,7 @@ import {IconPractice} from "@/components/icons/icon-practice";
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import { motion, AnimatePresence } from "framer-motion";
 import {cn} from "@/lib/utils";
+import {Service} from "@/types/service";
 
 interface InstagramServiceCardProps {
     service: Service

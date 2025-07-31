@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation"
 import { Share, Reply, MapPinHouse} from "lucide-react"
 import { useDoubleTap } from "@/hooks/use-double-tap"
 import { useLikes } from "@/hooks/use-likes"
-import type { Specialist } from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import {IconPractice} from "@/components/icons/icon-practice";
+import {Specialist} from "@/types/specialist";
 
 interface InstagramSpecialistCardProps {
   specialist: Specialist

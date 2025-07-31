@@ -3,7 +3,8 @@ import { persist } from "zustand/middleware"
 import type { ProfileSection } from "@/types/profile"
 import { User } from "@/types/user"
 import { ProfileStats } from "@/types/profile-stats"
-import {Specialist} from "@/types/common";
+
+import {Specialist} from "@/types/specialist";
 
 interface ProfileState {
   // UI State

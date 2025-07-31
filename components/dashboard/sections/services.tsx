@@ -12,8 +12,8 @@ import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/
 import { cn } from "@/lib/utils"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import { ClockIcon } from "@heroicons/react/24/outline"
-import type { Service } from "@/types/common"
 import {mockServices} from "@/services/mock-services";
+import {Service} from "@/types/service";
 
 interface ServiceCardProps {
   service: Service & { isActive?: boolean }

@@ -2,11 +2,11 @@
 
 import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-import type { Format, Service } from "@/types/common"
+import type { Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
@@ -19,6 +19,8 @@ import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { CurrencyInput } from "@/components/currency-input"
 import { PhotoUpload } from "@/components/photo-upload"
+import {PracticeServiceRestrictions} from "@/components/service/components/practice-service-restrictions";
+import {Service} from "@/types/service";
 
 interface ServiceCardProps {
   service: Service
@@ -324,6 +326,18 @@ export function ServiceCard({
               <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
             </div>
           )}
+
+          {/* Practice Service Restrictions - only in edit mode */}
+          {/*{isEditMode && (*/}
+          {/*    <div className="mt-8 p-6 bg-white rounded-lg shadow-sm">*/}
+          {/*      <PracticeServiceRestrictions*/}
+          {/*          restrictions={service.restrictions}*/}
+          {/*          onUpdate={setRestrictions}*/}
+          {/*          editingRestrictionId={editingRestrictionId}*/}
+          {/*          setEditingRestrictionId={setEditingRestrictionId}*/}
+          {/*      />*/}
+          {/*    </div>*/}
+          {/*)}*/}
         </div>
 
         {!isEditMode && (

@@ -4,7 +4,7 @@ import type React from "react"
 
 import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
-import type { Service, Format } from "@/types/common"
+import type { Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -31,6 +31,7 @@ import { Bullets } from "@/components/specialist/bullets"
 import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
 import type { CalendarRestrictions } from "@/types/calendar-event"
+import {Service} from "@/types/service";
 
 interface MobileServiceCardProps {
   service: Service

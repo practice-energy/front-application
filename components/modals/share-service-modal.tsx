@@ -8,7 +8,8 @@ import { Copy, Check, MessageCircle, Mail, Link, X } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { EnhancedInput } from "@/components/enhanced-input"
-import type { Service } from "@/types/common"
+
+import {Service} from "@/types/service";
 
 interface ShareServiceModalProps {
   isOpen: boolean

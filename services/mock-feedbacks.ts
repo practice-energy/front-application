@@ -1,5 +1,6 @@
 import {v4 as uuidv4} from "uuid"
-import type {Feedback} from "@/types/common";
+
+import {Feedback} from "@/types/feedback";
 
 export const mockFeedbacks: Feedback[] = [
     {

@@ -4,7 +4,7 @@ import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp } from "lucide-react"
 import { BackButton } from "@/components/ui/button-back"
-import type {Education, Experience, Service, Specialist} from "@/types/common"
+import type {Education, Experience} from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -22,6 +22,8 @@ import { PracticePlaceholder } from "@/components/practice-placeholder"
 import {SpecialistData} from "@/components/specialist/types/common";
 import {LocationInput} from "@/components/location-input";
 import {PracticeBlockSection} from "@/components/specialist/practice";
+import {Service} from "@/types/service";
+import {Specialist} from "@/types/specialist";
 
 interface SpecialistProfileProps {
   specialist: Specialist
