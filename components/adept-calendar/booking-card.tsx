@@ -128,7 +128,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
             <div className="flex flex-col flex-1 min-w-0">
               {/* Заголовок услуги */}
               <div
-                  className={`line-clamp-2 text-sm font-medium`}
+                  className={`leading-relaxed line-clamp-2 text-sm font-medium`}
                   style={{height: `${slotHeight}px`}}
               >
                 {booking.service.title}

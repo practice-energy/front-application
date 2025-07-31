@@ -1,5 +1,6 @@
 import { PanelRightOpen, Search } from "lucide-react";
 import { Input } from "@/components/ui/input"
+import {cn} from "@/lib/utils";
 
 interface TopperProps {
     toggleSidebar: () => void;
@@ -15,7 +16,10 @@ export const Topper = ({
                            isMobile,
                        }: TopperProps) => {
     return (
-        <div className="relative p-3 space-y-3 mt-6">
+        <div className={cn(
+            "relative p-3 space-y-3" ,
+            !isMobile && "mt-6"
+        )}>
             {isMobile ? (
                 <div className="flex items-center gap-3">
                     <div className="relative w-full">

@@ -419,7 +419,6 @@ export function MobileServiceCard({
                         placeholder="Название"
                         type="input"
                         className="text-neutral-900 flex-1 w-min-2/3"
-                        showEditIcon
                       />
                     ) : (
                       <div className="text-2xl font-semibold">{draftData.title}</div>
@@ -453,7 +452,6 @@ export function MobileServiceCard({
                     placeholder="Введите описание"
                     type="input"
                     className="mt-4 text-sm"
-                    showEditIcon
                   />
                 ) : (
                   <p className="text-gray-700">{draftData.description}</p>

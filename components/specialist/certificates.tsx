@@ -232,7 +232,6 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
                                                 placeholder="Введите название"
                                                 error={errors.title}
                                                 required
-                                                showEditIcon
                                             />
                                             <EnhancedInput
                                                 value={item.description}
@@ -240,7 +239,6 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
                                                 placeholder="Введите описание"
                                                 type="input"
                                                 rows={1}
-                                                showEditIcon
                                             />
                                         </div>
                                         <motion.div

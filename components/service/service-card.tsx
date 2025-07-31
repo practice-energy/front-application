@@ -231,7 +231,6 @@ export function ServiceCard({
                   placeholder="Название"
                   type="input"
                   className="text-neutral-900 flex-1"
-                  showEditIcon
                 />
               ) : (
                 <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
@@ -263,7 +262,6 @@ export function ServiceCard({
                 placeholder="Введите описание"
                 type="input"
                 className="mt-4 text-sm"
-                showEditIcon
               />
             ) : (
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{service.description}</p>

@@ -340,7 +340,6 @@ export function OverviewSection() {
                             error={errors.name}
                             required
                             placeholder="Введите имя"
-                            showEditIcon
                           />
                         </div>
                       ) : (

@@ -113,7 +113,6 @@ export function AboutContentsSection({
                             type="textarea"
                             rows={4}
                             error={errors?.contents}
-                            showEditIcon
                         />
                     ) : (
                         <div className={cn(

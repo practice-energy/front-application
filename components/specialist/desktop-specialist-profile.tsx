@@ -389,7 +389,6 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                                     error={errors.name}
                                     required
                                     placeholder="Введите имя"
-                                    showEditIcon
                                 />
                                 <EnhancedInput
                                     value={draftData.title}
@@ -397,7 +396,6 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                                     placeholder="Введите описание"
                                     type="input"
                                     className="mt-4 text-sm"
-                                    showEditIcon
                                 />
                                 <div className="mt-4">
                                   <LocationInput

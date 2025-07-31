@@ -27,7 +27,7 @@ export function ProfileIcon({
             <button
                 onClick={toggleProfileMenu}
                 className={cn(
-                    "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10 mt-2",
+                    "w-[50px] h-[50px] rounded-sm transition-all duration-200 z-10",
                     "focus:outline-none"
                 )}
                 aria-label="Profile menu"

@@ -114,7 +114,6 @@ export function AboutSkillsSection({
                             type="textarea"
                             rows={4}
                             error={errors?.description}
-                            showEditIcon
                         />
                     ) : (
                         <div className={cn(

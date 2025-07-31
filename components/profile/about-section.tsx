@@ -76,7 +76,6 @@ export function AboutSection({ description, isEditMode, onInputChange, errors }:
                     placeholder="Расскажите о себе..."
                     error={errors.bio}
                     required
-                    showEditIcon
                     rows={3}
                     type="textarea"
                 />

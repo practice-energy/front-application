@@ -29,7 +29,7 @@ export const CalendarMobileHeader = ({
     const pathname = usePathname()
 
     return (
-        <header className="top-0 left-0 right-0 h-24 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-50 px-4 flex items-center justify-between">
+        <header className="top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50 px-4 flex items-center justify-between">
             <SidebarToggleButton
                 toggleSidebar={toggleSidebar}
                 className="mr-2"
@@ -47,7 +47,6 @@ export const CalendarMobileHeader = ({
                     toggleProfileMenu={toggleProfileMenu}
                     user={user}
                     iconSize={50}
-                    className="mb-2"
                 />
             </div>
         </header>

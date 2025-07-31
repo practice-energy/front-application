@@ -69,24 +69,6 @@ export function ProfileMenu({
             </Link>
 
             <Link
-              href="/calendar"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <CalendarDays className="mr-3 h-4 w-4" />
-              Календарь
-            </Link>
-
-            <Link
-              href="/profile?section=saved"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <Pentagram className="mr-3 h-4 w-4" />
-              Сохраненные
-            </Link>
-
-            <Link
               href="/profile?section=security"
               className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
               onClick={() => setShowProfileMenu(false)}
@@ -102,17 +84,6 @@ export function ProfileMenu({
             >
               <CreditCard className="mr-3 h-4 w-4" />
               Баланс
-            </Link>
-          </div>
-
-          <div className="border-t border-gray-100 dark:border-gray-700 py-2">
-            <Link
-              href="/help"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <HelpCircle className="mr-3 h-4 w-4" />
-              Help / FAQ
             </Link>
           </div>
 

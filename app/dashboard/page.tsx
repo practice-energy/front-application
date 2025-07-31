@@ -3,7 +3,6 @@
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { MainDashboard } from "@/components/dashboard/sections/main-dashboard"
-import Overview from "@/components/dashboard/sections/overview";
 
 function DashboardContent() {
   const searchParams = useSearchParams()

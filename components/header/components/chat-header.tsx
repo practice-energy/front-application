@@ -21,7 +21,7 @@ export const ChatHeader = ({
                                isAuthenticated
                            }: ChatHeaderProps) => {
     return (
-        <header className="fixed top-0 left-0 right-0 h-24 bg-white opacity-70 z-50 px-4 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 h-16 bg-white opacity-70 z-50 px-4 flex items-center justify-between">
             <SidebarToggleButton
                 toggleSidebar={toggleSidebar}
                 className="mr-2"
@@ -37,7 +37,7 @@ export const ChatHeader = ({
                 toggleProfileMenu={toggleProfileMenu}
                 user={user}
                 className="ml-4"
-                iconSize={36}
+                iconSize={50}
             />
         </header>
     )
