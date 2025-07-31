@@ -6,7 +6,7 @@ import type { Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
@@ -19,8 +19,9 @@ import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { CurrencyInput } from "@/components/currency-input"
 import { PhotoUpload } from "@/components/photo-upload"
-import {PracticeServiceRestrictions} from "@/components/service/components/practice-service-restrictions";
-import {Service} from "@/types/service";
+import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
+import type { Service } from "@/types/service"
+import type { CalendarRestrictions } from "@/types/calendar-event"
 
 interface ServiceCardProps {
   service: Service
@@ -30,6 +31,13 @@ interface ServiceCardProps {
   onInputChange: (field: keyof ServiceData, value: string | string[] | Format[] | any) => void
   onPhotosUpload?: (photos: File[]) => Promise<void>
   errors?: Record<string, string>
+}
+
+// Helper function to create File from URL
+const createFileFromUrl = async (url: string, filename: string): Promise<File> => {
+  const response = await fetch(url)
+  const blob = await response.blob()
+  return new File([blob], filename, { type: blob.type })
 }
 
 export function ServiceCard({
@@ -44,6 +52,23 @@ export function ServiceCard({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
+  const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+
+  // Initialize restrictions from service or create default
+  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
+    service.calendarRestrictions || {
+      commons: {
+        Mon: { isActive: true, intervals: [] },
+        Tue: { isActive: true, intervals: [] },
+        Wed: { isActive: true, intervals: [] },
+        Thu: { isActive: true, intervals: [] },
+        Fri: { isActive: true, intervals: [] },
+        Sat: { isActive: false, intervals: [] },
+        Sun: { isActive: false, intervals: [] },
+      },
+      restrictions: [],
+    },
+  )
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
@@ -90,6 +115,11 @@ export function ServiceCard({
     // Обновляем состояние в service data - создаем временные URL для превью
     const photoUrls = photos.map((photo) => URL.createObjectURL(photo))
     onInputChange("images", photoUrls)
+  }
+
+  const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
+    setRestrictions(newRestrictions)
+    onInputChange("calendarRestrictions", newRestrictions)
   }
 
   // Передаем фотографии для загрузки на сервер через пропс
@@ -306,7 +336,9 @@ export function ServiceCard({
           <AboutContentsSection
             contents={service.contents}
             included={service.includes}
-            onContentsChange={(e) => {onInputChange("contents", e)}}
+            onContentsChange={(e) => {
+              onInputChange("contents", e)
+            }}
             onAddIncluded={handleAddIncluded}
             onIncludedChange={handleIncludedChange}
             onRemoveIncluded={handleRemoveIncluded}
@@ -315,29 +347,29 @@ export function ServiceCard({
 
           {/* Bookings section */}
           {isAuthenticated &&
-              // TODO
-              // booked?.length === 0 &&
-              !isEditMode && (
-            <div className=" relative flex flex-row px-6 pb-3">
-              <div className="w-80 flex-shrink-0">
-                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+            // TODO
+            // booked?.length === 0 &&
+            !isEditMode && (
+              <div className=" relative flex flex-row px-6 pb-3">
+                <div className="w-80 flex-shrink-0">
+                  <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+                </div>
+                <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+                <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
               </div>
-              <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-              <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-            </div>
-          )}
+            )}
 
           {/* Practice Service Restrictions - only in edit mode */}
-          {/*{isEditMode && (*/}
-          {/*    <div className="mt-8 p-6 bg-white rounded-lg shadow-sm">*/}
-          {/*      <PracticeServiceRestrictions*/}
-          {/*          restrictions={service.restrictions}*/}
-          {/*          onUpdate={setRestrictions}*/}
-          {/*          editingRestrictionId={editingRestrictionId}*/}
-          {/*          setEditingRestrictionId={setEditingRestrictionId}*/}
-          {/*      />*/}
-          {/*    </div>*/}
-          {/*)}*/}
+          {isEditMode && (
+            <div className="mt-8 p-6 bg-white rounded-lg shadow-sm">
+              <PracticeServiceRestrictions
+                restrictions={restrictions}
+                onUpdate={handleRestrictionsUpdate}
+                editingRestrictionId={editingRestrictionId}
+                setEditingRestrictionId={setEditingRestrictionId}
+              />
+            </div>
+          )}
         </div>
 
         {!isEditMode && (

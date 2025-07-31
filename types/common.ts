@@ -9,4 +9,3 @@ export interface Experience {
 }
 
 export type Format = "video" | "in-person"
-

@@ -31,7 +31,7 @@ import { Bullets } from "@/components/specialist/bullets"
 import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
 import type { CalendarRestrictions } from "@/types/calendar-event"
-import {Service} from "@/types/service";
+import type { Service } from "@/types/service"
 
 interface MobileServiceCardProps {
   service: Service
@@ -84,19 +84,21 @@ export function MobileServiceCard({
 
   const [editPhotos, setEditPhotos] = useState<File[]>([])
 
-  // Mock calendar restrictions state
-  const [restrictions, setRestrictions] = useState<CalendarRestrictions>({
-    commons: {
-      Mon: { isActive: true, intervals: [] },
-      Tue: { isActive: true, intervals: [] },
-      Wed: { isActive: true, intervals: [] },
-      Thu: { isActive: true, intervals: [] },
-      Fri: { isActive: true, intervals: [] },
-      Sat: { isActive: false, intervals: [] },
-      Sun: { isActive: false, intervals: [] },
+  // Initialize restrictions from service or create default
+  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
+    service.calendarRestrictions || {
+      commons: {
+        Mon: { isActive: true, intervals: [] },
+        Tue: { isActive: true, intervals: [] },
+        Wed: { isActive: true, intervals: [] },
+        Thu: { isActive: true, intervals: [] },
+        Fri: { isActive: true, intervals: [] },
+        Sat: { isActive: false, intervals: [] },
+        Sun: { isActive: false, intervals: [] },
+      },
+      restrictions: [],
     },
-    restrictions: [],
-  })
+  )
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
@@ -207,6 +209,11 @@ export function MobileServiceCard({
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
+  }
+
+  const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
+    setRestrictions(newRestrictions)
+    handleInputChange("calendarRestrictions", newRestrictions)
   }
 
   const handleShare = useCallback(
@@ -566,7 +573,7 @@ export function MobileServiceCard({
                 <div className="bg-colors-neutral-150 px-4 py-6">
                   <PracticeServiceRestrictions
                     restrictions={restrictions}
-                    onUpdate={setRestrictions}
+                    onUpdate={handleRestrictionsUpdate}
                     editingRestrictionId={editingRestrictionId}
                     setEditingRestrictionId={setEditingRestrictionId}
                   />
