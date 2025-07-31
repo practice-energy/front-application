@@ -6,7 +6,7 @@ import type { Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { BookingSection } from "@/components/service/booking-section"
@@ -53,6 +53,9 @@ export function ServiceCard({
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+
+  const calendarBottomRef = useRef<HTMLDivElement>(null)
+  const restrictionBottomRef = useRef<HTMLDivElement>(null)
 
   // Initialize restrictions from service or create default
   const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
@@ -121,6 +124,20 @@ export function ServiceCard({
     setRestrictions(newRestrictions)
     onInputChange("calendarRestrictions", newRestrictions)
   }
+
+  // Scroll to calendar bottom when calendar opens
+  useEffect(() => {
+    if (selectedDate && calendarBottomRef.current) {
+      calendarBottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" })
+    }
+  }, [selectedDate])
+
+  // Scroll to restriction bottom when editing restriction
+  useEffect(() => {
+    if (editingRestrictionId && restrictionBottomRef.current) {
+      restrictionBottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" })
+    }
+  }, [editingRestrictionId])
 
   // Передаем фотографии для загрузки на сервер через пропс
   const handleUploadPhotos = async () => {
@@ -356,6 +373,7 @@ export function ServiceCard({
                 </div>
                 <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
                 <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                <div ref={calendarBottomRef} />
               </div>
             )}
 
@@ -368,6 +386,7 @@ export function ServiceCard({
                 editingRestrictionId={editingRestrictionId}
                 setEditingRestrictionId={setEditingRestrictionId}
               />
+              <div ref={restrictionBottomRef} />
             </div>
           )}
         </div>

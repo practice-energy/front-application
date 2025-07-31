@@ -8,7 +8,7 @@ import type { Format } from "@/types/common"
 import Image from "next/image"
 import { AboutContentsSection } from "@/components/service/about-contents-section"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { useState, useCallback, useMemo, useEffect } from "react"
+import { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import { CalendarWidget } from "@/components/adept-calendar/calendar-widget"
 import type { BookingSlot } from "@/types/booking"
 import { FeedbackSection } from "@/components/service/feedback-section"
@@ -100,6 +100,9 @@ export function MobileServiceCard({
     },
   )
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+
+  const calendarBottomRef = useRef<HTMLDivElement>(null)
+  const restrictionBottomRef = useRef<HTMLDivElement>(null)
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
@@ -215,6 +218,20 @@ export function MobileServiceCard({
     setRestrictions(newRestrictions)
     handleInputChange("calendarRestrictions", newRestrictions)
   }
+
+  // Scroll to calendar bottom when calendar opens
+  useEffect(() => {
+    if (selectedDate && calendarBottomRef.current) {
+      calendarBottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" })
+    }
+  }, [selectedDate])
+
+  // Scroll to restriction bottom when editing restriction
+  useEffect(() => {
+    if (editingRestrictionId && restrictionBottomRef.current) {
+      restrictionBottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" })
+    }
+  }, [editingRestrictionId])
 
   const handleShare = useCallback(
     (e: React.MouseEvent) => {
@@ -577,6 +594,7 @@ export function MobileServiceCard({
                     editingRestrictionId={editingRestrictionId}
                     setEditingRestrictionId={setEditingRestrictionId}
                   />
+                  <div ref={restrictionBottomRef} />
                 </div>
               )}
             </motion.div>
@@ -595,6 +613,7 @@ export function MobileServiceCard({
                   <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
                 </div>
                 <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+                <div ref={calendarBottomRef} />
               </>
             )}
 
