@@ -2,17 +2,14 @@
 
 import React from "react"
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { ArrowUp, X, FileText, Paperclip } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTranslations } from "@/hooks/use-translations"
+import { ArrowUp, X, FileText, Paperclip, MessageSquarePlus } from "lucide-react"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
-import {IconPractice} from "@/components/icons/icon-practice";
-import {IconAlura} from "@/components/icons/icon-alura";
+import { IconPractice } from "@/components/icons/icon-practice"
+import { IconAlura } from "@/components/icons/icon-alura"
 
 interface DesktopSearchBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -28,6 +25,8 @@ interface DesktopSearchBarProps {
   chatTitle?: string
   showPractice: boolean
   disableFileApply: boolean
+  mode?: "accept" | "continue" | "input"
+  onContinue?: () => void
 }
 
 export const DesktopMufi = React.memo(function DesktopSearchBar({
@@ -38,6 +37,8 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
   chatTitle = "Alura",
   showPractice = false,
   disableFileApply = true,
+  mode = "input",
+  onContinue,
 }: DesktopSearchBarProps) {
   const router = useRouter()
   const [message, setMessage] = useState("")
@@ -48,6 +49,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
   const [isDragOver, setIsDragOver] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [isPractice, setIsPractice] = useState(false)
+  const [isAccepted, setIsAccepted] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -249,6 +251,31 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
   const canSubmit = message.trim() || uploadedFiles.length > 0
   const hasContent = message.trim().length > 0 || isFocused
 
+  const handleCheckboxToggle = useCallback(() => {
+    setIsAccepted((prev) => !prev)
+  }, [])
+
+  const handleContinue = useCallback(() => {
+    if (onContinue) {
+      onContinue()
+    }
+  }, [onContinue])
+
+  const handleNewChat = useCallback(() => {
+    const searchId = uuidv4()
+    window.dispatchEvent(
+      new CustomEvent("newChatCreated", {
+        detail: {
+          chatId: searchId,
+          title: chatTitle,
+          query: "",
+          files: [],
+        },
+      }),
+    )
+    router.push(`/search/${searchId}`)
+  }, [router, chatTitle])
+
   return (
     <div
       ref={containerRef}
@@ -296,11 +323,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
             <form onSubmit={handleSubmit} className="w-full">
               <div className="flex items-center gap-2.5 pb-2">
                 <div className="flex-shrink-0 flex items-center justify-center">
-                  <IconAlura
-                    width={36}
-                    height={36}
-                    className="mb-1.5 mr-1"
-                  />
+                  <IconAlura width={36} height={36} className="mb-1.5 mr-1" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <textarea
@@ -327,52 +350,78 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                 <div className="flex items-center gap-2">
                   {/* File Upload Button */}
                   <button
-                      type="button"
-                      onClick={openFileDialog}
-                      disabled={disableFileApply} // Добавлен disabled проп
-                      className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
-                          disableFileApply
-                              ? "bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100"
-                              : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white"
-                      }`}
+                    type="button"
+                    onClick={openFileDialog}
+                    disabled={disableFileApply} // Добавлен disabled проп
+                    className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
+                      disableFileApply
+                        ? "bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100"
+                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white"
+                    }`}
                   >
-                    <Paperclip className={`w-4 h-4 ${
-                        disableFileApply ? "opacity-50" : ""
-                    }`} />
+                    <Paperclip className={`w-4 h-4 ${disableFileApply ? "opacity-50" : ""}`} />
                   </button>
 
                   {/* Settings/Practice Button */}
-                  {
-                    showPractice && (<button
-                          type="button"
-                          onClick={togglePractice}
-                          className={`rounded-sm px-1.5 h-[36px] w-[36px] font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
-                              isPractice
-                                  ? "bg-violet-600 text-white hover:bg-violet-500"
-                                  : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
-                          }`}
-                      >
-                        <IconPractice
-                            width={27}
-                            height={24}
-                            className={`${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
-                        />
-                      </button>)
-                  }
+                  {showPractice && (
+                    <button
+                      type="button"
+                      onClick={togglePractice}
+                      className={`rounded-sm px-1.5 h-[36px] w-[36px] font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
+                        isPractice
+                          ? "bg-violet-600 text-white hover:bg-violet-500"
+                          : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
+                      }`}
+                    >
+                      <IconPractice
+                        width={27}
+                        height={24}
+                        className={`${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
+                      />
+                    </button>
+                  )}
                 </div>
 
-                {/* Send Button */}
-                <button
-                  type="submit"
-                  disabled={!canSubmit}
-                  className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
-                    canSubmit
-                      ? "bg-violet-600 hover:bg-violet-700 text-white"
-                      : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
-                  }`}
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </button>
+                {/* Action Button */}
+                {mode === "accept" ? (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={isAccepted}
+                      onChange={handleCheckboxToggle}
+                      className="h-9 w-9 rounded-sm border-2 border-violet-600 text-violet-600 focus:ring-violet-500 focus:ring-2 cursor-pointer"
+                    />
+                  </div>
+                ) : mode === "continue" ? (
+                  <button
+                    type="button"
+                    onClick={handleContinue}
+                    className="h-9 px-4 shadow-sm rounded-sm bg-violet-600 hover:bg-violet-700 text-white font-medium"
+                  >
+                    Продолжить
+                  </button>
+                ) : message.trim() || uploadedFiles.length > 0 ? (
+                  <button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
+                      canSubmit
+                        ? "bg-violet-600 hover:bg-violet-700 text-white"
+                        : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
+                    }`}
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleNewChat}
+                    className="h-9 px-4 shadow-sm rounded-sm bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center gap-2"
+                  >
+                    <MessageSquarePlus className="w-4 h-4" />
+                    Новый чат
+                  </button>
+                )}
               </div>
             </form>
 

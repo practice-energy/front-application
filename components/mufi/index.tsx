@@ -19,16 +19,21 @@ interface SearchBarProps {
   chatTitle?: string
   disableFileApply: boolean
   showPractice: boolean
+  mode?: "accept" | "continue" | "input"
+  onContinue?: () => void
 }
 
 export const Mufi = React.memo(function SearchBar(props: SearchBarProps) {
   const isMobile = useIsMobile()
+  const { mode = "input", ...restProps } = props
 
   if (isMobile) {
-    return <MobileMufi onSearch={props.onSearch} placeholder={props.placeholder} chatTitle={props.chatTitle} />
+    return <MobileMufi {...restProps} mode={mode} />
   }
 
-  return <div className="max-w-4xl mx-auto mb-6">
-    <DesktopMufi {...props} />
-  </div>
+  return (
+    <div className="max-w-4xl mx-auto mb-6">
+      <DesktopMufi {...restProps} mode={mode} />
+    </div>
+  )
 })
