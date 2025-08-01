@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Copy, Share, Paperclip } from "lucide-react"
@@ -25,6 +25,8 @@ interface MessageItemProps {
   onRegenerate: (message: Message) => void
   isAI: boolean
   aiMessageType?: AiMessageType
+  onTagSelection?: (tags: string[]) => void
+  onPolicyAcceptance?: (accepted: boolean) => void
 }
 
 export const MessageItem = React.memo(
@@ -37,6 +39,8 @@ export const MessageItem = React.memo(
     onRegenerate,
     isAI,
     aiMessageType,
+    onTagSelection,
+    onPolicyAcceptance,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -45,6 +49,20 @@ export const MessageItem = React.memo(
     const [policyAccepted, setPolicyAccepted] = useState(false)
     const [selectedTags, setSelectedTags] = useState<string[]>([])
     const [expandedTags, setExpandedTags] = useState<string[]>([])
+
+    // Notify parent component about tag selection changes
+    useEffect(() => {
+      if (message.aiMessageType === "become-specialist-drops" && onTagSelection) {
+        onTagSelection(selectedTags)
+      }
+    }, [selectedTags, message.aiMessageType, onTagSelection])
+
+    // Notify parent component about policy acceptance changes
+    useEffect(() => {
+      if (message.aiMessageType === "become-specialist-drops" && onPolicyAcceptance) {
+        onPolicyAcceptance(policyAccepted)
+      }
+    }, [policyAccepted, message.aiMessageType, onPolicyAcceptance])
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -72,33 +90,29 @@ export const MessageItem = React.memo(
 
     const renderTagGrid = (tags: Tag[], depth = 0) => {
       return (
-          <div className={`flex  ${depth > 0 ? 'flex-col gap-2' : 'flex-wrap gap-4'}`}>
-            {tags.map((tag, index) => (
-                <div key={`${depth}-${index}`} className="flex flex-col">
-                  <button
-                      onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
-                      className={cn(
-                          "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                          "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
-                          selectedTags.includes(tag.name)
-                              ? "bg-violet-50"
-                              : "bg-gray-100 md:hover:bg-violet-50"
-                      )}
-                  >
-                    {tag.name}
-                  </button>
+        <div className={`flex  ${depth > 0 ? "flex-col gap-2" : "flex-wrap gap-4"}`}>
+          {tags.map((tag, index) => (
+            <div key={`${depth}-${index}`} className="flex flex-col">
+              <button
+                onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
+                className={cn(
+                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
+                  selectedTags.includes(tag.name) ? "bg-violet-50" : "bg-gray-100 md:hover:bg-violet-50",
+                )}
+              >
+                {tag.name}
+              </button>
 
-                  {/* Рекурсивный вызов для подтегов (вертикальное расположение) */}
-                  {tag.subtags && expandedTags.includes(tag.name) && (
-                      <div className="flex flex-col gap-2 mt-2">
-                        {renderTagGrid(tag.subtags, depth + 1)}
-                      </div>
-                  )}
-                </div>
-            ))}
-          </div>
-      );
-    };
+              {/* Рекурсивный вызов для подтегов (вертикальное расположение) */}
+              {tag.subtags && expandedTags.includes(tag.name) && (
+                <div className="flex flex-col gap-2 mt-2">{renderTagGrid(tag.subtags, depth + 1)}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
 
     return (
       <div
