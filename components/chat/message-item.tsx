@@ -8,7 +8,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
-import type {AiMessageType, Message} from "@/types/chats"
+import type { AiMessageType, Message, Tag } from "@/types/chats"
 import Image from "next/image"
 import { getSpecialistById } from "@/services/mock-specialists"
 import { IconAlura } from "@/components/icons/icon-alura"
@@ -45,6 +45,8 @@ export const MessageItem = React.memo(
     const isAssistant = message.type === "assistant"
     const isSpecialist = message.type === "specialist"
     const [policyAccepted, setPolicyAccepted] = useState(false)
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [expandedTags, setExpandedTags] = useState<string[]>([])
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -60,7 +62,59 @@ export const MessageItem = React.memo(
       onSpecialistClick(specialistId)
     }, [isAssistant, router, specialistId, onSpecialistClick])
 
+    const handleTagClick = useCallback((tagName: string, hasSubtags: boolean) => {
+      if (hasSubtags) {
+        setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
+      } else {
+        setSelectedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
+      }
+    }, [])
+
     const specialist = getSpecialistById(specialistId)
+
+    const renderTagGrid = (tags: Tag[]) => {
+      return (
+        <div className="mt-4 space-y-2">
+          {tags.map((tag, index) => (
+            <div key={index} className="space-y-2">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+                    selectedTags.includes(tag.name)
+                      ? "bg-violet-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+                  )}
+                >
+                  {tag.name}
+                </button>
+              </div>
+
+              {/* Subtags */}
+              {tag.subtags && expandedTags.includes(tag.name) && (
+                <div className="ml-4 flex flex-wrap gap-2">
+                  {tag.subtags.map((subtag, subIndex) => (
+                    <button
+                      key={subIndex}
+                      onClick={() => handleTagClick(subtag.name, false)}
+                      className={cn(
+                        "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                        selectedTags.includes(subtag.name)
+                          ? "bg-violet-500 text-white"
+                          : "bg-gray-50 text-gray-600 hover:bg-gray-100",
+                      )}
+                    >
+                      {subtag.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
 
     return (
       <div
@@ -71,8 +125,6 @@ export const MessageItem = React.memo(
           <div className="flex mb-1">
             {!isUser && (
               <div className="flex ml-1">
-                {" "}
-                {/* И здесь тоже убираем items-end */}
                 <button
                   className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
                   onClick={handleViewSpecialistProfile}
@@ -92,8 +144,6 @@ export const MessageItem = React.memo(
                   )}
                 </button>
                 <div className="flex flex-col ml-3 justify-end">
-                  {" "}
-                  {/* Добавляем justify-end */}
                   <div className="text-black font-sans">{isAssistant ? "Alura" : specialist?.name}</div>
                   <div className="text-accent text-gray-500">
                     {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
@@ -120,6 +170,11 @@ export const MessageItem = React.memo(
                   <p className="text-sm leading-relaxed">{message.content}</p>
                 </div>
               </div>
+            )}
+
+            {/* Tags grid for become-specialist-drops */}
+            {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
+              <div className="mt-4">{renderTagGrid(message.tags)}</div>
             )}
 
             {message.files && message.files.length > 0 && (
@@ -165,11 +220,7 @@ export const MessageItem = React.memo(
 
             {message.services && message.services.length > 0 && (
               <div className="mt-3 space-y-3 flex justify-end justify-items-end">
-                {" "}
-                {/* Основной контейнер с выравниванием вправо */}
                 <div className="grid grid-cols-1 gap-6">
-                  {" "}
-                  {/* Сетка карточек */}
                   {message.services.map((service: Service) => (
                     <InstagramServiceCard
                       key={service.id}
@@ -196,6 +247,7 @@ export const MessageItem = React.memo(
                 aiMessageType === "service" && "border-violet-600",
                 aiMessageType === "warning" && "border-pink-500",
                 message.aiMessageType === "accept-policy" && "border-violet-600",
+                message.aiMessageType === "become-specialist-drops" && "border-violet-600",
               )}
             />
           )}
@@ -205,10 +257,10 @@ export const MessageItem = React.memo(
             <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
               <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
               <Checkbox
-                  id="policy-accept"
-                  checked={policyAccepted}
-                  onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
-                  className="w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600"
+                id="policy-accept"
+                checked={policyAccepted}
+                onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
+                className="w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600"
               />
             </div>
           )}
