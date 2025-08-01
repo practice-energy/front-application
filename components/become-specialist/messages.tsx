@@ -22,7 +22,7 @@ interface SelectorModel {
     questions: SelectorQuestion[];
 }
 
-const personalitySelector: SelectorModel = {
+export const personalitySelector: SelectorModel = {
     questions: [
         {
             question: "Ваша реакция на неопределённость:",
