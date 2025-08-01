@@ -19,6 +19,7 @@ import { useAdeptChats } from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
 import {becomeSpecialistTags} from "@/services/become-specialist-tree-tag";
+import {messageInitMaster} from "@/components/become-specialist/messages";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -91,16 +92,7 @@ export function Header() {
       timestamp: Date.now(),
       createdAt: Date.now(),
       messages: [
-        {
-          id: uuidv4(),
-          type: "become-specialist-drops" as const,
-          tags: becomeSpecialistTags,
-          content:
-            "Приветствую вас на пути, где свет и тень вечного познания переплетаются с технологиями. Я - Alura, ваша спутница в этом путешествии\n\nНачинаем с выбора подходящих областей специализации. Какие ближе для ваших практис?",
-          timestamp: Date.now(),
-          footerContent: "Если часть вашей области пока не добавлена в чате выше, можете написать мне и она может появиться в ближайшее время а я вернусь к вам с оповещением, как только это произойдет.",
-          aiMessageType: "become-specialist-drops" as const,
-        },
+        messageInitMaster,
       ],
     }
 

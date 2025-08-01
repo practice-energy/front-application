@@ -22,6 +22,10 @@ interface SearchBarProps {
   mode?: "accept" | "continue" | "input"
   onContinue?: () => void
   canAccept?: boolean
+  selector: {
+    question: string
+    variants: string[]
+  }
 }
 
 export const Mufi = React.memo(function SearchBar(props: SearchBarProps) {

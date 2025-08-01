@@ -90,9 +90,9 @@ export const MessageItem = React.memo(
 
     const renderTagGrid = (tags: Tag[], depth = 0) => {
       return (
-        <div className={`flex  ${depth > 0 ? "flex-col gap-2" : "flex-wrap gap-4"}`}>
+        <div className={`flex  ml-auto ${depth > 0 ? "flex-col gap-2 " : "flex-wrap gap-4"}`}>
           {tags.map((tag, index) => (
-            <div key={`${depth}-${index}`} className="flex flex-col">
+            <div key={`${depth}-${index}`} className="flex flex-col  ml-auto">
               <button
                 onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
                 className={cn(
@@ -172,7 +172,7 @@ export const MessageItem = React.memo(
 
             {/* Tags grid for become-specialist-drops */}
             {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
-              <div className="mt-4">{renderTagGrid(message.tags)}</div>
+              <div className="mt-4 ml-auto">{renderTagGrid(message.tags)}</div>
             )}
 
             {message.files && message.files.length > 0 && (
