@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
+import { EasyNotifications } from "./components/easy-notifications" // Import EasyNotifications
 
 import { useHeaderState } from "./hooks/use-header-state"
 import { Logo } from "./components/logo"
@@ -15,7 +16,6 @@ import { ProfileMenu } from "./components/profile-menu"
 import { PentagramIcon, UserSwitchIcon } from "@phosphor-icons/react"
 import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
-import { EasyNotifications } from "@/components/easy-notifications"
 import { useAdeptChats } from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 
@@ -27,7 +27,7 @@ export function Header() {
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const hat = user?.hat
-  const { addChat } = useAdeptChats()
+  const { addChat, chats: adeptChats } = useAdeptChats()
 
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
@@ -70,6 +70,16 @@ export function Header() {
   }
 
   const handleBecomeSpecialist = () => {
+    // Проверяем, есть ли уже чат "стать мастером"
+    const existingBecomeSpecialistChat = adeptChats.find((chat) => chat.isSpecialChat === "become-specialist")
+
+    if (existingBecomeSpecialistChat) {
+      // Если чат уже существует, просто перенаправляем на него
+      router.push(`/search/${existingBecomeSpecialistChat.id}`)
+      return
+    }
+
+    // Если чата нет, создаем новый
     const chatId = uuidv4()
     const newChat = {
       id: chatId,
@@ -142,25 +152,29 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated
-              // && !user?.isSpecialist
-              && (
-              <button className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
-                  onClick={handleBecomeSpecialist}
-              >
-                <div className="font-medium"> Стать мастером</div>
-                <UserSwitchIcon size={36}/>
-              </button>
+          {isAuthenticated && (
+            // && !user?.isSpecialist
+            <button
+              className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
+              onClick={handleBecomeSpecialist}
+            >
+              <div className="font-medium"> Стать мастером</div>
+              <UserSwitchIcon size={36} />
+            </button>
           )}
 
-          {!isAuthenticated && <button onClick={() => {
-            login()
-          }}>
-            <Button className="bg-violet-600 border-0 shadow-md text-white">
-              <div className="font-medium">Инициировать практис</div>
-              <PentagramIcon size={36}/>
-            </Button>
-          </button>}
+          {!isAuthenticated && (
+            <button
+              onClick={() => {
+                login()
+              }}
+            >
+              <Button className="bg-violet-600 border-0 shadow-md text-white">
+                <div className="font-medium">Инициировать практис</div>
+                <PentagramIcon size={36} />
+              </Button>
+            </button>
+          )}
 
           {isAuthenticated && hat === "adept" && (
             <IconButton
@@ -178,10 +192,8 @@ export function Header() {
             <>
               {/* User likes icon */}
               <IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />
-
               {/* User switch icon */}
               <IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />
-
               <ProfileMenu
                 isAuthenticated={isAuthenticated}
                 user={user}
@@ -192,9 +204,9 @@ export function Header() {
                 handleRoleToggle={handleRoleToggle}
                 isSpecialist={isSpecialist}
               />
-
-            <EasyNotifications hat={user?.hat || "adept"}/>
-          </>)}
+              <EasyNotifications hat={user?.hat || "adept"} /> {/* Insert EasyNotifications here */}
+            </>
+          )}
         </div>
       </div>
 
