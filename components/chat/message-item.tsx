@@ -1,19 +1,20 @@
 "use client"
 
-import React, { useCallback } from "react"
+import React, { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import {Copy, Share, Paperclip, Flame, Check, RefreshCw, SquareSlash} from "lucide-react"
-import {ArrowPathIcon, ClockIcon} from "@heroicons/react/24/outline"
+import { Copy, Share, Paperclip } from "lucide-react"
+import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/chats"
 import Image from "next/image"
-import {getSpecialistById} from "@/services/mock-specialists";
-import {IconAlura} from "@/components/icons/icon-alura";
-import {ActionButtonsRow} from "@/components/action-button";
-import {Service} from "@/types/service";
+import { getSpecialistById } from "@/services/mock-specialists"
+import { IconAlura } from "@/components/icons/icon-alura"
+import { ActionButtonsRow } from "@/components/action-button"
+import type { Service } from "@/types/service"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface MessageItemProps {
   specialistId: string
@@ -43,6 +44,7 @@ export const MessageItem = React.memo(
     const isUser = message.type === "user"
     const isAssistant = message.type === "assistant"
     const isSpecialist = message.type === "specialist"
+    const [policyAccepted, setPolicyAccepted] = useState(false)
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -78,24 +80,16 @@ export const MessageItem = React.memo(
                   title={isAssistant ? "Alura" : "View profile"}
                 >
                   {isAssistant ? (
-                      <IconAlura
-                          width={36}
-                          height={36}
-                          className="rounded-sm active:bg-none"
-                      />
-                  ): (<Image
-                      src={
-                        isSpecialist && specialist
-                            ? specialist.avatar
-                            : "/placeholder.jpg"
-                      }
-                      className={cn(
-                          "rounded-sm hover:bg-violet-50",
-                      )}
+                    <IconAlura width={36} height={36} className="rounded-sm active:bg-none" />
+                  ) : (
+                    <Image
+                      src={isSpecialist && specialist ? specialist.avatar : "/placeholder.jpg"}
+                      className={cn("rounded-sm hover:bg-violet-50")}
                       alt={""}
                       width={36}
                       height={36}
-                  />)}
+                    />
+                  )}
                 </button>
                 <div className="flex flex-col ml-3 justify-end">
                   {" "}
@@ -202,19 +196,40 @@ export const MessageItem = React.memo(
                 "border-t border-gray-200 dark:border-gray-700 mt-2 w-full",
                 aiMessageType === "service" && "border-violet-600",
                 aiMessageType === "warning" && "border-pink-500",
+                message.aiMessageType === "accept-policy" && "border-violet-600",
               )}
             />
+          )}
+
+          {/* Policy acceptance section */}
+          {message.aiMessageType === "accept-policy" && (
+            <div className="mt-4 w-full">
+              <div className="bg-gray-50 p-4 rounded-sm border">
+                <h4 className="font-medium text-sm mb-2">Политика обработки данных</h4>
+                <p className="text-xs text-gray-600 mb-3">
+                  Для становления мастером необходимо согласие на обработку персональных данных в соответствии с нашей
+                  политикой конфиденциальности.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="policy-accept"
+                    checked={policyAccepted}
+                    onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
+                  />
+                  <label htmlFor="policy-accept" className="text-xs text-gray-700 cursor-pointer">
+                    Я принимаю политику обработки данных
+                  </label>
+                </div>
+              </div>
+            </div>
           )}
 
           <div className="flex justify-between pt-2 w-full">
             {aiMessageType === "service" ? (
               // Service-specific buttons
-                <div className="flex flex-col w-full pt-2">
-                  <ActionButtonsRow
-                      onRegenerate={() => {}}
-                      onConfirm={() => {}}
-                      onBurn={() => {}}/>
-                </div>
+              <div className="flex flex-col w-full pt-2">
+                <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
+              </div>
             ) : (
               // Regular action buttons
               <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
