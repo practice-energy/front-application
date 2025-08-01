@@ -24,7 +24,6 @@ interface MessageItemProps {
   onShare: (message: Message) => void
   onRegenerate: (message: Message) => void
   isAI: boolean
-  footerContent?: string
   aiMessageType?: AiMessageType
 }
 
@@ -37,12 +36,11 @@ export const MessageItem = React.memo(
     onShare,
     onRegenerate,
     isAI,
-    footerContent,
     aiMessageType,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
-    const isAssistant = message.type === "assistant"
+    const isAssistant = message.type === "assistant" || message.type === "become-specialist-drops"
     const isSpecialist = message.type === "specialist"
     const [policyAccepted, setPolicyAccepted] = useState(false)
     const [selectedTags, setSelectedTags] = useState<string[]>([])
@@ -72,49 +70,35 @@ export const MessageItem = React.memo(
 
     const specialist = getSpecialistById(specialistId)
 
-    const renderTagGrid = (tags: Tag[]) => {
+    const renderTagGrid = (tags: Tag[], depth = 0) => {
       return (
-        <div className="mt-4 space-y-2">
-          {tags.map((tag, index) => (
-            <div key={index} className="space-y-2">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-colors",
-                    selectedTags.includes(tag.name)
-                      ? "bg-violet-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-                  )}
-                >
-                  {tag.name}
-                </button>
-              </div>
-
-              {/* Subtags */}
-              {tag.subtags && expandedTags.includes(tag.name) && (
-                <div className="ml-4 flex flex-wrap gap-2">
-                  {tag.subtags.map((subtag, subIndex) => (
-                    <button
-                      key={subIndex}
-                      onClick={() => handleTagClick(subtag.name, false)}
+          <div className={`flex  ${depth > 0 ? 'flex-col gap-2' : 'flex-wrap gap-4'}`}>
+            {tags.map((tag, index) => (
+                <div key={`${depth}-${index}`} className="flex flex-col">
+                  <button
+                      onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
                       className={cn(
-                        "px-3 py-1 rounded-full text-xs font-medium transition-colors",
-                        selectedTags.includes(subtag.name)
-                          ? "bg-violet-500 text-white"
-                          : "bg-gray-50 text-gray-600 hover:bg-gray-100",
+                          "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                          "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
+                          selectedTags.includes(tag.name)
+                              ? "bg-violet-50"
+                              : "bg-gray-100 md:hover:bg-violet-50"
                       )}
-                    >
-                      {subtag.name}
-                    </button>
-                  ))}
+                  >
+                    {tag.name}
+                  </button>
+
+                  {/* Рекурсивный вызов для подтегов (вертикальное расположение) */}
+                  {tag.subtags && expandedTags.includes(tag.name) && (
+                      <div className="flex flex-col gap-2 mt-2">
+                        {renderTagGrid(tag.subtags, depth + 1)}
+                      </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )
-    }
+            ))}
+          </div>
+      );
+    };
 
     return (
       <div
@@ -234,9 +218,9 @@ export const MessageItem = React.memo(
             )}
           </div>
 
-          {footerContent && isAssistant && !isUser && (
+          {message.footerContent && (isAssistant || isAI) && !isUser && (
             <div className="mt-3 text-gray-800 dark:text-gray-100">
-              <p className="text-sm leading-relaxed mt-1.5">{footerContent}</p>
+              <p className="text-sm leading-relaxed mt-1.5">{message.footerContent}</p>
             </div>
           )}
 
@@ -253,7 +237,7 @@ export const MessageItem = React.memo(
           )}
 
           {/* Policy acceptance section */}
-          {message.aiMessageType === "accept-policy" && (
+          {message.aiMessageType === "become-specialist-drops" && (
             <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
               <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
               <Checkbox

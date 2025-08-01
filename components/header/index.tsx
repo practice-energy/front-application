@@ -18,6 +18,7 @@ import { useProfileStore } from "@/stores/profile-store"
 import { useAdeptChats } from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
+import {becomeSpecialistTags} from "@/services/become-specialist-tree-tag";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -73,11 +74,11 @@ export function Header() {
     // Проверяем, есть ли уже чат "стать мастером"
     const existingBecomeSpecialistChat = adeptChats.find((chat) => chat.isSpecialChat === "become-specialist")
 
-    if (existingBecomeSpecialistChat) {
-      // Если чат уже существует, просто перенаправляем на него
-      router.push(`/search/${existingBecomeSpecialistChat.id}`)
-      return
-    }
+    // if (existingBecomeSpecialistChat) {
+    //   // Если чат уже существует, просто перенаправляем на него
+    //   router.push(`/search/${existingBecomeSpecialistChat.id}`)
+    //   return
+    // }
 
     // Если чата нет, создаем новый
     const chatId = uuidv4()
@@ -92,14 +93,18 @@ export function Header() {
       messages: [
         {
           id: uuidv4(),
-          type: "assistant" as const,
+          type: "become-specialist-drops" as const,
+          tags: becomeSpecialistTags,
           content:
-            "Добро пожаловать в процесс становления мастером! Для продолжения необходимо принять политику обработки данных.",
+            "Приветствую вас на пути, где свет и тень вечного познания переплетаются с технологиями. Я - Alura, ваша спутница в этом путешествии\n\nНачинаем с выбора подходящих областей специализации. Какие ближе для ваших практис?",
           timestamp: Date.now(),
-          aiMessageType: "accept-policy" as const,
+          footerContent: "Если часть вашей области пока не добавлена в чате выше, можете написать мне и она может появиться в ближайшее время а я вернусь к вам с оповещением, как только это произойдет.",
+          aiMessageType: "become-specialist-drops" as const,
         },
       ],
     }
+
+    console.log(newChat)
 
     addChat(newChat)
     router.push(`/search/${chatId}`)

@@ -12,6 +12,7 @@ export interface Message {
   replyTo?: string
   aiMessageType?: AiMessageType
   tags: Tag[]
+  footerContent?: string
 }
 
 export type Tag = {
@@ -35,7 +36,6 @@ export type Chat = {
   messages: Message[]
   createdAt: number,
   hasNew?: boolean
-  footerContent?: string
   description?: string
   isSpecialChat?: "become-specialist"
 }
