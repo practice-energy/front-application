@@ -11,6 +11,12 @@ export interface Message {
   files?: File[]
   replyTo?: string
   aiMessageType?: AiMessageType
+  tags: Tag[]
+}
+
+export type Tag = {
+  name: string
+  subtags?:  Tag[]
 }
 
 export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input"
