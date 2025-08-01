@@ -76,17 +76,19 @@ export const ChatsSections = ({
                                 sectionKey={section.key}
                                 sectionVisibility={sectionVisibility}
                             >
-                                {section.chats.map((chat) => (
-                                    <ChatItem
-                                        key={chat.id}
-                                        chat={chat}
-                                        onChatClick={handleChatClick}
-                                        isActiveChat={isActiveChat}
-                                        hasNewMessages={hasNewMessages}
-                                        isCollapsed={isCollapsed}
-                                        isMobile={isMobile}
-                                    />
-                                ))}
+                                <div className="gap-2">
+                                    {section.chats.map((chat) => (
+                                        <ChatItem
+                                            key={chat.id}
+                                            chat={chat}
+                                            onChatClick={handleChatClick}
+                                            isActiveChat={isActiveChat}
+                                            hasNewMessages={hasNewMessages}
+                                            isCollapsed={isCollapsed}
+                                            isMobile={isMobile}
+                                        />
+                                    ))}
+                                </div>
                             </SectionContent>
                         </div>
                     )

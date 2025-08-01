@@ -203,26 +203,14 @@ export function MainSidebar() {
         </div>
 
         <div className="h-12" />
-
-        {/* Исчезающий градиент снизу */}
-        <div
-            className={cn(
-                "sticky bottom-0 left-0 right-0 h-3 bg-gradient-to-t to-transparent pointer-events-none z-10",
-                "from-white via-white/80 to-transparent",
-            )}
-        />
       </ScrollArea>
 
-      <div className="p-3">
-        <Button variant="outline" className="w-full hover:bg-violet-100 rounded-sm px-6 h-12 bg-transparent">
-          <div className="items-center flex flex-row gap-3">
+        <button className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4" >
+          <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
+            <p className="text-base font-medium text-start w-full ">Активировать подписку </p>
             <SparklesIcon />
-            <p className="text-base font-medium text-center w-full">Позолоти ручку</p>
           </div>
-        </Button>
-      </div>
-
-      <div className="h-6" />
+        </button>
     </div>
   )
 }

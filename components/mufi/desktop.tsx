@@ -2,7 +2,7 @@
 
 import React from "react"
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { ArrowUp, X, FileText, Paperclip, MessageSquarePlus } from "lucide-react"
+import {ArrowUp, X, FileText, Paperclip, MessageSquarePlus, MessagesSquareIcon, Check} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { ANIMATION_DURATION, ANIMATION_TIMING } from "@/components/main-sidebar/utils/sidebar.utils"
 import { useSidebar } from "@/contexts/sidebar-context"
@@ -13,7 +13,6 @@ import { IconAlura } from "@/components/icons/icon-alura"
 
 interface DesktopSearchBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
-  showHeading?: boolean
   dynamicWidth?: boolean
   replyingTo?: {
     id: string
@@ -27,11 +26,11 @@ interface DesktopSearchBarProps {
   disableFileApply: boolean
   mode?: "accept" | "continue" | "input"
   onContinue?: () => void
+  canAccept?: boolean
 }
 
 export const DesktopMufi = React.memo(function DesktopSearchBar({
   onSearch,
-  showHeading = true,
   dynamicWidth = false,
   placeholder = "Спроси Alura",
   chatTitle = "Alura",
@@ -39,6 +38,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
   disableFileApply = true,
   mode = "input",
   onContinue,
+  canAccept,
 }: DesktopSearchBarProps) {
   const router = useRouter()
   const [message, setMessage] = useState("")
@@ -263,16 +263,6 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
 
   const handleNewChat = useCallback(() => {
     const searchId = uuidv4()
-    window.dispatchEvent(
-      new CustomEvent("newChatCreated", {
-        detail: {
-          chatId: searchId,
-          title: chatTitle,
-          query: "",
-          files: [],
-        },
-      }),
-    )
     router.push(`/search/${searchId}`)
   }, [router, chatTitle])
 
@@ -304,7 +294,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
           </div>
         )}
 
-        <div className={cn("border rounded-sm", showHeading && "bg-violet-50 border-violet-100 bg-opacity-80")}>
+        <div className={cn("border rounded-sm  bg-violet-50 border-violet-100 bg-opacity-80 shadow-md shadow-violet-500/10", isAccepted ? "border-violet-600" : "border-violet-200")}>
           <div
             className={`relative border rounded-sm backdrop-blur-sm 
               p-2.5 sm:p-3.5 transition-all duration-300 flex 
@@ -314,7 +304,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                   ? "border-violet-400 bg-violet-50/30"
                   : hasContent
                     ? "bg-white border-white/30 opacity-80"
-                    : "bg-white/40 border-white/20 hover:border-white/30"
+                    : "bg-violet-50/10 border-white/20 hover:border-white/30"
               }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -352,7 +342,7 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                   <button
                     type="button"
                     onClick={openFileDialog}
-                    disabled={disableFileApply} // Добавлен disabled проп
+                    disabled={disableFileApply || mode === "accept" || mode === "continue"} // Добавлен disabled проп
                     className={`rounded-sm px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                       disableFileApply
                         ? "bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100"
@@ -370,8 +360,9 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                       className={`rounded-sm px-1.5 h-[36px] w-[36px] font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                         isPractice
                           ? "bg-violet-600 text-white hover:bg-violet-500"
-                          : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
-                      }`}
+                          : "bg-white dark:bg-gray-800 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
+                      } ${ disableFileApply ? "cursor-not-allowed" : "hover:bg-violet-50"}`}
+                      disabled={mode === "accept" || mode === "continue"}
                     >
                       <IconPractice
                         width={27}
@@ -384,21 +375,23 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
 
                 {/* Action Button */}
                 {mode === "accept" ? (
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={isAccepted}
-                      onChange={handleCheckboxToggle}
-                      className="h-9 w-9 rounded-sm border-2 border-violet-600 text-violet-600 focus:ring-violet-500 focus:ring-2 cursor-pointer"
-                    />
-                  </div>
+                    <button
+                        type="button"
+                        onClick={handleContinue}
+                        className={cn(
+                            "h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
+                            canAccept ? "" : "cursor-not-allowed opacity-50"
+                        )}
+                    >
+                      <Check className={"text-white mx-auto"}/>
+                    </button>
                 ) : mode === "continue" ? (
                   <button
                     type="button"
                     onClick={handleContinue}
-                    className="h-9 px-4 shadow-sm rounded-sm bg-violet-600 hover:bg-violet-700 text-white font-medium"
+                    className="h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-neutral-900 text-white font-medium"
                   >
-                    Продолжить
+                    <IconPractice width={25} height={22} className={"text-white mx-auto"}/>
                   </button>
                 ) : message.trim() || uploadedFiles.length > 0 ? (
                   <button
@@ -410,16 +403,15 @@ export const DesktopMufi = React.memo(function DesktopSearchBar({
                         : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
                     }`}
                   >
-                    <ArrowUp className="w-4 h-4" />
+                    <ArrowUp className="w-6 h-8" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={handleNewChat}
-                    className="h-9 px-4 shadow-sm rounded-sm bg-violet-600 hover:bg-violet-700 text-white font-medium flex items-center gap-2"
+                    className="shadow-sm rounded-sm border-gray-200 bg-white h-9 w-9 hover:bg-violet-50 text-white font-medium flex items-center"
                   >
-                    <MessageSquarePlus className="w-4 h-4" />
-                    Новый чат
+                    <MessagesSquareIcon className="w-8 h-8 text-neutral-900 ml-0.5 p-1"/>
                   </button>
                 )}
               </div>

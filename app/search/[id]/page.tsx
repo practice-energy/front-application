@@ -261,6 +261,7 @@ export default function SearchPage() {
                   placeholder={ `Спроси у ${currentChat?.title || "Alura"}`}
                   onCancelReply={() => {}}
                   chatTitle="Alura"
+                  mode={"accept"}
               />
             </div>
           </div>

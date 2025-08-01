@@ -37,15 +37,15 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
       <div
           className={cn(
-              "relative rounded-sm transition-colors cursor-pointer",
-              "pl-0 py-0.5 px-2",
+              "relative rounded-sm transition-colors cursor-pointer mt-1",
+              "pl-0 py-0.5 px-2 shadow-md border border-neutral-100",
               isMobile ? "w-full" : "w-[390px]",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
               isCollapsed && !isMobile
                   ? ""
                   : isActive
-                      ? "bg-white shadow-md shadow-violet-50"
-                      : "hover:bg-violet-600 hover:shadow-sm hover:bg-opacity-5",
+                      ? "bg-white "
+                      : "hover:bg-violet-600 hover:bg-opacity-5",
           )}
           onClick={() => onChatClick(chat.id)}
       >
@@ -53,20 +53,20 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           {/* Profile Image - spans all three rows */}
           <div className={cn(
               "flex-shrink-0 flex items-center",
-              "h-[81px]" // Высота аватара под три строки
+              "h-[90px]" // Высота аватара под три строки
           )}>
             {chat.isAI ? (
                 <IconAlura
-                    width={71}
-                    height={71}
+                    width={72}
+                    height={72}
                     className={cn("rounded-sm object-cover bg-white p-1.5")}
                 />
             ) : (
                 <Image
                     src={chat.avatar || "/placeholder.svg"}
                     alt={chat.title}
-                    width={71}
-                    height={71}
+                    width={72}
+                    height={72}
                     className={cn("rounded-sm object-cover")}
                 />
             )}

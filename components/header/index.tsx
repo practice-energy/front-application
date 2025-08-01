@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
-import { EasyNotifications } from "./components/easy-notifications" // Import EasyNotifications
 
 import { useHeaderState } from "./hooks/use-header-state"
 import { Logo } from "./components/logo"
@@ -18,6 +17,7 @@ import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
 import { useAdeptChats } from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
+import {EasyNotifications} from "@/components/easy-notifications";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
