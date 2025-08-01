@@ -27,6 +27,7 @@ interface MessageItemProps {
   aiMessageType?: AiMessageType
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
+  onPersonalityAnswer?: (answer: string) => void
 }
 
 export const MessageItem = React.memo(
@@ -41,6 +42,7 @@ export const MessageItem = React.memo(
     aiMessageType,
     onTagSelection,
     onPolicyAcceptance,
+    onPersonalityAnswer,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -49,6 +51,7 @@ export const MessageItem = React.memo(
     const [policyAccepted, setPolicyAccepted] = useState(false)
     const [selectedTags, setSelectedTags] = useState<string[]>([])
     const [expandedTags, setExpandedTags] = useState<string[]>([])
+    const [personalityAnswer, setPersonalityAnswer] = useState<string | null>(null)
 
     // Notify parent component about tag selection changes
     useEffect(() => {
@@ -78,27 +81,50 @@ export const MessageItem = React.memo(
       onSpecialistClick(specialistId)
     }, [isAssistant, router, specialistId, onSpecialistClick])
 
-    const handleTagClick = useCallback((tagName: string, hasSubtags: boolean) => {
-      if (hasSubtags) {
-        setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
-      } else {
-        setSelectedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
-      }
-    }, [])
+    const handleTagClick = useCallback(
+      (tagName: string, hasSubtags: boolean) => {
+        if (message.aiMessageType === "profile-test") {
+          // Handle personality test answer
+          setPersonalityAnswer(tagName)
+          if (onPersonalityAnswer) {
+            onPersonalityAnswer(tagName)
+          }
+        } else {
+          // Handle regular tag selection
+          if (hasSubtags) {
+            setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
+          } else {
+            setSelectedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
+          }
+        }
+      },
+      [message.aiMessageType, onPersonalityAnswer],
+    )
 
     const specialist = getSpecialistById(specialistId)
 
     const renderTagGrid = (tags: Tag[], depth = 0) => {
+      const isPersonalityTest = message.aiMessageType === "profile-test"
+
       return (
-        <div className={`flex  ml-auto ${depth > 0 ? "flex-col gap-2 " : "flex-wrap gap-4"}`}>
+        <div className={`flex ml-auto ${depth > 0 ? "flex-col gap-2 " : "flex-wrap gap-4"}`}>
           {tags.map((tag, index) => (
-            <div key={`${depth}-${index}`} className="flex flex-col  ml-auto">
+            <div key={`${depth}-${index}`} className="flex flex-col ml-auto">
               <button
                 onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
+                disabled={isPersonalityTest && personalityAnswer !== null}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
-                  selectedTags.includes(tag.name) ? "bg-violet-50" : "bg-gray-100 md:hover:bg-violet-50",
+                  isPersonalityTest
+                    ? personalityAnswer === tag.name
+                      ? "bg-violet-100 border-2 border-violet-600"
+                      : personalityAnswer !== null
+                        ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                        : "bg-gray-100 md:hover:bg-violet-50"
+                    : selectedTags.includes(tag.name)
+                      ? "bg-violet-50"
+                      : "bg-gray-100 md:hover:bg-violet-50",
                 )}
               >
                 {tag.name}
@@ -170,10 +196,10 @@ export const MessageItem = React.memo(
               </div>
             )}
 
-            {/* Tags grid for become-specialist-drops */}
-            {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
-              <div className="mt-4 ml-auto">{renderTagGrid(message.tags)}</div>
-            )}
+            {/* Tags grid for become-specialist-drops and profile-test */}
+            {(message.aiMessageType === "become-specialist-drops" || message.aiMessageType === "profile-test") &&
+              message.tags &&
+              message.tags.length > 0 && <div className="mt-4 ml-auto">{renderTagGrid(message.tags)}</div>}
 
             {message.files && message.files.length > 0 && (
               <div
@@ -246,6 +272,7 @@ export const MessageItem = React.memo(
                 aiMessageType === "warning" && "border-pink-500",
                 message.aiMessageType === "accept-policy" && "border-violet-600",
                 message.aiMessageType === "become-specialist-drops" && "border-violet-600",
+                message.aiMessageType === "profile-test" && "border-violet-600",
               )}
             />
           )}

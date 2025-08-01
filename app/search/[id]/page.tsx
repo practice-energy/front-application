@@ -16,6 +16,7 @@ import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
 import { useProfileStore } from "@/stores/profile-store"
+import { personalitySelector } from "@/components/become-specialist/messages"
 
 export default function SearchPage() {
   const params = useParams()
@@ -36,11 +37,27 @@ export default function SearchPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [policyAccepted, setPolicyAccepted] = useState(false)
 
+  // State for steps and personality test
+  const [steps, setSteps] = useState(1)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [personalityAnswers, setPersonalityAnswers] = useState<string[]>([])
+
   useEffect(() => {
     const chatId = params.id as string
     const existingChat = getChatDataById(chatId)
     if (existingChat) {
       setCurrentChat(existingChat)
+
+      // Determine step based on chat state
+      if (existingChat.messages.length === 1) {
+        setSteps(1)
+      } else if (existingChat.messages.length > 1) {
+        // Check if we're in personality test phase
+        const lastMessage = existingChat.messages[existingChat.messages.length - 1]
+        if (lastMessage.aiMessageType === "profile-test") {
+          setSteps(2)
+        }
+      }
     } else {
       const newChat: Chat = {
         id: chatId,
@@ -99,21 +116,86 @@ export default function SearchPage() {
     }
   }, [currentChat, addMessageToChat])
 
-  // Determine Mufi mode and canAccept based on last message
+  // Handle step transitions
+  const handleStepTransition = useCallback(() => {
+    if (steps === 1 && selectedTags.length > 0 && policyAccepted) {
+      // Move to step 2 - personality test
+      setSteps(2)
+      setCurrentQuestionIndex(0)
+      setPersonalityAnswers([])
+
+      // Add first personality question
+      const firstQuestion = personalitySelector.questions[0]
+      const questionMessage: Message = {
+        id: uuidv4(),
+        type: "assistant",
+        content: firstQuestion.question,
+        timestamp: Date.now(),
+        aiMessageType: "profile-test",
+        tags: firstQuestion.variants.map((variant) => ({ name: variant })),
+      }
+
+      const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
+      if (updatedChat) {
+        setCurrentChat(updatedChat)
+      }
+    } else if (steps === 2 && personalityAnswers.length === personalitySelector.questions.length) {
+      // Move to step 3
+      setSteps(3)
+    }
+  }, [steps, selectedTags, policyAccepted, personalityAnswers, currentChat, addMessageToChat])
+
+  // Handle personality answer selection
+  const handlePersonalityAnswer = useCallback(
+    (answer: string) => {
+      const newAnswers = [...personalityAnswers, answer]
+      setPersonalityAnswers(newAnswers)
+
+      // If there are more questions, ask the next one
+      if (newAnswers.length < personalitySelector.questions.length) {
+        const nextQuestionIndex = newAnswers.length
+        const nextQuestion = personalitySelector.questions[nextQuestionIndex]
+
+        setTimeout(() => {
+          const questionMessage: Message = {
+            id: uuidv4(),
+            type: "assistant",
+            content: nextQuestion.question,
+            timestamp: Date.now(),
+            aiMessageType: "profile-test",
+            tags: nextQuestion.variants.map((variant) => ({ name: variant })),
+          }
+
+          const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
+          if (updatedChat) {
+            setCurrentChat(updatedChat)
+          }
+        }, 500)
+      }
+    },
+    [personalityAnswers, currentChat, addMessageToChat],
+  )
+
+  // Determine Mufi mode and canAccept based on current step and state
   const getMufiMode = useCallback(() => {
     if (!currentChat || currentChat.messages.length === 0) {
-      return { mode: "default", canAccept: false }
+      return { mode: "input", canAccept: false }
     }
 
     const lastMessage = currentChat.messages[currentChat.messages.length - 1]
 
-    if (lastMessage.aiMessageType === "become-specialist-drops") {
+    if (steps === 1 && lastMessage.aiMessageType === "become-specialist-drops") {
       const canAccept = selectedTags.length > 0 && policyAccepted
       return { mode: "accept", canAccept }
     }
 
-    return { mode: "default", canAccept: false }
-  }, [currentChat, selectedTags, policyAccepted])
+    if (steps === 2 && lastMessage.aiMessageType === "profile-test") {
+      const canContinue = personalityAnswers.length === personalitySelector.questions.length
+      return { mode: "continue", canAccept: canContinue }
+    }
+
+    return { mode: "input", canAccept: false }
+  }, [currentChat, steps, selectedTags, policyAccepted, personalityAnswers])
 
   const handleSpecialistClick = useCallback(
     (specialistId: string) => {
@@ -162,6 +244,11 @@ export default function SearchPage() {
   const handlePolicyAcceptance = useCallback((accepted: boolean) => {
     setPolicyAccepted(accepted)
   }, [])
+
+  // Handle continue button click
+  const handleContinue = useCallback(() => {
+    handleStepTransition()
+  }, [handleStepTransition])
 
   // handleSearch now only adds the user's message. The useEffect handles the response.
   const handleSearch = useCallback(
@@ -241,6 +328,7 @@ export default function SearchPage() {
                 specialistId={params.id as string}
                 onTagSelection={handleTagSelection}
                 onPolicyAcceptance={handlePolicyAcceptance}
+                onPersonalityAnswer={handlePersonalityAnswer}
               />
             )}
             <div className="h-16" />
@@ -273,6 +361,7 @@ export default function SearchPage() {
                   specialistId={params.id as string}
                   onTagSelection={handleTagSelection}
                   onPolicyAcceptance={handlePolicyAcceptance}
+                  onPersonalityAnswer={handlePersonalityAnswer}
                 />
               )}
               <div className="h-16" />
@@ -300,6 +389,7 @@ export default function SearchPage() {
                 mode={mode}
                 canAccept={canAccept}
                 selectedTags={selectedTags}
+                onContinue={handleContinue}
               />
             </div>
           </div>

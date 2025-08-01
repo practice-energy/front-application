@@ -1,8 +1,6 @@
-"use client"
-
-import React from "react"
 import { MessageItem } from "./message-item"
 import type { Chat, Message } from "@/types/chats"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface MessageListProps {
   chat: Chat | null
@@ -14,59 +12,63 @@ interface MessageListProps {
   specialistId: string
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
+  onPersonalityAnswer?: (answer: string) => void
 }
 
-export const MessageList = React.memo(
-  ({
-    chat,
-    isLoading,
-    onSpecialistClick,
-    onServiceClick,
-    onShare,
-    onRegenerate,
-    specialistId,
-    onTagSelection,
-    onPolicyAcceptance,
-  }: MessageListProps) => {
-    if (!chat) return null
+export function MessageList({
+  chat,
+  isLoading,
+  onSpecialistClick,
+  onServiceClick,
+  onShare,
+  onRegenerate,
+  specialistId,
+  onTagSelection,
+  onPolicyAcceptance,
+  onPersonalityAnswer,
+}: MessageListProps) {
+  if (!chat) return null
 
-    return (
-      <div className="space-y-6">
-        {chat.messages.map((message, index) => (
-          <MessageItem
-            key={message.id}
-            specialistId={specialistId}
-            message={message}
-            onSpecialistClick={onSpecialistClick}
-            onServiceClick={onServiceClick}
-            onShare={onShare}
-            onRegenerate={onRegenerate}
-            isAI={chat.isAI}
-            aiMessageType={message.aiMessageType}
-            onTagSelection={onTagSelection}
-            onPolicyAcceptance={onPolicyAcceptance}
-          />
-        ))}
+  return (
+    <div className="space-y-6">
+      {chat.messages.map((message) => (
+        <MessageItem
+          key={message.id}
+          specialistId={specialistId}
+          message={message}
+          onSpecialistClick={onSpecialistClick}
+          onServiceClick={onServiceClick}
+          onShare={onShare}
+          onRegenerate={onRegenerate}
+          isAI={chat.isAI || false}
+          onTagSelection={onTagSelection}
+          onPolicyAcceptance={onPolicyAcceptance}
+          onPersonalityAnswer={onPersonalityAnswer}
+        />
+      ))}
 
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+      {isLoading && (
+        <div className="flex justify-start">
+          <div className="flex flex-col items-start max-w-4xl w-full">
+            <div className="flex mb-1">
+              <div className="flex ml-1">
+                <Skeleton className="w-9 h-9 rounded-sm" />
+                <div className="flex flex-col ml-3 justify-end">
+                  <Skeleton className="h-4 w-12 mb-1" />
+                  <Skeleton className="h-3 w-8" />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 min-w-0 w-full">
+              <div className="flex justify-start">
+                <div className="bg-white shadow-md shadow-violet-50 px-3 py-3 rounded-sm">
+                  <Skeleton className="h-4 w-64" />
+                </div>
               </div>
             </div>
           </div>
-        )}
-
-        {chat.footerContent && (
-          <div className="text-gray-600 dark:text-gray-400 text-sm italic">{chat.footerContent}</div>
-        )}
-      </div>
-    )
-  },
-)
-
-MessageList.displayName = "MessageList"
+        </div>
+      )}
+    </div>
+  )
+}
