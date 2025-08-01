@@ -8,7 +8,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { cn } from "@/lib/utils"
-import type { Message } from "@/types/chats"
+import type {AiMessageType, Message} from "@/types/chats"
 import Image from "next/image"
 import { getSpecialistById } from "@/services/mock-specialists"
 import { IconAlura } from "@/components/icons/icon-alura"
@@ -25,7 +25,7 @@ interface MessageItemProps {
   onRegenerate: (message: Message) => void
   isAI: boolean
   footerContent?: string
-  aiMessageType?: "info" | "warning" | "service"
+  aiMessageType?: AiMessageType
 }
 
 export const MessageItem = React.memo(
@@ -175,7 +175,6 @@ export const MessageItem = React.memo(
                       key={service.id}
                       service={service}
                       onClick={() => onServiceClick(service.id)}
-                      showActionButtons={false}
                       specialistId={service.specialist.id}
                     />
                   ))}
@@ -203,34 +202,26 @@ export const MessageItem = React.memo(
 
           {/* Policy acceptance section */}
           {message.aiMessageType === "accept-policy" && (
-            <div className="mt-4 w-full">
-              <div className="bg-gray-50 p-4 rounded-sm border">
-                <h4 className="font-medium text-sm mb-2">Политика обработки данных</h4>
-                <p className="text-xs text-gray-600 mb-3">
-                  Для становления мастером необходимо согласие на обработку персональных данных в соответствии с нашей
-                  политикой конфиденциальности.
-                </p>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="policy-accept"
-                    checked={policyAccepted}
-                    onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
-                  />
-                  <label htmlFor="policy-accept" className="text-xs text-gray-700 cursor-pointer">
-                    Я принимаю политику обработки данных
-                  </label>
-                </div>
-              </div>
+            <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
+              <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
+              <Checkbox
+                  id="policy-accept"
+                  checked={policyAccepted}
+                  onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
+                  className="w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600"
+              />
             </div>
           )}
 
           <div className="flex justify-between pt-2 w-full">
-            {aiMessageType === "service" ? (
+            {aiMessageType === "service" && (
               // Service-specific buttons
               <div className="flex flex-col w-full pt-2">
                 <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
               </div>
-            ) : (
+            )}
+
+            {aiMessageType === "info" && (
               // Regular action buttons
               <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
                 {isAI && isAssistant && (

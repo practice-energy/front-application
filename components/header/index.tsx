@@ -92,7 +92,7 @@ export function Header() {
     }
 
     addChat(newChat)
-    router.push(`/chat/${chatId}`)
+    router.push(`/search/${chatId}`)
   }
 
   const handleRoleToggle = () => {
@@ -142,7 +142,25 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated && !user?.isSpecialist && <Button onClick={handleBecomeSpecialist}>Стать мастером</Button>}
+          {isAuthenticated
+              // && !user?.isSpecialist
+              && (
+              <button className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
+                  onClick={handleBecomeSpecialist}
+              >
+                <div className="font-medium"> Стать мастером</div>
+                <UserSwitchIcon size={36}/>
+              </button>
+          )}
+
+          {!isAuthenticated && <button onClick={() => {
+            login()
+          }}>
+            <Button className="bg-violet-600 border-0 shadow-md text-white">
+              <div className="font-medium">Инициировать практис</div>
+              <PentagramIcon size={36}/>
+            </Button>
+          </button>}
 
           {isAuthenticated && hat === "adept" && (
             <IconButton
@@ -175,22 +193,8 @@ export function Header() {
                 isSpecialist={isSpecialist}
               />
 
-              <EasyNotifications hat={user?.hat || "adept"} />
-            </>
-          )}
-
-          {!isAuthenticated && (
-            <button
-              onClick={() => {
-                login()
-              }}
-            >
-              <div className="flex flex-row gap-2 items-center border border-gray-200 px-3 rounded-sm p-2 bg-white shadow-sm shadow-violet-50 ml-auto">
-                <div className="font-medium">Инициировать практис</div>
-                <PentagramIcon size={36} />
-              </div>
-            </button>
-          )}
+            <EasyNotifications hat={user?.hat || "adept"}/>
+          </>)}
         </div>
       </div>
 

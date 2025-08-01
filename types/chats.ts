@@ -10,8 +10,10 @@ export interface Message {
   services?: Service[]
   files?: File[]
   replyTo?: string
-  aiMessageType?: "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input"
+  aiMessageType?: AiMessageType
 }
+
+export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input"
 
 export type Chat = {
   id: string
