@@ -1,59 +1,72 @@
 "use client"
 
-import { useMemo } from "react"
+import React from "react"
 import { MessageItem } from "./message-item"
 import type { Chat, Message } from "@/types/chats"
 
 interface MessageListProps {
   chat: Chat | null
+  isLoading: boolean
   onSpecialistClick: (id: string) => void
   onServiceClick: (id: string) => void
   onShare: (message: Message) => void
   onRegenerate: (message: Message) => void
   specialistId: string
-  isLoading: boolean
+  onTagSelection?: (tags: string[]) => void
+  onPolicyAcceptance?: (accepted: boolean) => void
 }
 
-export function MessageList({
-  chat,
-  onSpecialistClick,
-  onServiceClick,
-  onShare,
-  onRegenerate,
-  specialistId,
-  isLoading,
-}: MessageListProps) {
-  const messageList = useMemo(
-    () =>
-      chat?.messages.map((message, index) => (
-        <MessageItem
-          key={message.id}
-          specialistId={specialistId}
-          message={message}
-          onSpecialistClick={onSpecialistClick}
-          onServiceClick={onServiceClick}
-          onShare={onShare}
-          onRegenerate={onRegenerate}
-          isAI={chat.isAI === true}
-          aiMessageType={message.aiMessageType}
-        />
-      )),
-    [chat, specialistId, onSpecialistClick, onServiceClick, onShare, onRegenerate],
-  )
+export const MessageList = React.memo(
+  ({
+    chat,
+    isLoading,
+    onSpecialistClick,
+    onServiceClick,
+    onShare,
+    onRegenerate,
+    specialistId,
+    onTagSelection,
+    onPolicyAcceptance,
+  }: MessageListProps) => {
+    if (!chat) return null
 
-  return (
-    <>
-      {messageList}
-      {isLoading && (
-        <div className="flex flex-col items-start gap-4 p-4 animate-pulse">
-          <div className="flex w-16 h-16 rounded-sm bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
-          <div className="space-y-2 flex-1 flex">
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+    return (
+      <div className="space-y-6">
+        {chat.messages.map((message, index) => (
+          <MessageItem
+            key={message.id}
+            specialistId={specialistId}
+            message={message}
+            onSpecialistClick={onSpecialistClick}
+            onServiceClick={onServiceClick}
+            onShare={onShare}
+            onRegenerate={onRegenerate}
+            isAI={chat.isAI}
+            aiMessageType={message.aiMessageType}
+            onTagSelection={onTagSelection}
+            onPolicyAcceptance={onPolicyAcceptance}
+          />
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+              </div>
+            </div>
           </div>
-        </div>
-      )}
-    </>
-  )
-}
+        )}
+
+        {chat.footerContent && (
+          <div className="text-gray-600 dark:text-gray-400 text-sm italic">{chat.footerContent}</div>
+        )}
+      </div>
+    )
+  },
+)
+
+MessageList.displayName = "MessageList"

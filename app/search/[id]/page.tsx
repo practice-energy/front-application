@@ -10,12 +10,12 @@ import { useAdeptChats } from "@/stores/chat-store"
 import { MessageList } from "@/components/chat/message-list"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
-import {mockSavedSpecialists} from "@/services/mock-specialists";
-import {cn} from "@/lib/utils";
-import {useSidebar} from "@/contexts/sidebar-context";
-import {useAuth} from "@/hooks/use-auth";
+import { mockSavedSpecialists } from "@/services/mock-specialists"
+import { cn } from "@/lib/utils"
+import { useSidebar } from "@/contexts/sidebar-context"
+import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
-import {useProfileStore} from "@/stores/profile-store";
+import { useProfileStore } from "@/stores/profile-store"
 
 export default function SearchPage() {
   const params = useParams()
@@ -31,6 +31,10 @@ export default function SearchPage() {
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
   const { user } = useProfileStore()
+
+  // State for tracking selected tags and policy acceptance
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [policyAccepted, setPolicyAccepted] = useState(false)
 
   useEffect(() => {
     const chatId = params.id as string
@@ -95,6 +99,22 @@ export default function SearchPage() {
     }
   }, [currentChat, addMessageToChat])
 
+  // Determine Mufi mode and canAccept based on last message
+  const getMufiMode = useCallback(() => {
+    if (!currentChat || currentChat.messages.length === 0) {
+      return { mode: "default", canAccept: false }
+    }
+
+    const lastMessage = currentChat.messages[currentChat.messages.length - 1]
+
+    if (lastMessage.aiMessageType === "become-specialist-drops") {
+      const canAccept = selectedTags.length > 0 && policyAccepted
+      return { mode: "accept", canAccept }
+    }
+
+    return { mode: "default", canAccept: false }
+  }, [currentChat, selectedTags, policyAccepted])
+
   const handleSpecialistClick = useCallback(
     (specialistId: string) => {
       router.push(`/specialist/${specialistId}`)
@@ -132,6 +152,16 @@ export default function SearchPage() {
     },
     [], // No dependencies needed, making the function stable
   )
+
+  // Callback to handle tag selection from MessageItem
+  const handleTagSelection = useCallback((tags: string[]) => {
+    setSelectedTags(tags)
+  }, [])
+
+  // Callback to handle policy acceptance from MessageItem
+  const handlePolicyAcceptance = useCallback((accepted: boolean) => {
+    setPolicyAccepted(accepted)
+  }, [])
 
   // handleSearch now only adds the user's message. The useEffect handles the response.
   const handleSearch = useCallback(
@@ -176,98 +206,107 @@ export default function SearchPage() {
     [params.id, getChatDataById, addChat, addMessageToChat],
   )
 
+  const { mode, canAccept } = getMufiMode()
+
   console.log("wip", user, currentChat, isAuthenticated)
   if (!user || !isAuthenticated) {
     router.push("/")
   }
 
   return (
-      <div className="relative h-screen bg-white dark:bg-gray-900">
-        {isMobile && isCollapsed ? (<>
+    <div className="relative h-screen bg-white dark:bg-gray-900">
+      {isMobile && isCollapsed ? (
+        <>
           <ChatHeader
-              user={user!}
-              currentChat={currentChat!}
-              toggleSidebar={toggleSidebar}
-              toggleProfileMenu={toggleSidebar}
-              isAuthenticated={isAuthenticated}
+            user={user!}
+            currentChat={currentChat!}
+            toggleSidebar={toggleSidebar}
+            toggleProfileMenu={toggleSidebar}
+            isAuthenticated={isAuthenticated}
           />
 
           {/* Прокручиваемая область сообщений */}
           <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
-            <div className={cn(
-                "w-full",
-                isMobile ? "h-12" :"h-24",
-            )}/>
+            <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
             {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                <ChatEmptyState />
+              <ChatEmptyState />
             ) : (
-                <MessageList
-                    chat={currentChat}
-                    isLoading={isLoading}
-                    onSpecialistClick={handleSpecialistClick}
-                    onServiceClick={handleServiceClick}
-                    onShare={handleShare}
-                    onRegenerate={handleRegenerate}
-                    specialistId={params.id as string}
-                />
+              <MessageList
+                chat={currentChat}
+                isLoading={isLoading}
+                onSpecialistClick={handleSpecialistClick}
+                onServiceClick={handleServiceClick}
+                onShare={handleShare}
+                onRegenerate={handleRegenerate}
+                specialistId={params.id as string}
+                onTagSelection={handleTagSelection}
+                onPolicyAcceptance={handlePolicyAcceptance}
+              />
             )}
-            <div className="h-16"/>
+            <div className="h-16" />
             <div ref={messagesEndRef} />
           </div>
-        </>) : (<>
+        </>
+      ) : (
+        <>
           {/* Фиксированный контейнер чата по центру экрана */}
           <div
-              className="fixed inset-0 flex justify-center overflow-hidden"
-              style={{
-                left: "500px", // Отступ для сайдбара
-                right: "0",
-              }}
+            className="fixed inset-0 flex justify-center overflow-hidden"
+            style={{
+              left: "500px", // Отступ для сайдбара
+              right: "0",
+            }}
           >
             {/* Прокручиваемая область сообщений */}
             <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
-              <div className="h-24"/>
+              <div className="h-24" />
               {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                  <ChatEmptyState />
+                <ChatEmptyState />
               ) : (
-                  <MessageList
-                      chat={currentChat}
-                      isLoading={isLoading}
-                      onSpecialistClick={handleSpecialistClick}
-                      onServiceClick={handleServiceClick}
-                      onShare={handleShare}
-                      onRegenerate={handleRegenerate}
-                      specialistId={params.id as string}
-                  />
+                <MessageList
+                  chat={currentChat}
+                  isLoading={isLoading}
+                  onSpecialistClick={handleSpecialistClick}
+                  onServiceClick={handleServiceClick}
+                  onShare={handleShare}
+                  onRegenerate={handleRegenerate}
+                  specialistId={params.id as string}
+                  onTagSelection={handleTagSelection}
+                  onPolicyAcceptance={handlePolicyAcceptance}
+                />
               )}
-              <div className="h-16"/>
+              <div className="h-16" />
               <div ref={messagesEndRef} />
             </div>
           </div>
 
           {/* Фиксированный Mufi по центру экрана */}
           <div
-              className="fixed bottom-0 left-0 right-0 flex justify-center"
-              style={{
-                left: "500px", // Учитываем отступ сайдбара
-              }}
+            className="fixed bottom-0 left-0 right-0 flex justify-center"
+            style={{
+              left: "500px", // Учитываем отступ сайдбара
+            }}
           >
             <div className="w-full max-w-4xl px-4 pb-4 pt-4">
               <Mufi
-                  onSearch={handleSearch}
-                  showHeading={false}
-                  dynamicWidth={false}
-                  showPractice={currentChat?.isAI === true}
-                  disableFileApply={true}
-                  placeholder={ `Спроси у ${currentChat?.title || "Alura"}`}
-                  onCancelReply={() => {}}
-                  chatTitle="Alura"
-                  mode={"accept"}
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={false}
+                showPractice={currentChat?.isAI === true}
+                disableFileApply={true}
+                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                onCancelReply={() => {}}
+                chatTitle="Alura"
+                mode={mode}
+                canAccept={canAccept}
+                selectedTags={selectedTags}
               />
             </div>
           </div>
-        </>)}
+        </>
+      )}
 
-        <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
-      </div>
+      <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
+    </div>
   )
 }
