@@ -26,3 +26,17 @@ export const personalityQuestions: PersonalityQuestion[] = [
     options: ["Строгое расписание", "Гибкий график", "По настроению", "Спонтанно"],
   },
 ]
+
+// Helper function to create personality test message
+export const createPersonalityTestMessage = (
+  question: PersonalityQuestion,
+): Omit<import("@/types/chats").Message, "id"> => {
+  return {
+    type: "assistant",
+    content: question.question,
+    timestamp: Date.now(),
+    aiMessageType: "profile-test",
+    questionId: question.id,
+    tags: question.options.map((option) => ({ name: option })),
+  }
+}

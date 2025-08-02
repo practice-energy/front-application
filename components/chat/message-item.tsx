@@ -114,6 +114,10 @@ export const MessageItem = React.memo(
     // Handle personality test answers (for profile-test)
     const handlePersonalityAnswer = useCallback(
       (answer: string) => {
+        console.log("Message object:", message)
+        console.log("Message questionId:", message.questionId)
+        console.log("Message aiMessageType:", message.aiMessageType)
+
         if (message.questionId) {
           console.log("Setting personality answer:", message.questionId, answer)
           setPersonalityAnswer(message.questionId, answer)
@@ -121,7 +125,8 @@ export const MessageItem = React.memo(
             onPersonalityAnswer(message.questionId, answer)
           }
         } else {
-          console.warn("No questionId found in message:", message)
+          console.error("No questionId found in message:", message)
+          console.error("Message keys:", Object.keys(message))
         }
       },
       [message, setPersonalityAnswer, onPersonalityAnswer],
