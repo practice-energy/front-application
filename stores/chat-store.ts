@@ -32,6 +32,7 @@ interface ChatState {
   resetBecomeSpecialistState: () => void
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
+  submitVersionAnswers: () => Promise<{ success: boolean; mufiMode?: string } | null>
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -87,6 +88,37 @@ const mockSubmitPersonalityTest = async (personalityAnswers: Record<string, stri
   } else {
     return { v: 2 }
   }
+}
+
+// Mock backend API call for version answers
+const mockSubmitVersionAnswers = async (
+  versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5>,
+  version: 1 | 2 | 3 | null,
+): Promise<{ success: boolean; mufiMode?: string }> => {
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 2000))
+
+  // Simulate 15% chance of error for retry logic
+  if (Math.random() < 0.15) {
+    throw new Error("Network error")
+  }
+
+  // Calculate average score
+  const scores = Object.values(versionAnswers)
+  const averageScore = scores.reduce((sum, score) => sum + score, 0) / scores.length
+
+  // Determine mufiMode based on version and average score
+  let mufiMode = "continue"
+
+  if (version === 1 && averageScore >= 4) {
+    mufiMode = "young-high"
+  } else if (version === 2 && averageScore >= 4) {
+    mufiMode = "mature-high"
+  } else if (version === 3 && averageScore >= 4) {
+    mufiMode = "wise-high"
+  }
+
+  return { success: true, mufiMode }
 }
 
 export const useChatStore = create(
@@ -178,6 +210,36 @@ export const useChatStore = create(
             retries--
             if (retries === 0) {
               console.error("Failed to submit personality test after retries:", error)
+              return null
+            }
+            // Wait before retry
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+          }
+        }
+        return null
+      },
+
+      submitVersionAnswers: async () => {
+        const { versionAnswers, v } = get().becomeSpecialistState
+
+        let retries = 3
+        while (retries > 0) {
+          try {
+            const result = await mockSubmitVersionAnswers(versionAnswers, v)
+
+            // Move to step 4 (continue mode)
+            set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                step: 4,
+              },
+            }))
+
+            return result
+          } catch (error) {
+            retries--
+            if (retries === 0) {
+              console.error("Failed to submit version answers after retries:", error)
               return null
             }
             // Wait before retry
@@ -398,6 +460,7 @@ export const useBecomeSpecialist = () => {
     resetBecomeSpecialistState,
     getBecomeSpecialistState,
     submitPersonalityTest,
+    submitVersionAnswers,
   } = useChatStore()
 
   return {
@@ -411,5 +474,6 @@ export const useBecomeSpecialist = () => {
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
+    submitVersionAnswers,
   }
 }
