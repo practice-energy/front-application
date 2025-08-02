@@ -238,39 +238,47 @@ export const MessageItem = React.memo(
       )
     }
 
-    // Render personality test options (vertical layout) - Step 2
     const renderPersonalityOptions = (tags: Tag[]) => {
-      const currentAnswer = message.content ? becomeSpecialistState.personalityAnswers[message.content] : null
-      const isDisabled = becomeSpecialistState.step >= 3
+      const currentAnswer = message.content
+          ? becomeSpecialistState.personalityAnswers[message.content]
+          : null;
+
+      console.log("currentAnswer", currentAnswer)
+
+      // Блокируем кнопки, если:
+      // 1. Пользователь уже ответил на этот вопрос, ИЛИ
+      // 2. Активный шаг (step) изменился (появилось новое сообщение)
+      const isButtonDisabled =
+          becomeSpecialistState.step !== 2 ||
+          (currentAnswer !== null && currentAnswer !== undefined);
 
       return (
-        <div className="flex flex-col gap-3 ml-auto max-w-xs">
-          {tags.map((tag, index) => {
-            const isSelected = currentAnswer === tag.name
-            const isButtonDisabled = isDisabled || (currentAnswer !== null && !isSelected)
+          <div className="flex flex-col gap-3 ml-auto max-w-xs">
+            {tags.map((tag, index) => {
+              const isSelected = currentAnswer === tag.name;
 
-            return (
-              <button
-                key={index}
-                onClick={() => handlePersonalityAnswer(tag.name)}
-                disabled={isButtonDisabled}
-                className={cn(
-                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                  "w-full h-[36px] px-4 text-neutral-700",
-                  isSelected
-                    ? "bg-violet-100 "
-                    : isButtonDisabled
-                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 md:hover:bg-violet-50",
-                )}
-              >
-                {tag.name}
-              </button>
-            )
-          })}
-        </div>
-      )
-    }
+              return (
+                  <button
+                      key={index}
+                      onClick={() => handlePersonalityAnswer(tag.name)}
+                      disabled={isButtonDisabled}
+                      className={cn(
+                          "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                          "w-full h-[36px] px-4 text-neutral-700",
+                          isSelected
+                              ? "bg-violet-100"
+                              : isButtonDisabled
+                                  ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                                  : "bg-gray-100 md:hover:bg-violet-50",
+                      )}
+                  >
+                    {tag.name}
+                  </button>
+              );
+            })}
+          </div>
+      );
+    };
 
     // Render version-specific test options (1-5 scale) - Step 3
     const renderVersionOptions = () => {

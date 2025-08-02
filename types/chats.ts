@@ -20,7 +20,7 @@ export type Tag = {
   subtags?:  Tag[]
 }
 
-export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test"
+export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test" | "version-test"
 
 export type Chat = {
   id: string
