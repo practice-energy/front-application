@@ -5,8 +5,7 @@ import { Mufi } from "@/components/mufi/index"
 import { ShareModal } from "@/components/modals/share-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import {useAdeptChats, useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
-
+import { useAdeptChats, useBecomeSpecialist, useMasterChats } from "@/stores/chat-store"
 import { MessageList } from "@/components/chat/message-list"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -29,15 +28,6 @@ export default function SearchPage() {
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
   const { user } = useProfileStore()
-
-  const {
-    getChatDataById,
-    addMessageToChat,
-    addChat,
-    chats
-  } = user?.hat === "adept" ? useAdeptChats() : useMasterChats()
-
-  // Use the become specialist store
   const {
     state: becomeSpecialistState,
     setStep: setBecomeSpecialistStep,
@@ -46,9 +36,11 @@ export default function SearchPage() {
     setPersonalityAnswer,
     resetState: resetBecomeSpecialistState,
   } = useBecomeSpecialist()
-
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
+
+  const { getChatDataById, addMessageToChat, addChat, chats } =
+    user?.hat === "adept" ? useAdeptChats() : useMasterChats()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -90,7 +82,6 @@ export default function SearchPage() {
     scrollToBottom()
   }, [currentChat?.messages, scrollToBottom])
 
-  // This useEffect is now the single source of truth for generating assistant responses.
   useEffect(() => {
     if (!currentChat || currentChat.messages.length === 0) {
       return
@@ -124,13 +115,14 @@ export default function SearchPage() {
     }
   }, [currentChat, addMessageToChat])
 
-  // Handle step transitions
   const handleStepTransition = useCallback(() => {
-    if (becomeSpecialistState.step === 1 && becomeSpecialistState.selectedTags.length > 0 && becomeSpecialistState.policyAccepted) {
-      // Move to step 2 - personality test
+    if (
+      becomeSpecialistState.step === 1 &&
+      becomeSpecialistState.selectedTags.length > 0 &&
+      becomeSpecialistState.policyAccepted
+    ) {
       setBecomeSpecialistStep(2)
 
-      // Add first personality question
       const firstQuestion = personalitySelector.questions[0]
       const questionMessage: Message = {
         id: uuidv4(),
@@ -145,44 +137,54 @@ export default function SearchPage() {
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }
-    } else if (becomeSpecialistState.step === 2 &&
-        Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length) {
-      // Move to step 3
+    } else if (
+      becomeSpecialistState.step === 2 &&
+      Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+    ) {
       setBecomeSpecialistStep(3)
     }
   }, [becomeSpecialistState, currentChat, addMessageToChat, setBecomeSpecialistStep])
 
-  // Handle personality answer selection
   const handlePersonalityAnswer = useCallback(
-      (questionId: string, answer: string) => {
-        setPersonalityAnswer(questionId, answer)
+    (questionId: string, answer: string) => {
+      setPersonalityAnswer(questionId, answer)
 
-        // If there are more questions, ask the next one
-        if (Object.keys(becomeSpecialistState.personalityAnswers).length < personalitySelector.questions.length - 1) {
-          const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
-          const nextQuestion = personalitySelector.questions[nextQuestionIndex]
+      if (Object.keys(becomeSpecialistState.personalityAnswers).length < personalitySelector.questions.length - 1) {
+        const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
+        const nextQuestion = personalitySelector.questions[nextQuestionIndex]
 
-          setTimeout(() => {
-            const questionMessage: Message = {
-              id: uuidv4(),
-              type: "assistant",
-              content: nextQuestion.question,
-              timestamp: Date.now(),
-              aiMessageType: "profile-test",
-              tags: nextQuestion.variants.map((variant) => ({ name: variant })),
-            }
+        setTimeout(() => {
+          const questionMessage: Message = {
+            id: uuidv4(),
+            type: "assistant",
+            content: nextQuestion.question,
+            timestamp: Date.now(),
+            aiMessageType: "profile-test",
+            tags: nextQuestion.variants.map((variant) => ({ name: variant })),
+          }
 
-            const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
-            if (updatedChat) {
-              setCurrentChat(updatedChat)
-            }
-          }, 500)
-        }
-      },
-      [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
+          const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
+          if (updatedChat) {
+            setCurrentChat(updatedChat)
+          }
+        }, 500)
+      }
+    },
+    [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
   )
 
-  // Determine Mufi mode and canAccept based on current step and state
+  const handleAddMessage = useCallback(
+    (message: Message) => {
+      if (!currentChat) return
+
+      const updatedChat = addMessageToChat(currentChat.id, message)
+      if (updatedChat) {
+        setCurrentChat(updatedChat)
+      }
+    },
+    [currentChat, addMessageToChat],
+  )
+
   const getMufiMode = useCallback(() => {
     if (!currentChat || currentChat.messages.length === 0) {
       return { mode: "input", canAccept: false }
@@ -196,7 +198,8 @@ export default function SearchPage() {
     }
 
     if (becomeSpecialistState.step === 2 && lastMessage.aiMessageType === "profile-test") {
-      const canContinue = Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+      const canContinue =
+        Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
       return { mode: "continue", canAccept: canContinue }
     }
 
@@ -204,17 +207,17 @@ export default function SearchPage() {
   }, [currentChat, becomeSpecialistState])
 
   const handleSpecialistClick = useCallback(
-      (specialistId: string) => {
-        router.push(`/specialist/${specialistId}`)
-      },
-      [router],
+    (specialistId: string) => {
+      router.push(`/specialist/${specialistId}`)
+    },
+    [router],
   )
 
   const handleServiceClick = useCallback(
-      (serviceId: string) => {
-        router.push(`/service/${serviceId}`)
-      },
-      [router],
+    (serviceId: string) => {
+      router.push(`/service/${serviceId}`)
+    },
+    [router],
   )
 
   const handleShare = useCallback((message: Message) => {
@@ -222,80 +225,74 @@ export default function SearchPage() {
     setShareModalOpen(true)
   }, [])
 
-  const handleRegenerate = useCallback(
-      async (message: Message) => {
-        setCurrentChat((prevChat) => {
-          if (!prevChat || message.type !== "assistant") return prevChat
+  const handleRegenerate = useCallback(async (message: Message) => {
+    setCurrentChat((prevChat) => {
+      if (!prevChat || message.type !== "assistant") return prevChat
 
-          // Remove the assistant message to be regenerated
-          const updatedMessages = prevChat.messages.filter((m) => m.id !== message.id)
+      const updatedMessages = prevChat.messages.filter((m) => m.id !== message.id)
+      lastHandledMessageId.current = null
 
-          // The last message is now a user message. We want the useEffect to re-run for it.
-          // To do that, we clear the lastHandledMessageId ref before updating the state.
-          lastHandledMessageId.current = null
+      const updatedChat = { ...prevChat, messages: updatedMessages }
+      return updatedChat
+    })
+  }, [])
 
-          const updatedChat = { ...prevChat, messages: updatedMessages }
-          return updatedChat
-        })
-      },
-      [],
+  const handleTagSelection = useCallback(
+    (tags: string[]) => {
+      setSelectedTags(tags)
+    },
+    [setSelectedTags],
   )
 
-  // Callback to handle tag selection from MessageItem
-  const handleTagSelection = useCallback((tags: string[]) => {
-    setSelectedTags(tags)
-  }, [setSelectedTags])
+  const handlePolicyAcceptance = useCallback(
+    (accepted: boolean) => {
+      setPolicyAccepted(accepted)
+    },
+    [setPolicyAccepted],
+  )
 
-  // Callback to handle policy acceptance from MessageItem
-  const handlePolicyAcceptance = useCallback((accepted: boolean) => {
-    setPolicyAccepted(accepted)
-  }, [setPolicyAccepted])
-
-  // Handle continue button click
   const handleContinue = useCallback(() => {
     handleStepTransition()
   }, [handleStepTransition])
 
   const handleSearch = useCallback(
-      async (query: string, title = "Alura", files: File[] = [], isPractice = false) => {
-        if ((!query || !query.trim()) && (!files || files.length === 0)) return
+    async (query: string, title = "Alura", files: File[] = [], isPractice = false) => {
+      if ((!query || !query.trim()) && (!files || files.length === 0)) return
 
-        const now = Date.now()
-        const userMessage: Message = {
-          id: uuidv4(),
-          type: "user",
-          content: query,
-          timestamp: now,
-          files: files,
+      const now = Date.now()
+      const userMessage: Message = {
+        id: uuidv4(),
+        type: "user",
+        content: query,
+        timestamp: now,
+        files: files,
+      }
+
+      const chatId = params.id as string
+      const existingChat = getChatDataById(chatId)
+
+      if (!existingChat || existingChat.messages.length === 0) {
+        const newChat: Chat = {
+          id: chatId,
+          title: title,
+          timestamp: Date.now(),
+          messages: [userMessage],
+          isAI: true,
+          createdAt: Date.now(),
+          isMuted: false,
+          hasNew: true,
         }
 
-        const chatId = params.id as string
-        const existingChat = getChatDataById(chatId)
-
-        if (!existingChat || existingChat.messages.length === 0) {
-          // Create new chat only if it doesn't exist in store
-          const newChat: Chat = {
-            id: chatId,
-            title: title,
-            timestamp: Date.now(),
-            messages: [userMessage],
-            isAI: true,
-            createdAt: Date.now(),
-            isMuted: false,
-            hasNew: true,
-          }
-
-          addChat(newChat)
-          setCurrentChat(newChat)
-        } else {
-          // Add message to existing chat
-          const updatedChat = addMessageToChat(chatId, userMessage)
-          if (updatedChat) {
-            setCurrentChat(updatedChat)
-          }
+        addChat(newChat)
+        setCurrentChat(newChat)
+      } else {
+        const updatedChat = addMessageToChat(chatId, userMessage)
+        if (updatedChat) {
+          setCurrentChat(updatedChat)
         }
-      },
-      [params.id, getChatDataById, addChat, addMessageToChat],
+      }
+    },
+    [params.id, getChatDataById, addChat, addMessageToChat],
   )
 
   const { mode, canAccept } = getMufiMode()
@@ -306,98 +303,100 @@ export default function SearchPage() {
   }
 
   return (
-      <div className="relative h-screen bg-white dark:bg-gray-900">
-        {isMobile && isCollapsed ? (
-            <>
-              <ChatHeader
-                  user={user}
-                  currentChat={currentChat!}
-                  toggleSidebar={toggleSidebar}
-                  toggleProfileMenu={toggleSidebar}
-                  isAuthenticated={isAuthenticated}
+    <div className="relative h-screen bg-white dark:bg-gray-900">
+      {isMobile && isCollapsed ? (
+        <>
+          <ChatHeader
+            user={user}
+            currentChat={currentChat!}
+            toggleSidebar={toggleSidebar}
+            toggleProfileMenu={toggleSidebar}
+            isAuthenticated={isAuthenticated}
+          />
+
+          <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
+            <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
+            {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+              <ChatEmptyState />
+            ) : (
+              <MessageList
+                chat={currentChat}
+                isLoading={isLoading}
+                onSpecialistClick={handleSpecialistClick}
+                onServiceClick={handleServiceClick}
+                onShare={handleShare}
+                onRegenerate={handleRegenerate}
+                specialistId={params.id as string}
+                onTagSelection={handleTagSelection}
+                onPolicyAcceptance={handlePolicyAcceptance}
+                onPersonalityAnswer={handlePersonalityAnswer}
+                onAddMessage={handleAddMessage}
               />
+            )}
+            <div className="h-16" />
+            <div ref={messagesEndRef} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className="fixed inset-0 flex justify-center overflow-hidden"
+            style={{
+              left: "500px",
+              right: "0",
+            }}
+          >
+            <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
+              <div className="h-24" />
+              {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+                <ChatEmptyState />
+              ) : (
+                <MessageList
+                  chat={currentChat}
+                  isLoading={isLoading}
+                  onSpecialistClick={handleSpecialistClick}
+                  onServiceClick={handleServiceClick}
+                  onShare={handleShare}
+                  onRegenerate={handleRegenerate}
+                  specialistId={params.id as string}
+                  onTagSelection={handleTagSelection}
+                  onPolicyAcceptance={handlePolicyAcceptance}
+                  onPersonalityAnswer={handlePersonalityAnswer}
+                  onAddMessage={handleAddMessage}
+                />
+              )}
+              <div className="h-16" />
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
 
-              <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
-                <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
-                {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                    <ChatEmptyState />
-                ) : (
-                    <MessageList
-                        chat={currentChat}
-                        isLoading={isLoading}
-                        onSpecialistClick={handleSpecialistClick}
-                        onServiceClick={handleServiceClick}
-                        onShare={handleShare}
-                        onRegenerate={handleRegenerate}
-                        specialistId={params.id as string}
-                        onTagSelection={handleTagSelection}
-                        onPolicyAcceptance={handlePolicyAcceptance}
-                        onPersonalityAnswer={handlePersonalityAnswer}
-                    />
-                )}
-                <div className="h-16" />
-                <div ref={messagesEndRef} />
-              </div>
-            </>
-        ) : (
-            <>
-              <div
-                  className="fixed inset-0 flex justify-center overflow-hidden"
-                  style={{
-                    left: "500px",
-                    right: "0",
-                  }}
-              >
-                <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
-                  <div className="h-24" />
-                  {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                      <ChatEmptyState />
-                  ) : (
-                      <MessageList
-                          chat={currentChat}
-                          isLoading={isLoading}
-                          onSpecialistClick={handleSpecialistClick}
-                          onServiceClick={handleServiceClick}
-                          onShare={handleShare}
-                          onRegenerate={handleRegenerate}
-                          specialistId={params.id as string}
-                          onTagSelection={handleTagSelection}
-                          onPolicyAcceptance={handlePolicyAcceptance}
-                          onPersonalityAnswer={handlePersonalityAnswer}
-                      />
-                  )}
-                  <div className="h-16" />
-                  <div ref={messagesEndRef} />
-                </div>
-              </div>
+          <div
+            className="fixed bottom-0 left-0 right-0 flex justify-center"
+            style={{
+              left: "500px",
+            }}
+          >
+            <div className="w-full max-w-4xl px-4 pb-4 pt-4">
+              <Mufi
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={false}
+                showPractice={currentChat?.isAI === true}
+                disableFileApply={true}
+                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                onCancelReply={() => {}}
+                chatTitle="Alura"
+                mode={mode}
+                canAccept={canAccept}
+                selectedTags={becomeSpecialistState.selectedTags}
+                onContinue={handleContinue}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
-              <div
-                  className="fixed bottom-0 left-0 right-0 flex justify-center"
-                  style={{
-                    left: "500px",
-                  }}
-              >
-                <div className="w-full max-w-4xl px-4 pb-4 pt-4">
-                  <Mufi
-                      onSearch={handleSearch}
-                      showHeading={false}
-                      dynamicWidth={false}
-                      showPractice={currentChat?.isAI === true}
-                      disableFileApply={true}
-                      placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
-                      onCancelReply={() => {}}
-                      chatTitle="Alura"
-                      mode={mode}
-                      canAccept={canAccept}
-                      selectedTags={becomeSpecialistState.selectedTags}
-                      onContinue={handleContinue}
-                  />
-                </div>
-              </div>
-            </>
-        )}
-
-        <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
-      </div>
+      <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
+    </div>
   )
 }
