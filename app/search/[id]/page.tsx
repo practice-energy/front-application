@@ -24,6 +24,29 @@ const SearchPage = ({ becomeSpecialistState, chat, chatId }) => {
     }
   }, [becomeSpecialistState.step, becomeSpecialistState.v, chat, chatId, addMessageToChat])
 
+  // Add this useEffect after the existing useEffects
+  useEffect(() => {
+    if (becomeSpecialistState.step === 3 && becomeSpecialistState.v && chat && chat.messages.length > 0) {
+      // Check if we already have a version-test message to avoid duplicates
+      const hasVersionMessage = chat.messages.some((msg) => msg.aiMessageType === "version-test")
+
+      if (!hasVersionMessage) {
+        const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
+
+        if (versionQuestions.length > 0) {
+          setTimeout(() => {
+            const firstVersionMessage = createVersionMessage(versionQuestions[0], 0)
+            const updatedChat = addMessageToChat(chatId, firstVersionMessage)
+            if (updatedChat) {
+              // Assuming setCurrentChat is available in the scope
+              // setCurrentChat(updatedChat)
+            }
+          }, 500)
+        }
+      }
+    }
+  }, [becomeSpecialistState.step, becomeSpecialistState.v, chat, chatId, addMessageToChat])
+
   return (
     <div>
       {chat.messages.map((message, index) => (
