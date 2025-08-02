@@ -21,7 +21,7 @@ export const ChatHeader = ({
                                isAuthenticated
                            }: ChatHeaderProps) => {
     return (
-        <header className="fixed top-0 left-0 right-0 h-16 bg-white opacity-70 z-50 px-4 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 h-16 bg-white bg-opacity-70 z-50 px-4 flex items-center justify-between">
             <div className="w-min">
                 <SidebarToggleButton
                     toggleSidebar={toggleSidebar}
@@ -30,7 +30,7 @@ export const ChatHeader = ({
             </div>
 
             {/* Центральная часть - название чата */}
-            <div className="flex-1 text-center font-medium text-gray-900 truncate line-clamp-1 opacity-100 w-full">
+            <div className="flex-1 text-center font-medium text-gray-900 truncate line-clamp-1 w-full">
                 {currentChat?.description || currentChat?.title || "Чат"}
             </div>
 

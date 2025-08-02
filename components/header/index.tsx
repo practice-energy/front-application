@@ -15,7 +15,7 @@ import { ProfileMenu } from "./components/profile-menu"
 import { PentagramIcon, UserSwitchIcon } from "@phosphor-icons/react"
 import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
-import { useAdeptChats } from "@/stores/chat-store"
+import {useAdeptChats, useMasterChats} from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
 import {becomeSpecialistTags} from "@/services/become-specialist-tree-tag";
@@ -24,12 +24,12 @@ import {messageInitMaster} from "@/components/become-specialist/messages";
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isAuthenticated, logout, updateUser, login } = useAuth()
-  const { user } = useProfileStore()
+  const { user, setUser } = useProfileStore()
   const router = useRouter()
   const pathname = usePathname()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const hat = user?.hat
-  const { addChat, chats: adeptChats } = useAdeptChats()
+  const { addChat } = useMasterChats()
 
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
@@ -73,15 +73,9 @@ export function Header() {
 
   const handleBecomeSpecialist = () => {
     // Проверяем, есть ли уже чат "стать мастером"
-    const existingBecomeSpecialistChat = adeptChats.find((chat) => chat.isSpecialChat === "become-specialist")
+    const updatedUser = {...user, isSpecialist: true}
+    setUser(updatedUser)
 
-    // if (existingBecomeSpecialistChat) {
-    //   // Если чат уже существует, просто перенаправляем на него
-    //   router.push(`/search/${existingBecomeSpecialistChat.id}`)
-    //   return
-    // }
-
-    // Если чата нет, создаем новый
     const chatId = uuidv4()
     const newChat = {
       id: chatId,
@@ -96,7 +90,9 @@ export function Header() {
       ],
     }
 
-    console.log(newChat)
+    updateUser({
+      hat: "master",
+    })
 
     addChat(newChat)
     router.push(`/search/${chatId}`)
@@ -149,8 +145,7 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated && (
-            // && !user?.isSpecialist
+          {isAuthenticated && !user?.isSpecialist && (
             <button
               className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
               onClick={handleBecomeSpecialist}
