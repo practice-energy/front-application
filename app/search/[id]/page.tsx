@@ -5,7 +5,7 @@ import { Mufi } from "@/components/mufi/index"
 import { ShareModal } from "@/components/modals/share-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import { useAdeptChats, useBecomeSpecialist, useMasterChats } from "@/stores/chat-store"
+import { useAdeptChats, useMasterChats } from "@/stores/chat-store"
 import { MessageList } from "@/components/chat/message-list"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -18,9 +18,11 @@ import { useProfileStore } from "@/stores/profile-store"
 import {
   createVersionMessage,
   getVersionQuestions,
-  initVersionTestMessage, initVersionTestMessageFooter,
-  personalitySelector
+  initVersionTestMessage,
+  initVersionTestMessageFooter,
+  personalitySelector,
 } from "@/components/become-specialist/messages"
+import { useBecomeSpecialistStore } from "@/stores/become-specialist-store"
 
 export default function SearchPage() {
   const params = useParams()
@@ -33,20 +35,19 @@ export default function SearchPage() {
   const lastHandledMessageId = useRef<string | null>(null)
   const isMobile = useIsMobile()
   const { user } = useProfileStore()
-  const {
-    state: becomeSpecialistState,
-    setStep: setBecomeSpecialistStep,
-    setSelectedTags,
-    setPolicyAccepted,
-    setPersonalityAnswer,
-    setVersionAnswer,
-    resetState: resetBecomeSpecialistState,
-  } = useBecomeSpecialist()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
-
-  const { getChatDataById, addMessageToChat, addChat } =
-      user?.hat === "adept" ? useAdeptChats() : useMasterChats()
+  const useChatStore = user?.hat === "adept" ? useAdeptChats : useMasterChats
+  const { getChatDataById, addMessageToChat, addChat } = useChatStore()
+  const {
+    becomeSpecialistState,
+    setBecomeSpecialistStep,
+    setPersonalityAnswer,
+    setVersionAnswer,
+    setSelectedTags,
+    setPolicyAccepted,
+    submitVersionTest,
+  } = useBecomeSpecialistStore()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -125,11 +126,11 @@ export default function SearchPage() {
     }
   }, [currentChat, addMessageToChat])
 
-  const handleStepTransition = useCallback(() => {
+  const handleStepTransition = useCallback(async () => {
     if (
-        becomeSpecialistState.step === 1 &&
-        becomeSpecialistState.selectedTags.length > 0 &&
-        becomeSpecialistState.policyAccepted
+      becomeSpecialistState.step === 1 &&
+      becomeSpecialistState.selectedTags.length > 0 &&
+      becomeSpecialistState.policyAccepted
     ) {
       setBecomeSpecialistStep(2)
 
@@ -148,8 +149,8 @@ export default function SearchPage() {
         setCurrentChat(updatedChat)
       }
     } else if (
-        becomeSpecialistState.step === 2 &&
-        Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+      becomeSpecialistState.step === 2 &&
+      Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
     ) {
       setBecomeSpecialistStep(3)
 
@@ -159,32 +160,57 @@ export default function SearchPage() {
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }
+    } else if (
+      becomeSpecialistState.step === 3 &&
+      becomeSpecialistState.v &&
+      Object.keys(becomeSpecialistState.versionAnswers).length === getVersionQuestions(becomeSpecialistState.v).length
+    ) {
+      setBecomeSpecialistStep(4)
+
+      // Submit version test to backend
+      try {
+        await submitVersionTest()
+
+        // Add completion message
+        const completionMessage: Message = {
+          id: uuidv4(),
+          type: "assistant",
+          content: "Отлично! Все тесты завершены. Теперь я могу лучше подбирать для вас подходящих специалистов.",
+          timestamp: Date.now(),
+          aiMessageType: "completion",
+        }
+
+        const updatedChat = addMessageToChat(currentChat!.id, completionMessage)
+        if (updatedChat) {
+          setCurrentChat(updatedChat)
+        }
+      } catch (error) {
+        console.error("Failed to submit version test:", error)
+      }
     }
-  }, [becomeSpecialistState, currentChat, addMessageToChat, setBecomeSpecialistStep])
+  }, [becomeSpecialistState, currentChat, addMessageToChat, setBecomeSpecialistStep, submitVersionTest])
 
   useEffect(() => {
     if (
-        becomeSpecialistState.step === 3 &&
-        becomeSpecialistState.v &&
-        currentChat &&
-        currentChat.isSpecialChat === "become-specialist"
+      becomeSpecialistState.step === 3 &&
+      becomeSpecialistState.v &&
+      currentChat &&
+      currentChat.isSpecialChat === "become-specialist"
     ) {
-      const questions = getVersionQuestions(becomeSpecialistState.v);
-      const hasVersionMessage = currentChat.messages.some(
-          msg => msg.aiMessageType === "version-test"
-      );
+      const questions = getVersionQuestions(becomeSpecialistState.v)
+      const hasVersionMessage = currentChat.messages.some((msg) => msg.aiMessageType === "version-test")
 
       if (!hasVersionMessage && questions.length > 0) {
         const firstVersionMessage = createVersionMessage(
-            questions[0],
-            0,
-            initVersionTestMessage,
-            initVersionTestMessageFooter,
-        );
+          questions[0],
+          0,
+          initVersionTestMessage,
+          initVersionTestMessageFooter,
+        )
 
-        const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage);
+        const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage)
         if (updatedChat) {
-          setCurrentChat(updatedChat);
+          setCurrentChat(updatedChat)
         }
       }
     }
@@ -195,59 +221,64 @@ export default function SearchPage() {
     addMessageToChat,
     initVersionTestMessage,
     initVersionTestMessageFooter,
-  ]);
+  ])
 
   const handlePersonalityAnswer = useCallback(
-      (questionId: string, answer: string) => {
-        setPersonalityAnswer(questionId, answer)
+    (questionId: string, answer: string) => {
+      setPersonalityAnswer(questionId, answer)
 
-        if (Object.keys(becomeSpecialistState.personalityAnswers).length < personalitySelector.questions.length - 1) {
-          const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
-          const nextQuestion = personalitySelector.questions[nextQuestionIndex]
+      if (Object.keys(becomeSpecialistState.personalityAnswers).length < personalitySelector.questions.length - 1) {
+        const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
+        const nextQuestion = personalitySelector.questions[nextQuestionIndex]
 
-          setTimeout(() => {
-            const questionMessage: Message = {
-              id: uuidv4(),
-              type: "assistant",
-              content: nextQuestion.question,
-              timestamp: Date.now(),
-              aiMessageType: "profile-test",
-              tags: nextQuestion.variants.map((variant) => ({ name: variant })),
-            }
+        setTimeout(() => {
+          const questionMessage: Message = {
+            id: uuidv4(),
+            type: "assistant",
+            content: nextQuestion.question,
+            timestamp: Date.now(),
+            aiMessageType: "profile-test",
+            tags: nextQuestion.variants.map((variant) => ({ name: variant })),
+          }
 
-            const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
-            if (updatedChat) {
-              setCurrentChat(updatedChat)
-            }
-          }, 500)
-        }
-      },
-      [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
+          const updatedChat = addMessageToChat(currentChat!.id, questionMessage)
+          if (updatedChat) {
+            setCurrentChat(updatedChat)
+          }
+        }, 500)
+      }
+    },
+    [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
   )
 
   const handleVersionAnswer = useCallback(
-      (questionId: string, answer: number) => {
-        setVersionAnswer(questionId, answer)
+    (questionId: string, answer: number) => {
+      setVersionAnswer(questionId, answer)
 
-        const questions = getVersionQuestions(becomeSpecialistState.v)
+      const questions = getVersionQuestions(becomeSpecialistState.v)
 
-        if (Object.keys(becomeSpecialistState.versionAnswers).length < getVersionQuestions(becomeSpecialistState.v).length - 1) {
-          const nextQuestionIndex = Object.keys(becomeSpecialistState.versionAnswers).length + 1
-          const nextQuestion = questions[nextQuestionIndex]
+      if (
+        Object.keys(becomeSpecialistState.versionAnswers).length <
+        getVersionQuestions(becomeSpecialistState.v).length - 1
+      ) {
+        const nextQuestionIndex = Object.keys(becomeSpecialistState.versionAnswers).length + 1
+        const nextQuestion = questions[nextQuestionIndex]
 
-          setTimeout(() => {
-            const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage(nextQuestion, nextQuestionIndex))
-            if (updatedChat) {
-              setCurrentChat(updatedChat)
-            }
-          }, 500)
-        }
-      },
-      [ becomeSpecialistState.step,
-        becomeSpecialistState.v,
-        becomeSpecialistState.versionAnswers,
-        currentChat,
-        addMessageToChat],
+        setTimeout(() => {
+          const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage(nextQuestion, nextQuestionIndex))
+          if (updatedChat) {
+            setCurrentChat(updatedChat)
+          }
+        }, 500)
+      }
+    },
+    [
+      becomeSpecialistState.step,
+      becomeSpecialistState.v,
+      becomeSpecialistState.versionAnswers,
+      currentChat,
+      addMessageToChat,
+    ],
   )
 
   const getMufiMode = useCallback(() => {
@@ -263,11 +294,18 @@ export default function SearchPage() {
     }
 
     if (
-        (becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) &&
-        (lastMessage.aiMessageType === "profile-test" || lastMessage.aiMessageType === "version-test")
+      (becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) &&
+      (lastMessage.aiMessageType === "profile-test" || lastMessage.aiMessageType === "version-test")
     ) {
       const canContinue =
-          Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+        Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+      return { mode: "continue", canAccept: canContinue }
+    }
+
+    if (becomeSpecialistState.step === 4) {
+      const canContinue =
+        becomeSpecialistState.v &&
+        Object.keys(becomeSpecialistState.versionAnswers).length === getVersionQuestions(becomeSpecialistState.v).length
       return { mode: "continue", canAccept: canContinue }
     }
 
@@ -275,17 +313,17 @@ export default function SearchPage() {
   }, [currentChat, becomeSpecialistState])
 
   const handleSpecialistClick = useCallback(
-      (specialistId: string) => {
-        router.push(`/specialist/${specialistId}`)
-      },
-      [router],
+    (specialistId: string) => {
+      router.push(`/specialist/${specialistId}`)
+    },
+    [router],
   )
 
   const handleServiceClick = useCallback(
-      (serviceId: string) => {
-        router.push(`/service/${serviceId}`)
-      },
-      [router],
+    (serviceId: string) => {
+      router.push(`/service/${serviceId}`)
+    },
+    [router],
   )
 
   const handleShare = useCallback((message: Message) => {
@@ -306,17 +344,17 @@ export default function SearchPage() {
   }, [])
 
   const handleTagSelection = useCallback(
-      (tags: string[]) => {
-        setSelectedTags(tags)
-      },
-      [setSelectedTags],
+    (tags: string[]) => {
+      setSelectedTags(tags)
+    },
+    [setSelectedTags],
   )
 
   const handlePolicyAcceptance = useCallback(
-      (accepted: boolean) => {
-        setPolicyAccepted(accepted)
-      },
-      [setPolicyAccepted],
+    (accepted: boolean) => {
+      setPolicyAccepted(accepted)
+    },
+    [setPolicyAccepted],
   )
 
   const handleContinue = useCallback(() => {
@@ -324,43 +362,43 @@ export default function SearchPage() {
   }, [handleStepTransition])
 
   const handleSearch = useCallback(
-      async (query: string, title = "Alura", files: File[] = [], isPractice = false) => {
-        if ((!query || !query.trim()) && (!files || files.length === 0)) return
+    async (query: string, title = "Alura", files: File[] = [], isPractice = false) => {
+      if ((!query || !query.trim()) && (!files || files.length === 0)) return
 
-        const now = Date.now()
-        const userMessage: Message = {
-          id: uuidv4(),
-          type: "user",
-          content: query,
-          timestamp: now,
-          files: files,
+      const now = Date.now()
+      const userMessage: Message = {
+        id: uuidv4(),
+        type: "user",
+        content: query,
+        timestamp: now,
+        files: files,
+      }
+
+      const chatId = params.id as string
+      const existingChat = getChatDataById(chatId)
+
+      if (!existingChat || existingChat.messages.length === 0) {
+        const newChat: Chat = {
+          id: chatId,
+          title: title,
+          timestamp: Date.now(),
+          messages: [userMessage],
+          isAI: true,
+          createdAt: Date.now(),
+          isMuted: false,
+          hasNew: true,
         }
 
-        const chatId = params.id as string
-        const existingChat = getChatDataById(chatId)
-
-        if (!existingChat || existingChat.messages.length === 0) {
-          const newChat: Chat = {
-            id: chatId,
-            title: title,
-            timestamp: Date.now(),
-            messages: [userMessage],
-            isAI: true,
-            createdAt: Date.now(),
-            isMuted: false,
-            hasNew: true,
-          }
-
-          addChat(newChat)
-          setCurrentChat(newChat)
-        } else {
-          const updatedChat = addMessageToChat(chatId, userMessage)
-          if (updatedChat) {
-            setCurrentChat(updatedChat)
-          }
+        addChat(newChat)
+        setCurrentChat(newChat)
+      } else {
+        const updatedChat = addMessageToChat(chatId, userMessage)
+        if (updatedChat) {
+          setCurrentChat(updatedChat)
         }
-      },
-      [params.id, getChatDataById, addChat, addMessageToChat],
+      }
+    },
+    [params.id, getChatDataById, addChat, addMessageToChat],
   )
 
   const { mode, canAccept } = getMufiMode()
@@ -371,100 +409,100 @@ export default function SearchPage() {
   }
 
   return (
-      <div className="relative h-screen bg-white dark:bg-gray-900">
-        {isMobile && isCollapsed ? (
-            <>
-              <ChatHeader
-                  user={user}
-                  currentChat={currentChat!}
-                  toggleSidebar={toggleSidebar}
-                  toggleProfileMenu={toggleSidebar}
-                  isAuthenticated={isAuthenticated}
+    <div className="relative h-screen bg-white dark:bg-gray-900">
+      {isMobile && isCollapsed ? (
+        <>
+          <ChatHeader
+            user={user}
+            currentChat={currentChat!}
+            toggleSidebar={toggleSidebar}
+            toggleProfileMenu={toggleSidebar}
+            isAuthenticated={isAuthenticated}
+          />
+
+          <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
+            <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
+            {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+              <ChatEmptyState />
+            ) : (
+              <MessageList
+                chat={currentChat}
+                isLoading={isLoading}
+                onSpecialistClick={handleSpecialistClick}
+                onServiceClick={handleServiceClick}
+                onShare={handleShare}
+                onRegenerate={handleRegenerate}
+                specialistId={params.id as string}
+                onTagSelection={handleTagSelection}
+                onPolicyAcceptance={handlePolicyAcceptance}
+                onPersonalityAnswer={handlePersonalityAnswer}
+                onVersionAnswer={handleVersionAnswer}
               />
+            )}
+            <div className="h-16" />
+            <div ref={messagesEndRef} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className="fixed inset-0 flex justify-center overflow-hidden"
+            style={{
+              left: "500px",
+              right: "0",
+            }}
+          >
+            <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
+              <div className="h-24" />
+              {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+                <ChatEmptyState />
+              ) : (
+                <MessageList
+                  chat={currentChat}
+                  isLoading={isLoading}
+                  onSpecialistClick={handleSpecialistClick}
+                  onServiceClick={handleServiceClick}
+                  onShare={handleShare}
+                  onRegenerate={handleRegenerate}
+                  specialistId={params.id as string}
+                  onTagSelection={handleTagSelection}
+                  onPolicyAcceptance={handlePolicyAcceptance}
+                  onPersonalityAnswer={handlePersonalityAnswer}
+                  onVersionAnswer={handleVersionAnswer}
+                />
+              )}
+              <div className="h-16" />
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
 
-              <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
-                <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
-                {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                    <ChatEmptyState />
-                ) : (
-                    <MessageList
-                        chat={currentChat}
-                        isLoading={isLoading}
-                        onSpecialistClick={handleSpecialistClick}
-                        onServiceClick={handleServiceClick}
-                        onShare={handleShare}
-                        onRegenerate={handleRegenerate}
-                        specialistId={params.id as string}
-                        onTagSelection={handleTagSelection}
-                        onPolicyAcceptance={handlePolicyAcceptance}
-                        onPersonalityAnswer={handlePersonalityAnswer}
-                        onVersionAnswer={handleVersionAnswer}
-                    />
-                )}
-                <div className="h-16" />
-                <div ref={messagesEndRef} />
-              </div>
-            </>
-        ) : (
-            <>
-              <div
-                  className="fixed inset-0 flex justify-center overflow-hidden"
-                  style={{
-                    left: "500px",
-                    right: "0",
-                  }}
-              >
-                <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
-                  <div className="h-24" />
-                  {currentChat && currentChat.messages.length === 0 && !isLoading ? (
-                      <ChatEmptyState />
-                  ) : (
-                      <MessageList
-                          chat={currentChat}
-                          isLoading={isLoading}
-                          onSpecialistClick={handleSpecialistClick}
-                          onServiceClick={handleServiceClick}
-                          onShare={handleShare}
-                          onRegenerate={handleRegenerate}
-                          specialistId={params.id as string}
-                          onTagSelection={handleTagSelection}
-                          onPolicyAcceptance={handlePolicyAcceptance}
-                          onPersonalityAnswer={handlePersonalityAnswer}
-                          onVersionAnswer={handleVersionAnswer}
-                      />
-                  )}
-                  <div className="h-16" />
-                  <div ref={messagesEndRef} />
-                </div>
-              </div>
+          <div
+            className="fixed bottom-0 left-0 right-0 flex justify-center"
+            style={{
+              left: "500px",
+            }}
+          >
+            <div className="w-full max-w-4xl px-4 pb-4 pt-4">
+              <Mufi
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={false}
+                showPractice={currentChat?.isAI === true}
+                disableFileApply={true}
+                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                onCancelReply={() => {}}
+                chatTitle="Alura"
+                mode={mode}
+                canAccept={canAccept}
+                selectedTags={becomeSpecialistState.selectedTags}
+                onContinue={handleContinue}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
-              <div
-                  className="fixed bottom-0 left-0 right-0 flex justify-center"
-                  style={{
-                    left: "500px",
-                  }}
-              >
-                <div className="w-full max-w-4xl px-4 pb-4 pt-4">
-                  <Mufi
-                      onSearch={handleSearch}
-                      showHeading={false}
-                      dynamicWidth={false}
-                      showPractice={currentChat?.isAI === true}
-                      disableFileApply={true}
-                      placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
-                      onCancelReply={() => {}}
-                      chatTitle="Alura"
-                      mode={mode}
-                      canAccept={canAccept}
-                      selectedTags={becomeSpecialistState.selectedTags}
-                      onContinue={handleContinue}
-                  />
-                </div>
-              </div>
-            </>
-        )}
-
-        <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
-      </div>
+      <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
+    </div>
   )
 }

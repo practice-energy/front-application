@@ -32,7 +32,7 @@ interface ChatState {
   resetBecomeSpecialistState: () => void
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
-  submitVersionAnswers: () => Promise<{ success: boolean; mufiMode?: string } | null>
+  submitVersionTest: () => Promise<{ success: boolean } | null>
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -88,6 +88,22 @@ const mockSubmitPersonalityTest = async (personalityAnswers: Record<string, stri
   } else {
     return { v: 2 }
   }
+}
+
+// Mock backend API call for version test
+const mockSubmitVersionTest = async (
+  versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5>,
+): Promise<{ success: boolean }> => {
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1500 + Math.random() * 1000))
+
+  // Simulate 10% chance of error for retry logic
+  if (Math.random() < 0.1) {
+    throw new Error("Network error")
+  }
+
+  console.log("Version test submitted:", versionAnswers)
+  return { success: true }
 }
 
 export const useChatStore = create(
@@ -188,27 +204,18 @@ export const useChatStore = create(
         return null
       },
 
-      submitVersionAnswers: async () => {
-        const { versionAnswers, v } = get().becomeSpecialistState
+      submitVersionTest: async () => {
+        const { versionAnswers } = get().becomeSpecialistState
 
         let retries = 3
         while (retries > 0) {
           try {
-            const result = await mockSubmitVersionAnswers(versionAnswers, v)
-
-            // Move to step 4 (continue mode)
-            set((state) => ({
-              becomeSpecialistState: {
-                ...state.becomeSpecialistState,
-                step: 4,
-              },
-            }))
-
+            const result = await mockSubmitVersionTest(versionAnswers)
             return result
           } catch (error) {
             retries--
             if (retries === 0) {
-              console.error("Failed to submit version answers after retries:", error)
+              console.error("Failed to submit version test after retries:", error)
               return null
             }
             // Wait before retry
@@ -367,37 +374,6 @@ export const useChatStore = create(
   ),
 )
 
-// Mock backend API call for version answers
-const mockSubmitVersionAnswers = async (
-  versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5>,
-  version: 1 | 2 | 3 | null,
-): Promise<{ success: boolean; mufiMode?: string }> => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 2000))
-
-  // Simulate 15% chance of error for retry logic
-  if (Math.random() < 0.15) {
-    throw new Error("Network error")
-  }
-
-  // Calculate average score
-  const scores = Object.values(versionAnswers)
-  const averageScore = scores.reduce((sum, score) => sum + score, 0) / scores.length
-
-  // Determine mufiMode based on version and average score
-  let mufiMode = "continue"
-
-  if (version === 1 && averageScore >= 4) {
-    mufiMode = "young-high"
-  } else if (version === 2 && averageScore >= 4) {
-    mufiMode = "mature-high"
-  } else if (version === 3 && averageScore >= 4) {
-    mufiMode = "wise-high"
-  }
-
-  return { success: true, mufiMode }
-}
-
 // Convenience hooks for specific hat usage
 export const useAdeptChats = () => {
   const {
@@ -460,7 +436,7 @@ export const useBecomeSpecialist = () => {
     resetBecomeSpecialistState,
     getBecomeSpecialistState,
     submitPersonalityTest,
-    submitVersionAnswers,
+    submitVersionTest,
   } = useChatStore()
 
   return {
@@ -474,6 +450,6 @@ export const useBecomeSpecialist = () => {
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
-    submitVersionAnswers,
+    submitVersionTest,
   }
 }

@@ -97,7 +97,7 @@ export const getVersionQuestions = (version: 1 | 2 | 3): string[] => {
 }
 
 // Helper function to create version-specific messages
-export const createVersionMessage = (question: string, index: number, content = "", footer = "") => ({
+export const createVersionMessage = (question: string, index: number, content: string = "", footer: string ="") => ({
   id: uuidv4(),
   type: "assistant",
   content: content,
@@ -109,18 +109,6 @@ export const createVersionMessage = (question: string, index: number, content = 
   isAI: true,
 })
 
-export const initVersionTestMessage =
-  "Теперь, когда области специальнсти определены, давайте углубимся в ваши внутренние миры.\n\nОтветы позволят мне лучше понять, каких инициантов для вас подбирать:"
+export const initVersionTestMessage = "Теперь, когда области специальнсти определены, давайте углубимся в ваши внутренние миры.\n\nОтветы позволят мне лучше понять, каких инициантов для вас подбирать:"
 
-export const initVersionTestMessageFooter =
-  "Ответы в безопасности и надёжно защищены: только вы и я имеем к ним доступ."
-
-export const step4ContinueMessage = {
-  id: uuidv4(),
-  type: "assistant" as const,
-  content:
-    "Отлично! Все данные обработаны и анализ завершен.\n\nВаш профиль создается, и система готова к работе. Теперь вы можете продолжить использование платформы со всеми доступными функциями.",
-  timestamp: Date.now(),
-  aiMessageType: "become-specialist-drops" as const,
-  footerContent: "Добро пожаловать в сообщество специалистов. Ваш путь развития начинается здесь.",
-}
+export const initVersionTestMessageFooter = "Ответы в безопасности и надёжно защищены: только вы и я имеем к ним доступ."

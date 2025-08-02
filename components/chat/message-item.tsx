@@ -16,7 +16,7 @@ import { ActionButtonsRow } from "@/components/action-button"
 import type { Service } from "@/types/service"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useBecomeSpecialist } from "@/stores/chat-store"
-import { getVersionQuestions } from "@/components/become-specialist/messages"
+import { getVersionQuestions, createVersionMessage } from "@/components/become-specialist/messages"
 
 interface MessageItemProps {
   specialistId: string
@@ -60,7 +60,6 @@ export const MessageItem = React.memo(
       setPersonalityAnswer,
       setStep,
       submitPersonalityTest,
-      submitVersionAnswers,
     } = useBecomeSpecialist()
 
     const [expandedTags, setExpandedTags] = useState<string[]>([])
@@ -90,17 +89,17 @@ export const MessageItem = React.memo(
       }
     }, [becomeSpecialistState.personalityAnswers, becomeSpecialistState.step, isSubmitting])
 
-    // Check if all version questions are answered and submit version answers
+    // Check if all version questions are answered and move to step 4
     useEffect(() => {
       if (becomeSpecialistState.step === 3 && becomeSpecialistState.v) {
         const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
         const answeredVersionQuestions = Object.keys(becomeSpecialistState.versionAnswers).length
 
-        if (answeredVersionQuestions === versionQuestions.length && !isSubmitting) {
-          handleSubmitVersionAnswers()
+        if (answeredVersionQuestions === versionQuestions.length) {
+          setStep(4)
         }
       }
-    }, [becomeSpecialistState.versionAnswers, becomeSpecialistState.step, becomeSpecialistState.v, isSubmitting])
+    }, [becomeSpecialistState.versionAnswers, becomeSpecialistState.step, becomeSpecialistState.v, setStep])
 
     const handleSubmitPersonalityTest = async () => {
       setIsSubmitting(true)
@@ -109,21 +108,6 @@ export const MessageItem = React.memo(
         setStep(3)
       } catch (error) {
         console.error("Failed to submit personality test:", error)
-      } finally {
-        setIsSubmitting(false)
-      }
-    }
-
-    const handleSubmitVersionAnswers = async () => {
-      setIsSubmitting(true)
-      try {
-        const result = await submitVersionAnswers()
-        if (result?.success) {
-          console.log("Version answers submitted successfully:", result)
-          // Step 4 is automatically set in the store
-        }
-      } catch (error) {
-        console.error("Failed to submit version answers:", error)
       } finally {
         setIsSubmitting(false)
       }
@@ -211,10 +195,9 @@ export const MessageItem = React.memo(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
                   becomeSpecialistState.selectedTags.includes(tag.name)
-                    ? "bg-violet-50"
-                    : isDisabled
-                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 md:hover:bg-violet-50",
+                      ? "bg-violet-50" : isDisabled
+                          ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-100 md:hover:bg-violet-50",
                 )}
               >
                 {tag.name}
@@ -280,9 +263,7 @@ export const MessageItem = React.memo(
             return (
               <button
                 key={value}
-                onClick={() => {
-                  onVersionAnswer(message.testQuestion, value)
-                }}
+                onClick={() => {onVersionAnswer(message.testQuestion, value)}}
                 disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
@@ -298,20 +279,6 @@ export const MessageItem = React.memo(
               </button>
             )
           })}
-        </div>
-      )
-    }
-
-    // Render step 4 content (continue mode)
-    const renderStep4Content = () => {
-      return (
-        <div className="mt-4 ml-auto">
-          <div className="bg-violet-50 rounded-sm p-4 text-center">
-            <p className="text-sm text-violet-800 font-medium">Анализ завершен. Переход в режим продолжения...</p>
-            <div className="mt-2 animate-pulse">
-              <div className="h-2 bg-violet-200 rounded-full"></div>
-            </div>
-          </div>
         </div>
       )
     }
@@ -383,26 +350,19 @@ export const MessageItem = React.memo(
             )}
 
             {/* Version-specific test options */}
-            {message.aiMessageType === "version-test" && (
-              <div>
-                <div
+            {message.aiMessageType === "version-test" && <div>
+              <div
                   className={cn(
-                    "rounded-sm py-3 flex flex-col",
-                    "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                      "rounded-sm py-3 flex flex-col",
+                      "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
                   )}
                   style={{ wordBreak: "break-word" }}
-                >
-                  <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex + 1)}</p>
-                  <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
-                </div>
-                <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
+              >
+                <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex+1)}</p>
+                <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
               </div>
-            )}
-
-            {/* Step 4 - Continue mode */}
-            {message.aiMessageType === "become-specialist-drops" && becomeSpecialistState.step === 4 && (
-              <div>{renderStep4Content()}</div>
-            )}
+              <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
+            </div>}
 
             {message.files && message.files.length > 0 && (
               <div
@@ -462,7 +422,7 @@ export const MessageItem = React.memo(
           </div>
 
           {message.footerContent && (isAssistant || isAI) && !isUser && (
-            <div className={cn("mt-3 text-neutral-700")}>
+            <div className={cn("mt-3 text-neutral-700",)}>
               <p className="text-sm leading-relaxed mt-1.5">{message.footerContent}</p>
             </div>
           )}
