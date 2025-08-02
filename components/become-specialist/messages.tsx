@@ -99,9 +99,10 @@ export const getVersionQuestions = (version: 1 | 2 | 3): string[] => {
 // Helper function to create version-specific messages
 export const createVersionMessage = (question: string, index: number) => ({
   id: uuidv4(),
-  type: "version-test" as const,
+  type: "assistant",
   content: question,
   timestamp: Date.now(),
   aiMessageType: "version-test" as const,
   questionIndex: index,
+  isAI: true,
 })

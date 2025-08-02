@@ -112,11 +112,7 @@ export const MessageItem = React.memo(
           // Add first version-specific question as message
           if (onAddMessage) {
             const versionQuestions = getVersionQuestions(result.v)
-            if (versionQuestions.length > 0) {
-              setTimeout(() => {
-                onAddMessage(createVersionMessage(versionQuestions[0], 0))
-              }, 500)
-            }
+            onAddMessage(createVersionMessage(versionQuestions[0], 0))
           }
         }
       } catch (error) {
@@ -185,23 +181,11 @@ export const MessageItem = React.memo(
     // Handle version-specific test answers - Step 3 only
     const handleVersionAnswer = useCallback(
       (answer: 1 | 2 | 3 | 4 | 5) => {
+
         // Only allow answer changes on step 3
         if (becomeSpecialistState.step !== 3) return
 
         setVersionAnswer(message.content, answer)
-
-        // Add next version question if available
-        if (onAddMessage && becomeSpecialistState.v) {
-          const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
-          const currentAnsweredCount = Object.keys(becomeSpecialistState.versionAnswers).length + 1 // +1 for the current answer
-
-          if (currentAnsweredCount < versionQuestions.length) {
-            const nextQuestion = versionQuestions[currentAnsweredCount]
-            setTimeout(() => {
-              onAddMessage(createVersionMessage(nextQuestion, currentAnsweredCount))
-            }, 500)
-          }
-        }
       },
       [
         message,
@@ -490,14 +474,6 @@ export const MessageItem = React.memo(
                   becomeSpecialistState.step > 1 && "opacity-50 cursor-not-allowed",
                 )}
               />
-            </div>
-          )}
-
-          {/* Loading indicator for personality test submission */}
-          {isSubmitting && becomeSpecialistState.step === 2 && (
-            <div className="mt-4 flex items-center gap-2 ml-auto">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-violet-600"></div>
-              <span className="text-sm text-gray-600">Обрабатываем результаты теста...</span>
             </div>
           )}
 
