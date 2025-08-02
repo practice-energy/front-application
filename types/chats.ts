@@ -1,49 +1,37 @@
-import type { Service } from "@/types/service"
-import type { Specialist } from "@/types/specialist"
+export type MessageType = "user" | "assistant" | "specialist" | "become-specialist-drops"
 
-export interface Message {
-  id: string
-  type: "user" | "assistant" | "specialist"
-  content: string
-  timestamp: number
-  specialists?: Specialist[]
-  services?: Service[]
-  files?: File[]
-  replyTo?: string
-  aiMessageType?: AiMessageType
-  tags: Tag[]
-  footerContent?: string
-  questionId?: string // For personality test questions
-}
+export type AiMessageType =
+  | "info"
+  | "service"
+  | "warning"
+  | "accept-policy"
+  | "become-specialist-drops"
+  | "profile-test"
 
-export type Tag = {
+export interface Tag {
   name: string
   subtags?: Tag[]
 }
 
-export type AiMessageType =
-  | "info"
-  | "warning"
-  | "service"
-  | "become-specialist-drops"
-  | "accept-policy"
-  | "drops-or-input"
-  | "profile-test"
+export interface Message {
+  id: string
+  type: MessageType
+  content?: string
+  timestamp: number
+  files?: File[]
+  specialists?: import("@/types/specialist").Specialist[]
+  services?: import("@/types/service").Service[]
+  footerContent?: string
+  aiMessageType?: AiMessageType
+  tags?: Tag[]
+  questionId?: string
+}
 
-export type Chat = {
+export interface Chat {
   id: string
   title: string
-  specialistId?: string
-  serviceId?: string
-  avatar?: string
-  isAI?: boolean
-  isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | "request" | "declined" | null
-  timestamp: number
-  isMuted?: boolean
   messages: Message[]
-  createdAt: number
-  hasNew?: boolean
-  description?: string
-  isSpecialChat?: "become-specialist"
+  lastMessage: string
+  timestamp: number
+  isActive: boolean
 }

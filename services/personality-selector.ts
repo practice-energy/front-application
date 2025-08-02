@@ -1,29 +1,41 @@
+import type { Tag } from "@/types/chats"
+
 export interface PersonalityQuestion {
   id: string
   question: string
-  options: string[]
+  options: Tag[]
 }
 
-export const personalityQuestions: PersonalityQuestion[] = [
+export const personalitySelector: PersonalityQuestion[] = [
   {
     id: "question-1",
     question: "Как вы предпочитаете работать с клиентами?",
-    options: ["Индивидуально", "В группе", "Смешанный формат", "Онлайн только"],
+    options: [{ name: "Индивидуально" }, { name: "В группе" }, { name: "Смешанный формат" }, { name: "Онлайн только" }],
   },
   {
     id: "question-2",
     question: "Какой стиль общения вам ближе?",
-    options: ["Формальный", "Дружеский", "Профессиональный", "Творческий"],
+    options: [{ name: "Формальный" }, { name: "Дружеский" }, { name: "Профессиональный" }, { name: "Творческий" }],
   },
   {
     id: "question-3",
     question: "Как вы относитесь к нестандартным запросам?",
-    options: ["Принимаю с энтузиазмом", "Осторожно изучаю", "Предпочитаю стандарт", "Избегаю"],
+    options: [
+      { name: "Принимаю с энтузиазмом" },
+      { name: "Осторожно изучаю" },
+      { name: "Предпочитаю стандарт" },
+      { name: "Избегаю" },
+    ],
   },
   {
     id: "question-4",
     question: "Ваш подход к планированию работы?",
-    options: ["Строгое расписание", "Гибкий график", "По настроению", "Спонтанно"],
+    options: [
+      { name: "Строгое расписание" },
+      { name: "Гибкий график" },
+      { name: "По настроению" },
+      { name: "Спонтанно" },
+    ],
   },
 ]
 
@@ -37,6 +49,6 @@ export const createPersonalityTestMessage = (
     timestamp: Date.now(),
     aiMessageType: "profile-test",
     questionId: question.id,
-    tags: question.options.map((option) => ({ name: option })),
+    tags: question.options,
   }
 }

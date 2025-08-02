@@ -302,24 +302,36 @@ export const useMasterChats = () => {
 }
 
 // Hook for become specialist functionality
-export const useBecomeSpecialist = () => {
-  const {
-    becomeSpecialistState,
-    setBecomeSpecialistStep,
-    setSelectedTags,
-    setPolicyAccepted,
-    setPersonalityAnswer,
-    resetBecomeSpecialistState,
-    getBecomeSpecialistState,
-  } = useChatStore()
-
-  return {
-    state: becomeSpecialistState,
-    setStep: setBecomeSpecialistStep,
-    setSelectedTags,
-    setPolicyAccepted,
-    setPersonalityAnswer,
-    resetState: resetBecomeSpecialistState,
-    getState: getBecomeSpecialistState,
-  }
-}
+export const useBecomeSpecialistStore = create<BecomeSpecialistState>()(
+  persist(
+    (set) => ({
+      state: initialBecomeSpecialistState,
+      setStep: (step) =>
+        set((state) => ({
+          state: { ...state.state, step },
+        })),
+      setSelectedTags: (selectedTags) =>
+        set((state) => ({
+          state: { ...state.state, selectedTags },
+        })),
+      setPolicyAccepted: (policyAccepted) =>
+        set((state) => ({
+          state: { ...state.state, policyAccepted },
+        })),
+      setPersonalityAnswer: (questionId, answer) =>
+        set((state) => ({
+          state: {
+            ...state.state,
+            personalityAnswers: {
+              ...state.state.personalityAnswers,
+              [questionId]: answer,
+            },
+          },
+        })),
+      resetState: () => set({ state: initialBecomeSpecialistState }),
+    }),
+    {
+      name: "become-specialist-storage",
+    },
+  ),
+)
