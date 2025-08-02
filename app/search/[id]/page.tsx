@@ -19,7 +19,7 @@ import {
   createVersionMessage,
   getVersionQuestions,
   initVersionTestMessage, initVersionTestMessageFooter,
-  personalitySelector
+  personalitySelector, step4ContinueMessage
 } from "@/components/become-specialist/messages"
 
 export default function SearchPage() {
@@ -271,6 +271,8 @@ export default function SearchPage() {
       return { mode: "continue", canAccept: canContinue }
     }
 
+    if (becomeSpecialistState.step === 4) return { mode: "continue", canAccept: true }
+
     return { mode: "input", canAccept: false }
   }, [currentChat, becomeSpecialistState])
 
@@ -369,6 +371,15 @@ export default function SearchPage() {
     router.push("/")
     return null
   }
+
+  useEffect(() => {
+    if (becomeSpecialistState.step === 4) {
+      const updatedChat = addMessageToChat(currentChat!.id, step4ContinueMessage)
+      if (updatedChat) {
+        setCurrentChat(updatedChat)
+      }
+    }
+  }, [becomeSpecialistState.step]);
 
   return (
       <div className="relative h-screen bg-white dark:bg-gray-900">
