@@ -294,7 +294,7 @@ export const MessageItem = React.memo(
           )}
 
           <div className="flex justify-between pt-2 w-full">
-            {aiMessageType === "service" && (
+            {message.aiMessageType === "service" && (
               // Service-specific buttons
               <div className="flex flex-col w-full pt-2">
                 <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />

@@ -28,6 +28,7 @@ export const mockChatData: Chat[] = [
                 type: "user",
                 content: "Ищу хорошего астролога для консультации",
                 timestamp: Date.now() - 1000 * 60 * 30,
+                tags: []
             },
             {
                 id: uuidv4(),
@@ -35,12 +36,12 @@ export const mockChatData: Chat[] = [
                 content: "Отлично! Я помогу вам найти подходящего астролога. Вот несколько специалистов с высоким рейтингом:",
                 timestamp: Date.now() - 1000 * 60 * 29,
                 specialists: [mockSpecialists[0]],
+                tags: []
             },
         ],
         isAI: true,
         hasNew: false,
         createdAt: Date.now() - 1000 * 60 * 30,
-        footerContent: "Выберите подходящего специалиста или уточните ваши предпочтения.",
     },
 
     // Чат с человеком-специалистом, но с сообщениями от Allura

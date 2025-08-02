@@ -3,12 +3,30 @@ import { persist } from "zustand/middleware"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 
-import {mockChatData} from "@/services/mock-chat";
+import { mockChatData } from "@/services/mock-chat"
+
+interface BecomeSpecialistState {
+  step: 1 | 2 | 3 | 4
+  selectedTags: string[]
+  policyAccepted: boolean
+  personalityAnswers: Record<string, string> // questionId -> answer
+}
 
 interface ChatState {
   // Separate chats for different user hats
   adeptChats: Chat[]
   masterChats: Chat[]
+
+  // Become specialist state
+  becomeSpecialistState: BecomeSpecialistState
+
+  // Become specialist functions
+  setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => void
+  setSelectedTags: (tags: string[]) => void
+  setPolicyAccepted: (accepted: boolean) => void
+  setPersonalityAnswer: (questionId: string, answer: string) => void
+  resetBecomeSpecialistState: () => void
+  getBecomeSpecialistState: () => BecomeSpecialistState
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -31,150 +49,207 @@ interface ChatState {
 
 const deepCopy = (obj: any): any => JSON.parse(JSON.stringify(obj))
 
+const initialBecomeSpecialistState: BecomeSpecialistState = {
+  step: 1,
+  selectedTags: [],
+  policyAccepted: false,
+  personalityAnswers: {},
+}
+
 export const useChatStore = create(
-  persist(
-    (set, get) => ({
-      adeptChats: mockChatData,
-      masterChats: [],
+    persist(
+        (set, get) => ({
+          adeptChats: mockChatData,
+          masterChats: [],
+          becomeSpecialistState: initialBecomeSpecialistState,
 
-      // Adept hat functions
-      getAdeptChatDataById: (id: string) => {
-        const chat = get().adeptChats.find((chat) => chat.id === id)
-        return chat ? deepCopy(chat) : undefined
-      },
+          // Become specialist functions
+          setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => {
+            set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                step,
+              },
+            }))
+          },
 
-      findAdeptChatBySpecialistId: (specialistId: string) => {
-        const chat = get().adeptChats.find((chat) => chat.specialistId === specialistId)
-        return chat ? deepCopy(chat) : undefined
-      },
+          setSelectedTags: (tags: string[]) => {
+            set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                selectedTags: tags,
+              },
+            }))
+          },
 
-      addAdeptChat: (chat: any) => {
-        console.log(chat)
-        console.log(get().adeptChats)
-        set((state) => ({
-          adeptChats: [deepCopy(chat), ...state.adeptChats],
-        }))
-      },
+          setPolicyAccepted: (accepted: boolean) => {
+            set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                policyAccepted: accepted,
+              },
+            }))
+          },
 
-      updateAdeptChat: (chatId: string, updates: any) => {
-        set((state) => ({
-          adeptChats: state.adeptChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
-        }))
-      },
+          setPersonalityAnswer: (questionId: string, answer: string) => {
+            set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                personalityAnswers: {
+                  ...state.becomeSpecialistState.personalityAnswers,
+                  [questionId]: answer,
+                },
+              },
+            }))
+          },
 
-      removeAdeptChat: (chatId: string) => {
-        set((state) => ({
-          adeptChats: state.adeptChats.filter((chat) => chat.id !== chatId),
-        }))
-      },
+          resetBecomeSpecialistState: () => {
+            set({ becomeSpecialistState: initialBecomeSpecialistState })
+          },
 
-      addMessageToAdeptChat: (chatId: string, message: any) => {
-        const newMessage = {
-          ...message,
-          id: uuidv4(),
-        }
+          getBecomeSpecialistState: () => {
+            return get().becomeSpecialistState
+          },
 
-        let updatedChat
+          // Adept hat functions
+          getAdeptChatDataById: (id: string) => {
+            const chat = get().adeptChats.find((chat) => chat.id === id)
+            return chat ? deepCopy(chat) : undefined
+          },
 
-        set((state) => {
-          const chatIndex = state.adeptChats.findIndex((chat) => chat.id === chatId)
-          if (chatIndex === -1) return state
+          findAdeptChatBySpecialistId: (specialistId: string) => {
+            const chat = get().adeptChats.find((chat) => chat.specialistId === specialistId)
+            return chat ? deepCopy(chat) : undefined
+          },
 
-          const chat = state.adeptChats[chatIndex]
-          updatedChat = {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            timestamp: message.timestamp,
-            hasNew: false,
-          }
+          addAdeptChat: (chat: any) => {
+            console.log(chat)
+            console.log(get().adeptChats)
+            set((state) => ({
+              adeptChats: [deepCopy(chat), ...state.adeptChats],
+            }))
+          },
 
-          const newChats = [...state.adeptChats]
-          newChats[chatIndex] = updatedChat
+          updateAdeptChat: (chatId: string, updates: any) => {
+            set((state) => ({
+              adeptChats: state.adeptChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
+            }))
+          },
 
-          return {
-            adeptChats: newChats,
-          }
-        })
+          removeAdeptChat: (chatId: string) => {
+            set((state) => ({
+              adeptChats: state.adeptChats.filter((chat) => chat.id !== chatId),
+            }))
+          },
 
-        return updatedChat ? deepCopy(updatedChat) : undefined
-      },
+          addMessageToAdeptChat: (chatId: string, message: any) => {
+            const newMessage = {
+              ...message,
+              id: uuidv4(),
+            }
 
-      clearAdeptChats: () => {
-        set({ adeptChats: [] })
-      },
+            let updatedChat
 
-      // Master hat functions
-      getMasterChatDataById: (id: string) => {
-        const chat = get().masterChats.find((chat) => chat.id === id)
-        return chat ? deepCopy(chat) : undefined
-      },
+            set((state) => {
+              const chatIndex = state.adeptChats.findIndex((chat) => chat.id === chatId)
+              if (chatIndex === -1) return state
 
-      findMasterChatBySpecialistId: (specialistId: string) => {
-        const chat = get().masterChats.find((chat) => chat.specialistId === specialistId)
-        return chat ? deepCopy(chat) : undefined
-      },
+              const chat = state.adeptChats[chatIndex]
+              updatedChat = {
+                ...chat,
+                messages: [...chat.messages, newMessage],
+                timestamp: message.timestamp,
+                hasNew: false,
+              }
 
-      addMasterChat: (chat: any) => {
-        set((state) => ({
-          masterChats: [deepCopy(chat), ...state.masterChats],
-        }))
-      },
+              const newChats = [...state.adeptChats]
+              newChats[chatIndex] = updatedChat
 
-      updateMasterChat: (chatId: string, updates: any) => {
-        set((state) => ({
-          masterChats: state.masterChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
-        }))
-      },
+              return {
+                adeptChats: newChats,
+              }
+            })
 
-      removeMasterChat: (chatId: string) => {
-        set((state) => ({
-          masterChats: state.masterChats.filter((chat) => chat.id !== chatId),
-        }))
-      },
+            return updatedChat ? deepCopy(updatedChat) : undefined
+          },
 
-      addMessageToMasterChat: (chatId: string, message: any) => {
-        const newMessage = {
-          ...message,
-          id: uuidv4(),
-        }
+          clearAdeptChats: () => {
+            set({ adeptChats: [] })
+          },
 
-        let updatedChat
+          // Master hat functions
+          getMasterChatDataById: (id: string) => {
+            const chat = get().masterChats.find((chat) => chat.id === id)
+            return chat ? deepCopy(chat) : undefined
+          },
 
-        set((state) => {
-          const chatIndex = state.masterChats.findIndex((chat) => chat.id === chatId)
-          if (chatIndex === -1) return state
+          findMasterChatBySpecialistId: (specialistId: string) => {
+            const chat = get().masterChats.find((chat) => chat.specialistId === specialistId)
+            return chat ? deepCopy(chat) : undefined
+          },
 
-          const chat = state.masterChats[chatIndex]
-          updatedChat = {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            timestamp: message.timestamp,
-            hasNew: false,
-          }
+          addMasterChat: (chat: any) => {
+            set((state) => ({
+              masterChats: [deepCopy(chat), ...state.masterChats],
+            }))
+          },
 
-          const newChats = [...state.masterChats]
-          newChats[chatIndex] = updatedChat
+          updateMasterChat: (chatId: string, updates: any) => {
+            set((state) => ({
+              masterChats: state.masterChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
+            }))
+          },
 
-          return {
-            masterChats: newChats,
-          }
-        })
+          removeMasterChat: (chatId: string) => {
+            set((state) => ({
+              masterChats: state.masterChats.filter((chat) => chat.id !== chatId),
+            }))
+          },
 
-        return updatedChat ? deepCopy(updatedChat) : undefined
-      },
+          addMessageToMasterChat: (chatId: string, message: any) => {
+            const newMessage = {
+              ...message,
+              id: uuidv4(),
+            }
 
-      clearMasterChats: () => {
-        set({ masterChats: [] })
-      },
-    }),
-    {
-      name: "chat-storage",
-      partialize: (state) => ({
-        adeptChats: state.adeptChats,
-        masterChats: state.masterChats,
-      }),
-    },
-  ),
+            let updatedChat
+
+            set((state) => {
+              const chatIndex = state.masterChats.findIndex((chat) => chat.id === chatId)
+              if (chatIndex === -1) return state
+
+              const chat = state.masterChats[chatIndex]
+              updatedChat = {
+                ...chat,
+                messages: [...chat.messages, newMessage],
+                timestamp: message.timestamp,
+                hasNew: false,
+              }
+
+              const newChats = [...state.masterChats]
+              newChats[chatIndex] = updatedChat
+
+              return {
+                masterChats: newChats,
+              }
+            })
+
+            return updatedChat ? deepCopy(updatedChat) : undefined
+          },
+
+          clearMasterChats: () => {
+            set({ masterChats: [] })
+          },
+        }),
+        {
+          name: "chat-storage",
+          partialize: (state) => ({
+            adeptChats: state.adeptChats,
+            masterChats: state.masterChats,
+            becomeSpecialistState: state.becomeSpecialistState,
+          }),
+        },
+    ),
 )
 
 // Convenience hooks for specific hat usage
@@ -223,5 +298,28 @@ export const useMasterChats = () => {
     removeChat: removeMasterChat,
     addMessageToChat: addMessageToMasterChat,
     clearChats: clearMasterChats,
+  }
+}
+
+// Hook for become specialist functionality
+export const useBecomeSpecialist = () => {
+  const {
+    becomeSpecialistState,
+    setBecomeSpecialistStep,
+    setSelectedTags,
+    setPolicyAccepted,
+    setPersonalityAnswer,
+    resetBecomeSpecialistState,
+    getBecomeSpecialistState,
+  } = useChatStore()
+
+  return {
+    state: becomeSpecialistState,
+    setStep: setBecomeSpecialistStep,
+    setSelectedTags,
+    setPolicyAccepted,
+    setPersonalityAnswer,
+    resetState: resetBecomeSpecialistState,
+    getState: getBecomeSpecialistState,
   }
 }
