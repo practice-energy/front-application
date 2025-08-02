@@ -13,6 +13,10 @@ export interface Message {
   aiMessageType?: AiMessageType
   tags?: Tag[]
   footerContent?: string
+  bookingFrame?: boolean
+  bookingTextTitle?: string
+  testQuestion: string
+  questionIndex: number
 }
 
 export type Tag = {

@@ -59,7 +59,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
                 <IconAlura
                     width={72}
                     height={72}
-                    className={cn("rounded-sm object-cover bg-white p-1.5")}
+                    className={cn("rounded-sm object-cover bg-none p-1.5")}
                 />
             ) : (
                 <Image

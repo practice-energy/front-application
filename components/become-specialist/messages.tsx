@@ -100,9 +100,10 @@ export const getVersionQuestions = (version: 1 | 2 | 3): string[] => {
 export const createVersionMessage = (question: string, index: number) => ({
   id: uuidv4(),
   type: "assistant",
-  content: question,
+  content: "",
   timestamp: Date.now(),
   aiMessageType: "version-test" as const,
+  testQuestion: question,
   questionIndex: index,
   isAI: true,
 })
