@@ -398,6 +398,7 @@ export const useBecomeSpecialist = () => {
     resetBecomeSpecialistState,
     getBecomeSpecialistState,
     submitPersonalityTest,
+    getVersionQuestions,
   } = useChatStore()
 
   return {
@@ -411,5 +412,6 @@ export const useBecomeSpecialist = () => {
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
+    getVersionQuestions
   }
 }
