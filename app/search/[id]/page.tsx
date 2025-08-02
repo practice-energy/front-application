@@ -374,7 +374,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (becomeSpecialistState.step === 4) {
-      const updatedChat = addMessageToChat(currentChat!.id, step4ContinueMessage)
+      const updatedChat = addMessageToChat(currentChat?.id, step4ContinueMessage)
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }

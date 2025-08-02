@@ -17,6 +17,11 @@ import type { Service } from "@/types/service"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useBecomeSpecialist } from "@/stores/chat-store"
 import { getVersionQuestions } from "@/components/become-specialist/messages"
+import {MobileBookingSection} from "@/components/service/mobile-booking-section";
+import {BookingSection} from "@/components/service/booking-section";
+import {useIsMobile} from "@/hooks/use-mobile";
+import {mockBookingSlots} from "@/services/booking-slot-data";
+import {CalendarWidget} from "@/components/adept-calendar/calendar-widget";
 
 interface MessageItemProps {
   specialistId: string
@@ -52,6 +57,7 @@ export const MessageItem = React.memo(
     const isUser = message.type === "user"
     const isAssistant = message.type === "assistant" || message.type === "become-specialist-drops"
     const isSpecialist = message.type === "specialist"
+    const isMobile = useIsMobile()
 
     const {
       state: becomeSpecialistState,
@@ -65,6 +71,7 @@ export const MessageItem = React.memo(
 
     const [expandedTags, setExpandedTags] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
     // Sync local state with store for policy acceptance
     useEffect(() => {
@@ -302,20 +309,6 @@ export const MessageItem = React.memo(
       )
     }
 
-    // Render step 4 content (continue mode)
-    const renderStep4Content = () => {
-      return (
-        <div className="mt-4 ml-auto">
-          <div className="bg-violet-50 rounded-sm p-4 text-center">
-            <p className="text-sm text-violet-800 font-medium">Анализ завершен. Переход в режим продолжения...</p>
-            <div className="mt-2 animate-pulse">
-              <div className="h-2 bg-violet-200 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
     return (
       <div
         id={`message-${message.id}`}
@@ -399,11 +392,6 @@ export const MessageItem = React.memo(
               </div>
             )}
 
-            {/* Step 4 - Continue mode */}
-            {message.aiMessageType === "become-specialist-drops" && becomeSpecialistState.step === 4 && (
-              <div>{renderStep4Content()}</div>
-            )}
-
             {message.files && message.files.length > 0 && (
               <div
                 className={cn(
@@ -460,6 +448,27 @@ export const MessageItem = React.memo(
               </div>
             )}
           </div>
+
+          {message.bookingFrame && (
+              isMobile ? (
+                  <>
+                    <div className="w-full">
+                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
+                    </div>
+                    <MobileBookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
+                    <div/>
+                  </>
+              ) : (
+                  <div className=" relative flex flex-row px-6 pb-3 w-full">
+                    <div className="w-80 flex-shrink-0">
+                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+                    </div>
+                    <BookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
+                    <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                    <div/>
+                  </div>
+              )
+          )}
 
           {message.footerContent && (isAssistant || isAI) && !isUser && (
             <div className={cn("mt-3 text-neutral-700")}>
