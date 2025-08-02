@@ -72,7 +72,7 @@ export function AwaitingActivityCard({
           </div>
 
         {/* Карточка активности */}
-        <div className={`flex items-start gap-4 p-1 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5 w-full h-[88px]`}>
+        <div className={`flex items-start gap-4 p-1 border border-gray-100 rounded-sm shadow-md w-full h-[88px]`}>
           {/* 1. Левая колонка - время и аватар (как было) */}
           <div className="flex flex-col items-center ">
             <div className={`text-sm font-medium ${isBackToBack ? "text-pink-500" : ""}`}>{startTime}</div>

@@ -76,7 +76,7 @@ export function UpcomingActivityCard({
         ) : null}
 
         {/* Карточка активности */}
-        <div className={`flex items-start gap-4 p-1 rounded-sm border border-gray-100 hover:bg-violet-600 hover:bg-opacity-5 w-full h-[88px] ${
+        <div className={`flex items-start gap-4 p-1 rounded-sm shadow-md border border-gray-100 w-full h-[88px] ${
             isPastEvent ? "opacity-70" : ""
         }`}>
           {/* 1. Левая колонка - время и аватар (как было) */}

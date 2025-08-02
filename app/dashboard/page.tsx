@@ -1,12 +1,19 @@
 "use client"
 
 import { Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+import {useRouter, useSearchParams} from "next/navigation"
 import { MainDashboard } from "@/components/dashboard/sections/main-dashboard"
+import {useAuth} from "@/hooks/use-auth";
 
 function DashboardContent() {
   const searchParams = useSearchParams()
   const section = searchParams.get("section") || "main"
+  const { isAuthenticated } = useAuth()
+  const router = useRouter()
+
+  if (!isAuthenticated) {
+    router.push("/")
+  }
 
   const renderSection = () => {
     switch (section) {

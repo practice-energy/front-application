@@ -459,7 +459,7 @@ export const MessageItem = React.memo(
                     <div/>
                   </>
               ) : (
-                  <div className=" relative flex flex-row px-6 pb-3 w-full">
+                  <div className=" relative flex flex-row  pb-3 w-full">
                     <div className="w-80 flex-shrink-0">
                       <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                     </div>
