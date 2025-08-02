@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { useRouter } from "next/navigation"
 import type { User } from "@/types/user"
 import { mockUser } from "@/services/mock-user"
 import { useProfileStore } from "@/stores/profile-store"
@@ -11,6 +12,7 @@ interface AuthContextType {
   login: () => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
+  requireAuth: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -21,11 +23,13 @@ const AuthContext = createContext<AuthContextType>({
   },
   logout: () => {},
   updateUser: () => {},
+  requireAuth: () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const setProfileUser = useProfileStore(state => state.setUser)
+  const setProfileUser = useProfileStore((state) => state.setUser)
+  const router = useRouter()
 
   // Check for saved user on mount
   useEffect(() => {
@@ -61,10 +65,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const requireAuth = () => {
+    if (!user) {
+      router.push("/")
+    }
+  }
+
   return (
-      <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser }}>
-        {children}
-      </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser, requireAuth }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 
