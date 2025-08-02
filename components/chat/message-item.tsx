@@ -30,6 +30,7 @@ interface MessageItemProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
+  onAddMessage?: (message: Message) => void
 }
 
 export const MessageItem = React.memo(
@@ -45,6 +46,7 @@ export const MessageItem = React.memo(
     onTagSelection,
     onPolicyAcceptance,
     onPersonalityAnswer,
+    onAddMessage,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -106,6 +108,16 @@ export const MessageItem = React.memo(
         const result = await submitPersonalityTest()
         if (result) {
           setStep(3)
+
+          // Add first version-specific question as message
+          if (onAddMessage) {
+            const versionQuestions = getVersionQuestions(result.v)
+            if (versionQuestions.length > 0) {
+              setTimeout(() => {
+                onAddMessage(createVersionMessage(versionQuestions[0], 0))
+              }, 500)
+            }
+          }
         }
       } catch (error) {
         console.error("Failed to submit personality test:", error)
@@ -177,8 +189,28 @@ export const MessageItem = React.memo(
         if (becomeSpecialistState.step !== 3) return
 
         setVersionAnswer(message.content, answer)
+
+        // Add next version question if available
+        if (onAddMessage && becomeSpecialistState.v) {
+          const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
+          const currentAnsweredCount = Object.keys(becomeSpecialistState.versionAnswers).length + 1 // +1 for the current answer
+
+          if (currentAnsweredCount < versionQuestions.length) {
+            const nextQuestion = versionQuestions[currentAnsweredCount]
+            setTimeout(() => {
+              onAddMessage(createVersionMessage(nextQuestion, currentAnsweredCount))
+            }, 500)
+          }
+        }
       },
-      [message, becomeSpecialistState.step, setVersionAnswer],
+      [
+        message,
+        becomeSpecialistState.step,
+        becomeSpecialistState.v,
+        becomeSpecialistState.versionAnswers,
+        setVersionAnswer,
+        onAddMessage,
+      ],
     )
 
     const handlePolicyChange = useCallback(
@@ -227,9 +259,7 @@ export const MessageItem = React.memo(
     }
 
     const renderPersonalityOptions = (tags: Tag[]) => {
-      const currentAnswer = message.content
-          ? becomeSpecialistState.personalityAnswers[message.content]
-          : null;
+      const currentAnswer = message.content ? becomeSpecialistState.personalityAnswers[message.content] : null
 
       console.log("currentAnswer", currentAnswer)
 
@@ -237,59 +267,57 @@ export const MessageItem = React.memo(
       // 1. Пользователь уже ответил на этот вопрос, ИЛИ
       // 2. Активный шаг (step) изменился (появилось новое сообщение)
       const isButtonDisabled =
-          becomeSpecialistState.step !== 2 ||
-          (currentAnswer !== null && currentAnswer !== undefined);
+        becomeSpecialistState.step !== 2 || (currentAnswer !== null && currentAnswer !== undefined)
 
       return (
-          <div className="flex flex-col gap-3 ml-auto max-w-xs">
-            {tags.map((tag, index) => {
-              const isSelected = currentAnswer === tag.name;
+        <div className="flex flex-col gap-3 ml-auto max-w-xs">
+          {tags.map((tag, index) => {
+            const isSelected = currentAnswer === tag.name
 
-              return (
-                  <button
-                      key={index}
-                      onClick={() => handlePersonalityAnswer(tag.name)}
-                      disabled={isButtonDisabled}
-                      className={cn(
-                          "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                          "w-full h-[36px] px-4 text-neutral-700",
-                          isSelected
-                              ? "bg-violet-100"
-                              : isButtonDisabled
-                                  ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                                  : "bg-gray-100 md:hover:bg-violet-50",
-                      )}
-                  >
-                    {tag.name}
-                  </button>
-              );
-            })}
-          </div>
-      );
-    };
+            return (
+              <button
+                key={index}
+                onClick={() => handlePersonalityAnswer(tag.name)}
+                disabled={isButtonDisabled}
+                className={cn(
+                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "w-full h-[36px] px-4 text-neutral-700",
+                  isSelected
+                    ? "bg-violet-100"
+                    : isButtonDisabled
+                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-100 md:hover:bg-violet-50",
+                )}
+              >
+                {tag.name}
+              </button>
+            )
+          })}
+        </div>
+      )
+    }
 
     // Render version-specific test options (1-5 scale) - Step 3
     const renderVersionOptions = () => {
       const currentAnswer = message.content ? becomeSpecialistState.versionAnswers[message.content] : null
-      const isDisabled = becomeSpecialistState.step !== 3
+      const isDisabled = becomeSpecialistState.step !== 3 || (currentAnswer !== null && currentAnswer !== undefined)
 
       return (
         <div className="flex gap-2 ml-auto">
           {[1, 2, 3, 4, 5].map((value) => {
             const isSelected = currentAnswer === value
-            const isButtonDisabled = isDisabled || (currentAnswer !== null && !isSelected)
 
             return (
               <button
                 key={value}
                 onClick={() => handleVersionAnswer(value as 1 | 2 | 3 | 4 | 5)}
-                disabled={isButtonDisabled}
+                disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-[36px] h-[36px] text-neutral-700",
                   isSelected
                     ? "bg-violet-100"
-                    : isButtonDisabled
+                    : isDisabled
                       ? "bg-gray-50 text-gray-400 cursor-not-allowed"
                       : "bg-gray-100 md:hover:bg-violet-50",
                 )}
