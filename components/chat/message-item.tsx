@@ -30,7 +30,7 @@ interface MessageItemProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
-  onAddMessage?: (message: any) => void
+  onAddMessage?: (message: Message) => void
 }
 
 export const MessageItem = React.memo(

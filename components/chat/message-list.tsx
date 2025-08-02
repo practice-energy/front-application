@@ -13,7 +13,7 @@ interface MessageListProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (answer: string) => void
-  onAddMessage?: (message: any) => void
+  onAddMessage?: (message: Message) => void
 }
 
 export function MessageList({
