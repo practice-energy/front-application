@@ -13,7 +13,6 @@ interface MessageListProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (answer: string) => void
-  onAddMessage?: (message: Message) => void
 }
 
 export function MessageList({
@@ -27,7 +26,6 @@ export function MessageList({
   onTagSelection,
   onPolicyAcceptance,
   onPersonalityAnswer,
-  onAddMessage,
 }: MessageListProps) {
   if (!chat) return null
 
@@ -46,7 +44,6 @@ export function MessageList({
           onTagSelection={onTagSelection}
           onPolicyAcceptance={onPolicyAcceptance}
           onPersonalityAnswer={onPersonalityAnswer}
-          onAddMessage={onAddMessage}
         />
       ))}
 

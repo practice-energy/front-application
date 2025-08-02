@@ -30,7 +30,6 @@ interface MessageItemProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
-  onAddMessage?: (message: Message) => void
 }
 
 export const MessageItem = React.memo(
@@ -46,7 +45,6 @@ export const MessageItem = React.memo(
     onTagSelection,
     onPolicyAcceptance,
     onPersonalityAnswer,
-    onAddMessage,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -108,16 +106,6 @@ export const MessageItem = React.memo(
         const result = await submitPersonalityTest()
         if (result) {
           setStep(3)
-
-          // Add version-specific questions as messages
-          if (onAddMessage) {
-            const versionQuestions = getVersionQuestions(result.v)
-            versionQuestions.forEach((question, index) => {
-              setTimeout(() => {
-                onAddMessage(createVersionMessage(question, index))
-              }, index * 500) // Stagger message appearance
-            })
-          }
         }
       } catch (error) {
         console.error("Failed to submit personality test:", error)
