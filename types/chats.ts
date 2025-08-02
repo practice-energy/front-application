@@ -1,5 +1,5 @@
-import {Service} from "@/types/service";
-import {Specialist} from "@/types/specialist";
+import type { Service } from "@/types/service"
+import type { Specialist } from "@/types/specialist"
 
 export interface Message {
   id: string
@@ -13,14 +13,22 @@ export interface Message {
   aiMessageType?: AiMessageType
   tags: Tag[]
   footerContent?: string
+  questionId?: string // For personality test questions
 }
 
 export type Tag = {
   name: string
-  subtags?:  Tag[]
+  subtags?: Tag[]
 }
 
-export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test"
+export type AiMessageType =
+  | "info"
+  | "warning"
+  | "service"
+  | "become-specialist-drops"
+  | "accept-policy"
+  | "drops-or-input"
+  | "profile-test"
 
 export type Chat = {
   id: string
@@ -34,7 +42,7 @@ export type Chat = {
   timestamp: number
   isMuted?: boolean
   messages: Message[]
-  createdAt: number,
+  createdAt: number
   hasNew?: boolean
   description?: string
   isSpecialChat?: "become-specialist"

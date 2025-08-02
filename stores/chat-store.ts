@@ -3,12 +3,30 @@ import { persist } from "zustand/middleware"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
 
-import {mockChatData} from "@/services/mock-chat";
+import { mockChatData } from "@/services/mock-chat"
+
+interface BecomeSpecialistState {
+  step: 1 | 2 | 3 | 4
+  selectedTags: string[]
+  policyAccepted: boolean
+  personalityAnswers: Record<string, string> // questionId -> answer
+}
 
 interface ChatState {
   // Separate chats for different user hats
   adeptChats: Chat[]
   masterChats: Chat[]
+
+  // Become specialist state
+  becomeSpecialistState: BecomeSpecialistState
+
+  // Become specialist functions
+  setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => void
+  setSelectedTags: (tags: string[]) => void
+  setPolicyAccepted: (accepted: boolean) => void
+  setPersonalityAnswer: (questionId: string, answer: string) => void
+  resetBecomeSpecialistState: () => void
+  getBecomeSpecialistState: () => BecomeSpecialistState
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -31,11 +49,67 @@ interface ChatState {
 
 const deepCopy = (obj: any): any => JSON.parse(JSON.stringify(obj))
 
+const initialBecomeSpecialistState: BecomeSpecialistState = {
+  step: 1,
+  selectedTags: [],
+  policyAccepted: false,
+  personalityAnswers: {},
+}
+
 export const useChatStore = create(
   persist(
     (set, get) => ({
       adeptChats: mockChatData,
       masterChats: [],
+      becomeSpecialistState: initialBecomeSpecialistState,
+
+      // Become specialist functions
+      setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => {
+        set((state) => ({
+          becomeSpecialistState: {
+            ...state.becomeSpecialistState,
+            step,
+          },
+        }))
+      },
+
+      setSelectedTags: (tags: string[]) => {
+        set((state) => ({
+          becomeSpecialistState: {
+            ...state.becomeSpecialistState,
+            selectedTags: tags,
+          },
+        }))
+      },
+
+      setPolicyAccepted: (accepted: boolean) => {
+        set((state) => ({
+          becomeSpecialistState: {
+            ...state.becomeSpecialistState,
+            policyAccepted: accepted,
+          },
+        }))
+      },
+
+      setPersonalityAnswer: (questionId: string, answer: string) => {
+        set((state) => ({
+          becomeSpecialistState: {
+            ...state.becomeSpecialistState,
+            personalityAnswers: {
+              ...state.becomeSpecialistState.personalityAnswers,
+              [questionId]: answer,
+            },
+          },
+        }))
+      },
+
+      resetBecomeSpecialistState: () => {
+        set({ becomeSpecialistState: initialBecomeSpecialistState })
+      },
+
+      getBecomeSpecialistState: () => {
+        return get().becomeSpecialistState
+      },
 
       // Adept hat functions
       getAdeptChatDataById: (id: string) => {
@@ -172,6 +246,7 @@ export const useChatStore = create(
       partialize: (state) => ({
         adeptChats: state.adeptChats,
         masterChats: state.masterChats,
+        becomeSpecialistState: state.becomeSpecialistState,
       }),
     },
   ),
@@ -223,5 +298,28 @@ export const useMasterChats = () => {
     removeChat: removeMasterChat,
     addMessageToChat: addMessageToMasterChat,
     clearChats: clearMasterChats,
+  }
+}
+
+// Hook for become specialist functionality
+export const useBecomeSpecialist = () => {
+  const {
+    becomeSpecialistState,
+    setBecomeSpecialistStep,
+    setSelectedTags,
+    setPolicyAccepted,
+    setPersonalityAnswer,
+    resetBecomeSpecialistState,
+    getBecomeSpecialistState,
+  } = useChatStore()
+
+  return {
+    state: becomeSpecialistState,
+    setStep: setBecomeSpecialistStep,
+    setSelectedTags,
+    setPolicyAccepted,
+    setPersonalityAnswer,
+    resetState: resetBecomeSpecialistState,
+    getState: getBecomeSpecialistState,
   }
 }

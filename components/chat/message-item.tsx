@@ -15,6 +15,7 @@ import { IconAlura } from "@/components/icons/icon-alura"
 import { ActionButtonsRow } from "@/components/action-button"
 import type { Service } from "@/types/service"
 import { Checkbox } from "@/components/ui/checkbox"
+import { useBecomeSpecialist } from "@/stores/chat-store"
 
 interface MessageItemProps {
   specialistId: string
@@ -27,7 +28,7 @@ interface MessageItemProps {
   aiMessageType?: AiMessageType
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
-  onPersonalityAnswer?: (answer: string) => void
+  onPersonalityAnswer?: (questionId: string, answer: string) => void
 }
 
 export const MessageItem = React.memo(
@@ -48,24 +49,29 @@ export const MessageItem = React.memo(
     const isUser = message.type === "user"
     const isAssistant = message.type === "assistant" || message.type === "become-specialist-drops"
     const isSpecialist = message.type === "specialist"
-    const [policyAccepted, setPolicyAccepted] = useState(false)
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
+
+    const {
+      state: becomeSpecialistState,
+      setSelectedTags,
+      setPolicyAccepted,
+      setPersonalityAnswer,
+    } = useBecomeSpecialist()
+
     const [expandedTags, setExpandedTags] = useState<string[]>([])
-    const [personalityAnswer, setPersonalityAnswer] = useState<string | null>(null)
 
-    // Notify parent component about tag selection changes
-    useEffect(() => {
-      if (message.aiMessageType === "become-specialist-drops" && onTagSelection) {
-        onTagSelection(selectedTags)
-      }
-    }, [selectedTags, message.aiMessageType, onTagSelection])
-
-    // Notify parent component about policy acceptance changes
+    // Sync local state with store for policy acceptance
     useEffect(() => {
       if (message.aiMessageType === "become-specialist-drops" && onPolicyAcceptance) {
-        onPolicyAcceptance(policyAccepted)
+        onPolicyAcceptance(becomeSpecialistState.policyAccepted)
       }
-    }, [policyAccepted, message.aiMessageType, onPolicyAcceptance])
+    }, [becomeSpecialistState.policyAccepted, message.aiMessageType, onPolicyAcceptance])
+
+    // Sync local state with store for tag selection
+    useEffect(() => {
+      if (message.aiMessageType === "become-specialist-drops" && onTagSelection) {
+        onTagSelection(becomeSpecialistState.selectedTags)
+      }
+    }, [becomeSpecialistState.selectedTags, message.aiMessageType, onTagSelection])
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -81,63 +87,102 @@ export const MessageItem = React.memo(
       onSpecialistClick(specialistId)
     }, [isAssistant, router, specialistId, onSpecialistClick])
 
-    const handleTagClick = useCallback(
+    // Handle specialty tags selection (for become-specialist-drops)
+    const handleSpecialtyTagClick = useCallback(
       (tagName: string, hasSubtags: boolean) => {
-        if (message.aiMessageType === "profile-test") {
-          // Handle personality test answer
-          setPersonalityAnswer(tagName)
-          if (onPersonalityAnswer) {
-            onPersonalityAnswer(tagName)
-          }
+        if (hasSubtags) {
+          // If tag has subtags, add it to selected tags and expand it
+          const newSelectedTags = becomeSpecialistState.selectedTags.includes(tagName)
+            ? becomeSpecialistState.selectedTags.filter((t) => t !== tagName)
+            : [...becomeSpecialistState.selectedTags, tagName]
+
+          setSelectedTags(newSelectedTags)
+
+          setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
         } else {
-          // Handle regular tag selection
-          if (hasSubtags) {
-            setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
-          } else {
-            setSelectedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
-          }
+          // Regular tag selection
+          const newSelectedTags = becomeSpecialistState.selectedTags.includes(tagName)
+            ? becomeSpecialistState.selectedTags.filter((t) => t !== tagName)
+            : [...becomeSpecialistState.selectedTags, tagName]
+
+          setSelectedTags(newSelectedTags)
         }
       },
-      [message.aiMessageType, onPersonalityAnswer],
+      [becomeSpecialistState.selectedTags, setSelectedTags],
+    )
+
+    // Handle personality test answers (for profile-test)
+    const handlePersonalityAnswer = useCallback(
+      (answer: string) => {
+        if (message.questionId && onPersonalityAnswer) {
+          setPersonalityAnswer(message.questionId, answer)
+          onPersonalityAnswer(message.questionId, answer)
+        }
+      },
+      [message.questionId, setPersonalityAnswer, onPersonalityAnswer],
+    )
+
+    const handlePolicyChange = useCallback(
+      (checked: boolean) => {
+        setPolicyAccepted(checked)
+      },
+      [setPolicyAccepted],
     )
 
     const specialist = getSpecialistById(specialistId)
 
-    const renderTagGrid = (tags: Tag[], depth = 0) => {
-      const isPersonalityTest = message.aiMessageType === "profile-test"
-
+    // Render specialty tags (horizontal layout with expansion)
+    const renderSpecialtyTags = (tags: Tag[], depth = 0) => {
       return (
         <div className={`flex ml-auto ${depth > 0 ? "flex-col gap-2 " : "flex-wrap gap-4"}`}>
           {tags.map((tag, index) => (
-            <div key={`${depth}-${index}`} className={cn(
-                "flex flex-col ml-auto"
-            )}>
+            <div key={`${depth}-${index}`} className="flex flex-col ml-auto">
               <button
-                onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
-                disabled={isPersonalityTest && personalityAnswer !== null}
+                onClick={() => handleSpecialtyTagClick(tag.name, !!tag.subtags?.length)}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                  isPersonalityTest ? "px-2 w-full": "w-[104px]", "h-[36px]",
-                  "whitespace-nowrap text-neutral-700",
-                  isPersonalityTest
-                    ? personalityAnswer === tag.name
-                      ? "bg-violet-100"
-                      : personalityAnswer !== null
-                        ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 md:hover:bg-violet-50"
-                    : selectedTags.includes(tag.name)
-                      ? "bg-violet-50"
-                      : "bg-gray-100 md:hover:bg-violet-50",
+                  "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
+                  becomeSpecialistState.selectedTags.includes(tag.name)
+                    ? "bg-violet-50"
+                    : "bg-gray-100 md:hover:bg-violet-50",
                 )}
               >
                 {tag.name}
               </button>
 
-              {/* Рекурсивный вызов для подтегов (вертикальное расположение) */}
+              {/* Recursive call for subtags (vertical layout) */}
               {tag.subtags && expandedTags.includes(tag.name) && (
-                <div className="flex flex-col gap-2 mt-2">{renderTagGrid(tag.subtags, depth + 1)}</div>
+                <div className="flex flex-col gap-2 mt-2">{renderSpecialtyTags(tag.subtags, depth + 1)}</div>
               )}
             </div>
+          ))}
+        </div>
+      )
+    }
+
+    // Render personality test options (vertical layout)
+    const renderPersonalityOptions = (tags: Tag[]) => {
+      const currentAnswer = message.questionId ? becomeSpecialistState.personalityAnswers[message.questionId] : null
+
+      return (
+        <div className="flex flex-col gap-3 ml-auto max-w-xs">
+          {tags.map((tag, index) => (
+            <button
+              key={index}
+              onClick={() => handlePersonalityAnswer(tag.name)}
+              disabled={currentAnswer !== null}
+              className={cn(
+                "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                "w-full h-[36px] px-4 text-neutral-700",
+                currentAnswer === tag.name
+                  ? "bg-violet-100 border-2 border-violet-600"
+                  : currentAnswer !== null
+                    ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-100 md:hover:bg-violet-50",
+              )}
+            >
+              {tag.name}
+            </button>
           ))}
         </div>
       )
@@ -199,10 +244,15 @@ export const MessageItem = React.memo(
               </div>
             )}
 
-            {/* Tags grid for become-specialist-drops and profile-test */}
-            {(message.aiMessageType === "become-specialist-drops" || message.aiMessageType === "profile-test") &&
-              message.tags &&
-              message.tags.length > 0 && <div className="mt-4 ml-auto">{renderTagGrid(message.tags)}</div>}
+            {/* Specialty tags for become-specialist-drops */}
+            {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
+              <div className="mt-4 ml-auto">{renderSpecialtyTags(message.tags)}</div>
+            )}
+
+            {/* Personality test options for profile-test */}
+            {message.aiMessageType === "profile-test" && message.tags && message.tags.length > 0 && (
+              <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
+            )}
 
             {message.files && message.files.length > 0 && (
               <div
@@ -286,8 +336,8 @@ export const MessageItem = React.memo(
               <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
               <Checkbox
                 id="policy-accept"
-                checked={policyAccepted}
-                onCheckedChange={(checked) => setPolicyAccepted(checked as boolean)}
+                checked={becomeSpecialistState.policyAccepted}
+                onCheckedChange={handlePolicyChange}
                 className="w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600"
               />
             </div>
