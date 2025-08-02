@@ -15,7 +15,8 @@ import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
 import { useProfileStore } from "@/stores/profile-store"
-import { personalitySelector } from "@/components/become-specialist/messages"
+import {createVersionMessage, getVersionQuestions, personalitySelector} from "@/components/become-specialist/messages"
+import {getVersion} from "sucrase";
 
 export default function SearchPage() {
   const params = useParams()
@@ -34,6 +35,7 @@ export default function SearchPage() {
     setSelectedTags,
     setPolicyAccepted,
     setPersonalityAnswer,
+    setVersionAnswer,
     resetState: resetBecomeSpecialistState,
   } = useBecomeSpecialist()
   const { isCollapsed, toggleSidebar } = useSidebar()
@@ -173,17 +175,27 @@ export default function SearchPage() {
     [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
   )
 
-  const handleAddMessage = useCallback(
-    (message: Message) => {
-      if (!currentChat) return
+  const handleVersionAnswer = useCallback(
+      (questionId: string, answer: number) => {
+        setVersionAnswer(questionId, answer)
 
-      const updatedChat = addMessageToChat(currentChat.id, message)
-      if (updatedChat) {
-        setCurrentChat(updatedChat)
-      }
-    },
-    [currentChat, addMessageToChat],
+        const questions = getVersionQuestions(getVersion())
+
+        if (Object.keys(becomeSpecialistState.versionAnswers).length < personalitySelector.questions.length - 1) {
+          const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
+          const nextQuestion = questions[nextQuestionIndex]
+
+          setTimeout(() => {
+            const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage(nextQuestion, nextQuestionIndex))
+            if (updatedChat) {
+              setCurrentChat(updatedChat)
+            }
+          }, 500)
+        }
+      },
+      [becomeSpecialistState.versionAnswers, currentChat, addMessageToChat, setVersionAnswer],
   )
+
 
   const getMufiMode = useCallback(() => {
     if (!currentChat || currentChat.messages.length === 0) {
@@ -330,7 +342,7 @@ export default function SearchPage() {
                 onTagSelection={handleTagSelection}
                 onPolicyAcceptance={handlePolicyAcceptance}
                 onPersonalityAnswer={handlePersonalityAnswer}
-                onAddMessage={handleAddMessage}
+                onVersionAnswer={handleVersionAnswer}
               />
             )}
             <div className="h-16" />
@@ -362,7 +374,7 @@ export default function SearchPage() {
                   onTagSelection={handleTagSelection}
                   onPolicyAcceptance={handlePolicyAcceptance}
                   onPersonalityAnswer={handlePersonalityAnswer}
-                  onAddMessage={handleAddMessage}
+                  onVersionAnswer={handleVersionAnswer}
                 />
               )}
               <div className="h-16" />

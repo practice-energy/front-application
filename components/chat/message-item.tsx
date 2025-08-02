@@ -30,7 +30,7 @@ interface MessageItemProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
-  onAddMessage?: (message: Message) => void
+  onVersionAnswer: (questionId: string, answer: number) => void
 }
 
 export const MessageItem = React.memo(
@@ -46,7 +46,7 @@ export const MessageItem = React.memo(
     onTagSelection,
     onPolicyAcceptance,
     onPersonalityAnswer,
-    onAddMessage,
+    onVersionAnswer,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -61,6 +61,7 @@ export const MessageItem = React.memo(
       setVersionAnswer,
       setStep,
       submitPersonalityTest,
+      setVersion,
     } = useBecomeSpecialist()
 
     const [expandedTags, setExpandedTags] = useState<string[]>([])
@@ -108,12 +109,6 @@ export const MessageItem = React.memo(
         const result = await submitPersonalityTest()
         if (result) {
           setStep(3)
-
-          // Add first version-specific question as message
-          if (onAddMessage) {
-            const versionQuestions = getVersionQuestions(result.v)
-            onAddMessage(createVersionMessage(versionQuestions[0], 0))
-          }
         }
       } catch (error) {
         console.error("Failed to submit personality test:", error)
@@ -168,7 +163,7 @@ export const MessageItem = React.memo(
     const handlePersonalityAnswer = useCallback(
       (answer: string) => {
         // Only allow answer changes before step 3
-        if (becomeSpecialistState.step >= 3) return
+        if (becomeSpecialistState.step != 2) return
 
         setPersonalityAnswer(message.content, answer)
         if (onPersonalityAnswer) {
@@ -185,18 +180,8 @@ export const MessageItem = React.memo(
         if (becomeSpecialistState.step !== 3) return
 
         setVersionAnswer(message.content, answer)
-
-        // Add next version question if available and this is the last message
-        if (onAddMessage && becomeSpecialistState.v) {
-          const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
-          const currentAnsweredCount = Object.keys(becomeSpecialistState.versionAnswers).length + 1 // +1 for the current answer
-
-          if (currentAnsweredCount < versionQuestions.length) {
-            const nextQuestion = versionQuestions[currentAnsweredCount]
-            setTimeout(() => {
-              onAddMessage(createVersionMessage(nextQuestion, currentAnsweredCount))
-            }, 500)
-          }
+        if (onVersionAnswer) {
+          onVersionAnswer(message.content, answer)
         }
       },
       [
@@ -205,7 +190,7 @@ export const MessageItem = React.memo(
         becomeSpecialistState.v,
         becomeSpecialistState.versionAnswers,
         setVersionAnswer,
-        onAddMessage,
+        onVersionAnswer,
       ],
     )
 
@@ -299,7 +284,7 @@ export const MessageItem = React.memo(
       const isDisabled = becomeSpecialistState.step !== 3 || (currentAnswer !== null && currentAnswer !== undefined)
 
       return (
-        <div className="flex gap-2 ml-auto">
+        <div className="w-min flex gap-6 ml-auto">
           {[1, 2, 3, 4, 5].map((value) => {
             const isSelected = currentAnswer === value
 
