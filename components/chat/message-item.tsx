@@ -121,7 +121,7 @@ export const MessageItem = React.memo(
                   "whitespace-nowrap text-neutral-700",
                   isPersonalityTest
                     ? personalityAnswer === tag.name
-                      ? "bg-violet-100 border-2"
+                      ? "bg-violet-100"
                       : personalityAnswer !== null
                         ? "bg-gray-50 text-gray-400 cursor-not-allowed"
                         : "bg-gray-100 md:hover:bg-violet-50"
