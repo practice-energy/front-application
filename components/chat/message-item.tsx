@@ -181,11 +181,23 @@ export const MessageItem = React.memo(
     // Handle version-specific test answers - Step 3 only
     const handleVersionAnswer = useCallback(
       (answer: 1 | 2 | 3 | 4 | 5) => {
-
         // Only allow answer changes on step 3
         if (becomeSpecialistState.step !== 3) return
 
         setVersionAnswer(message.content, answer)
+
+        // Add next version question if available and this is the last message
+        if (onAddMessage && becomeSpecialistState.v) {
+          const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
+          const currentAnsweredCount = Object.keys(becomeSpecialistState.versionAnswers).length + 1 // +1 for the current answer
+
+          if (currentAnsweredCount < versionQuestions.length) {
+            const nextQuestion = versionQuestions[currentAnsweredCount]
+            setTimeout(() => {
+              onAddMessage(createVersionMessage(nextQuestion, currentAnsweredCount))
+            }, 500)
+          }
+        }
       },
       [
         message,
