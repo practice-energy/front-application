@@ -1,7 +1,6 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import { useRouter } from "next/navigation"
 import type { User } from "@/types/user"
 import { mockUser } from "@/services/mock-user"
 import { useProfileStore } from "@/stores/profile-store"
@@ -9,27 +8,27 @@ import { useProfileStore } from "@/stores/profile-store"
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
+  isLoading: boolean
   login: () => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
-  requireAuth: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
+  isLoading: true,
   login: async () => {
     return Promise.resolve()
   },
   logout: () => {},
   updateUser: () => {},
-  requireAuth: () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const setProfileUser = useProfileStore((state) => state.setUser)
-  const router = useRouter()
 
   // Check for saved user on mount
   useEffect(() => {
@@ -39,7 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(parsedUser)
       setProfileUser(parsedUser)
     }
-  }, []) // Убрали setProfileUser из зависимостей
+    setIsLoading(false)
+  }, [])
 
   const login = async () => {
     // Simulate backend request
@@ -65,14 +65,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const requireAuth = () => {
-    if (!user) {
-      router.push("/")
-    }
-  }
-
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser, requireAuth }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
