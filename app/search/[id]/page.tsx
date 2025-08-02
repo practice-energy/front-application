@@ -35,16 +35,13 @@ export default function SearchPage() {
     setPolicyAccepted,
     setPersonalityAnswer,
     setVersionAnswer,
-    getVersionQuestions,
     resetState: resetBecomeSpecialistState,
   } = useBecomeSpecialist()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
 
-  const { getChatDataById, addMessageToChat, addChat, chats } =
+  const { getChatDataById, addMessageToChat, addChat } =
       user?.hat === "adept" ? useAdeptChats() : useMasterChats()
-
-  console.log(becomeSpecialistState)
 
   useEffect(() => {
     const chatId = params.id as string
@@ -151,7 +148,7 @@ export default function SearchPage() {
     ) {
       setBecomeSpecialistStep(3)
 
-      const questions = getVersionQuestions()
+      const questions = getVersionQuestions(becomeSpecialistState.v)
 
       const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage( questions[0], 0))
       if (updatedChat) {
@@ -161,15 +158,32 @@ export default function SearchPage() {
   }, [becomeSpecialistState, currentChat, addMessageToChat, setBecomeSpecialistStep])
 
   useEffect(() => {
-    if (becomeSpecialistState.step === 3 && becomeSpecialistState.versionAnswers.length === 0) {
-      const questions = getVersionQuestions()
+    if (
+        becomeSpecialistState.step === 3 &&
+        becomeSpecialistState.v &&
+        currentChat?.isSpecialChat === "become-specialist" &&
+        Object.keys(becomeSpecialistState.versionAnswers).length === 0
+    ) {
+      const questions = getVersionQuestions(becomeSpecialistState.v);
+      const hasVersionMessage = currentChat.messages.some(
+          msg => msg.aiMessageType === "version-test"
+      );
 
-      const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage( questions[0], 0))
-      if (updatedChat) {
-        setCurrentChat(updatedChat)
+      if (!hasVersionMessage && questions.length > 0) {
+        const firstVersionMessage = createVersionMessage(questions[0], 0);
+        const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage);
+        if (updatedChat) {
+          setCurrentChat(updatedChat);
+        }
       }
     }
-  }, [becomeSpecialistState.step, becomeSpecialistState.versionAnswers, currentChat, addMessageToChat,]);
+  }, [
+    becomeSpecialistState.step,
+    becomeSpecialistState.v,
+    becomeSpecialistState.versionAnswers,
+    currentChat,
+    addMessageToChat
+  ]);
 
   const handlePersonalityAnswer = useCallback(
       (questionId: string, answer: string) => {
@@ -203,10 +217,10 @@ export default function SearchPage() {
       (questionId: string, answer: number) => {
         setVersionAnswer(questionId, answer)
 
-        const questions = getVersionQuestions()
+        const questions = getVersionQuestions(becomeSpecialistState.v)
 
-        if (Object.keys(becomeSpecialistState.versionAnswers).length < personalitySelector.questions.length - 1) {
-          const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
+        if (Object.keys(becomeSpecialistState.versionAnswers).length < getVersionQuestions(becomeSpecialistState.v).length - 1) {
+          const nextQuestionIndex = Object.keys(becomeSpecialistState.versionAnswers).length + 1
           const nextQuestion = questions[nextQuestionIndex]
 
           setTimeout(() => {
@@ -342,21 +356,23 @@ export default function SearchPage() {
 
   // Add this useEffect after the existing useEffects
   useEffect(() => {
-    if (becomeSpecialistState.step === 3 && becomeSpecialistState.v && currentChat && currentChat.messages.length > 0) {
+    if (
+        becomeSpecialistState.step === 3 &&
+        becomeSpecialistState.v && currentChat &&
+        becomeSpecialistState.versionAnswers.length === 0 &&
+        currentChat.isSpecialChat === "become-specialist"
+    ) {
       // Check if we already have a version-test message to avoid duplicates
       const hasVersionMessage = currentChat.messages.some((msg) => msg.aiMessageType === "version-test")
 
       if (!hasVersionMessage) {
-        const versionQuestions = getVersionQuestions()
+        const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
 
         if (versionQuestions.length > 0) {
           setTimeout(() => {
             const firstVersionMessage = createVersionMessage(versionQuestions[0], 0)
+            firstVersionMessage.content = "Теперь, когда области специальнсти определены, давайте углубимся в ваши внутренние миры.\n\nОтветы позволят мне лучше понять, каких инициантов для вас подбирать:"
             const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage)
-            if (updatedChat) {
-              // Assuming setCurrentChat is available in the scope
-              // setCurrentChat(updatedChat)
-            }
           }, 500)
         }
       }

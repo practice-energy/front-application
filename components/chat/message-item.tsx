@@ -58,10 +58,8 @@ export const MessageItem = React.memo(
       setSelectedTags,
       setPolicyAccepted,
       setPersonalityAnswer,
-      setVersionAnswer,
       setStep,
       submitPersonalityTest,
-      setVersion,
     } = useBecomeSpecialist()
 
     const [expandedTags, setExpandedTags] = useState<string[]>([])
@@ -171,27 +169,6 @@ export const MessageItem = React.memo(
       [message, becomeSpecialistState.step, setPersonalityAnswer, onPersonalityAnswer],
     )
 
-    // Handle version-specific test answers - Step 3 only
-    const handleVersionAnswer = useCallback(
-      (answer: 1 | 2 | 3 | 4 | 5) => {
-        // Only allow answer changes on step 3
-        if (becomeSpecialistState.step !== 3) return
-
-        setVersionAnswer(message.content, answer)
-        if (onVersionAnswer) {
-          onVersionAnswer(message.content, answer)
-        }
-      },
-      [
-        message,
-        becomeSpecialistState.step,
-        becomeSpecialistState.v,
-        becomeSpecialistState.versionAnswers,
-        setVersionAnswer,
-        onVersionAnswer,
-      ],
-    )
-
     const handlePolicyChange = useCallback(
       (checked: boolean) => {
         // Only allow policy changes on step 1
@@ -286,7 +263,7 @@ export const MessageItem = React.memo(
             return (
               <button
                 key={value}
-                onClick={() => handleVersionAnswer(value as 1 | 2 | 3 | 4 | 5)}
+                onClick={() => {onVersionAnswer(message.content, value)}}
                 disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
@@ -373,7 +350,19 @@ export const MessageItem = React.memo(
             )}
 
             {/* Version-specific test options */}
-            {message.aiMessageType === "version-test" && <div className="mt-4 ml-auto">{renderVersionOptions()}</div>}
+            {message.aiMessageType === "version-test" && <div>
+              <div
+                  className={cn(
+                      "rounded-sm py-3 flex flex-col",
+                      "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                  )}
+                  style={{ wordBreak: "break-word" }}
+              >
+                <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex+1)}</p>
+                <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+              </div>
+              <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
+            </div>}
 
             {message.files && message.files.length > 0 && (
               <div
