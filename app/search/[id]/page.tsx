@@ -5,7 +5,7 @@ import { Mufi } from "@/components/mufi/index"
 import { ShareModal } from "@/components/modals/share-modal"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import { useAdeptChats } from "@/stores/chat-store"
+import { useAdeptChats, useBecomeSpecialist } from "@/stores/chat-store"
 
 import { MessageList } from "@/components/chat/message-list"
 import { ChatEmptyState } from "@/components/chat/chat-empty-state"
@@ -33,14 +33,16 @@ export default function SearchPage() {
   const { isAuthenticated } = useAuth()
   const { user } = useProfileStore()
 
-  // State for tracking selected tags and policy acceptance
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [policyAccepted, setPolicyAccepted] = useState(false)
+  // Use become specialist store instead of local state
+  const {
+    state: becomeSpecialistState,
+    setStep,
+    setSelectedTags,
+    setPolicyAccepted,
+    setPersonalityAnswer,
+  } = useBecomeSpecialist()
 
-  // State for steps and personality test
-  const [steps, setSteps] = useState(1)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [personalityAnswers, setPersonalityAnswers] = useState<string[]>([])
 
   useEffect(() => {
     const chatId = params.id as string
@@ -50,12 +52,12 @@ export default function SearchPage() {
 
       // Determine step based on chat state
       if (existingChat.messages.length === 1) {
-        setSteps(1)
+        setStep(1)
       } else if (existingChat.messages.length > 1) {
         // Check if we're in personality test phase
         const lastMessage = existingChat.messages[existingChat.messages.length - 1]
         if (lastMessage.aiMessageType === "profile-test") {
-          setSteps(2)
+          setStep(2)
         }
       }
     } else {
@@ -72,7 +74,7 @@ export default function SearchPage() {
       }
       setCurrentChat(newChat)
     }
-  }, [params.id, getChatDataById])
+  }, [params.id, getChatDataById, setStep])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -118,11 +120,14 @@ export default function SearchPage() {
 
   // Handle step transitions
   const handleStepTransition = useCallback(() => {
-    if (steps === 1 && selectedTags.length > 0 && policyAccepted) {
+    if (
+      becomeSpecialistState.step === 1 &&
+      becomeSpecialistState.selectedTags.length > 0 &&
+      becomeSpecialistState.policyAccepted
+    ) {
       // Move to step 2 - personality test
-      setSteps(2)
+      setStep(2)
       setCurrentQuestionIndex(0)
-      setPersonalityAnswers([])
 
       // Add first personality question
       const firstQuestion = personalitySelector.questions[0]
@@ -132,6 +137,7 @@ export default function SearchPage() {
         content: firstQuestion.question,
         timestamp: Date.now(),
         aiMessageType: "profile-test",
+        questionId: firstQuestion.id,
         tags: firstQuestion.variants.map((variant) => ({ name: variant })),
       }
 
@@ -139,21 +145,32 @@ export default function SearchPage() {
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }
-    } else if (steps === 2 && personalityAnswers.length === personalitySelector.questions.length) {
+    } else if (
+      becomeSpecialistState.step === 2 &&
+      Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
+    ) {
       // Move to step 3
-      setSteps(3)
+      setStep(3)
     }
-  }, [steps, selectedTags, policyAccepted, personalityAnswers, currentChat, addMessageToChat])
+  }, [
+    becomeSpecialistState.step,
+    becomeSpecialistState.selectedTags,
+    becomeSpecialistState.policyAccepted,
+    becomeSpecialistState.personalityAnswers,
+    currentChat,
+    addMessageToChat,
+    setStep,
+  ])
 
   // Handle personality answer selection
   const handlePersonalityAnswer = useCallback(
-    (answer: string) => {
-      const newAnswers = [...personalityAnswers, answer]
-      setPersonalityAnswers(newAnswers)
+    (questionId: string, answer: string) => {
+      setPersonalityAnswer(questionId, answer)
 
       // If there are more questions, ask the next one
-      if (newAnswers.length < personalitySelector.questions.length) {
-        const nextQuestionIndex = newAnswers.length
+      const answeredQuestions = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
+      if (answeredQuestions < personalitySelector.questions.length) {
+        const nextQuestionIndex = answeredQuestions
         const nextQuestion = personalitySelector.questions[nextQuestionIndex]
 
         setTimeout(() => {
@@ -163,6 +180,7 @@ export default function SearchPage() {
             content: nextQuestion.question,
             timestamp: Date.now(),
             aiMessageType: "profile-test",
+            questionId: nextQuestion.id,
             tags: nextQuestion.variants.map((variant) => ({ name: variant })),
           }
 
@@ -173,7 +191,7 @@ export default function SearchPage() {
         }, 500)
       }
     },
-    [personalityAnswers, currentChat, addMessageToChat],
+    [becomeSpecialistState.personalityAnswers, currentChat, addMessageToChat, setPersonalityAnswer],
   )
 
   // Determine Mufi mode and canAccept based on current step and state
@@ -184,18 +202,25 @@ export default function SearchPage() {
 
     const lastMessage = currentChat.messages[currentChat.messages.length - 1]
 
-    if (steps === 1 && lastMessage.aiMessageType === "become-specialist-drops") {
-      const canAccept = selectedTags.length > 0 && policyAccepted
+    if (becomeSpecialistState.step === 1 && lastMessage.aiMessageType === "become-specialist-drops") {
+      const canAccept = becomeSpecialistState.selectedTags.length > 0 && becomeSpecialistState.policyAccepted
       return { mode: "accept", canAccept }
     }
 
-    if (steps === 2 && lastMessage.aiMessageType === "profile-test") {
-      const canContinue = personalityAnswers.length === personalitySelector.questions.length
+    if (becomeSpecialistState.step === 2 && lastMessage.aiMessageType === "profile-test") {
+      const canContinue =
+        Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
       return { mode: "continue", canAccept: canContinue }
     }
 
     return { mode: "input", canAccept: false }
-  }, [currentChat, steps, selectedTags, policyAccepted, personalityAnswers])
+  }, [
+    currentChat,
+    becomeSpecialistState.step,
+    becomeSpecialistState.selectedTags,
+    becomeSpecialistState.policyAccepted,
+    becomeSpecialistState.personalityAnswers,
+  ])
 
   const handleSpecialistClick = useCallback(
     (specialistId: string) => {
@@ -235,15 +260,21 @@ export default function SearchPage() {
     [], // No dependencies needed, making the function stable
   )
 
-  // Callback to handle tag selection from MessageItem
-  const handleTagSelection = useCallback((tags: string[]) => {
-    setSelectedTags(tags)
-  }, [])
+  // Callback to handle tag selection from MessageItem - now handled by store
+  const handleTagSelection = useCallback(
+    (tags: string[]) => {
+      setSelectedTags(tags)
+    },
+    [setSelectedTags],
+  )
 
-  // Callback to handle policy acceptance from MessageItem
-  const handlePolicyAcceptance = useCallback((accepted: boolean) => {
-    setPolicyAccepted(accepted)
-  }, [])
+  // Callback to handle policy acceptance from MessageItem - now handled by store
+  const handlePolicyAcceptance = useCallback(
+    (accepted: boolean) => {
+      setPolicyAccepted(accepted)
+    },
+    [setPolicyAccepted],
+  )
 
   // Handle continue button click
   const handleContinue = useCallback(() => {
@@ -388,7 +419,7 @@ export default function SearchPage() {
                 chatTitle="Alura"
                 mode={mode}
                 canAccept={canAccept}
-                selectedTags={selectedTags}
+                selectedTags={becomeSpecialistState.selectedTags}
                 onContinue={handleContinue}
               />
             </div>

@@ -1,49 +1,39 @@
-import type { Service } from "@/types/service"
-import type { Specialist } from "@/types/specialist"
-
-export interface Message {
-  id: string
-  type: "user" | "assistant" | "specialist"
-  content: string
-  timestamp: number
-  specialists?: Specialist[]
-  services?: Service[]
-  files?: File[]
-  replyTo?: string
-  aiMessageType?: AiMessageType
-  tags: Tag[]
-  footerContent?: string
-  questionId?: string // For personality test questions
-}
-
-export type Tag = {
-  name: string
-  subtags?: Tag[]
-}
-
 export type AiMessageType =
   | "info"
   | "warning"
   | "service"
-  | "become-specialist-drops"
   | "accept-policy"
-  | "drops-or-input"
+  | "become-specialist-drops"
   | "profile-test"
 
-export type Chat = {
+export interface Tag {
+  name: string
+  subtags?: Tag[]
+}
+
+export interface Message {
+  id: string
+  type: "user" | "assistant" | "specialist" | "become-specialist-drops"
+  content?: string
+  timestamp: number
+  files?: File[]
+  specialists?: any[]
+  services?: any[]
+  footerContent?: string
+  aiMessageType?: AiMessageType
+  tags?: Tag[]
+  questionId?: string // Added for personality test questions
+}
+
+export interface Chat {
   id: string
   title: string
-  specialistId?: string
-  serviceId?: string
-  avatar?: string
-  isAI?: boolean
-  isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | "request" | "declined" | null
   timestamp: number
-  isMuted?: boolean
   messages: Message[]
+  isAI?: boolean
   createdAt: number
-  hasNew?: boolean
-  description?: string
-  isSpecialChat?: "become-specialist"
+  isMuted: boolean
+  hasNew: boolean
+  footerContent?: string
+  specialistId?: string
 }
