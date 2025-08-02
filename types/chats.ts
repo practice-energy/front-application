@@ -11,7 +11,7 @@ export interface Message {
   files?: File[]
   replyTo?: string
   aiMessageType?: AiMessageType
-  tags: Tag[]
+  tags?: Tag[]
   footerContent?: string
 }
 

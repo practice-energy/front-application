@@ -16,7 +16,6 @@ import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
 import { useProfileStore } from "@/stores/profile-store"
 import {createVersionMessage, getVersionQuestions, personalitySelector} from "@/components/become-specialist/messages"
-import {getVersion} from "sucrase";
 
 export default function SearchPage() {
   const params = useParams()
@@ -36,6 +35,7 @@ export default function SearchPage() {
     setPolicyAccepted,
     setPersonalityAnswer,
     setVersionAnswer,
+    getVersionQuestions,
     resetState: resetBecomeSpecialistState,
   } = useBecomeSpecialist()
   const { isCollapsed, toggleSidebar } = useSidebar()
@@ -43,6 +43,8 @@ export default function SearchPage() {
 
   const { getChatDataById, addMessageToChat, addChat, chats } =
     user?.hat === "adept" ? useAdeptChats() : useMasterChats()
+
+  console.log(becomeSpecialistState)
 
   useEffect(() => {
     const chatId = params.id as string
@@ -59,6 +61,10 @@ export default function SearchPage() {
         const lastMessage = existingChat.messages[existingChat.messages.length - 1]
         if (lastMessage.aiMessageType === "profile-test") {
           setBecomeSpecialistStep(2)
+        }
+
+        if (lastMessage.aiMessageType === "version-test") {
+          setBecomeSpecialistStep(3)
         }
       }
     } else {
@@ -144,8 +150,26 @@ export default function SearchPage() {
       Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
     ) {
       setBecomeSpecialistStep(3)
+
+      const questions = getVersionQuestions(getVersionQuestions())
+
+      const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage( questions[0], 0))
+      if (updatedChat) {
+        setCurrentChat(updatedChat)
+      }
     }
   }, [becomeSpecialistState, currentChat, addMessageToChat, setBecomeSpecialistStep])
+
+  useEffect(() => {
+    if (becomeSpecialistState.step === 3 && becomeSpecialistState.versionAnswers.length === 0) {
+      const questions = getVersionQuestions(getVersionQuestions())
+
+      const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage( questions[0], 0))
+      if (updatedChat) {
+        setCurrentChat(updatedChat)
+      }
+    }
+  }, [becomeSpecialistState.step, becomeSpecialistState.versionAnswers, currentChat, addMessageToChat,]);
 
   const handlePersonalityAnswer = useCallback(
     (questionId: string, answer: string) => {
@@ -179,7 +203,7 @@ export default function SearchPage() {
       (questionId: string, answer: number) => {
         setVersionAnswer(questionId, answer)
 
-        const questions = getVersionQuestions(getVersion())
+        const questions = getVersionQuestions(getVersionQuestions())
 
         if (Object.keys(becomeSpecialistState.versionAnswers).length < personalitySelector.questions.length - 1) {
           const nextQuestionIndex = Object.keys(becomeSpecialistState.personalityAnswers).length + 1
@@ -196,7 +220,6 @@ export default function SearchPage() {
       [becomeSpecialistState.versionAnswers, currentChat, addMessageToChat, setVersionAnswer],
   )
 
-
   const getMufiMode = useCallback(() => {
     if (!currentChat || currentChat.messages.length === 0) {
       return { mode: "input", canAccept: false }
@@ -209,7 +232,10 @@ export default function SearchPage() {
       return { mode: "accept", canAccept }
     }
 
-    if (becomeSpecialistState.step === 2 && lastMessage.aiMessageType === "profile-test") {
+    if (
+        (becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) &&
+        (lastMessage.aiMessageType === "profile-test" || lastMessage.aiMessageType === "version-test")
+    ) {
       const canContinue =
         Object.keys(becomeSpecialistState.personalityAnswers).length === personalitySelector.questions.length
       return { mode: "continue", canAccept: canContinue }

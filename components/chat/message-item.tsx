@@ -106,10 +106,8 @@ export const MessageItem = React.memo(
     const handleSubmitPersonalityTest = async () => {
       setIsSubmitting(true)
       try {
-        const result = await submitPersonalityTest()
-        if (result) {
-          setStep(3)
-        }
+        await submitPersonalityTest()
+        setStep(3)
       } catch (error) {
         console.error("Failed to submit personality test:", error)
       } finally {
@@ -219,11 +217,10 @@ export const MessageItem = React.memo(
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
-                  isDisabled
-                    ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                    : becomeSpecialistState.selectedTags.includes(tag.name)
-                      ? "bg-violet-50"
-                      : "bg-gray-100 md:hover:bg-violet-50",
+                  becomeSpecialistState.selectedTags.includes(tag.name)
+                      ? "bg-violet-50" : isDisabled
+                          ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-100 md:hover:bg-violet-50",
                 )}
               >
                 {tag.name}
@@ -241,8 +238,6 @@ export const MessageItem = React.memo(
 
     const renderPersonalityOptions = (tags: Tag[]) => {
       const currentAnswer = message.content ? becomeSpecialistState.personalityAnswers[message.content] : null
-
-      console.log("currentAnswer", currentAnswer)
 
       // Блокируем кнопки, если:
       // 1. Пользователь уже ответил на этот вопрос, ИЛИ
