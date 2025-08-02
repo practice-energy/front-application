@@ -32,7 +32,6 @@ interface ChatState {
   resetBecomeSpecialistState: () => void
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
-  getVersionQuestions: (version: 1 | 2 | 3) => any[]
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -186,85 +185,6 @@ export const useChatStore = create(
           }
         }
         return null
-      },
-
-      getVersionQuestions: (version: 1 | 2 | 3) => {
-        const versionQuestions = {
-          1: [
-            {
-              id: "v1_q1",
-              text: "Как вы предпочитаете работать с клиентами?",
-              options: [
-                { value: 1, text: "Индивидуально, один на один" },
-                { value: 2, text: "В небольших группах" },
-                { value: 3, text: "В больших группах" },
-                { value: 4, text: "Онлайн формат" },
-                { value: 5, text: "Смешанный формат" },
-              ],
-            },
-            {
-              id: "v1_q2",
-              text: "Какой подход к решению проблем вам ближе?",
-              options: [
-                { value: 1, text: "Аналитический и структурированный" },
-                { value: 2, text: "Творческий и интуитивный" },
-                { value: 3, text: "Практический и прямолинейный" },
-                { value: 4, text: "Эмпатический и поддерживающий" },
-                { value: 5, text: "Комбинированный подход" },
-              ],
-            },
-          ],
-          2: [
-            {
-              id: "v2_q1",
-              text: "Что для вас важнее в работе со специалистом?",
-              options: [
-                { value: 1, text: "Быстрый результат" },
-                { value: 2, text: "Глубокое понимание проблемы" },
-                { value: 3, text: "Долгосрочные изменения" },
-                { value: 4, text: "Эмоциональная поддержка" },
-                { value: 5, text: "Практические инструменты" },
-              ],
-            },
-            {
-              id: "v2_q2",
-              text: "Как вы оцениваете свой стиль общения?",
-              options: [
-                { value: 1, text: "Прямой и честный" },
-                { value: 2, text: "Мягкий и деликатный" },
-                { value: 3, text: "Энергичный и мотивирующий" },
-                { value: 4, text: "Спокойный и размеренный" },
-                { value: 5, text: "Адаптивный к ситуации" },
-              ],
-            },
-          ],
-          3: [
-            {
-              id: "v3_q1",
-              text: "Какой тип клиентов вам интереснее?",
-              options: [
-                { value: 1, text: "Люди в кризисных ситуациях" },
-                { value: 2, text: "Те, кто стремится к развитию" },
-                { value: 3, text: "Профессионалы, ищущие баланс" },
-                { value: 4, text: "Молодые люди с вопросами самоопределения" },
-                { value: 5, text: "Все типы клиентов одинаково интересны" },
-              ],
-            },
-            {
-              id: "v3_q2",
-              text: "Как вы относитесь к нестандартным методам работы?",
-              options: [
-                { value: 1, text: "Предпочитаю проверенные классические методы" },
-                { value: 2, text: "Открыт к экспериментам и новым подходам" },
-                { value: 3, text: "Использую смешанный подход" },
-                { value: 4, text: "Выбираю метод в зависимости от клиента" },
-                { value: 5, text: "Постоянно изучаю и внедряю новое" },
-              ],
-            },
-          ],
-        }
-
-        return versionQuestions[version] || []
       },
 
       resetBecomeSpecialistState: () => {
@@ -492,6 +412,6 @@ export const useBecomeSpecialist = () => {
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
-    getVersionQuestions,
+    getVersionQuestions
   }
 }
