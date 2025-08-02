@@ -114,12 +114,17 @@ export const MessageItem = React.memo(
     // Handle personality test answers (for profile-test)
     const handlePersonalityAnswer = useCallback(
       (answer: string) => {
-        if (message.questionId && onPersonalityAnswer) {
+        if (message.questionId) {
+          console.log("Setting personality answer:", message.questionId, answer)
           setPersonalityAnswer(message.questionId, answer)
-          onPersonalityAnswer(message.questionId, answer)
+          if (onPersonalityAnswer) {
+            onPersonalityAnswer(message.questionId, answer)
+          }
+        } else {
+          console.warn("No questionId found in message:", message)
         }
       },
-      [message.questionId, setPersonalityAnswer, onPersonalityAnswer],
+      [message, setPersonalityAnswer, onPersonalityAnswer],
     )
 
     const handlePolicyChange = useCallback(
@@ -163,27 +168,34 @@ export const MessageItem = React.memo(
     // Render personality test options (vertical layout)
     const renderPersonalityOptions = (tags: Tag[]) => {
       const currentAnswer = message.questionId ? becomeSpecialistState.personalityAnswers[message.questionId] : null
+      console.log("Current answer for", message.questionId, ":", currentAnswer)
+      console.log("All personality answers:", becomeSpecialistState.personalityAnswers)
 
       return (
         <div className="flex flex-col gap-3 ml-auto max-w-xs">
-          {tags.map((tag, index) => (
-            <button
-              key={index}
-              onClick={() => handlePersonalityAnswer(tag.name)}
-              disabled={currentAnswer !== null}
-              className={cn(
-                "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                "w-full h-[36px] px-4 text-neutral-700",
-                currentAnswer === tag.name
-                  ? "bg-violet-100 border-2 border-violet-600"
-                  : currentAnswer !== null
-                    ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                    : "bg-gray-100 md:hover:bg-violet-50",
-              )}
-            >
-              {tag.name}
-            </button>
-          ))}
+          {tags.map((tag, index) => {
+            const isSelected = currentAnswer === tag.name
+            const isDisabled = currentAnswer !== null && !isSelected
+
+            return (
+              <button
+                key={index}
+                onClick={() => handlePersonalityAnswer(tag.name)}
+                disabled={isDisabled}
+                className={cn(
+                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "w-full h-[36px] px-4 text-neutral-700",
+                  isSelected
+                    ? "bg-violet-100 border-2 border-violet-600"
+                    : isDisabled
+                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-100 md:hover:bg-violet-50",
+                )}
+              >
+                {tag.name}
+              </button>
+            )
+          })}
         </div>
       )
     }

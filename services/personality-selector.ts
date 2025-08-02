@@ -1,40 +1,28 @@
-import type { Tag } from "@/types/chats"
-
 export interface PersonalityQuestion {
   id: string
   question: string
-  options: Tag[]
+  options: string[]
 }
 
 export const personalityQuestions: PersonalityQuestion[] = [
   {
-    id: "work-style",
-    question: "Как вы предпочитаете работать?",
-    options: [{ name: "Самостоятельно" }, { name: "В команде" }, { name: "Гибридно" }, { name: "По ситуации" }],
+    id: "question-1",
+    question: "Как вы предпочитаете работать с клиентами?",
+    options: ["Индивидуально", "В группе", "Смешанный формат", "Онлайн только"],
   },
   {
-    id: "communication",
+    id: "question-2",
     question: "Какой стиль общения вам ближе?",
-    options: [{ name: "Прямой" }, { name: "Дипломатичный" }, { name: "Дружелюбный" }, { name: "Формальный" }],
+    options: ["Формальный", "Дружеский", "Профессиональный", "Творческий"],
   },
   {
-    id: "problem-solving",
-    question: "Как вы решаете сложные задачи?",
-    options: [
-      { name: "Анализирую детально" },
-      { name: "Ищу творческие решения" },
-      { name: "Консультируюсь с другими" },
-      { name: "Действую интуитивно" },
-    ],
+    id: "question-3",
+    question: "Как вы относитесь к нестандартным запросам?",
+    options: ["Принимаю с энтузиазмом", "Осторожно изучаю", "Предпочитаю стандарт", "Избегаю"],
   },
   {
-    id: "time-management",
-    question: "Как вы планируете свое время?",
-    options: [
-      { name: "Строгий график" },
-      { name: "Гибкое планирование" },
-      { name: "По приоритетам" },
-      { name: "Спонтанно" },
-    ],
+    id: "question-4",
+    question: "Ваш подход к планированию работы?",
+    options: ["Строгое расписание", "Гибкий график", "По настроению", "Спонтанно"],
   },
 ]
