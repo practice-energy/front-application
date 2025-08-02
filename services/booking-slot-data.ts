@@ -7,10 +7,18 @@ export const mockBookingSlots: BookingSlot[] = [
         date: new Date(new Date().setHours(new Date().getHours() + 1, 0, 0, 0)),
         slots: 2
     },
-    {
-        date: new Date(new Date().setHours(new Date().getHours() + 1, 30, 0, 0)),
-        slots: 1
-    },
+    // {
+    //     date: new Date(new Date().setHours(new Date().getHours() + 1, 30, 0, 0)),
+    //     slots: 2
+    // },
+    // {
+    //     date: new Date(new Date().setHours(new Date().getHours() + 2, 0, 0, 0)),
+    //     slots: 2
+    // },
+    // {
+    //     date: new Date(new Date().setHours(new Date().getHours() + 3, 0, 0, 0)),
+    //     slots: 2
+    // },
 
     // Сегодня +2 часа
     {

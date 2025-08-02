@@ -50,18 +50,6 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
 
     const hourlySlots = generateVisibleHourlySlots()
 
-    // Get all visible time slots (for internal calculations)
-    Array.from(
-        new Set(
-            bookingSlots.reduce((acc, booking) => {
-                if (!booking.date) return acc
-                const isIncludedDay = days.some(day => isSameDay(booking.date, day))
-                if (!isIncludedDay) return acc
-                return [...acc, format(booking.date, "HH:mm")]
-            }, [] as string[])
-        )
-    ).sort();
-
     const SLOT_HEIGHT = 48 // Height for 30-minute slot
     const totalHeight = visibleHours.length * 2 * SLOT_HEIGHT // 2 slots per hour
 
@@ -104,6 +92,50 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
         const slotInHour = minutes >= 30 ? 1 : 0
         return (hourIndex * 2 + slotInHour) * SLOT_HEIGHT
     }
+
+    // Group overlapping bookings for a day
+    const groupOverlappingBookings = (dayBookings: BookingSlot[]) => {
+        if (dayBookings.length === 0) return [];
+
+        // Sort bookings by start time
+        const sortedBookings = [...dayBookings].sort((a, b) => {
+            if (!a.date || !b.date) return 0
+            return a.date.getTime() - b.date.getTime()
+        });
+
+        const groups: BookingSlot[][] = [];
+        let currentGroup: BookingSlot[] = [];
+        let currentEndTime: Date | null = null;
+
+        sortedBookings.forEach(booking => {
+            if (!booking.date) return;
+
+            const bookingStart = booking.date;
+            const bookingEnd = new Date(bookingStart.getTime() + (booking.slots * 30 * 60 * 1000));
+
+            if (!currentEndTime || bookingStart >= currentEndTime) {
+                // Start a new group
+                if (currentGroup.length > 0) {
+                    groups.push(currentGroup);
+                }
+                currentGroup = [booking];
+                currentEndTime = bookingEnd;
+            } else {
+                // Add to current group
+                currentGroup.push(booking);
+                if (bookingEnd > currentEndTime) {
+                    currentEndTime = bookingEnd;
+                }
+            }
+        });
+
+        // Add the last group
+        if (currentGroup.length > 0) {
+            groups.push(currentGroup);
+        }
+
+        return groups;
+    };
 
     return (
         <div className="flex-1 h-full w-full relative">
@@ -161,6 +193,7 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
                             {/* Render bookings as overlay - FIXED POSITIONING */}
                             {days.map((day, dayIndex) => {
                                 const dayBookings = getBookingsForDay(day)
+                                const bookingGroups = groupOverlappingBookings(dayBookings)
                                 const columnWidth = `calc((100% - 50px) / ${days.length})`
                                 const columnLeft = `calc(50px + ${dayIndex} * ${columnWidth})`
 
@@ -174,29 +207,36 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
                                             height: '100%'
                                         }}
                                     >
-                                        {dayBookings.map((booking, bookingIndex) => {
-                                            if (!booking.date) return null
+                                        {bookingGroups.map((group, groupIndex) => {
+                                            return group.map((booking, bookingIndex) => {
+                                                if (!booking.date) return null
 
-                                            const startTime = format(booking.date, "HH:mm")
-                                            const top = calculatePosition(startTime)
-                                            const height = SLOT_HEIGHT * booking.slots
+                                                const startTime = format(booking.date, "HH:mm")
+                                                const top = calculatePosition(startTime)
+                                                const height = SLOT_HEIGHT * booking.slots
 
-                                            return (
-                                                <div
-                                                    key={bookingIndex}
-                                                    className="absolute text-xs font-normal"
-                                                    style={{
-                                                        top: `${top+4}px`,
-                                                        height: `${height-8}px`,
-                                                        width: 'calc(100% - 12px)',
-                                                        left: '6px',
-                                                    }}
-                                                >
-                                                    <div className="bg-violet-600 hover:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex items-center justify-center">
-                                                        {format(booking.date, "HH:mm")}
+                                                // Calculate width and left position based on group size
+                                                const groupSize = group.length
+                                                const width = `calc(${100 / groupSize}% - 8px)`
+                                                const left = `calc(${(bookingIndex % groupSize) * (100 / groupSize)}% + 4px)`
+
+                                                return (
+                                                    <div
+                                                        key={`${groupIndex}-${bookingIndex}`}
+                                                        className="absolute text-xs font-normal"
+                                                        style={{
+                                                            top: `${top+4}px`,
+                                                            height: `${height-8}px`,
+                                                            width: width,
+                                                            left: left,
+                                                        }}
+                                                    >
+                                                        <div className="bg-violet-600 hover:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex items-center justify-center">
+                                                            {group.length < 4 && format(booking.date, "HH:mm")}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
+                                                )
+                                            })
                                         })}
                                     </div>
                                 )
