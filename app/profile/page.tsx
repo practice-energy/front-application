@@ -1,7 +1,11 @@
-"use client"
-
-import { ProfileDashboard } from "@/components/profile/profile-dashboard"
+import { useRequireAuth } from "@/hooks/use-require-auth"
 
 export default function ProfilePage() {
-  return <ProfileDashboard />
+  const isAuthenticated = useRequireAuth()
+
+  if (!isAuthenticated) {
+    return null // or a loading spinner
+  }
+
+  // rest of the component remains the same
 }

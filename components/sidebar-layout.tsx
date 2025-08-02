@@ -1,54 +1,68 @@
 "use client"
 
 import type React from "react"
-import { useEffect } from "react"
-import { useAuth } from "../hooks/useAuth"
-import { useSidebar } from "../hooks/useSidebar"
-import { useRouter } from "next/router"
+
+import { useAuth } from "@/hooks/use-auth"
+import { Header } from "@/components/header/index"
+import { MainSidebar } from "@/components/main-sidebar/index"
+import { useSidebar } from "@/contexts/sidebar-context"
 import { usePathname } from "next/navigation"
-import Sidebar from "./Sidebar"
-import MainContent from "./MainContent"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useEffect } from "react"
 
 interface SidebarLayoutProps {
   children: React.ReactNode
 }
 
-function isPublicRoute(pathname: string): boolean {
-  // Define your public routes here
-  return pathname === "/" || pathname === "/login"
-}
-
 export function SidebarLayout({ children }: SidebarLayoutProps) {
-  const { isAuthenticated, isLoading } = useAuth()
-  const { isOpen } = useSidebar()
-  const router = useRouter()
+  const { isAuthenticated } = useAuth()
   const pathname = usePathname()
+  const isMobile = useIsMobile()
+  const { isCollapsed } = useSidebar()
 
-  useEffect(() => {
-    // Only redirect after loading is complete
-    if (!isLoading && !isAuthenticated && !isPublicRoute(pathname)) {
-      router.push("/")
+  // Определяем нужно ли показывать header
+  const shouldShowHeader = () => {
+    // На мобильных устройствах не показываем header на странице календаря
+    if (isMobile) {
+        return false
     }
-  }, [isAuthenticated, isLoading, pathname, router])
-
-  // Show loading spinner while checking authentication
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-      </div>
-    )
+    // На всех остальных страницах показываем header
+    return true
   }
 
-  // Don't render protected content for unauthenticated users
-  if (!isAuthenticated && !isPublicRoute(pathname)) {
-    return null
-  }
+  const showHeader = shouldShowHeader()
+
+  // Update body margin when sidebar state changes
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      // Используем custom event для уведомления компонентов о изменении состояния сайдбара
+      window.dispatchEvent(
+        new CustomEvent("sidebarToggle", {
+          detail: { isCollapsed, width: isCollapsed ? 0 : 400 },
+        }),
+      )
+
+      // Отложенная установка стилей для лучшей синхронизации рендеринга
+      const applyStyles = () => {
+        const sidebarWidth = window.innerWidth < 768 ? "0" : "400px"
+        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
+        document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+      }
+
+      requestAnimationFrame(applyStyles)
+    }
+    return () => {
+      if (typeof document !== "undefined") {
+        document.body.style.marginLeft = "0"
+      }
+    }
+  }, [isAuthenticated, isCollapsed])
 
   return (
-    <div className="flex h-screen">
-      {isOpen && <Sidebar />}
-      <MainContent>{children}</MainContent>
+    <div className="min-h-screen">
+      {showHeader && <Header />}
+      {isAuthenticated && <MainSidebar />}
+      <main className={showHeader ? "min-h-[calc(100vh-3rem)]" : "min-h-screen"}>{children}</main>
     </div>
   )
 }
