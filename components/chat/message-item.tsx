@@ -109,16 +109,19 @@ export const MessageItem = React.memo(
       return (
         <div className={`flex ml-auto ${depth > 0 ? "flex-col gap-2 " : "flex-wrap gap-4"}`}>
           {tags.map((tag, index) => (
-            <div key={`${depth}-${index}`} className="flex flex-col ml-auto">
+            <div key={`${depth}-${index}`} className={cn(
+                "flex flex-col ml-auto"
+            )}>
               <button
                 onClick={() => handleTagClick(tag.name, !!tag.subtags?.length)}
                 disabled={isPersonalityTest && personalityAnswer !== null}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                  "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
+                  isPersonalityTest ? "px-2 w-full": "w-[104px]", "h-[36px]",
+                  "whitespace-nowrap text-neutral-700",
                   isPersonalityTest
                     ? personalityAnswer === tag.name
-                      ? "bg-violet-100 border-2 border-violet-600"
+                      ? "bg-violet-100 border-2"
                       : personalityAnswer !== null
                         ? "bg-gray-50 text-gray-400 cursor-not-allowed"
                         : "bg-gray-100 md:hover:bg-violet-50"
