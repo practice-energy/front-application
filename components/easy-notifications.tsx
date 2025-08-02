@@ -1,23 +1,8 @@
 "use client"
 
-import {useCallback, useEffect, useRef, useState} from "react"
-import {Badge} from "@/components/ui/badge"
-import {Button} from "@/components/ui/button"
-import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer"
-import {
-    ChatBubbleLeftIcon,
-    ClockIcon,
-    ExclamationTriangleIcon,
-    InformationCircleIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/outline"
 import {Bell} from "lucide-react"
 import {usePathname, useRouter} from "next/navigation"
 import {cn} from "@/lib/utils"
-import {mockNotifications} from "@/services/mock-notification";
-import type {Notification} from "@/types/notification";
-import {BellIcon} from "@heroicons/react/24/outline";
-import {useSidebar} from "@/components/ui/sidebar";
 import {useSidebarData} from "@/components/main-sidebar/hooks/use-sidebar-data";
 import {Chat} from "@/types/chats";
 
