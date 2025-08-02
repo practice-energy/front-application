@@ -32,6 +32,7 @@ interface ChatState {
   resetBecomeSpecialistState: () => void
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
+  submitVersionTest: () => Promise<{ success: boolean } | null>
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -87,6 +88,22 @@ const mockSubmitPersonalityTest = async (personalityAnswers: Record<string, stri
   } else {
     return { v: 2 }
   }
+}
+
+// Mock backend API call for version test
+const mockSubmitVersionTest = async (
+  versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5>,
+): Promise<{ success: boolean }> => {
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1500 + Math.random() * 1000))
+
+  // Simulate 10% chance of error for retry logic
+  if (Math.random() < 0.1) {
+    throw new Error("Network error")
+  }
+
+  console.log("Version test submitted:", versionAnswers)
+  return { success: true }
 }
 
 export const useChatStore = create(
@@ -178,6 +195,27 @@ export const useChatStore = create(
             retries--
             if (retries === 0) {
               console.error("Failed to submit personality test after retries:", error)
+              return null
+            }
+            // Wait before retry
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+          }
+        }
+        return null
+      },
+
+      submitVersionTest: async () => {
+        const { versionAnswers } = get().becomeSpecialistState
+
+        let retries = 3
+        while (retries > 0) {
+          try {
+            const result = await mockSubmitVersionTest(versionAnswers)
+            return result
+          } catch (error) {
+            retries--
+            if (retries === 0) {
+              console.error("Failed to submit version test after retries:", error)
               return null
             }
             // Wait before retry
@@ -398,6 +436,7 @@ export const useBecomeSpecialist = () => {
     resetBecomeSpecialistState,
     getBecomeSpecialistState,
     submitPersonalityTest,
+    submitVersionTest,
   } = useChatStore()
 
   return {
@@ -411,5 +450,6 @@ export const useBecomeSpecialist = () => {
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
+    submitVersionTest,
   }
 }
