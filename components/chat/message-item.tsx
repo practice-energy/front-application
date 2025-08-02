@@ -120,14 +120,9 @@ export const MessageItem = React.memo(
         // Only allow answer changes before step 3
         if (becomeSpecialistState.step >= 3) return
 
-        if (message.questionId) {
-          console.log("Setting personality answer:", message.questionId, answer)
-          setPersonalityAnswer(message.questionId, answer)
-          if (onPersonalityAnswer) {
-            onPersonalityAnswer(message.questionId, answer)
-          }
-        } else {
-          console.error("No questionId found in message:", message)
+        setPersonalityAnswer(message.content, answer)
+        if (onPersonalityAnswer) {
+          onPersonalityAnswer(message.content, answer)
         }
       },
       [message, becomeSpecialistState.step, setPersonalityAnswer, onPersonalityAnswer],
@@ -180,7 +175,7 @@ export const MessageItem = React.memo(
 
     // Render personality test options (vertical layout) - Step 2
     const renderPersonalityOptions = (tags: Tag[]) => {
-      const currentAnswer = message.questionId ? becomeSpecialistState.personalityAnswers[message.questionId] : null
+      const currentAnswer = message.content ? becomeSpecialistState.personalityAnswers[message.content] : null
       const isDisabled = becomeSpecialistState.step >= 3
 
       return (
@@ -198,7 +193,7 @@ export const MessageItem = React.memo(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-full h-[36px] px-4 text-neutral-700",
                   isSelected
-                    ? "bg-violet-100 border-2 border-violet-600"
+                    ? "bg-violet-100 "
                     : isButtonDisabled
                       ? "bg-gray-50 text-gray-400 cursor-not-allowed"
                       : "bg-gray-100 md:hover:bg-violet-50",
