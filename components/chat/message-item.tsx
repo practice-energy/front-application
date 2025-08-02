@@ -87,23 +87,45 @@ export const MessageItem = React.memo(
       onSpecialistClick(specialistId)
     }, [isAssistant, router, specialistId, onSpecialistClick])
 
+    // Helper function to collect all subtags recursively
+    const collectAllSubtags = useCallback((tag: Tag): string[] => {
+      const subtags = [tag.name]
+      if (tag.subtags) {
+        tag.subtags.forEach((subtag) => {
+          subtags.push(...collectAllSubtags(subtag))
+        })
+      }
+      return subtags
+    }, [])
+
     // Handle specialty tags selection (for become-specialist-drops) - Step 1 only
     const handleSpecialtyTagClick = useCallback(
-      (tagName: string, hasSubtags: boolean) => {
+      (tagName: string, hasSubtags: boolean, fullTag?: Tag) => {
         // Only allow tag changes on step 1
         if (becomeSpecialistState.step !== 1) return
 
-        if (hasSubtags) {
-          // If tag has subtags, add it to selected tags and expand it
-          const newSelectedTags = becomeSpecialistState.selectedTags.includes(tagName)
-            ? becomeSpecialistState.selectedTags.filter((t) => t !== tagName)
-            : [...becomeSpecialistState.selectedTags, tagName]
+        if (hasSubtags && fullTag) {
+          // If tag has subtags, add it AND all its subtags to selected tags, then expand it
+          const allTagsToAdd = collectAllSubtags(fullTag)
+
+          const isCurrentlySelected = becomeSpecialistState.selectedTags.includes(tagName)
+
+          let newSelectedTags
+          if (isCurrentlySelected) {
+            // Remove the main tag and all its subtags
+            newSelectedTags = becomeSpecialistState.selectedTags.filter((t) => !allTagsToAdd.includes(t))
+          } else {
+            // Add the main tag and all its subtags
+            const tagsToAdd = allTagsToAdd.filter((t) => !becomeSpecialistState.selectedTags.includes(t))
+            newSelectedTags = [...becomeSpecialistState.selectedTags, ...tagsToAdd]
+          }
 
           setSelectedTags(newSelectedTags)
 
+          // Toggle expansion
           setExpandedTags((prev) => (prev.includes(tagName) ? prev.filter((t) => t !== tagName) : [...prev, tagName]))
         } else {
-          // Regular tag selection
+          // Regular tag selection (no subtags)
           const newSelectedTags = becomeSpecialistState.selectedTags.includes(tagName)
             ? becomeSpecialistState.selectedTags.filter((t) => t !== tagName)
             : [...becomeSpecialistState.selectedTags, tagName]
@@ -111,7 +133,7 @@ export const MessageItem = React.memo(
           setSelectedTags(newSelectedTags)
         }
       },
-      [becomeSpecialistState.selectedTags, becomeSpecialistState.step, setSelectedTags],
+      [becomeSpecialistState.selectedTags, becomeSpecialistState.step, setSelectedTags, collectAllSubtags],
     )
 
     // Handle personality test answers (for profile-test) - Step 2 only
@@ -148,7 +170,7 @@ export const MessageItem = React.memo(
           {tags.map((tag, index) => (
             <div key={`${depth}-${index}`} className="flex flex-col ml-auto">
               <button
-                onClick={() => handleSpecialtyTagClick(tag.name, !!tag.subtags?.length)}
+                onClick={() => handleSpecialtyTagClick(tag.name, !!tag.subtags?.length, tag)}
                 disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
