@@ -16,6 +16,7 @@ import { ActionButtonsRow } from "@/components/action-button"
 import type { Service } from "@/types/service"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useBecomeSpecialist } from "@/stores/chat-store"
+import { getVersionQuestions, createVersionMessage } from "@/components/become-specialist/messages"
 
 interface MessageItemProps {
   specialistId: string
@@ -29,6 +30,7 @@ interface MessageItemProps {
   onTagSelection?: (tags: string[]) => void
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
+  onAddMessage?: (message: any) => void
 }
 
 export const MessageItem = React.memo(
@@ -44,6 +46,7 @@ export const MessageItem = React.memo(
     onTagSelection,
     onPolicyAcceptance,
     onPersonalityAnswer,
+    onAddMessage,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -55,9 +58,13 @@ export const MessageItem = React.memo(
       setSelectedTags,
       setPolicyAccepted,
       setPersonalityAnswer,
+      setVersionAnswer,
+      setStep,
+      submitPersonalityTest,
     } = useBecomeSpecialist()
 
     const [expandedTags, setExpandedTags] = useState<string[]>([])
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Sync local state with store for policy acceptance
     useEffect(() => {
@@ -72,6 +79,52 @@ export const MessageItem = React.memo(
         onTagSelection(becomeSpecialistState.selectedTags)
       }
     }, [becomeSpecialistState.selectedTags, message.aiMessageType, onTagSelection])
+
+    // Check if all personality questions are answered and submit test
+    useEffect(() => {
+      const personalityQuestions = 4 // Number of personality questions
+      const answeredQuestions = Object.keys(becomeSpecialistState.personalityAnswers).length
+
+      if (becomeSpecialistState.step === 2 && answeredQuestions === personalityQuestions && !isSubmitting) {
+        handleSubmitPersonalityTest()
+      }
+    }, [becomeSpecialistState.personalityAnswers, becomeSpecialistState.step, isSubmitting])
+
+    // Check if all version questions are answered and move to step 4
+    useEffect(() => {
+      if (becomeSpecialistState.step === 3 && becomeSpecialistState.v) {
+        const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
+        const answeredVersionQuestions = Object.keys(becomeSpecialistState.versionAnswers).length
+
+        if (answeredVersionQuestions === versionQuestions.length) {
+          setStep(4)
+        }
+      }
+    }, [becomeSpecialistState.versionAnswers, becomeSpecialistState.step, becomeSpecialistState.v, setStep])
+
+    const handleSubmitPersonalityTest = async () => {
+      setIsSubmitting(true)
+      try {
+        const result = await submitPersonalityTest()
+        if (result) {
+          setStep(3)
+
+          // Add version-specific questions as messages
+          if (onAddMessage) {
+            const versionQuestions = getVersionQuestions(result.v)
+            versionQuestions.forEach((question, index) => {
+              setTimeout(() => {
+                onAddMessage(createVersionMessage(question, index))
+              }, index * 500) // Stagger message appearance
+            })
+          }
+        }
+      } catch (error) {
+        console.error("Failed to submit personality test:", error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
 
     const handleCopyMessage = useCallback(() => {
       const textToCopy = message.content || "Message with cards"
@@ -127,6 +180,17 @@ export const MessageItem = React.memo(
         }
       },
       [message, becomeSpecialistState.step, setPersonalityAnswer, onPersonalityAnswer],
+    )
+
+    // Handle version-specific test answers - Step 3 only
+    const handleVersionAnswer = useCallback(
+      (answer: 1 | 2 | 3 | 4 | 5) => {
+        // Only allow answer changes on step 3
+        if (becomeSpecialistState.step !== 3) return
+
+        setVersionAnswer(message.content, answer)
+      },
+      [message, becomeSpecialistState.step, setVersionAnswer],
     )
 
     const handlePolicyChange = useCallback(
@@ -208,6 +272,40 @@ export const MessageItem = React.memo(
       )
     }
 
+    // Render version-specific test options (1-5 scale) - Step 3
+    const renderVersionOptions = () => {
+      const currentAnswer = message.content ? becomeSpecialistState.versionAnswers[message.content] : null
+      const isDisabled = becomeSpecialistState.step !== 3
+
+      return (
+        <div className="flex gap-2 ml-auto">
+          {[1, 2, 3, 4, 5].map((value) => {
+            const isSelected = currentAnswer === value
+            const isButtonDisabled = isDisabled || (currentAnswer !== null && !isSelected)
+
+            return (
+              <button
+                key={value}
+                onClick={() => handleVersionAnswer(value as 1 | 2 | 3 | 4 | 5)}
+                disabled={isButtonDisabled}
+                className={cn(
+                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "w-[36px] h-[36px] text-neutral-700",
+                  isSelected
+                    ? "bg-violet-100"
+                    : isButtonDisabled
+                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-100 md:hover:bg-violet-50",
+                )}
+              >
+                {value}
+              </button>
+            )
+          })}
+        </div>
+      )
+    }
+
     return (
       <div
         id={`message-${message.id}`}
@@ -273,6 +371,9 @@ export const MessageItem = React.memo(
             {message.aiMessageType === "profile-test" && message.tags && message.tags.length > 0 && (
               <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
             )}
+
+            {/* Version-specific test options */}
+            {message.aiMessageType === "version-test" && <div className="mt-4 ml-auto">{renderVersionOptions()}</div>}
 
             {message.files && message.files.length > 0 && (
               <div
@@ -346,6 +447,7 @@ export const MessageItem = React.memo(
                 message.aiMessageType === "accept-policy" && "border-violet-600",
                 message.aiMessageType === "become-specialist-drops" && "border-violet-600",
                 message.aiMessageType === "profile-test" && "border-violet-600",
+                message.aiMessageType === "version-test" && "border-violet-600",
               )}
             />
           )}
@@ -364,6 +466,14 @@ export const MessageItem = React.memo(
                   becomeSpecialistState.step > 1 && "opacity-50 cursor-not-allowed",
                 )}
               />
+            </div>
+          )}
+
+          {/* Loading indicator for personality test submission */}
+          {isSubmitting && becomeSpecialistState.step === 2 && (
+            <div className="mt-4 flex items-center gap-2 ml-auto">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-violet-600"></div>
+              <span className="text-sm text-gray-600">Обрабатываем результаты теста...</span>
             </div>
           )}
 
