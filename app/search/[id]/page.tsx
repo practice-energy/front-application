@@ -15,7 +15,12 @@ import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
 import { useProfileStore } from "@/stores/profile-store"
-import {createVersionMessage, getVersionQuestions, personalitySelector} from "@/components/become-specialist/messages"
+import {
+  createVersionMessage,
+  getVersionQuestions,
+  initVersionTestMessage, initVersionTestMessageFooter,
+  personalitySelector
+} from "@/components/become-specialist/messages"
 
 export default function SearchPage() {
   const params = useParams()
@@ -150,7 +155,7 @@ export default function SearchPage() {
 
       const questions = getVersionQuestions(becomeSpecialistState.v)
 
-      const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage( questions[0], 0))
+      const updatedChat = addMessageToChat(currentChat!.id, createVersionMessage(questions[0], 0))
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }
@@ -161,8 +166,8 @@ export default function SearchPage() {
     if (
         becomeSpecialistState.step === 3 &&
         becomeSpecialistState.v &&
-        currentChat?.isSpecialChat === "become-specialist" &&
-        Object.keys(becomeSpecialistState.versionAnswers).length === 0
+        currentChat &&
+        currentChat.isSpecialChat === "become-specialist"
     ) {
       const questions = getVersionQuestions(becomeSpecialistState.v);
       const hasVersionMessage = currentChat.messages.some(
@@ -170,7 +175,13 @@ export default function SearchPage() {
       );
 
       if (!hasVersionMessage && questions.length > 0) {
-        const firstVersionMessage = createVersionMessage(questions[0], 0);
+        const firstVersionMessage = createVersionMessage(
+            questions[0],
+            0,
+            initVersionTestMessage,
+            initVersionTestMessageFooter,
+        );
+
         const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage);
         if (updatedChat) {
           setCurrentChat(updatedChat);
@@ -180,9 +191,10 @@ export default function SearchPage() {
   }, [
     becomeSpecialistState.step,
     becomeSpecialistState.v,
-    becomeSpecialistState.versionAnswers,
     currentChat,
-    addMessageToChat
+    addMessageToChat,
+    initVersionTestMessage,
+    initVersionTestMessageFooter,
   ]);
 
   const handlePersonalityAnswer = useCallback(
@@ -231,7 +243,11 @@ export default function SearchPage() {
           }, 500)
         }
       },
-      [becomeSpecialistState.versionAnswers, currentChat, addMessageToChat, setVersionAnswer],
+      [ becomeSpecialistState.step,
+        becomeSpecialistState.v,
+        becomeSpecialistState.versionAnswers,
+        currentChat,
+        addMessageToChat],
   )
 
   const getMufiMode = useCallback(() => {
@@ -353,31 +369,6 @@ export default function SearchPage() {
     router.push("/")
     return null
   }
-
-  // Add this useEffect after the existing useEffects
-  useEffect(() => {
-    if (
-        becomeSpecialistState.step === 3 &&
-        becomeSpecialistState.v && currentChat &&
-        becomeSpecialistState.versionAnswers.length === 0 &&
-        currentChat.isSpecialChat === "become-specialist"
-    ) {
-      // Check if we already have a version-test message to avoid duplicates
-      const hasVersionMessage = currentChat.messages.some((msg) => msg.aiMessageType === "version-test")
-
-      if (!hasVersionMessage) {
-        const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
-
-        if (versionQuestions.length > 0) {
-          setTimeout(() => {
-            const firstVersionMessage = createVersionMessage(versionQuestions[0], 0)
-            firstVersionMessage.content = "Теперь, когда области специальнсти определены, давайте углубимся в ваши внутренние миры.\n\nОтветы позволят мне лучше понять, каких инициантов для вас подбирать:"
-            const updatedChat = addMessageToChat(currentChat.id, firstVersionMessage)
-          }, 500)
-        }
-      }
-    }
-  }, [becomeSpecialistState.step, becomeSpecialistState.v, currentChat, addMessageToChat])
 
   return (
       <div className="relative h-screen bg-white dark:bg-gray-900">

@@ -252,7 +252,7 @@ export const MessageItem = React.memo(
 
     // Render version-specific test options (1-5 scale) - Step 3
     const renderVersionOptions = () => {
-      const currentAnswer = message.content ? becomeSpecialistState.versionAnswers[message.content] : null
+      const currentAnswer = message.testQuestion ? becomeSpecialistState.versionAnswers[message.testQuestion] : null
       const isDisabled = becomeSpecialistState.step !== 3 || (currentAnswer !== null && currentAnswer !== undefined)
 
       return (
@@ -263,7 +263,7 @@ export const MessageItem = React.memo(
             return (
               <button
                 key={value}
-                onClick={() => {onVersionAnswer(message.content, value)}}
+                onClick={() => {onVersionAnswer(message.testQuestion, value)}}
                 disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
@@ -328,13 +328,13 @@ export const MessageItem = React.memo(
                     `rounded-sm py-3 ${
                       isUser
                         ? "bg-violet-50 shadow-md px-3 py-3 gap-3 "
-                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
+                        : "bg-white text-neutral-700  rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
                     }`,
                     isAssistant && "border-none shadow-none px-0 ",
                   )}
                   style={{ wordBreak: "break-word" }}
                 >
-                  <p className="text-sm leading-relaxed">{message.content}</p>
+                  <div className="text-sm leading-relaxed">{message.content}</div>
                 </div>
               </div>
             )}
@@ -354,7 +354,7 @@ export const MessageItem = React.memo(
               <div
                   className={cn(
                       "rounded-sm py-3 flex flex-col",
-                      "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                      "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
                   )}
                   style={{ wordBreak: "break-word" }}
               >
@@ -393,7 +393,7 @@ export const MessageItem = React.memo(
             {message.specialists && message.specialists.length > 0 && (
               <div className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {message.specialists.slice(0, 2).map((specialist) => (
+                  {message.specialists.map((specialist) => (
                     <InstagramSpecialistCard
                       key={specialist.id}
                       specialist={specialist}
@@ -422,7 +422,7 @@ export const MessageItem = React.memo(
           </div>
 
           {message.footerContent && (isAssistant || isAI) && !isUser && (
-            <div className="mt-3 text-gray-800 dark:text-gray-100">
+            <div className={cn("mt-3 text-neutral-700",)}>
               <p className="text-sm leading-relaxed mt-1.5">{message.footerContent}</p>
             </div>
           )}
@@ -431,12 +431,12 @@ export const MessageItem = React.memo(
             <div
               className={cn(
                 "border-t border-gray-200 dark:border-gray-700 mt-2 w-full",
-                aiMessageType === "service" && "border-violet-600",
-                aiMessageType === "warning" && "border-pink-500",
+                message.aiMessageType === "service" && "border-violet-600",
+                message.aiMessageType === "warning" && "border-pink-500",
                 message.aiMessageType === "accept-policy" && "border-violet-600",
-                message.aiMessageType === "become-specialist-drops" && "border-violet-600",
-                message.aiMessageType === "profile-test" && "border-violet-600",
-                message.aiMessageType === "version-test" && "border-violet-600",
+                message.aiMessageType === "become-specialist-drops" && "border-neutral-500",
+                message.aiMessageType === "profile-test" && "border-neutral-500",
+                message.aiMessageType === "version-test" && "border-neutral-500",
               )}
             />
           )}

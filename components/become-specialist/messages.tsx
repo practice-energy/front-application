@@ -97,13 +97,18 @@ export const getVersionQuestions = (version: 1 | 2 | 3): string[] => {
 }
 
 // Helper function to create version-specific messages
-export const createVersionMessage = (question: string, index: number) => ({
+export const createVersionMessage = (question: string, index: number, content: string = "", footer: string ="") => ({
   id: uuidv4(),
   type: "assistant",
-  content: "",
+  content: content,
   timestamp: Date.now(),
   aiMessageType: "version-test" as const,
   testQuestion: question,
   questionIndex: index,
+  footerContent: footer,
   isAI: true,
 })
+
+export const initVersionTestMessage = "Теперь, когда области специальнсти определены, давайте углубимся в ваши внутренние миры.\n\nОтветы позволят мне лучше понять, каких инициантов для вас подбирать:"
+
+export const initVersionTestMessageFooter = "Ответы в безопасности и надёжно защищены: только вы и я имеем к ним доступ."
