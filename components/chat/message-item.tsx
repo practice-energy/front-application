@@ -31,7 +31,6 @@ interface MessageItemProps {
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
   onVersionAnswer: (questionId: string, answer: number) => void
-  onAddMessage?: (message: Message) => void
 }
 
 export const MessageItem = React.memo(
@@ -48,7 +47,6 @@ export const MessageItem = React.memo(
     onPolicyAcceptance,
     onPersonalityAnswer,
     onVersionAnswer,
-    onAddMessage,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
@@ -108,20 +106,8 @@ export const MessageItem = React.memo(
     const handleSubmitPersonalityTest = async () => {
       setIsSubmitting(true)
       try {
-        const result = await submitPersonalityTest()
-        if (result) {
-          setStep(3)
-
-          // Add first version-specific question as message
-          if (onAddMessage) {
-            const versionQuestions = getVersionQuestions(result.v)
-            if (versionQuestions.length > 0) {
-              setTimeout(() => {
-                onAddMessage(createVersionMessage(versionQuestions[0], 0))
-              }, 500)
-            }
-          }
-        }
+        await submitPersonalityTest()
+        setStep(3)
       } catch (error) {
         console.error("Failed to submit personality test:", error)
       } finally {
@@ -195,19 +181,6 @@ export const MessageItem = React.memo(
         if (onVersionAnswer) {
           onVersionAnswer(message.content, answer)
         }
-
-        // Add next version question if available
-        if (onAddMessage && becomeSpecialistState.v) {
-          const versionQuestions = getVersionQuestions(becomeSpecialistState.v)
-          const currentAnsweredCount = Object.keys(becomeSpecialistState.versionAnswers).length + 1 // +1 for the current answer
-
-          if (currentAnsweredCount < versionQuestions.length) {
-            const nextQuestion = versionQuestions[currentAnsweredCount]
-            setTimeout(() => {
-              onAddMessage(createVersionMessage(nextQuestion, currentAnsweredCount))
-            }, 500)
-          }
-        }
       },
       [
         message,
@@ -216,7 +189,6 @@ export const MessageItem = React.memo(
         becomeSpecialistState.versionAnswers,
         setVersionAnswer,
         onVersionAnswer,
-        onAddMessage,
       ],
     )
 
@@ -246,10 +218,9 @@ export const MessageItem = React.memo(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
                   "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
                   becomeSpecialistState.selectedTags.includes(tag.name)
-                    ? "bg-violet-50"
-                    : isDisabled
-                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 md:hover:bg-violet-50",
+                      ? "bg-violet-50" : isDisabled
+                          ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-100 md:hover:bg-violet-50",
                 )}
               >
                 {tag.name}
