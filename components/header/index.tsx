@@ -204,7 +204,7 @@ export function Header() {
 
       <header
         className={cn(
-          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg opacity-80 fixed items-end",
+          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg fixed items-end",
           isCollapsed ? "w-full" : "w-[calc(100%-400px)]",
         )}
       >

@@ -41,8 +41,7 @@ export function SectionHeader({
       </h3>
           <ChevronDown
               className={cn(
-                  "w-6 h-6 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",
-                  "group-hover:text-gray-600 dark:group-hover:text-gray-300",
+                  "w-6 h-6 text-violet-600 transition-all duration-200 ease-in-out transform ml-auto",
                   isVisible ? "rotate-180" : "rotate-0",
               )}
           />

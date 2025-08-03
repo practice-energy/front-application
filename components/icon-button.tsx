@@ -19,7 +19,7 @@ export function IconButton({
     return (
         <div className={cn(
             "hidden md:flex items-center justify-center",
-            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 border",
+            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 border-neutral-100",
             disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
             className
         )}>

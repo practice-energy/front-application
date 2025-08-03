@@ -62,7 +62,7 @@ export function AwaitingActivityCard({
               </div>
 
               {/* Кнопки действий справа */}
-              <div className="flex-1">
+              <div className="flex-1 ml-auto pr-2">
                   <ActionButtonsRow
                       onRegenerate={() => {}}
                       onBurn={() => {}}
@@ -87,7 +87,7 @@ export function AwaitingActivityCard({
             ) : (
                 <IconPractice width={36} height={36} className="my-0.5"/>
             )}
-            <div className="text-sm text-gray-500">{endTime}</div>
+            <div className="text-sm">{endTime}</div>
           </div>
 
           {/* 2. Центральная колонка - сервис и клиент */}

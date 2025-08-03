@@ -57,23 +57,25 @@ export function UpcomingActivityCard({
   return (
       <div className="flex flex-col w-full gap-1.5">
         {/* Кнопки действий */}
-        {isPastEvent ? (
-            <ActionButtonsRowFinalize
-                onPractice={() => {}}
-                onBurn={() => {}}
-            />
-        ) : status === "waiting" ? (
-            <ActionButtonsRow
-                onRegenerate={() => {}}
-                onBurn={() => {}}
-                onConfirm={() => {}}
-            />
-        ) : status === "confirmed" ? (
-            <ActionButtonsRowConfirmed
-                onRegenerate={() => {}}
-                onBurn={() => {}}
-            />
-        ) : null}
+        <div className="flex flex-row ml-auto pr-2">
+          {isPastEvent ? (
+              <ActionButtonsRowFinalize
+                  onPractice={() => {}}
+                  onBurn={() => {}}
+              />
+          ) : status === "waiting" ? (
+              <ActionButtonsRow
+                  onRegenerate={() => {}}
+                  onBurn={() => {}}
+                  onConfirm={() => {}}
+              />
+          ) : status === "confirmed" ? (
+              <ActionButtonsRowConfirmed
+                  onRegenerate={() => {}}
+                  onBurn={() => {}}
+              />
+          ) : null}
+        </div>
 
         {/* Карточка активности */}
         <div className={`flex items-start gap-4 p-1 rounded-sm shadow-md border border-gray-100 w-full h-[88px] ${
@@ -93,7 +95,7 @@ export function UpcomingActivityCard({
             ) : (
                 <IconPractice width={36} height={36} className="my-0.5"/>
             )}
-            <div className="text-sm text-gray-500">{endTime}</div>
+            <div className="text-sm">{endTime}</div>
           </div>
 
           {/* 2. Центральная колонка - сервис и клиент */}

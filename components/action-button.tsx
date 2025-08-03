@@ -38,21 +38,13 @@ export function ActionButton({
     };
 
     return (
-        <div className="flex items-center gap-2">
-            {/* Для кнопки подтверждения текст слева */}
-            {/*{type === "confirm" && <span className="text-base whitespace-nowrap">{label}</span>}*/}
+        <button
+            onClick={onClick}
+            className={`flex rounded-sm w-8 h-8 items-center justify-center shadow-md ${buttonStyles[type]} ${className}`}
+        >
+            {icons[type]}
+        </button>
 
-            {/* Сама кнопка с иконкой */}
-            <button
-                onClick={onClick}
-                className={`flex rounded-sm w-8 h-8 items-center justify-center ${buttonStyles[type]} ${className}`}
-            >
-                {icons[type]}
-            </button>
-
-            {/* Для остальных кнопок текст справа */}
-            {/*{type !== "confirm" && <span className="text-base whitespace-nowrap">{label}</span>}*/}
-        </div>
     );
 }
 

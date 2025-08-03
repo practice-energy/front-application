@@ -175,7 +175,7 @@ export function MainSidebar() {
           ) : (<>
             {hat === "master" &&  isMobile && showMasterChats? (
                <DashboardMasterSections
-                   activities={mockDashboardStats.upcomingActivities.activities}
+                   stats={mockDashboardStats}
                    sectionVisibility={sectionVisibility}
                    toggleSection={toggleSection}
                    isCollapsed={isCollapsed}
