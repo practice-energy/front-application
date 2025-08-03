@@ -18,9 +18,14 @@ import { useProfileStore } from "@/stores/profile-store"
 import {
   createVersionMessage,
   getVersionQuestions,
-  initVersionTestMessage, initVersionTestMessageFooter,
-  personalitySelector, step4ContinueMessage
+  initVersionTestMessage,
+  initVersionTestMessageFooter,
+  personalitySelector,
+  step4ContinueMessage,
 } from "@/components/become-specialist/messages"
+
+const useAdeptChatsHook = useAdeptChats()
+const useMasterChatsHook = useMasterChats()
 
 export default function SearchPage() {
   const params = useParams()
@@ -46,8 +51,7 @@ export default function SearchPage() {
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
 
-  const { getChatDataById, addMessageToChat, addChat } =
-      user?.hat === "adept" ? useAdeptChats() : useMasterChats()
+  const { getChatDataById, addMessageToChat, addChat } = user?.hat === "adept" ? useAdeptChatsHook : useMasterChatsHook;
 
   useEffect(() => {
     const chatId = params.id as string
@@ -134,15 +138,10 @@ export default function SearchPage() {
         tags: firstQuestion.variants.map((variant) => ({ name: variant })),
       };
 
-      addMessageToChat(currentChat.id, questionMessage)
-          .then(updatedChat => {
-            if (updatedChat) {
-              setCurrentChat(updatedChat);
-            }
-          })
-          .catch(error => {
-            console.error("Failed to add message:", error);
-          });
+      const updatedChat = addMessageToChat(currentChat.id, questionMessage);
+      if (updatedChat) {
+        setCurrentChat(updatedChat);
+      }
 
       console.log(becomeSpecialistState)
     }
@@ -156,15 +155,10 @@ export default function SearchPage() {
       setBecomeSpecialistStep(3);
 
       const questions = getVersionQuestions(becomeSpecialistState.v);
-      addMessageToChat(currentChat.id, createVersionMessage(questions[0], 0))
-          .then(updatedChat => {
-            if (updatedChat) {
-              setCurrentChat(updatedChat);
-            }
-          })
-          .catch(error => {
-            console.error("Failed to add message:", error);
-          });
+      const updatedChat = addMessageToChat(currentChat.id, createVersionMessage(questions[0], 0));
+      if (updatedChat) {
+        setCurrentChat(updatedChat);
+      }
     }
     // Step 4 → 5
     else if (becomeSpecialistState.step === 4) {
@@ -252,7 +246,7 @@ export default function SearchPage() {
 
         const questions = getVersionQuestions(becomeSpecialistState.v)
 
-        if (Object.keys(becomeSpecialistState.versionAnswers).length < getVersionQuestions(becomeSpecialistState.v).length - 1) {
+        if (Object.keys(becomeSpecialistState.versionAnswers).length < questions.length - 1) {
           const nextQuestionIndex = Object.keys(becomeSpecialistState.versionAnswers).length + 1
           const nextQuestion = questions[nextQuestionIndex]
 
@@ -262,15 +256,8 @@ export default function SearchPage() {
               setCurrentChat(updatedChat)
             }
           }, 500)
-        }
-      },
-      [ becomeSpecialistState.step,
-        becomeSpecialistState.v,
-        becomeSpecialistState.versionAnswers,
-        currentChat,
-        addMessageToChat,
-        setVersionAnswer
-      ],
+      },\
+      [becomeSpecialistState.step, becomeSpecialistState.v, becomeSpecialistState.versionAnswers, currentChat, addMessageToChat, setVersionAnswer],
   )
 
   const getMufiMode = useCallback(() => {
@@ -399,7 +386,7 @@ export default function SearchPage() {
         setCurrentChat(updatedChat)
       }
     }
-  }, [becomeSpecialistState.step]);
+  }, [becomeSpecialistState.step, currentChat?.id, addMessageToChat]);
 
   return (
       <div className="relative h-screen bg-white dark:bg-gray-900">
@@ -497,5 +484,5 @@ export default function SearchPage() {
 
         <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
       </div>
-  )
+  )\
 }
