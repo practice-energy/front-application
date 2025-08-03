@@ -6,12 +6,13 @@ import type { Chat, Message } from "@/types/chats"
 import { mockChatData } from "@/services/mock-chat"
 
 interface BecomeSpecialistState {
-  step: 1 | 2 | 3 | 4
+  step: 1 | 2 | 3 | 4 | 5
   selectedTags: string[]
   policyAccepted: boolean
   personalityAnswers: Record<string, string> // questionId -> answer
   v: 1 | 2 | 3 | null // Version from backend
   versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5> // Version-specific answers
+  chatId?: string
 }
 
 interface ChatState {
@@ -23,12 +24,13 @@ interface ChatState {
   becomeSpecialistState: BecomeSpecialistState
 
   // Become specialist functions
-  setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => void
+  setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4 | 5) => void
   setSelectedTags: (tags: string[]) => void
   setPolicyAccepted: (accepted: boolean) => void
   setPersonalityAnswer: (questionId: string, answer: string) => void
   setVersion: (v: 1 | 2 | 3) => void
   setVersionAnswer: (questionId: string, answer: 1 | 2 | 3 | 4 | 5) => void
+  setChatId: (chatId: string) => void
   resetBecomeSpecialistState: () => void
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
@@ -62,6 +64,7 @@ const initialBecomeSpecialistState: BecomeSpecialistState = {
   personalityAnswers: {},
   v: null,
   versionAnswers: {},
+  chatId: undefined,
 }
 
 // Mock backend API call
@@ -129,7 +132,7 @@ export const useChatStore = create(
       becomeSpecialistState: initialBecomeSpecialistState,
 
       // Become specialist functions
-      setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4) => {
+      setBecomeSpecialistStep: (step: 1 | 2 | 3 | 4 | 5) => {
         set((state) => ({
           becomeSpecialistState: {
             ...state.becomeSpecialistState,
@@ -185,6 +188,15 @@ export const useChatStore = create(
               ...state.becomeSpecialistState.versionAnswers,
               [questionId]: answer,
             },
+          },
+        }))
+      },
+
+      setChatId: (chatId: string) => {
+        set((state) => ({
+          becomeSpecialistState: {
+            ...state.becomeSpecialistState,
+            chatId: chatId,
           },
         }))
       },
@@ -259,24 +271,20 @@ export const useChatStore = create(
 
       // Adept hat functions
       getAdeptChatDataById: (id: string) => {
-        const chat = get().adeptChats.find((chat) => chat.id === id)
-        return chat ? deepCopy(chat) : undefined
+        return get().adeptChats.find((chat) => chat.id === id)
       },
 
       findAdeptChatBySpecialistId: (specialistId: string) => {
-        const chat = get().adeptChats.find((chat) => chat.specialistId === specialistId)
-        return chat ? deepCopy(chat) : undefined
+        return get().adeptChats.find((chat) => chat.specialistId === specialistId)
       },
 
-      addAdeptChat: (chat: any) => {
-        console.log(chat)
-        console.log(get().adeptChats)
+      addAdeptChat: (chat: Chat) => {
         set((state) => ({
-          adeptChats: [deepCopy(chat), ...state.adeptChats],
+          adeptChats: [...state.adeptChats, chat],
         }))
       },
 
-      updateAdeptChat: (chatId: string, updates: any) => {
+      updateAdeptChat: (chatId: string, updates: Partial<Chat>) => {
         set((state) => ({
           adeptChats: state.adeptChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
         }))
@@ -288,35 +296,17 @@ export const useChatStore = create(
         }))
       },
 
-      addMessageToAdeptChat: (chatId: string, message: any) => {
-        const newMessage = {
-          ...message,
-          id: uuidv4(),
+      addMessageToAdeptChat: (chatId: string, message: Omit<Message, "id">) => {
+        const chat = get().adeptChats.find((chat) => chat.id === chatId)
+        if (chat) {
+          set((state) => ({
+            adeptChats: state.adeptChats.map((c) =>
+              c.id === chatId ? { ...c, messages: [...c.messages, { ...message, id: uuidv4() }] } : c,
+            ),
+          }))
+          return chat
         }
-
-        let updatedChat
-
-        set((state) => {
-          const chatIndex = state.adeptChats.findIndex((chat) => chat.id === chatId)
-          if (chatIndex === -1) return state
-
-          const chat = state.adeptChats[chatIndex]
-          updatedChat = {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            timestamp: message.timestamp,
-            hasNew: false,
-          }
-
-          const newChats = [...state.adeptChats]
-          newChats[chatIndex] = updatedChat
-
-          return {
-            adeptChats: newChats,
-          }
-        })
-
-        return updatedChat ? deepCopy(updatedChat) : undefined
+        return undefined
       },
 
       clearAdeptChats: () => {
@@ -325,22 +315,20 @@ export const useChatStore = create(
 
       // Master hat functions
       getMasterChatDataById: (id: string) => {
-        const chat = get().masterChats.find((chat) => chat.id === id)
-        return chat ? deepCopy(chat) : undefined
+        return get().masterChats.find((chat) => chat.id === id)
       },
 
       findMasterChatBySpecialistId: (specialistId: string) => {
-        const chat = get().masterChats.find((chat) => chat.specialistId === specialistId)
-        return chat ? deepCopy(chat) : undefined
+        return get().masterChats.find((chat) => chat.specialistId === specialistId)
       },
 
-      addMasterChat: (chat: any) => {
+      addMasterChat: (chat: Chat) => {
         set((state) => ({
-          masterChats: [deepCopy(chat), ...state.masterChats],
+          masterChats: [...state.masterChats, chat],
         }))
       },
 
-      updateMasterChat: (chatId: string, updates: any) => {
+      updateMasterChat: (chatId: string, updates: Partial<Chat>) => {
         set((state) => ({
           masterChats: state.masterChats.map((chat) => (chat.id === chatId ? { ...chat, ...updates } : chat)),
         }))
@@ -352,35 +340,17 @@ export const useChatStore = create(
         }))
       },
 
-      addMessageToMasterChat: (chatId: string, message: any) => {
-        const newMessage = {
-          ...message,
-          id: uuidv4(),
+      addMessageToMasterChat: (chatId: string, message: Omit<Message, "id">) => {
+        const chat = get().masterChats.find((chat) => chat.id === chatId)
+        if (chat) {
+          set((state) => ({
+            masterChats: state.masterChats.map((c) =>
+              c.id === chatId ? { ...c, messages: [...c.messages, { ...message, id: uuidv4() }] } : c,
+            ),
+          }))
+          return chat
         }
-
-        let updatedChat
-
-        set((state) => {
-          const chatIndex = state.masterChats.findIndex((chat) => chat.id === chatId)
-          if (chatIndex === -1) return state
-
-          const chat = state.masterChats[chatIndex]
-          updatedChat = {
-            ...chat,
-            messages: [...chat.messages, newMessage],
-            timestamp: message.timestamp,
-            hasNew: false,
-          }
-
-          const newChats = [...state.masterChats]
-          newChats[chatIndex] = updatedChat
-
-          return {
-            masterChats: newChats,
-          }
-        })
-
-        return updatedChat ? deepCopy(updatedChat) : undefined
+        return undefined
       },
 
       clearMasterChats: () => {
@@ -457,6 +427,7 @@ export const useBecomeSpecialist = () => {
     setPersonalityAnswer,
     setVersion,
     setVersionAnswer,
+    setChatId,
     resetBecomeSpecialistState,
     getBecomeSpecialistState,
     submitPersonalityTest,
@@ -471,6 +442,7 @@ export const useBecomeSpecialist = () => {
     setPersonalityAnswer,
     setVersion,
     setVersionAnswer,
+    setChatId,
     resetState: resetBecomeSpecialistState,
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
