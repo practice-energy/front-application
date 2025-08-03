@@ -449,6 +449,8 @@ export const MessageItem = React.memo(
             )}
           </div>
 
+          {message.bookingTextTitle && (<div className="text-base text-neutral-900 font-semibold">{message.bookingTextTitle}</div>)}
+
           {message.bookingFrame && (
               isMobile ? (
                   <>
