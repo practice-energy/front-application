@@ -15,11 +15,15 @@ import { ProfileMenu } from "./components/profile-menu"
 import { PentagramIcon, UserSwitchIcon } from "@phosphor-icons/react"
 import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
-import {useAdeptChats, useMasterChats} from "@/stores/chat-store"
+import {useAdeptChats, useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
 import {becomeSpecialistTags} from "@/services/become-specialist-tree-tag";
 import {messageInitMaster} from "@/components/become-specialist/messages";
+import {IconPractice1} from "@/components/icons/practice-1-logo";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {IconPractice2} from "@/components/icons/prractice-2-logo";
+import RomanStep from "@/components/roman-step";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -30,6 +34,12 @@ export function Header() {
   const { isCollapsed, toggleSidebar } = useSidebar()
   const hat = user?.hat
   const { addChat } = useMasterChats()
+  const {
+    state: becomeSpecialistState,
+    setStep: setBecomeSpecialistStep,
+    setChatId: setBecomeSpecialistChatId,
+    resetState: resetBecomeSpecialistState,
+  } = useBecomeSpecialist()
 
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
@@ -90,12 +100,14 @@ export function Header() {
       ],
     }
 
-    updateUser({
-      hat: "master",
-    })
+    setBecomeSpecialistChatId(chatId)
 
     addChat(newChat)
     router.push(`/search/${chatId}`)
+
+    updateUser({
+      hat: "master",
+    })
   }
 
   const handleRoleToggle = () => {
@@ -125,7 +137,7 @@ export function Header() {
     }
   }
 
-  console.log(user)
+  const isBecomeSpecialist = pathname === `/search/${becomeSpecialistState.chatId}`
 
   return (
     <>
@@ -145,7 +157,9 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated && !user?.isSpecialist && (
+          {isAuthenticated &&
+              // !user?.isSpecialist &&
+              (
             <button
               className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
               onClick={handleBecomeSpecialist}
@@ -178,14 +192,35 @@ export function Header() {
             />
           )}
 
-          <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+          {isBecomeSpecialist ? (
+              <>
+              {/* Content without opacity */}
+              <div className="relative z-10 flex flex-row items-center px-3 py-4 gap-3">
+                {becomeSpecialistState.step === 1 && (
+                    <RomanStep step={1}/>
+                )}
+                {(becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) && (
+                    <RomanStep step={2}/>
+                )}
+                {becomeSpecialistState.step === 4 && (
+                    <RomanStep step={3}/>
+                )}
+                <PentagramIcon
+                    size={36} className="text-white bg-violet-600 rounded-sm p-1"
+                />
+                <div className="text-base font-semibold">Инициация Мастера</div>
+              </div>
+              </>
+              ) : (
+              <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+          )}
 
           {isAuthenticated && (
             <>
               {/* User likes icon */}
-              <IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />
+              {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />)}
               {/* User switch icon */}
-              <IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />
+              {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />)}
               <ProfileMenu
                 isAuthenticated={isAuthenticated}
                 user={user}
@@ -196,7 +231,7 @@ export function Header() {
                 handleRoleToggle={handleRoleToggle}
                 isSpecialist={isSpecialist}
               />
-              <EasyNotifications hat={user?.hat || "adept"} /> {/* Insert EasyNotifications here */}
+              {!isBecomeSpecialist ? (<EasyNotifications hat={user?.hat || "adept"} />) : (<div className="w-6"/>)}
             </>
           )}
         </div>
@@ -204,7 +239,7 @@ export function Header() {
 
       <header
         className={cn(
-          "top-0 z-50 h-24 bg-background bg-opacity-70 backdrop-blur-lg fixed items-end",
+          "top-0 z-50 h-24 bg-background opacity-70 backdrop-blur-lg fixed items-end",
           isCollapsed ? "w-full" : "w-[calc(100%-400px)]",
         )}
       >
