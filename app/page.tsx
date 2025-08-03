@@ -11,13 +11,19 @@ import {useProfileStore} from "@/stores/profile-store";
 import {useSidebar} from "@/contexts/sidebar-context";
 import {useAuth} from "@/hooks/use-auth";
 import {useIsMobile} from "@/hooks/use-mobile";
+import {Button} from "@/components/ui/button";
+import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
+import {IconPractice1} from "@/components/icons/practice-1-logo";
+import {IconAlura} from "@/components/icons/icon-alura";
+import {cn} from "@/lib/utils";
+import {AuthButtons} from "@/components/auth-buttons";
 
 export default function HomePage() {
   const router = useRouter()
   const { addChat, clearChats } = useAdeptChats()
   const { user } = useProfileStore()
   const {toggleSidebar, isCollapsed} = useSidebar()
-  const {isAuthenticated} = useAuth()
+  const {isAuthenticated, login} = useAuth()
   const isMobile = useIsMobile()
 
   if (user?.hat === "master") {
@@ -54,8 +60,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-900 transition-all duration-300">
-      {isCollapsed && isMobile &&(
+    <div className="bg-white dark:bg-gray-900 transition-all duration-300">
+      {isCollapsed && isMobile && isAuthenticated &&(
           <MainMobileHeader
               user={user}
               toggleSidebar={toggleSidebar}
@@ -64,21 +70,28 @@ export default function HomePage() {
           />
       )}
 
-      {/* Основной контент */}
-      <div className="flex-1 relative min-h-screen">
-        {/* Скроллящийся контент с логотипом */}
-        <div className="pt-48 pb-96 text-center">
-          <IconPractice
-                 width={180}
-                 height={180}
-                 className="mx-auto"
-          />
-        </div>
+      {!isAuthenticated && (<AuthButtons
+          login={login}
+          isMobile={isMobile}
+      />)}
 
-        {/* Mufi - абсолютно позиционирован, но в потоке контента */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-10">
-          <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" showPractice={true} />
-        </div>
+      {/* Скроллящийся контент с логотипом */}
+      <div className={cn(
+          isMobile ? "justify-center": "absolute top-1/3 left-1/2 text-center"
+      )}>
+        <IconPractice
+            width={180}
+            height={180}
+            className={cn("mx-auto my-auto", isMobile && "h-screen")}
+        />
+      </div>
+
+      {/* Mufi - абсолютно позиционирован, но в потоке контента */}
+      <div className={cn(
+          "absolute bottom-0 z-10",
+          isMobile ? "w-full" : "w-[800px] left-[calc(50%-360px)]"
+      )}>
+        <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" showPractice={true}/>
       </div>
     </div>
   )

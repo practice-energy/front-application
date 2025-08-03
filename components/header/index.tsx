@@ -23,7 +23,7 @@ import RomanStep from "@/components/roman-step";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { isAuthenticated, logout, updateUser, login } = useAuth()
+  const { isAuthenticated, logout, updateUser } = useAuth()
   const { user, setUser } = useProfileStore()
   const router = useRouter()
   const pathname = usePathname()
@@ -78,9 +78,10 @@ export function Header() {
   }
 
   const handleBecomeSpecialist = () => {
-    // Проверяем, есть ли уже чат "стать мастером"
-    const updatedUser = {...user, isSpecialist: true}
-    setUser(updatedUser)
+    updateUser({
+      hat: "master",
+      isSpecialist: true,
+    })
 
     const chatId = uuidv4()
     const newChat = {
@@ -100,10 +101,6 @@ export function Header() {
 
     addChat(newChat)
     router.push(`/search/${chatId}`)
-
-    updateUser({
-      hat: "master",
-    })
   }
 
   const handleRoleToggle = () => {
@@ -153,28 +150,13 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated &&
-              // !user?.isSpecialist &&
-              (
+          {isAuthenticated && !user?.isSpecialist && (
             <button
               className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
               onClick={handleBecomeSpecialist}
             >
               <div className="font-medium"> Стать мастером</div>
               <UserSwitchIcon size={36} />
-            </button>
-          )}
-
-          {!isAuthenticated && (
-            <button
-              onClick={() => {
-                login()
-              }}
-            >
-              <Button className="bg-violet-600 border-0 shadow-md text-white">
-                <div className="font-medium">Инициировать практис</div>
-                <PentagramIcon size={36} />
-              </Button>
             </button>
           )}
 

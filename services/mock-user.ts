@@ -13,7 +13,7 @@ export const mockUser: User = {
     timezone: "GMT+3",
     createdAt: new Date(2023, 6, 10, 11, 0),
     tier: "basic",
-    isSpecialist: true,
+    isSpecialist: false,
     avatar: "/test-photo.jpg",
     bio: "With over 15 years of experience in spiritual guidance and life coaching, I help clients find clarity, purpose, and balance. My approach combines traditional astrological wisdom with modern coaching techniques to create personalized paths for growth and transformation.",
     education: [],

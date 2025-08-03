@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import type {Interval, Restriction} from "@/types/calendar-event"
-import {TvMinimalPlayIcon, User, Video} from "lucide-react"
+import {TvMinimalPlayIcon, Users, Video} from "lucide-react"
 import { useState, useEffect } from "react"
 import {Format} from "@/types/common";
 import {IconPractice} from "@/components/icons/icon-practice";
@@ -295,7 +295,7 @@ export function RestrictionItem({
                                         onClick={isEditMode ? () => toggleFormat(i, 'in-person') : undefined}
                                         disabled={!isEditMode}
                                     >
-                                      <User className={cn(
+                                      <Users className={cn(
                                           "w-[18px] h-[18px]",
                                           !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
                                       )}/>

@@ -428,8 +428,23 @@ export default function SearchPage() {
                 onVersionAnswer={handleVersionAnswer}
               />
             )}
-            <div className="h-16" />
             <div ref={messagesEndRef} />
+          </div>
+          <div className="absolute bottom-0 w-full">
+            <Mufi
+                onSearch={handleSearch}
+                showHeading={false}
+                dynamicWidth={false}
+                showPractice={currentChat?.isAI === true}
+                disableFileApply={true}
+                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                onCancelReply={() => {}}
+                chatTitle="Alura"
+                mode={mode}
+                canAccept={canAccept}
+                selectedTags={becomeSpecialistState.selectedTags}
+                onContinue={handleContinue}
+            />
           </div>
         </>
       ) : (

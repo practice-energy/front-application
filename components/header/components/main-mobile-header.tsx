@@ -20,7 +20,7 @@ export const MainMobileHeader = ({
                                isAuthenticated,
                            }: MainMobileHeaderProps) => {
     return (
-        <header className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-50 px-4 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 h-16 bg-white/70 z-50 px-4 flex items-center justify-between">
             {/* Левая часть - кнопка сайдбара */}
             <div className="flex-1">
                 <button
