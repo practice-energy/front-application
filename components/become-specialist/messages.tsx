@@ -130,4 +130,4 @@ export const step4ContinueMessage = {
 
 export const initiationMessageValid = "Отправила письмо со ссылкой на указанный  адрес: перейдите по ней для старта процесса инициации Мастера."
 
-export const initiationMessageInvalid = "Введенный адрес вашей электронной почты."
+export const initiationMessageInvalid = "Введите адрес вашей электронной почты."

@@ -15,8 +15,8 @@ export interface Message {
   footerContent?: string
   bookingFrame?: boolean
   bookingTextTitle?: string
-  testQuestion: string
-  questionIndex: number
+  testQuestion?: string
+  questionIndex?: number
 }
 
 export type Tag = {

@@ -28,7 +28,7 @@ interface MufiBarProps {
   onContinue?: () => void
   canAccept?: boolean
   isOnPage?: boolean
-  onPushOnPage?: () => string
+  onPushOnPage?: (s: string) => string
 }
 
 export const Mufi = React.memo(function DesktopSearchBar({
@@ -144,7 +144,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
           timestamp: Date.now(),
         }
 
-        const responseContent = onPushOnPage()
+        const responseContent = onPushOnPage(trimmedMessage)
         const responseMessage = {
           id: uuidv4(),
           content: responseContent,
@@ -258,7 +258,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
     <div ref={containerRef} className="p-4" data-animating={isAnimating ? "true" : "false"}>
       {/* On-page messages display */}
       {isOnPage && onPageMessages.length > 0 && (
-        <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto">
+        <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
           <div className="p-4">
             {onPageMessages.map((msg) => {
                   if (msg.type === "user") {
