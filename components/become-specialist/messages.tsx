@@ -127,3 +127,7 @@ export const step4ContinueMessage = {
   bookingFrame: true,
   bookingTextTitle: "Выбрать слот для демонстрации Практис",
 }
+
+export const initiationMessageValid = "Отправила письмо со ссылкой на указанный  адрес: перейдите по ней для старта процесса инициации Мастера."
+
+export const initiationMessageInvalid = "Введенный адрес вашей электронной почты."

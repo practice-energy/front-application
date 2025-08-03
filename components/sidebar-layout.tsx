@@ -26,6 +26,10 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
     if (isMobile) {
         return false
     }
+
+    if (pathname === "/" && !isAuthenticated) {
+      return false
+    }
     // На всех остальных страницах показываем header
     return true
   }

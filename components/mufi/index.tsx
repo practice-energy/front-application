@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from "uuid"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { IconAlura } from "@/components/icons/icon-alura"
 import { useIsMobile } from "@/hooks/use-mobile"
+import {IconPractice1} from "@/components/icons/practice-1-logo";
+import {PentagramIcon} from "@phosphor-icons/react";
 
 interface MufiBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -256,23 +258,42 @@ export const Mufi = React.memo(function DesktopSearchBar({
     <div ref={containerRef} className="p-4" data-animating={isAnimating ? "true" : "false"}>
       {/* On-page messages display */}
       {isOnPage && onPageMessages.length > 0 && (
-        <div className="mb-4 border rounded-sm bg-white border-gray-200 shadow-sm max-h-96 overflow-y-auto">
-          <div className="p-4 space-y-3">
-            {onPageMessages.map((msg) => (
-              <div key={msg.id} className={cn("flex", msg.type === "user" ? "justify-start" : "justify-end")}>
-                <div
-                  className={cn(
-                    "max-w-[70%] px-3 py-2 rounded-lg text-sm",
-                    msg.type === "user" ? "bg-gray-100 text-gray-900" : "bg-violet-600 text-white",
-                  )}
-                >
-                  {msg.content}
-                </div>
-              </div>
-            ))}
+        <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto">
+          <div className="p-4">
+            {onPageMessages.map((msg) => {
+                  if (msg.type === "user") {
+                    return (<div key={msg.id} className={cn("flex justify-end")}>
+                      <div
+                          className={cn(
+                              "max-w-[70%] px-3 py-2 rounded-sm text-sm",
+                              "bg-violet-600/10 text-neutral-900"
+                          )}
+                      >
+                        {msg.content}
+                      </div>
+                    </div>)
+                  }
+
+                  return (<div className="flex flex-col">
+                    <div className="flex flex-row ml-1 ">
+                      <IconAlura width={36} height={36} className="rounded-sm active:bg-none" />
+                      <div className="flex flex-col ml-3 justify-end">
+                        <div className="text-stone-900 font-sans">{"Alura"}</div>
+                        <div className="text-accent text-gray-400">
+                          {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                      </div>
+                  </div>
+                    <div className="text-neutral-700">
+                      {msg.content}
+                    </div>
+                  </div>)
+                })
+            }
           </div>
         </div>
       )}
+
       <div className={cn("mx-auto")}>
         {uploadedFiles.length > 0 && (
           <div className="pb-2 flex flex-wrap gap-2">
@@ -368,7 +389,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                       } hover:bg-violet-50`}
                       disabled={mode === "accept" || mode === "continue"}
                     >
-                      <IconPractice
+                      <IconPractice1
                         width={27}
                         height={24}
                         className={`${isPractice ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert"}`}
@@ -413,20 +434,23 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
                       canSubmit
                         ? "bg-violet-600 hover:bg-violet-700 text-white"
-                        : "bg-violet-200 dark:bg-violet-700 text-white dark:text-gray-500 cursor-not-allowed"
+                        : "bg-violet-200  text-white cursor-not-allowed"
                     }`}
                   >
                     <ArrowUp className="w-6 h-8" />
                   </button>
-                ) : (
+                ) : !isOnPage ? (
                   <button
                     type="button"
                     onClick={handleNewChat}
                     className="shadow-sm rounded-sm border-gray-200 bg-white h-9 w-9 hover:bg-violet-50 text-white font-medium flex items-center"
+                    disabled={isOnPage}
                   >
                     <MessagesSquareIcon className="w-8 h-8 text-neutral-900 ml-0.5 p-1" />
                   </button>
-                )}
+                ) : (<div className="bg-violet-200  h-9 w-9 p-0  items-center justify-center flex  rounded-sm text-white cursor-not-allowed">
+                  <ArrowUp className="w-6 h-8" />
+                </div>)}
               </div>
             </form>
 

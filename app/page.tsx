@@ -60,39 +60,47 @@ export default function HomePage() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 transition-all duration-300">
-      {isCollapsed && isMobile && isAuthenticated &&(
-          <MainMobileHeader
-              user={user}
-              toggleSidebar={toggleSidebar}
-              toggleProfileMenu={() => {router.push("/profile")}}
-              isAuthenticated={isAuthenticated}
-          />
-      )}
+      <div className="bg-white transition-all duration-300 min-h-screen flex flex-col">
+        {isCollapsed && isMobile && isAuthenticated &&(
+            <MainMobileHeader
+                user={user}
+                toggleSidebar={toggleSidebar}
+                toggleProfileMenu={() => {router.push("/profile")}}
+                isAuthenticated={isAuthenticated}
+            />
 
-      {!isAuthenticated && (<AuthButtons
-          login={login}
-          isMobile={isMobile}
-      />)}
+        )}
 
-      {/* Скроллящийся контент с логотипом */}
-      <div className={cn(
-          isMobile ? "justify-center": "absolute top-1/3 left-1/2 text-center"
-      )}>
-        <IconPractice
-            width={180}
-            height={180}
-            className={cn("mx-auto my-auto", isMobile && "h-screen")}
-        />
+        <main className="flex-1 flex flex-col items-center justify-center">
+          {!isAuthenticated ? (
+              <div className="w-full max-w-md px-4">
+                <AuthButtons
+                    login={login}
+                    isMobile={isMobile}
+                />
+              </div>
+          ) : (
+              <>
+                <div className={cn(
+                    "flex items-center justify-center",
+                    isMobile ? "h-screen" : "h-auto"
+                )}>
+                  <IconPractice
+                      width={180}
+                      height={180}
+                      className="mx-auto"
+                  />
+                </div>
+
+                {/* Mufi - абсолютно позиционирован, но в потоке контента */}
+                <div className={cn(
+                    isMobile ? "fixed bottom-0 w-full" : "absolute bottom-0 w-[800px] left-[calc(50%-400px)]"
+                )}>
+                  <Mufi onSearch={handleSearch} chatTitle="Alura" showPractice={true}/>
+                </div>
+              </>
+          )}
+        </main>
       </div>
-
-      {/* Mufi - абсолютно позиционирован, но в потоке контента */}
-      <div className={cn(
-          "absolute bottom-0 z-10",
-          isMobile ? "w-full" : "w-[800px] left-[calc(50%-360px)]"
-      )}>
-        <Mufi onSearch={handleSearch} showHeading={true} chatTitle="Alura" showPractice={true}/>
-      </div>
-    </div>
   )
 }
