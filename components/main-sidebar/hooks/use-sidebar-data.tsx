@@ -39,12 +39,12 @@ export function useSidebarData(pathname: string, hat: string = "adept") {
     const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
 
     return {
-      today: chats.filter((chat) => chat.timestamp > oneDayAgo),
+      today: chats.filter((chat) => chat.timestamp > oneDayAgo).sort((a, b) => a.timestamp - b.timestamp).reverse(),
       last7Days: chats.filter(
           (chat) => chat.timestamp <= oneDayAgo &&
               chat.timestamp > sevenDaysAgo
-      ),
-      older: chats.filter((chat) => chat.timestamp <= sevenDaysAgo),
+      ).sort((a, b) => a.timestamp - b.timestamp).reverse(),
+      older: chats.filter((chat) => chat.timestamp <= sevenDaysAgo).sort((a, b) => a.timestamp - b.timestamp).reverse(),
     };
   };
 

@@ -26,6 +26,7 @@ export default function HomePage() {
   const [showAuth, setShowAuth] = useState(true);
   const [showMufi, setShowMufi] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [validEmailEntered, setValidEmailEntered] = useState(false);
 
   if (user?.hat === "master") {
     router.push("/dashboard")
@@ -37,33 +38,43 @@ export default function HomePage() {
     setTimeout(() => {
       setShowMufi(true);
       setTransitioning(false);
-    }, 300); // Длительность анимации
+    }, 300);
   };
 
   const validateEmail = (email: string): boolean => {
-    // Улучшенное регулярное выражение для email
     const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-    if (email.length > 254) return false; // Максимальная длина email
+    if (!email || typeof email !== 'string') return false;
+    if (email.length > 254) return false;
 
-    // Проверка на наличие точки в доменной части
     const parts = email.split('@');
     if (parts.length !== 2) return false;
 
     const domain = parts[1];
     if (!domain.includes('.')) return false;
-
-    // Проверка длины доменной части
     if (domain.length > 63) return false;
 
-    // Проверка на валидные символы
     return re.test(email);
   };
 
   const handlePushOnPage = (input: string) => {
     const isValid = validateEmail(input);
+    if (isValid) {
+      setValidEmailEntered(true);
+      // Вызываем login через 1 секунду после валидации email
+      setTimeout(() => {
+        login();
+      }, 1000);
+    }
     return isValid ? initiationMessageValid : initiationMessageInvalid;
   };
+
+  useEffect(() => {
+    // Если email был валидирован и пользователь аутентифицирован, скрываем Mufi
+    if (validEmailEntered && isAuthenticated) {
+      setShowMufi(false);
+    }
+  }, [validEmailEntered, isAuthenticated]);
 
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
@@ -112,10 +123,10 @@ export default function HomePage() {
               </div>
           )}
 
-          {!isAuthenticated && (
+          {!isAuthenticated && !validEmailEntered && (
               <div className={`w-full max-w-md px-4 transition-opacity duration-600 ${showAuth ? 'opacity-100' : 'opacity-0'}`}>
                 <AuthButtons
-                    login={handleAuthClick} // Изменено на handleAuthClick
+                    login={handleAuthClick}
                     isMobile={isMobile}
                 />
               </div>
