@@ -268,7 +268,9 @@ export default function SearchPage() {
         becomeSpecialistState.v,
         becomeSpecialistState.versionAnswers,
         currentChat,
-        addMessageToChat],
+        addMessageToChat,
+        setVersionAnswer
+      ],
   )
 
   const getMufiMode = useCallback(() => {
@@ -389,11 +391,6 @@ export default function SearchPage() {
   )
 
   const { mode, canAccept } = getMufiMode()
-
-  if (!user || !isAuthenticated) {
-    router.push("/")
-    return null
-  }
 
   useEffect(() => {
     if (becomeSpecialistState.step === 4) {

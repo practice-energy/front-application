@@ -15,14 +15,10 @@ import { ProfileMenu } from "./components/profile-menu"
 import { PentagramIcon, UserSwitchIcon } from "@phosphor-icons/react"
 import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
-import {useAdeptChats, useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
+import { useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
-import {becomeSpecialistTags} from "@/services/become-specialist-tree-tag";
 import {messageInitMaster} from "@/components/become-specialist/messages";
-import {IconPractice1} from "@/components/icons/practice-1-logo";
-import {IconPractice} from "@/components/icons/icon-practice";
-import {IconPractice2} from "@/components/icons/prractice-2-logo";
 import RomanStep from "@/components/roman-step";
 
 export function Header() {
