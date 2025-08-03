@@ -20,6 +20,10 @@ export default function HomePage() {
   const {isAuthenticated} = useAuth()
   const isMobile = useIsMobile()
 
+  if (user?.hat === "master") {
+    router.push("/dashboard")
+  }
+
   const handleSearch = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
     const newChatId = uuidv4()
     const userMessage: Message = {

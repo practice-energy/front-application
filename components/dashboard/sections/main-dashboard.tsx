@@ -7,9 +7,13 @@ import { OverviewStatCard } from "../overview-stat-card"
 import { UpcomingActivityCard } from "../upcoming-activity-card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {AwaitingActivityCard} from "@/components/dashboard/awaiting-activity-card";
+import {useRouter} from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 export function MainDashboard() {
   const stats = mockDashboardStats
+
+  const router = useRouter()
 
   function pluralize(number: number, one: string, few: string, many: string) {
     const n = Math.abs(number)
@@ -46,6 +50,10 @@ export function MainDashboard() {
 
   const { weekday, day, month } = formatDate()
 
+  const addPractice = () => {
+    router.push(`/service/${uuidv4()}?mode=edit`)
+  }
+
   return (
     <div className="flex justify-center w-full pt-16">
       <div className="flex gap-6 p-2 w-[1150px] pb-32">
@@ -65,7 +73,10 @@ export function MainDashboard() {
                   </p>
                 </div>
               </div>
-              <button className="gap-1 bg-violet-600 text-white aspect-square w-9 h-9 p-1.5 rounded-sm items-center">
+              <button
+                  className="gap-1 bg-violet-600 text-white aspect-square w-9 h-9 p-1.5 rounded-sm items-center"
+                  onClick={addPractice}
+              >
                 <SquarePlus size={24} />
               </button>
             </CardHeader>

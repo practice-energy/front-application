@@ -34,13 +34,15 @@ export function ProfileMenu({
           height={50}
           src={user?.avatar}
           alt={user?.name}
-          className="overflow-hidden rounded-sm"
-      />) : (<PracticePlaceholder
+          className="overflow-hidden rounded-sm transition-opacity"
+      />) : (
+          <PracticePlaceholder
           width={50}
           height={50}
           className="bg-colors-neutral-150"
           iconClassName="text-gray-400"
-      />)}
+      />
+      )}
     </button>
   )
 
@@ -49,13 +51,13 @@ export function ProfileMenu({
   }
 
   return (
-    <div className="relative">
+    <div>
       {buttonComponent}
 
       {showProfileMenu && (
-        <div className="absolute right-0 top-full mt-2 w-60 bg-white dark:bg-gray-800 rounded-sm shadow-md border border-gray-200 dark:border-gray-700 py-0 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{user?.name || "User"}</p>
+        <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-sm shadow-md border border-gray-200  py-0 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 ">
+            <p className="text-sm font-semibold text-gray-900  truncate">{user?.name || "User"}</p>
           </div>
 
           <div>
