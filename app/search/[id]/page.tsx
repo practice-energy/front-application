@@ -15,7 +15,7 @@ import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
 import { ChatHeader } from "@/components/header/components/chat-header"
 import { useProfileStore } from "@/stores/profile-store"
-import { useBecomeSpecialistStore } from "@/stores/become-specialist-store"
+import { useBecomeSpecialist } from "@/stores/chat-store"
 import {
   createVersionMessage,
   getVersionQuestions,
@@ -40,16 +40,17 @@ export default function SearchPage() {
   const { user } = useProfileStore()
   const { isCollapsed, toggleSidebar } = useSidebar()
   const { isAuthenticated } = useAuth()
-  const { getChatDataById, addMessageToChat, addChat } = useChatStore(user)
+  const { getChatDataById, addMessageToChat, addChat, chats } = useChatStore(user)
   const {
-    becomeSpecialistState,
-    setBecomeSpecialistStep,
-    setBecomeSpecialistChatId,
+    state: becomeSpecialistState,
+    setStep: setBecomeSpecialistStep,
+    setChatId: setBecomeSpecialistChatId,
     setPersonalityAnswer,
     setVersionAnswer,
     setSelectedTags,
     setPolicyAccepted,
-  } = useBecomeSpecialistStore()
+    setMeetingLetted,
+  } = useBecomeSpecialist()
 
   useEffect(() => {
     const chatId = params.id as string
@@ -113,6 +114,10 @@ export default function SearchPage() {
     }
   }, [currentChat, addMessageToChat])
 
+  useEffect(() => {
+    setCurrentChat(getChatDataById(params.id))
+  }, [addMessageToChat, chats]);
+
   const handleStepTransition = useCallback(() => {
     console.log(becomeSpecialistState)
 
@@ -160,6 +165,7 @@ export default function SearchPage() {
     // Step 4 → 5
     else if (becomeSpecialistState.step === 4) {
       setBecomeSpecialistStep(5)
+      setMeetingLetted()
       setBecomeSpecialistChatId(null)
     }
   }, [

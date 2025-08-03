@@ -13,6 +13,7 @@ interface BecomeSpecialistState {
   v: 1 | 2 | 3 | null // Version from backend
   versionAnswers: Record<string, 1 | 2 | 3 | 4 | 5> // Version-specific answers
   chatId?: string
+  meetingLetted: boolean
 }
 
 interface ChatState {
@@ -35,6 +36,7 @@ interface ChatState {
   getBecomeSpecialistState: () => BecomeSpecialistState
   submitPersonalityTest: () => Promise<{ v: 1 | 2 | 3 } | null>
   submitVersionAnswers: () => Promise<{ success: boolean; mufiMode?: string } | null>
+  setMeetingLetted: () => void
 
   // Adept hat functions
   getAdeptChatDataById: (id: string) => Chat | undefined
@@ -139,6 +141,16 @@ export const useChatStore = create(
             step,
           },
         }))
+      },
+
+      setMeetingLetted: () => {
+        set((state) => ({
+              becomeSpecialistState: {
+                ...state.becomeSpecialistState,
+                meetingLetted: true,
+              }
+            }
+        ))
       },
 
       setSelectedTags: (tags: string[]) => {
@@ -432,6 +444,7 @@ export const useBecomeSpecialist = () => {
     getBecomeSpecialistState,
     submitPersonalityTest,
     submitVersionAnswers,
+    setMeetingLetted,
   } = useChatStore()
 
   return {
@@ -447,5 +460,6 @@ export const useBecomeSpecialist = () => {
     getState: getBecomeSpecialistState,
     submitPersonalityTest,
     submitVersionAnswers,
+    setMeetingLetted
   }
 }
