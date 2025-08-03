@@ -58,7 +58,7 @@ export function InstagramSpecialistCard({
         {/* Карточка специалиста */}
         <div className="relative">
           <div
-              className="bg-colors-neutral-150 w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
+              className="bg-white w-[300px] rounded-sm shadow-sm border border-gray-100  overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
               onClick={handleCardClick}
           >
             {/* Image Container */}
@@ -72,7 +72,6 @@ export function InstagramSpecialistCard({
 
             <div className="px-2 pt-3.5 h-[158px] w-[300px]">
               <div className="flex gap-3">
-                {/* Левая колонка - имя и должность */}
                 <div className="flex-1 overflow-hidden">
                   <p className="font-bold text-base text-gray-900 dark:text-white line-clamp-1">
                     {specialist.name}

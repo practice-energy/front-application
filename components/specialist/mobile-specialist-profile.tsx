@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {PracticePlaceholder} from "@/components/practice-placeholder";
 import {LocationInput} from "@/components/location-input";
 import {Specialist} from "@/types/specialist";
+import {SpecialistStatsCard} from "@/components/specialist/specilist-stats";
 
 interface MobileSpecialistProfileProps {
     specialist: Specialist
@@ -275,10 +276,10 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                         {/* Header with Back Button and Action Buttons */}
                         <div className="flex items-center justify-between mb-4 px-4 relative">
                             <div className="flex-1">
-                                <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
+                                <BackButton className="text-neutral-700 opacity-80" />
                             </div>
 
-                            <div className="flex flex-row gap-3 items-center pt-2.5 pr-6">
+                            <div className="flex flex-row gap-6 items-center pt-2.5 pr-6">
                                 {isEditable ? (
                                     <>
                                         <ModeToggleBar
@@ -315,17 +316,18 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                         >
                                             <MessagesSquare size={24} />
                                         </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={handleShare}
-                                            className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                                            title="Поделиться"
-                                        >
-                                            <Share size={24} />
-                                        </button>
                                     </>
                                 )}
+
+                                {!isEditMode && (
+                                <button
+                                    type="button"
+                                    onClick={handleShare}
+                                    className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                                    title="Поделиться"
+                                >
+                                    <Share size={24} />
+                                </button>)}
                             </div>
                         </div>
 

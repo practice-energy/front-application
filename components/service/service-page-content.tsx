@@ -176,7 +176,7 @@ export function ServicePageContent({
           {/* Header with Back Button and Action Buttons */}
           <div className="flex items-center justify-between mb-8 relative">
             <div className="flex-1">
-              <BackButton className="text-neutral-700 opacity-80" text={"назад к профайл"} />
+              <BackButton className="text-neutral-700 opacity-80" />
             </div>
 
             <div className="flex flex-row gap-3 items-center pt-2.5 pr-9">

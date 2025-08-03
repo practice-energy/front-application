@@ -24,6 +24,7 @@ import {LocationInput} from "@/components/location-input";
 import {PracticeBlockSection} from "@/components/specialist/practice";
 import {Service} from "@/types/service";
 import {Specialist} from "@/types/specialist";
+import {SpecialistStatsCard} from "@/components/specialist/specilist-stats";
 
 interface SpecialistProfileProps {
   specialist: Specialist
@@ -279,10 +280,10 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                   {/* Header with Back Button and Action Buttons */}
                   <div className="flex items-center justify-between mb-8 relative">
                     <div className="flex-1">
-                      <BackButton className="text-neutral-700 opacity-80" text={"назад к чату"} />
+                      <BackButton className="text-neutral-700 opacity-80" />
                     </div>
 
-                    <div className="flex flex-row gap-3 items-center pt-2.5 mr-6">
+                    <div className="flex flex-row gap-6 items-center mr-6">
                       {isEditable ? (
                           <ModeToggleBar
                               isEditMode={isEditMode}
@@ -315,17 +316,17 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                             >
                               <MessagesSquare size={24} />
                             </button>
-
-                            <button
-                                type="button"
-                                onClick={handleShare}
-                                className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
-                                title="Написать специалисту"
-                            >
-                              <Share size={24} />
-                            </button>
                           </>
                       )}
+
+                      <button
+                          type="button"
+                          onClick={handleShare}
+                          className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                          title="Написать специалисту"
+                      >
+                        <Share size={24} />
+                      </button>
                     </div>
                   </div>
 
@@ -423,16 +424,10 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
 
                         {/* Stats block */}
                         {!isEditMode && (
-                            <div className="bg-colors-neutral-150 rounded-sm shadow-md shadow-violet-100 aspect-square p-2 w-[100px]">
-                              <div className="flex flex-row items-center gap-1 text-violet-600 w-full border h-1/2 p-2 rounded-sm">
-                                <PentagramIcon size={20} />
-                                <div className="ml-auto">{formatNumber(specialist.likes)}</div>
-                              </div>
-                              <div className="flex flex-row items-center gap-1 w-full border h-1/2 p-2 rounded-sm mt-3">
-                                <IconPractice width={20} height={18} />
-                                <div className="ml-auto">{formatNumber(specialist.practices)}</div>
-                              </div>
-                            </div>
+                            <SpecialistStatsCard
+                                likes={specialist.likes}
+                                practices={specialist.practices}
+                            />
                         )}
                       </div>
                     </div>

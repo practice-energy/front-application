@@ -291,7 +291,7 @@ export function MobileServiceCard({
       <div className="w-full bg-colors-neutral-150">
         {/* Header with Back Button and Action Buttons */}
         <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-10 border-b">
-          <BackButton className="text-neutral-700 opacity-80" text="назад" />
+          <BackButton className="text-neutral-700 opacity-80" />
 
           <div className="flex gap-6">
             {isEditable && (

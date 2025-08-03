@@ -17,7 +17,7 @@ export function BurnEntityButton({
     return (
         <button
             onClick={onClick}
-            className={`flex rounded-sm w-6 h-6 items-center aspect-square justify-center bg-pink-500 hover:bg-pink-600", ${className}`}
+            className={`flex rounded-sm w-6 h-6 items-center aspect-square justify-center bg-pink-500 hover:bg-pink-600 shadow-sm", ${className}`}
         >
             <Flame className={`text-white ${iconClassName}`} size={iconSize}/>
         </button>

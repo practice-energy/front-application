@@ -13,6 +13,7 @@ import { useAdeptChats } from "@/stores/chat-store"
 import {getSpecialistById, mockSpecialist} from "@/services/mock-specialists";
 import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-profile";
 import {useIsMobile} from "@/components/ui/use-mobile";
+import {cn} from "@/lib/utils";
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -98,16 +99,16 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
             <DesctopSpecialistProfile specialist={specialist} />
           </>)}
 
-      <Mufi
-          onSearch={handleSearch}
-          showHeading={false}
-          dynamicWidth={false}
-          showPractice={false}
-          disableFileApply={true}
-          placeholder={`Спроси у ${specialist?.name || "Alura"}`}
-          onCancelReply={() => {}}
-          chatTitle="Alura"
-      />
+      <div className={cn(
+          isMobile ? "fixed bottom-0 w-full" : "fixed bottom-0 w-[800px] left-[calc(50%-400px)]",
+      )}>
+        <Mufi
+            onSearch={handleSearch}
+            chatTitle="Alura"
+            showPractice={false}
+            disableFileApply={true}
+        />
+      </div>
 
       <ShareSpecialistModal
         isOpen={shareModalOpen}

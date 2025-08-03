@@ -31,20 +31,31 @@ export function useSidebarData(pathname: string, hat: string = "adept") {
     older: false,
     search: true,
     awaiting: true,
+    requested: true
   })
 
-  const groupChatsByTime = (chats: Chat[]) => {
+  const groupChats = (chats: Chat[]) => {
     const now = Date.now();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
     const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
 
     return {
-      today: chats.filter((chat) => chat.timestamp > oneDayAgo).sort((a, b) => a.timestamp - b.timestamp).reverse(),
+      today: chats.filter((chat) => chat.timestamp > oneDayAgo)
+          .sort((a, b) => a.timestamp - b.timestamp).reverse(),
+
       last7Days: chats.filter(
           (chat) => chat.timestamp <= oneDayAgo &&
               chat.timestamp > sevenDaysAgo
       ).sort((a, b) => a.timestamp - b.timestamp).reverse(),
-      older: chats.filter((chat) => chat.timestamp <= sevenDaysAgo).sort((a, b) => a.timestamp - b.timestamp).reverse(),
+
+      older: chats.filter((chat) => chat.timestamp <= sevenDaysAgo)
+          .sort((a, b) => a.timestamp - b.timestamp).reverse(),
+
+      awaiting: chats.filter((chat) => chat.status === "waiting")
+          .sort((a, b) => a.timestamp - b.timestamp).reverse(),
+
+      requested: chats.filter((chat) => chat.status === "request")
+          .sort((a, b) => a.timestamp - b.timestamp).reverse(),
     };
   };
 
@@ -52,7 +63,7 @@ export function useSidebarData(pathname: string, hat: string = "adept") {
   const allChats = storeChats
 
   // Group chats by time period based on updatedAt
-  const groupedChats = groupChatsByTime(allChats)
+  const groupedChats = groupChats(allChats)
 
   const toggleSection = useCallback((section: string) => {
     setSectionVisibility((prev) => ({

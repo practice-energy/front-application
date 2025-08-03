@@ -46,6 +46,15 @@ export const DashboardMasterSections = ({
             }),
         },
         {
+            key: "requested",
+            title: "В запросе",
+            icon: undefined,
+            iconStyle: "",
+            activities: stats.upcomingActivities.activities.filter((activity: UpcomingActivity) => {
+                return activity.status === "request"
+            }),
+        },
+        {
             key: "older",
             title: "Архив опыта практис",
             icon: Archive,
@@ -60,7 +69,6 @@ export const DashboardMasterSections = ({
         <>
             {sections.map(
                 (section) =>
-                    section.activities.length > 0 ? (
                         <div key={section.key} className="px-1.5">
                             <SectionHeader
                                 title={section.title}
@@ -109,9 +117,6 @@ export const DashboardMasterSections = ({
                                 </SectionContent>
                             </div>
                         </div>
-                    ) : (<>
-
-                    </>)
             )}
             {/* Overview Stats Card */}
             <Card className="border-0 shadow-none">

@@ -11,6 +11,8 @@ import { useAdeptChats } from "@/stores/chat-store"
 import { useIsMobile } from "@/components/ui/use-mobile"
 import { MobileServiceCard } from "@/components/service/mobile-service-card"
 import {useSearchParams} from "next/navigation";
+import {cn} from "@/lib/utils";
+import {Mufi} from "@/components/mufi";
 
 export default function ServicePage({ params }: { params: { id: string } }) {
   const unwrappedParams = use(params)
@@ -95,6 +97,17 @@ export default function ServicePage({ params }: { params: { id: string } }) {
           <ServicePageContent service={service} bookingSlots={bookingSlots} isEditable={isEditable}/>
         </div>
       )}
+
+      <div className={cn(
+          isMobile ? "fixed bottom-0 w-full" : "fixed bottom-0 w-[800px] left-[calc(50%-400px)]",
+      )}>
+        <Mufi
+            onSearch={handleSearch}
+            chatTitle="Alura"
+            showPractice={false}
+            disableFileApply={true}
+        />
+      </div>
     </>
   )
 }

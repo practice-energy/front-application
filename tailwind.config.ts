@@ -114,7 +114,7 @@ const config: Config = {
           ring: "hsl(var(--sidebar-ring))",
         },
         "theme-light": {
-          bg: "#ffffff",
+          bg: "#fafaf9",
           "bg-secondary": "#f8fafc",
           "bg-tertiary": "#f1f5f9",
           text: "#0f172a",
