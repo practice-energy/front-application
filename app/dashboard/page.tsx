@@ -5,6 +5,7 @@ import {useRouter, useSearchParams} from "next/navigation"
 import { MainDashboard } from "@/components/dashboard/sections/main-dashboard"
 import {useAuth} from "@/hooks/use-auth";
 import {useIsMobile} from "@/components/ui/use-mobile";
+import {useProfileStore} from "@/stores/profile-store";
 
 function DashboardContent() {
   const searchParams = useSearchParams()
@@ -12,12 +13,13 @@ function DashboardContent() {
   const { isAuthenticated } = useAuth()
   const router = useRouter()
   const isMobile = useIsMobile()
+  const { user } = useProfileStore()
 
   if (isMobile) {
     return null
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || user?.hat !== "master") {
     router.push("/")
   }
 

@@ -17,22 +17,14 @@ interface NavigationButtonsProps {
 export function NavigationButtons({ isAuthenticated, hat, router }: NavigationButtonsProps) {
   const pathname = usePathname()
 
-  const handleChatsClick = () => {
-    // if (hat === "master") {
-    //   router.push("/dashboard?section=chats")
-    // }
-  }
+  const handleChatsClick = () => {}
 
   const handleTasksClick = () => {
     // Placeholder for tasks functionality
     console.log("Tasks clicked")
   }
 
-  const handleAnalyticsClick = () => {
-    // if (hat === "master") {
-    //   router.push("/dashboard?section=analytics")
-    // }
-  }
+  const handleAnalyticsClick = () => {}
 
   const handleCalendarClick = () => {
     router.push("/calendar")

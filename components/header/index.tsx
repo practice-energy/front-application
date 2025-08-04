@@ -39,6 +39,10 @@ export function Header() {
   } = useBecomeSpecialist()
   const isMobile = useIsMobile()
 
+  if (isMobile) {
+    return null
+  }
+
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
   const shouldShowSidebar = useMemo(() => {
@@ -195,10 +199,10 @@ export function Header() {
                 {becomeSpecialistState.step === 4 && (
                     <RomanStep step={3}/>
                 )}
+                <div className="text-base font-semibold pr-3">Инициация Мастера</div>
                 <PentagramIcon
                     size={36} className="text-white bg-violet-600 rounded-sm p-1"
                 />
-                <div className="text-base font-semibold">Инициация Мастера</div>
               </div>
               </>
               ) : (
