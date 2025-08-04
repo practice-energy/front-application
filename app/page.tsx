@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi"
 import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import { useAdeptChats } from "@/stores/chat-store"
+import {useAdeptChats, useBecomeSpecialist} from "@/stores/chat-store"
 import { IconPractice } from "@/components/icons/icon-practice";
 import { MainMobileHeader } from "@/components/header/components/main-mobile-header";
 import { useProfileStore } from "@/stores/profile-store";
@@ -22,6 +22,7 @@ export default function HomePage() {
   const { toggleSidebar, isCollapsed } = useSidebar()
   const { isAuthenticated, login } = useAuth()
   const isMobile = useIsMobile()
+  const {state: becomeSpecialistState }= useBecomeSpecialist()
 
   const [showAuth, setShowAuth] = useState(true);
   const [showMufi, setShowMufi] = useState(false);
@@ -29,7 +30,13 @@ export default function HomePage() {
   const [validEmailEntered, setValidEmailEntered] = useState(false);
 
   if (user?.hat === "master") {
-    router.push("/dashboard")
+    if (becomeSpecialistState.chatId !== null) {
+      router.push("/search/" + becomeSpecialistState.chatId)
+    }
+
+    if (!isMobile) {
+      router.push("/dashboard")
+    }
   }
 
   const handleAuthClick = () => {

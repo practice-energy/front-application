@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from "uuid"
 import {EasyNotifications} from "@/components/easy-notifications";
 import {messageInitMaster} from "@/components/become-specialist/messages";
 import RomanStep from "@/components/roman-step";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -36,6 +37,7 @@ export function Header() {
     setChatId: setBecomeSpecialistChatId,
     resetState: resetBecomeSpecialistState,
   } = useBecomeSpecialist()
+  const isMobile = useIsMobile()
 
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
@@ -110,18 +112,28 @@ export function Header() {
     })
 
     if (newHat === "master") {
-      router.push("/dashboard")
+      if (becomeSpecialistState.chatId !== null) {
+        router.push("/search/" + becomeSpecialistState.chatId)
+      }
+
+      if (!isMobile) {
+        router.push("/dashboard")
+      }
     } else {
       router.push("/")
     }
   }
 
   const handleLogoClick = () => {
-    if (hat === "master") {
+    if (hat === "master" && !isMobile) {
+      if (becomeSpecialistState.chatId !== null) {
+        router.push("/search/" + becomeSpecialistState.chatId)
+      }
+
       router.push("/dashboard")
-    } else {
-      router.push("/")
     }
+
+    router.push("/")
   }
 
   const handleOpenSidebar = () => {

@@ -4,12 +4,18 @@ import { Suspense } from "react"
 import {useRouter, useSearchParams} from "next/navigation"
 import { MainDashboard } from "@/components/dashboard/sections/main-dashboard"
 import {useAuth} from "@/hooks/use-auth";
+import {useIsMobile} from "@/components/ui/use-mobile";
 
 function DashboardContent() {
   const searchParams = useSearchParams()
   const section = searchParams.get("section") || "main"
   const { isAuthenticated } = useAuth()
   const router = useRouter()
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return null
+  }
 
   if (!isAuthenticated) {
     router.push("/")
