@@ -3,8 +3,6 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/hooks/use-auth"
-import { I18nProvider } from "@/components/i18n-provider"
-import { ThemeProvider } from "@/hooks/use-theme"
 import { SidebarProvider } from "@/contexts/sidebar-context"
 import { SidebarLayout } from "@/components/sidebar-layout"
 
@@ -47,15 +45,11 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <I18nProvider>
             <AuthProvider>
               <SidebarProvider>
                 <SidebarLayout>{children}</SidebarLayout>
               </SidebarProvider>
             </AuthProvider>
-          </I18nProvider>
-        </ThemeProvider>
       </body>
     </html>
   )

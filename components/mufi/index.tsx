@@ -33,7 +33,7 @@ interface MufiBarProps {
 
 export const Mufi = React.memo(function DesktopSearchBar({
   onSearch,
-  placeholder = "Спроси Alura",
+  placeholder = "Alura",
   chatTitle = "Alura",
   showPractice = false,
   disableFileApply = true,

@@ -2,7 +2,6 @@
 
 import {useState, useRef, use} from "react"
 import { useRouter } from "next/navigation"
-import { useTranslations } from "@/hooks/use-translations"
 import { Mufi } from "@/components/mufi/index"
 import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 import { notFound } from "next/navigation"
@@ -17,7 +16,6 @@ import {cn} from "@/lib/utils";
 
 export default function SpecialistPage({ params }: { params: { id: string } }) {
   const router = useRouter()
-  const { t } = useTranslations()
   const unwrappedParams = use(params)
   const { id } = unwrappedParams
   const isMobile = useIsMobile()

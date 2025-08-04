@@ -54,15 +54,15 @@ export const DashboardMasterSections = ({
                 return activity.status === "request"
             }),
         },
-        {
-            key: "older",
-            title: "Архив опыта практис",
-            icon: Archive,
-            iconStyle: "",
-            activities: stats.upcomingActivities.activities.filter((activity: UpcomingActivity) => {
-                return activity.end < new Date() && activity.status != "waiting"
-            }),
-        },
+        // {
+        //     key: "older",
+        //     title: "Архив опыта практис",
+        //     icon: Archive,
+        //     iconStyle: "",
+        //     activities: stats.upcomingActivities.activities.filter((activity: UpcomingActivity) => {
+        //         return activity.end < new Date() && activity.status != "waiting"
+        //     }),
+        // },
     ];
 
     return (

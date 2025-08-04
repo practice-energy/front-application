@@ -7,7 +7,6 @@ import type { SectionHeaderProps } from "../types/sidebar.types"
 export function SectionHeader({
   title,
   sectionKey,
-  count,
   sectionVisibility,
   toggleSection,
   isCollapsed,
@@ -16,8 +15,6 @@ export function SectionHeader({
   iconStyle = ""
 }: SectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
-
-  if (count === 0) return null
 
   return (
       <div>

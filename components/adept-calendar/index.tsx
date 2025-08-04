@@ -4,16 +4,15 @@ import { useState } from "react"
 import { CalendarSidebar } from "./calendar-sidebar"
 import { ScheduleView } from "./schedule-view"
 import { CalendarWidget } from "./calendar-widget"
-import { BackButton } from "@/components/ui/button-back"
 import type { Booking } from "@/types/booking"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {CalendarMobileHeader} from "@/components/header/components/calendar-mobile-header";
 import {useProfileStore} from "@/stores/profile-store";
-import {router} from "next/client";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useAuth} from "@/hooks/use-auth";
 import {CalendarRestrictions} from "@/types/calendar-event";
 import {CalendarSettings} from "@/components/adept-calendar/calendar-settings";
+import { useSidebar } from "@/contexts/sidebar-context";
 
 interface AdeptCalendarProps {
   bookings: Booking[]
@@ -24,9 +23,9 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const isMobile = useIsMobile()
   const { user } = useProfileStore()
-  const router = useRouter()
   const { isAuthenticated } = useAuth()
   const [showSettings, setShowSettings] = useState(false)
+  const { toggleSidebar, isCollapsed } = useSidebar()
 
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt: "GMT+3",
@@ -46,13 +45,15 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     if (isMobile) {
     return (
         <div className="h-full flex flex-col">
-          <CalendarMobileHeader
-              user={user}
-              onSettings={() => {setShowSettings(true)}}
-              onCalendar={() => {setShowSettings(false)}}
-              isAuthenticated={isAuthenticated}
-              isSettingsOpen={showSettings}
-          />
+            {isCollapsed && (<CalendarMobileHeader
+                user={user}
+                onSettings={() => {setShowSettings(true)}}
+                onCalendar={() => {setShowSettings(false)}}
+                isAuthenticated={isAuthenticated}
+                isSettingsOpen={showSettings}
+                toggleSidebar={toggleSidebar}
+            />)}
+
             {!showSettings ? (
                 <>
                     <div className="flex-shrink-0">

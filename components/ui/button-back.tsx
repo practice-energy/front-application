@@ -13,7 +13,7 @@ interface BackButtonProps {
 
 export function BackButton({
                                className = "",
-                               iconClassName = "h-6 w-6",
+                               iconClassName = "h-9 w-9",
     text,
                            }: BackButtonProps) {
     const router = useRouter()

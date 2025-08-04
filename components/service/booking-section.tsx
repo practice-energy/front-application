@@ -217,21 +217,27 @@ export function BookingSection({ selectedDate, bookingSlots }: BookingSectionPro
 
                                                 // Calculate width and left position based on group size
                                                 const groupSize = group.length
-                                                const width = `calc(${100 / groupSize}% - 8px)`
-                                                const left = `calc(${(bookingIndex % groupSize) * (100 / groupSize)}% + 4px)`
+                                                const width = `calc(${100 / groupSize}% - 4px)`
+                                                const left = `calc(${(bookingIndex % groupSize) * (100 / groupSize)}% + 2px)`
 
                                                 return (
                                                     <div
                                                         key={`${groupIndex}-${bookingIndex}`}
                                                         className="absolute text-xs font-normal"
                                                         style={{
-                                                            top: `${top+4}px`,
-                                                            height: `${height-8}px`,
+                                                            top: `${top+2}px`,
+                                                            height: `${height-4}px`,
                                                             width: width,
                                                             left: left,
                                                         }}
                                                     >
-                                                        <div className="bg-violet-600 hover:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex items-center justify-center">
+                                                        <div className={
+                                                            cn(
+                                                                "bg-violet-600 active:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex",
+                                                                group.length === 1 && "items-start justify-start",
+                                                                group.length === 2 && "items-start justify-center",
+                                                                group.length === 3 && "items-start justify-center"
+                                                            )}>
                                                             {group.length < 4 && format(booking.date, "HH:mm")}
                                                         </div>
                                                     </div>

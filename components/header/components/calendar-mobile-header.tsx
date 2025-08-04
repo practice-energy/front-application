@@ -9,7 +9,7 @@ import {usePathname} from "next/navigation";
 
 interface CalendarMobileHeaderProps {
     user: User | null
-    toggleSidebar?: () => void
+    toggleSidebar: () => void
     toggleProfileMenu?: () => void
     onSettings: () => void
     onCalendar: () => void
@@ -19,7 +19,7 @@ interface CalendarMobileHeaderProps {
 
 export const CalendarMobileHeader = ({
                                          user,
-                                         toggleSidebar = () => {},
+                                         toggleSidebar,
                                          toggleProfileMenu = () => {},
                                          onSettings= () => {},
                                          isAuthenticated,

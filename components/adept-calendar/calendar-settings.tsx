@@ -22,7 +22,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
   return (
     <div className="flex flex-col h-screen bg-white rounded-sm">
-      <div className="flex flex-row items-center gap-3 ml-6 py-4">
+      <div className="flex flex-row items-center gap-3 py-4 px-3">
         <SettingsButton
           onClick={disableSettings}
           className="bg-violet-600 hover:bg-violet-700 border-0 flex"
@@ -38,7 +38,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           )}
         />
 
-        <div className="space-y-6 p-4">
+        <div className="space-y-6 px-4">
           <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
 
           <PeriodsFormatsSection
