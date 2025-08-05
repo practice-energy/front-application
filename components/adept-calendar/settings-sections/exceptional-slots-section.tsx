@@ -37,14 +37,21 @@ export function ExceptionalSlotsSection({
 
   useEffect(() => {
     if (showDatePicker && calendarRef.current) {
-      setTimeout(() => {
-        calendarRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        })
-      }, 100)
+      console.log('Attempting to scroll to calendar');
+      const scrollToCalendar = () => {
+        if (calendarRef.current) {
+          const rect = calendarRef.current.getBoundingClientRect();
+          window.scrollTo({
+            top: rect.top + window.scrollY - 20,
+            behavior: "smooth",
+          });
+        }
+      };
+
+      const timer = setTimeout(scrollToCalendar, 300);
+      return () => clearTimeout(timer);
     }
-  }, [showDatePicker])
+  }, [showDatePicker, calendarRef.current]);
 
   const handleDateSelect = (date: Date) => {
     if (repeatDatePickerId) {
@@ -125,37 +132,37 @@ export function ExceptionalSlotsSection({
 
   return (
     <div className="space-y-4">
-      <div>
-        {isCollapsable ? (
-          <>
-            <button
-              className={cn(
-                "flex items-center w-full py-3 group transition-all duration-100 ease-in-out gap-3 text-simple text-neutral-900 opacity-80",
-                "rounded-sm items-center",
-              )}
-              onClick={(e) => {
-                e.stopPropagation()
-                setShowExceptionalSlots(!showExceptionalSlots)
-              }}
-            >
-              <div className="flex flex-row items-center justify-between w-full ">
-                <div className="font-semibold justify-start">{title}</div>
-                <ChevronDown
-                  className={cn(
-                    "w-6 h-6 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",
-                    "group-hover:text-gray-600",
-                    showExceptionalSlots ? "rotate-180" : "rotate-0",
-                  )}
-                />
-              </div>
-            </button>
-          </>
-        ) : (
-          <div className="flex items-center flex-row gap-2">
-            <div className="font-semibold justify-start py-3">{title}</div>
-          </div>
-        )}
-      </div>
+      {/*<div>*/}
+      {/*  {isCollapsable ? (*/}
+      {/*    <>*/}
+      {/*      <button*/}
+      {/*        className={cn(*/}
+      {/*          "flex items-center w-full py-3 group transition-all duration-100 ease-in-out gap-3 text-simple text-neutral-900 opacity-80",*/}
+      {/*          "rounded-sm items-center",*/}
+      {/*        )}*/}
+      {/*        onClick={(e) => {*/}
+      {/*          e.stopPropagation()*/}
+      {/*          setShowExceptionalSlots(!showExceptionalSlots)*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <div className="flex flex-row items-center justify-between w-full ">*/}
+      {/*          <div className="font-semibold justify-start">{title}</div>*/}
+      {/*          <ChevronDown*/}
+      {/*            className={cn(*/}
+      {/*              "w-6 h-6 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",*/}
+      {/*              "group-hover:text-gray-600",*/}
+      {/*              showExceptionalSlots ? "rotate-180" : "rotate-0",*/}
+      {/*            )}*/}
+      {/*          />*/}
+      {/*        </div>*/}
+      {/*      </button>*/}
+      {/*    </>*/}
+      {/*  ) : (*/}
+      {/*    <div className="flex items-center flex-row gap-2">*/}
+      {/*      <div className="font-semibold justify-start py-3">{title}</div>*/}
+      {/*    </div>*/}
+      {/*  )}*/}
+      {/*</div>*/}
 
       {(showExceptionalSlots || !isCollapsable) && (
         <div className="space-y-4">

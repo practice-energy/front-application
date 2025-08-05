@@ -92,8 +92,10 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             iconStyle="text-violet-600"
             showAddButton={editingRestrictionId === null}
             onAddClick={() => {
+              setSectionVisibility(
+                  (prev) => ({ ...prev, exceptional: false })
+              )
               setShowDatePicker(true)
-              setSectionVisibility((prev) => ({ ...prev, exceptional: true }))
             }}
           />
 
