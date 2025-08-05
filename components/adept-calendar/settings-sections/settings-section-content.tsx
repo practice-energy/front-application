@@ -49,7 +49,7 @@ export function SettingsSectionContent({ children, sectionKey, sectionVisibility
   return (
     <div
       ref={contentRef}
-      className="overflow-hidden"
+      className="overflow-visible"
       style={{
         height: isVisible ? "auto" : "0px",
         opacity: isVisible ? 1 : 0,

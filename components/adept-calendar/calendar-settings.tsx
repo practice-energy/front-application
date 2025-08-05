@@ -63,7 +63,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             iconStyle="text-violet-600"
           />
           <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
-            <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
+              <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
           </SettingsSectionContent>
 
           <SettingsSectionHeader

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { ChevronDown } from "lucide-react"
 import type { CalendarRestrictions } from "@/types/calendar-event"
 import { LocationInput } from "@/components/location-input"
+import {cn} from "@/lib/utils";
 
 interface TimezoneSectionProps {
   restrictions: CalendarRestrictions
@@ -70,7 +71,7 @@ export function TimezoneSection({ restrictions, onUpdate }: TimezoneSectionProps
   }, [])
 
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2")}>
       <LocationInput value={restrictions.location || ""} onChange={handleLocationSelect} />
 
       <div className="relative" ref={dropdownRef}>
