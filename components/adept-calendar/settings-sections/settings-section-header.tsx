@@ -11,7 +11,6 @@ interface SettingsSectionHeaderProps {
   sectionVisibility: Record<string, boolean>
   toggleSection: (sectionKey: string) => void
   isMobile: boolean
-  icon?: React.ComponentType<{ className?: string }>
   iconStyle?: string
 }
 
@@ -21,7 +20,6 @@ export function SettingsSectionHeader({
   sectionVisibility,
   toggleSection,
   isMobile,
-  icon: Icon,
   iconStyle = "",
 }: SettingsSectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
@@ -30,7 +28,7 @@ export function SettingsSectionHeader({
     <div>
       <button
         className={cn(
-          "flex items-center w-full py-3 px-1 pl-2 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
+          "flex items-center w-full py-3 group transition-all duration-100 ease-in-out gap-3 text-simple text-neutral-900",
           "rounded-sm",
         )}
         onClick={(e) => {
@@ -38,8 +36,7 @@ export function SettingsSectionHeader({
           toggleSection(sectionKey)
         }}
       >
-        {Icon && <Icon className={cn("h-6 w-6 mb-0.5 ml-3", iconStyle)} />}
-        <h3 className="tracking-wider font-semibold">{title}</h3>
+        <div className="tracking-wider font-semibold">{title}</div>
         <ChevronDown
           className={cn(
             "w-6 h-6 text-violet-600 transition-all duration-200 ease-in-out transform ml-auto",

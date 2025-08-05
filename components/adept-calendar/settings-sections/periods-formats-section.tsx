@@ -38,8 +38,8 @@ export function PeriodsFormatsSection({
     title = "Периоды и форматы",
     isCollapsable,
 }: PeriodsFormatsSectionProps) {
-  const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  const [showPeriodsFormats, setShowPeriodsFormats] = useState("Mon")
+  const [selectedDay, setSelectedDay] = useState<string | null>("Mon")
+  const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
   const isMobile = useIsMobile()
 
   const handleDayToggle = (dayKey: string) => {
@@ -136,35 +136,7 @@ export function PeriodsFormatsSection({
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        {isCollapsable ? (
-            <button
-                className={cn(
-                    "flex items-center w-full py-3 group transition-all duration-100 ease-in-out gap-3 text-simple text-neutral-900 opacity-80",
-                    "rounded-sm items-center",
-                )}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowPeriodsFormats(!showPeriodsFormats)
-                }}
-            >
-              <div className="flex flex-row items-center justify-between w-full ">
-                <div className="font-semibold justify-start">{title}</div>
-                <ChevronDown
-                    className={cn(
-                        "w-6 h-6 text-gray-400 transition-all duration-200 ease-in-out transform ml-auto",
-                        "group-hover:text-gray-600",
-                        showPeriodsFormats ? "rotate-180" : "rotate-0",
-                    )}
-                />
-              </div>
-            </button>
-        ) : (
-            <div className="font-semibold justify-start py-3">{title}</div>
-        )}
-      </div>
-
+    <div>
       {showPeriodsFormats && (
         <div className="space-y-4">
           {/* Day toggles */}

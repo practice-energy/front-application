@@ -70,11 +70,7 @@ export function TimezoneSection({ restrictions, onUpdate }: TimezoneSectionProps
   }, [])
 
   return (
-    <>
-      <div className="flex items-center justify-start">
-        <div className="font-semibold justify-start text-neutral-900">Часовой пояс</div>
-      </div>
-
+    <div className="space-y-2">
       <LocationInput value={restrictions.location || ""} onChange={handleLocationSelect} />
 
       <div className="relative" ref={dropdownRef}>
@@ -87,7 +83,10 @@ export function TimezoneSection({ restrictions, onUpdate }: TimezoneSectionProps
         </button>
 
         {showTimezoneDropdown && (
-          <div className="absolute right-0 z-10 mt-1 w-32 max-h-60 overflow-y-auto bg-white border rounded-md shadow-lg">
+          <div
+              className="absolute right-0 z-50 mt-1 w-32 max-h-60 overflow-y-auto bg-white border rounded-md shadow-lg"
+              style={{ zIndex: 100 }}
+          >
             {timezones.map((tz) => (
               <div
                 key={tz}
@@ -102,6 +101,6 @@ export function TimezoneSection({ restrictions, onUpdate }: TimezoneSectionProps
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }

@@ -53,9 +53,8 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           )}
         />
 
-        <div className="space-y-6 px-4">
-          <div className="px-1.5">
-            <SettingsSectionHeader
+        <div className="space-y-2 px-4">
+          <SettingsSectionHeader
               title="Часовой пояс"
               sectionKey="timezone"
               sectionVisibility={sectionVisibility}
@@ -63,14 +62,12 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
               isMobile={isMobile}
               icon={Clock}
               iconStyle="text-violet-600"
-            />
-            <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
-              <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
-            </SettingsSectionContent>
-          </div>
+          />
+          <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
+            <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
+          </SettingsSectionContent>
 
-          <div className="px-1.5">
-            <SettingsSectionHeader
+          <SettingsSectionHeader
               title="Периоды и форматы"
               sectionKey="periods"
               sectionVisibility={sectionVisibility}
@@ -78,36 +75,33 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
               isMobile={isMobile}
               icon={Calendar}
               iconStyle="text-violet-600"
-            />
-            <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
-              <PeriodsFormatsSection
+          />
+          <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
+            <PeriodsFormatsSection
                 restrictions={restrictions}
                 onUpdate={onUpdate}
                 editingRestrictionId={editingRestrictionId}
                 setEditingRestrictionId={setEditingRestrictionId}
-              />
-            </SettingsSectionContent>
-          </div>
+            />
+          </SettingsSectionContent>
 
-          <div className="px-1.5">
-            <SettingsSectionHeader
+          <SettingsSectionHeader
               title="Исключительные слоты"
               sectionKey="exceptional"
               sectionVisibility={sectionVisibility}
               toggleSection={toggleSection}
               isMobile={isMobile}
-              icon={Settings}
               iconStyle="text-violet-600"
-            />
-            <SettingsSectionContent sectionKey="exceptional" sectionVisibility={sectionVisibility}>
-              <ExceptionalSlotsSection
+          />
+
+          <SettingsSectionContent sectionKey="exceptional" sectionVisibility={sectionVisibility}>
+            <ExceptionalSlotsSection
                 restrictions={restrictions}
                 onUpdate={onUpdate}
                 editingRestrictionId={editingRestrictionId}
                 setEditingRestrictionId={setEditingRestrictionId}
-              />
-            </SettingsSectionContent>
-          </div>
+            />
+          </SettingsSectionContent>
         </div>
 
         <div className="flex items-center justify-center h-24" />
