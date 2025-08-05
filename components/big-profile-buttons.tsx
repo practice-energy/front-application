@@ -1,17 +1,15 @@
 "use client"
 
-import React, { ComponentType, useCallback, useEffect, useState } from "react"
+import type { ComponentType } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
-import useEmblaCarousel from 'embla-carousel-react'
-import { cn } from "@/lib/utils"
+import useEmblaCarousel from "embla-carousel-react"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface ButtonConfig {
   id: string
-  Icon: ComponentType<{ className?: string; width?: number; height?: number}>
+  Icon: ComponentType<{ className?: string; width?: number; height?: number }>
   topText?: string
   bottomText?: string
   singleText?: string
@@ -36,7 +34,7 @@ interface BigProfileButtonsProps {
     chat: ComponentType<{ className?: string }>
     pentagram: ComponentType<{ className?: string }>
     switch: ComponentType<{ className?: string }>
-    practice: ComponentType<{ className?: string; width: number; height: number}>
+    practice: ComponentType<{ className?: string; width: number; height: number }>
   }
   show: {
     calendar: boolean
@@ -107,83 +105,77 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onDashboard,
       show: show.dashboard,
     },
-  ]//.filter((button) => button.show)
+  ].filter((button) => button.show)
+
+  // Create infinite loop by duplicating buttons
+  const infiniteButtons = [...buttons, ...buttons, ...buttons]
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
+    align: "start",
     slidesToScroll: 1,
-    containScroll: 'keepSnaps',
-    dragFree: true
+    containScroll: false,
+    dragFree: true,
+    startIndex: buttons.length, // Start from the middle set
   })
 
   return (
-      <div className="flex items-center justify-center w-screen pl-4 overflow-hidden ">
-        <div className="flex items-center w-full">
-          {/* Аватарка */}
-          <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
-            {user?.avatar ? (
-                <Image
-                    src={user.avatar}
-                    alt={user.name}
-                    width={80}
-                    height={80}
-                    className="object-cover"
-                />
-            ) : (
-                <PracticePlaceholder width={80} height={80} />
-            )}
-          </div>
+    <div className="flex items-center justify-center w-screen pl-4 overflow-hidden">
+      <div className="flex items-center w-full">
+        {/* Аватарка */}
+        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
+          {user?.avatar ? (
+            <Image
+              src={user.avatar || "/placeholder.svg"}
+              alt={user.name}
+              width={80}
+              height={80}
+              className="object-cover"
+            />
+          ) : (
+            <PracticePlaceholder width={80} height={80} />
+          )}
+        </div>
 
-          {/* Карусель кнопок */}
-          <div className="flex-1 relative">
-            <div className="overflow-auto" ref={emblaRef}>
-              <div className="flex touch-pan-x select-none">
-                {buttons.map((button) => (
-                    <div
-                        key={button.id}
-                        className="flex-[0_0_auto] min-w-0 pl-2 pt-3 md:pl-4"
-                        style={{ flex: '0 0 auto', minWidth: 0 }}
-                    >
-                      <button
-                          onClick={button.onClick}
-                          className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
-                      >
-                        <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                          {button.variant === "practice" ? (
-                              <button.Icon
-                                  className="w-full h-full text-gray-700"
-                                  width={36}
-                                  height={36}
-                              />
-                          ) : (
-                              <button.Icon className="w-full h-full text-gray-700" />
-                          )}
-                        </div>
-
-                        {button.variant === "two-lines" ? (
-                            <>
-                        <span className="text-xs text-center leading-tight text-neutral-900">
-                          {button.topText}
-                        </span>
-                              {button.bottomText && (
-                                  <span className="text-sm text-center leading-tight text-gray-600">
-                            {button.bottomText}
-                          </span>
-                              )}
-                            </>
-                        ) : (
-                            <span className="text-xs text-center leading-tight text-gray-800">
-                        {button.singleText}
-                      </span>
-                        )}
-                      </button>
+        {/* Карусель кнопок */}
+        <div className="flex-1 relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex touch-pan-x select-none">
+              {infiniteButtons.map((button, index) => (
+                <div
+                  key={`${button.id}-${index}`}
+                  className="flex-[0_0_auto] min-w-0 pl-2 pt-3 md:pl-4"
+                  style={{ flex: "0 0 auto", minWidth: 0 }}
+                >
+                  <button
+                    onClick={button.onClick}
+                    className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
+                  >
+                    <div className="w-9 h-9 mb-1 flex items-center justify-center">
+                      {button.variant === "practice" ? (
+                        <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
+                      ) : (
+                        <button.Icon className="w-full h-full text-gray-700" />
+                      )}
                     </div>
-                ))}
-              </div>
+
+                    {button.variant === "two-lines" ? (
+                      <>
+                        <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
+                        {button.bottomText && (
+                          <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
+                    )}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
+    </div>
   )
 }
