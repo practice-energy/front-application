@@ -9,6 +9,9 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { TimezoneSection } from "./settings-sections/timezone-section"
 import { PeriodsFormatsSection } from "./settings-sections/periods-formats-section"
 import { ExceptionalSlotsSection } from "./settings-sections/exceptional-slots-section"
+import { SettingsSectionHeader } from "./settings-sections/settings-section-header"
+import { SettingsSectionContent } from "./settings-sections/settings-section-content"
+import { Clock, Calendar, Settings } from "lucide-react"
 
 interface CalendarSettingsProps {
   restrictions: CalendarRestrictions
@@ -18,7 +21,19 @@ interface CalendarSettingsProps {
 
 export function CalendarSettings({ restrictions, onUpdate, disableSettings }: CalendarSettingsProps) {
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+  const [sectionVisibility, setSectionVisibility] = useState<Record<string, boolean>>({
+    timezone: true,
+    periods: true,
+    exceptional: true,
+  })
   const isMobile = useIsMobile()
+
+  const toggleSection = (sectionKey: string) => {
+    setSectionVisibility((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey],
+    }))
+  }
 
   return (
     <div className="flex flex-col h-screen bg-white rounded-sm">
@@ -39,21 +54,60 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
         />
 
         <div className="space-y-6 px-4">
-          <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
+          <div className="px-1.5">
+            <SettingsSectionHeader
+              title="Часовой пояс"
+              sectionKey="timezone"
+              sectionVisibility={sectionVisibility}
+              toggleSection={toggleSection}
+              isMobile={isMobile}
+              icon={Clock}
+              iconStyle="text-violet-600"
+            />
+            <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
+              <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
+            </SettingsSectionContent>
+          </div>
 
-          <PeriodsFormatsSection
-            restrictions={restrictions}
-            onUpdate={onUpdate}
-            editingRestrictionId={editingRestrictionId}
-            setEditingRestrictionId={setEditingRestrictionId}
-          />
+          <div className="px-1.5">
+            <SettingsSectionHeader
+              title="Периоды и форматы"
+              sectionKey="periods"
+              sectionVisibility={sectionVisibility}
+              toggleSection={toggleSection}
+              isMobile={isMobile}
+              icon={Calendar}
+              iconStyle="text-violet-600"
+            />
+            <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
+              <PeriodsFormatsSection
+                restrictions={restrictions}
+                onUpdate={onUpdate}
+                editingRestrictionId={editingRestrictionId}
+                setEditingRestrictionId={setEditingRestrictionId}
+              />
+            </SettingsSectionContent>
+          </div>
 
-          <ExceptionalSlotsSection
-            restrictions={restrictions}
-            onUpdate={onUpdate}
-            editingRestrictionId={editingRestrictionId}
-            setEditingRestrictionId={setEditingRestrictionId}
-          />
+          <div className="px-1.5">
+            <SettingsSectionHeader
+              title="Исключительные слоты"
+              sectionKey="exceptional"
+              sectionVisibility={sectionVisibility}
+              toggleSection={toggleSection}
+              isMobile={isMobile}
+              icon={Settings}
+              iconStyle="text-violet-600"
+            />
+            <SettingsSectionContent sectionKey="exceptional" sectionVisibility={sectionVisibility}>
+              <ExceptionalSlotsSection
+                restrictions={restrictions}
+                onUpdate={onUpdate}
+                editingRestrictionId={editingRestrictionId}
+                setEditingRestrictionId={setEditingRestrictionId}
+              />
+            </SettingsSectionContent>
+          </div>
         </div>
 
         <div className="flex items-center justify-center h-24" />
