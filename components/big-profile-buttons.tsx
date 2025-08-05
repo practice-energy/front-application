@@ -104,10 +104,10 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onDashboard,
       show: show.dashboard,
     },
-  ].filter((button) => button.show)
+  ] //.filter((button) => button.show)
 
   return (
-    <div className="flex items-center justify-center w-screen pl-4 overflow-hidden">
+    <div className="w-full pl-4 overflow-hidden">
       <div className="flex items-center w-full">
         {/* Аватарка */}
         <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
@@ -125,15 +125,8 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
         </div>
 
         {/* Горизонтальный скролл кнопок */}
-        <div className="flex-1 relative">
-          <div
-            className="flex gap-2 md:gap-4 pt-3 overflow-x-auto scrollbar-hide touch-pan-x select-none"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              WebkitScrollbar: { display: "none" },
-            }}
-          >
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-2 pt-3 overflow-x-auto scrollbar-hide pb-2">
             <div className="w-2 flex-shrink-0" />
             {buttons.map((button) => (
               <div key={button.id} className="flex-shrink-0">
@@ -162,6 +155,7 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
                 </button>
               </div>
             ))}
+            <div className="w-4 flex-shrink-0" />
           </div>
         </div>
       </div>
