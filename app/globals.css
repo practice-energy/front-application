@@ -102,3 +102,13 @@
     rgba(0, 0, 0, 0.1) 4px
   );
 }
+
+/* Полное скрытие scrollbar для всех браузеров */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE и Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari и Opera */
+}

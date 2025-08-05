@@ -105,60 +105,59 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       show: show.dashboard,
     },
   ] //.filter((button) => button.show)
-
   return (
-    <div className="w-full pl-4 overflow-hidden">
-      <div className="flex items-center w-full">
-        {/* Аватарка */}
-        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
-          {user?.avatar ? (
-            <Image
-              src={user.avatar || "/placeholder.svg"}
-              alt={user.name}
-              width={80}
-              height={80}
-              className="object-cover"
-            />
-          ) : (
-            <PracticePlaceholder width={80} height={80} />
-          )}
-        </div>
+      <div className="w-full pl-4 overflow-hidden">
+        <div className="flex items-center w-full">
+          {/* Аватарка */}
+          <div className="flex-shrink-0 rounded-sm z-50 overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
+            {user?.avatar ? (
+                <Image
+                    src={user.avatar || "/placeholder.svg"}
+                    alt={user.name}
+                    width={80}
+                    height={80}
+                    className="object-cover"
+                />
+            ) : (
+                <PracticePlaceholder width={80} height={80} />
+            )}
+          </div>
 
-        {/* Горизонтальный скролл кнопок */}
-        <div className="flex-1 min-w-0">
-          <div className="flex gap-2 pt-3 overflow-x-auto scrollbar-hide pb-2">
-            <div className="w-2 flex-shrink-0" />
-            {buttons.map((button) => (
-              <div key={button.id} className="flex-shrink-0">
-                <button
-                  onClick={button.onClick}
-                  className="w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
-                >
-                  <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                    {button.variant === "practice" ? (
-                      <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
-                    ) : (
-                      <button.Icon className="w-full h-full text-gray-700" />
-                    )}
-                  </div>
+          {/* Горизонтальный скролл кнопок */}
+          <div className="flex-1 min-w-0">
+            <div className="flex gap-2 pt-3 overflow-x-auto pb-2 -mx-2 px-2 no-scrollbar">
+              <div className="w-4"></div>
+              {buttons.map((button) => (
+                  <div key={button.id} className="flex-shrink-0">
+                    <button
+                        onClick={button.onClick}
+                        className="w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform hover:bg-gray-50"
+                    >
+                      <div className="w-9 h-9 mb-1 flex items-center justify-center">
+                        {button.variant === "practice" ? (
+                            <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
+                        ) : (
+                            <button.Icon className="w-full h-full text-gray-700" />
+                        )}
+                      </div>
 
-                  {button.variant === "two-lines" ? (
-                    <>
-                      <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
-                      {button.bottomText && (
-                        <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
+                      {button.variant === "two-lines" ? (
+                          <>
+                            <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
+                            {button.bottomText && (
+                                <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
+                            )}
+                          </>
+                      ) : (
+                          <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
                       )}
-                    </>
-                  ) : (
-                    <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
-                  )}
-                </button>
-              </div>
-            ))}
-            <div className="w-4 flex-shrink-0" />
+                    </button>
+                  </div>
+              ))}
+              <div className="w-4"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   )
 }
