@@ -127,13 +127,14 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
         {/* Горизонтальный скролл кнопок */}
         <div className="flex-1 relative">
           <div
-            className="flex overflow-x-auto scrollbar-hide touch-pan-x select-none gap-2 md:gap-4 pl-2 md:pl-4 pt-3"
+            className="flex gap-2 md:gap-4 pt-3 overflow-x-auto scrollbar-hide touch-pan-x select-none"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
               WebkitScrollbar: { display: "none" },
             }}
           >
+            <div className="w-2 flex-shrink-0" />
             {buttons.map((button) => (
               <div key={button.id} className="flex-shrink-0">
                 <button
@@ -164,16 +165,6 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   )
 }
