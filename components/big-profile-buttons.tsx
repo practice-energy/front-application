@@ -105,7 +105,7 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onDashboard,
       show: show.dashboard,
     },
-  ].filter((button) => button.show)
+  ]//.filter((button) => button.show)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
