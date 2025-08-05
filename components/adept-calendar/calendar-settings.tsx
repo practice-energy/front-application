@@ -11,7 +11,7 @@ import { PeriodsFormatsSection } from "./settings-sections/periods-formats-secti
 import { ExceptionalSlotsSection } from "./settings-sections/exceptional-slots-section"
 import { SettingsSectionHeader } from "./settings-sections/settings-section-header"
 import { SettingsSectionContent } from "./settings-sections/settings-section-content"
-import { Clock, Calendar, Settings } from "lucide-react"
+import { Clock, Calendar } from "lucide-react"
 
 interface CalendarSettingsProps {
   restrictions: CalendarRestrictions
@@ -26,6 +26,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
     periods: true,
     exceptional: true,
   })
+  const [showDatePicker, setShowDatePicker] = useState(false)
   const isMobile = useIsMobile()
 
   const toggleSection = (sectionKey: string) => {
@@ -55,51 +56,58 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
         <div className="space-y-2 px-4">
           <SettingsSectionHeader
-              title="Часовой пояс"
-              sectionKey="timezone"
-              sectionVisibility={sectionVisibility}
-              toggleSection={toggleSection}
-              isMobile={isMobile}
-              icon={Clock}
-              iconStyle="text-violet-600"
+            title="Часовой пояс"
+            sectionKey="timezone"
+            sectionVisibility={sectionVisibility}
+            toggleSection={toggleSection}
+            isMobile={isMobile}
+            icon={Clock}
+            iconStyle="text-violet-600"
           />
           <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
             <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
           </SettingsSectionContent>
 
           <SettingsSectionHeader
-              title="Периоды и форматы"
-              sectionKey="periods"
-              sectionVisibility={sectionVisibility}
-              toggleSection={toggleSection}
-              isMobile={isMobile}
-              icon={Calendar}
-              iconStyle="text-violet-600"
+            title="Периоды и форматы"
+            sectionKey="periods"
+            sectionVisibility={sectionVisibility}
+            toggleSection={toggleSection}
+            isMobile={isMobile}
+            icon={Calendar}
+            iconStyle="text-violet-600"
           />
           <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
             <PeriodsFormatsSection
-                restrictions={restrictions}
-                onUpdate={onUpdate}
-                editingRestrictionId={editingRestrictionId}
-                setEditingRestrictionId={setEditingRestrictionId}
+              restrictions={restrictions}
+              onUpdate={onUpdate}
+              editingRestrictionId={editingRestrictionId}
+              setEditingRestrictionId={setEditingRestrictionId}
             />
           </SettingsSectionContent>
 
           <SettingsSectionHeader
-              title="Исключительные слоты"
-              sectionKey="exceptional"
-              sectionVisibility={sectionVisibility}
-              toggleSection={toggleSection}
-              isMobile={isMobile}
-              iconStyle="text-violet-600"
+            title="Исключительные слоты"
+            sectionKey="exceptional"
+            sectionVisibility={sectionVisibility}
+            toggleSection={toggleSection}
+            isMobile={isMobile}
+            iconStyle="text-violet-600"
+            showAddButton={editingRestrictionId === null}
+            onAddClick={() => {
+              setShowDatePicker(true)
+              setSectionVisibility((prev) => ({ ...prev, exceptional: true }))
+            }}
           />
 
           <SettingsSectionContent sectionKey="exceptional" sectionVisibility={sectionVisibility}>
             <ExceptionalSlotsSection
-                restrictions={restrictions}
-                onUpdate={onUpdate}
-                editingRestrictionId={editingRestrictionId}
-                setEditingRestrictionId={setEditingRestrictionId}
+              restrictions={restrictions}
+              onUpdate={onUpdate}
+              editingRestrictionId={editingRestrictionId}
+              setEditingRestrictionId={setEditingRestrictionId}
+              showDatePicker={showDatePicker}
+              setShowDatePicker={setShowDatePicker}
             />
           </SettingsSectionContent>
         </div>

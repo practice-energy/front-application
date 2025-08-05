@@ -1,9 +1,7 @@
 "use client"
-
-import type React from "react"
-
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { AddEntityButton } from "@/components/add-entity-button"
 
 interface SettingsSectionHeaderProps {
   title: string
@@ -12,6 +10,8 @@ interface SettingsSectionHeaderProps {
   toggleSection: (sectionKey: string) => void
   isMobile: boolean
   iconStyle?: string
+  onAddClick?: () => void
+  showAddButton?: boolean
 }
 
 export function SettingsSectionHeader({
@@ -21,6 +21,8 @@ export function SettingsSectionHeader({
   toggleSection,
   isMobile,
   iconStyle = "",
+  onAddClick,
+  showAddButton = false,
 }: SettingsSectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
 
@@ -37,6 +39,7 @@ export function SettingsSectionHeader({
         }}
       >
         <div className="tracking-wider font-semibold">{title}</div>
+        {showAddButton && onAddClick && <AddEntityButton onClick={onAddClick} />}
         <ChevronDown
           className={cn(
             "w-6 h-6 text-violet-600 transition-all duration-200 ease-in-out transform ml-auto",
