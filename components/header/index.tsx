@@ -209,12 +209,14 @@ export function Header() {
               <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
           )}
 
+          {/* User likes icon */}
+          {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />)}
+
+          {/* User switch icon */}
+          {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />)}
+
           {isAuthenticated && (
             <>
-              {/* User likes icon */}
-              {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />)}
-              {/* User switch icon */}
-              {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />)}
               <ProfileMenu
                 isAuthenticated={isAuthenticated}
                 user={user}

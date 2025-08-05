@@ -44,7 +44,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
+      <body className={`font-sans bg-theme-light-bg text-gray-900 `}>
             <AuthProvider>
               <SidebarProvider>
                 <SidebarLayout>{children}</SidebarLayout>

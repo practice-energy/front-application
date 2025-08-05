@@ -115,8 +115,8 @@ const config: Config = {
         },
         "theme-light": {
           bg: "#fafaf9",
-          "bg-secondary": "#f8fafc",
-          "bg-tertiary": "#f1f5f9",
+          "bg-secondary": "#fafaf9",
+          "bg-tertiary": "#fafaf9",
           text: "#0f172a",
           "text-secondary": "#475569",
           "text-muted": "#64748b",

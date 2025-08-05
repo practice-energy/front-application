@@ -63,6 +63,90 @@ const mockDashboardStats: DashboardStats = {
         practiceCount: 1,
       },
       {
+        id:uuidv4(),
+        start: new Date("2023-05-15T12:00:00"),
+        end: new Date("2023-05-15T13:30:00"),
+        duration: 90,
+        format: "in-person",
+        status: "waiting",
+        isRepeat: true,
+        client: {
+          id: uuidv4(),
+          name: "Иван ПетроИван ПетровИван ПетровИван ПетровИван Петровв",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожностиБоль моя дырка задница Боль моя дырка задница Боль моя дырка задница",
+          price: 3500,
+          description: "Боль моя дырка задница Боль моя дырка задница Боль моя дырка задница"
+        },
+        practiceCount: 1,
+      },
+      {
+        id:uuidv4(),
+        start: new Date("2023-05-15T12:00:00"),
+        end: new Date("2023-05-15T13:30:00"),
+        duration: 90,
+        format: "in-person",
+        status: "waiting",
+        isRepeat: true,
+        client: {
+          id: uuidv4(),
+          name: "Иван ПетроИван ПетровИван ПетровИван ПетровИван Петровв",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожностиБоль моя дырка задница Боль моя дырка задница Боль моя дырка задница",
+          price: 3500,
+          description: "Боль моя дырка задница Боль моя дырка задница Боль моя дырка задница"
+        },
+        practiceCount: 1,
+      },
+      {
+        id:uuidv4(),
+        start: new Date("2023-05-15T12:00:00"),
+        end: new Date("2023-05-15T13:30:00"),
+        duration: 90,
+        format: "in-person",
+        status: "waiting",
+        isRepeat: true,
+        client: {
+          id: uuidv4(),
+          name: "Иван ПетроИван ПетровИван ПетровИван ПетровИван Петровв",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожностиБоль моя дырка задница Боль моя дырка задница Боль моя дырка задница",
+          price: 3500,
+          description: "Боль моя дырка задница Боль моя дырка задница Боль моя дырка задница"
+        },
+        practiceCount: 1,
+      },
+      {
+        id:uuidv4(),
+        start: new Date("2023-05-15T12:00:00"),
+        end: new Date("2023-05-15T13:30:00"),
+        duration: 90,
+        format: "in-person",
+        status: "waiting",
+        isRepeat: true,
+        client: {
+          id: uuidv4(),
+          name: "Иван ПетроИван ПетровИван ПетровИван ПетровИван Петровв",
+          avatar: "/placeholder.jpg"
+        },
+        service: {
+          id: uuidv4(),
+          name: "Консультация по тревожностиБоль моя дырка задница Боль моя дырка задница Боль моя дырка задница",
+          price: 3500,
+          description: "Боль моя дырка задница Боль моя дырка задница Боль моя дырка задница"
+        },
+        practiceCount: 1,
+      },
+      {
         id: uuidv4(),
         start: new Date("2023-05-16T09:00:00"),
         end: new Date("2023-05-16T09:50:00"),

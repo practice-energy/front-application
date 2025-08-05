@@ -192,9 +192,9 @@ export function ExceptionalSlotsSection({
                   <div className="flex items-center gap-2 mr-2 justify-between">
                     <span className="text-sm text-gray-600">Повторить для другой даты</span>
                     <div className="flex gap-6 ml-auto">
-                      <RepeatEntityButton onClick={() => startRepeatForRestriction(restriction.id!)} />
-                      <EditEntityButton onClick={() => startEditing(restriction)} />
-                      <BurnEntityButton onClick={() => deleteRestriction(restriction.id!)} />
+                      <RepeatEntityButton onClick={() => startRepeatForRestriction(restriction.id!)} className="w-8 h-8" iconClassName="w-6 h-6"/>
+                      <EditEntityButton onClick={() => startEditing(restriction)} className="w-8 h-8" iconClassName="w-6 h-6"/>
+                      <BurnEntityButton onClick={() => deleteRestriction(restriction.id!)} className="w-8 h-8" iconClassName="w-6 h-6" />
                     </div>
                   </div>
                 )}

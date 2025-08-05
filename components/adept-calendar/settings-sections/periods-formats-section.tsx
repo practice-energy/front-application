@@ -39,7 +39,7 @@ export function PeriodsFormatsSection({
     isCollapsable,
 }: PeriodsFormatsSectionProps) {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
+  const [showPeriodsFormats, setShowPeriodsFormats] = useState("Mon")
   const isMobile = useIsMobile()
 
   const handleDayToggle = (dayKey: string) => {
@@ -223,13 +223,14 @@ export function PeriodsFormatsSection({
                 <div className="mt-4 flex items-center gap-6 mr-2">
                   <span className="text-sm text-gray-600">Повторить для всех активных</span>
                   <div className="flex gap-6">
-                    <RepeatEntityButton onClick={repeatSettingsToAllActive} />
+                    <RepeatEntityButton onClick={repeatSettingsToAllActive} className="w-8 h-8" iconClassName="w-6 h-6" />
                     <EditEntityButton
                       onClick={() =>
                         startEditing(restrictions.commons[selectedDay as keyof typeof restrictions.commons])
                       }
+                      className="w-8 h-8" iconClassName="w-6 h-6"
                     />
-                    <BurnEntityButton onClick={burnDaySettings} />
+                    <BurnEntityButton onClick={burnDaySettings} className="w-8 h-8" iconClassName="w-6 h-6" />
                   </div>
                 </div>
               )}

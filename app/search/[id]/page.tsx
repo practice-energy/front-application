@@ -135,7 +135,8 @@ export default function SearchPage() {
       const questionMessage: Message = {
         id: uuidv4(),
         type: "assistant",
-        content: firstQuestion.question,
+        testQuestion: firstQuestion.question,
+        questionIndex: 0,
         timestamp: Date.now(),
         aiMessageType: "profile-test",
         tags: firstQuestion.variants.map((variant) => ({ name: variant })),
@@ -225,7 +226,8 @@ export default function SearchPage() {
           const questionMessage: Message = {
             id: uuidv4(),
             type: "assistant",
-            content: nextQuestion.question,
+            testQuestion: nextQuestion.question,
+            questionIndex: nextQuestionIndex,
             timestamp: Date.now(),
             aiMessageType: "profile-test",
             tags: nextQuestion.variants.map((variant) => ({ name: variant })),
@@ -389,8 +391,9 @@ export default function SearchPage() {
   const { mode, canAccept } = getMufiMode()
 
   useEffect(() => {
-    if (becomeSpecialistState.step === 4) {
+    if (becomeSpecialistState.step === 4 && !becomeSpecialistState.meetingLetted) {
       const updatedChat = addMessageToChat(currentChat?.id, step4ContinueMessage)
+      setMeetingLetted()
       if (updatedChat) {
         setCurrentChat(updatedChat)
       }
@@ -398,7 +401,7 @@ export default function SearchPage() {
   }, [becomeSpecialistState.step, currentChat?.id, addMessageToChat])
 
   return (
-    <div className="relative h-screen bg-white dark:bg-gray-900">
+    <div className="relative h-screen bg-theme-light-bg dark:bg-gray-900">
       {isMobile && isCollapsed ? (
         <>
           <ChatHeader

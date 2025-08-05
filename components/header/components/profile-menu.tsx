@@ -71,15 +71,6 @@ export function ProfileMenu({
             </Link>
 
             <Link
-              href="/profile?section=security"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <Shield className="mr-3 h-4 w-4" />
-              Безопасность
-            </Link>
-
-            <Link
               href="/profile?section=balance"
               className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
               onClick={() => setShowProfileMenu(false)}

@@ -58,7 +58,7 @@ export function MainDashboard() {
     <div className="flex justify-center w-full pt-16">
       <div className="flex gap-6 p-2 w-[1150px] pb-32">
         {/* Left column - Top Stats and left section */}
-        <div className="flex flex-col flex-1 gap-6 w-[450px] flex-shrink-0 h-[850px]">
+        <div className="flex flex-col flex-1 gap-6 w-[450px] flex-shrink-0 h-[680px]">
           {/* Top Stats Card with Add button */}
           <Card className="border-0 shadow-md">
             <CardHeader className="flex flex-row items-center justify-between p-4">
@@ -117,14 +117,14 @@ export function MainDashboard() {
           </Card>
 
           {/* Upcoming Activities block for left section */}
-          <Card className="border-0 shadow-md flex-1 rounded-sm">
+          <Card className="border-0 shadow-md h-[358px] flex-1 rounded-sm p-1">
             <CardHeader>
               <CardTitle className="text-lg text-neutral-700">Ожидают внимания</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 h-[316px] relative">
+            <CardContent className="p-0 relative h-[278px] rounded-sm">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
-                  <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute -top-1 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
                   <ScrollArea className="h-full px-6">
                     <div className="space-y-2 py-4">
                       {stats.upcomingActivities.activities
@@ -159,7 +159,7 @@ export function MainDashboard() {
                           })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute -bottom-1 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -172,7 +172,7 @@ export function MainDashboard() {
         </div>
 
         {/* Right column - Upcoming Activities */}
-        <div className="flex-1 h-[850px]">
+        <div className="flex-1 h-[800px]">
           <Card className="border-0 shadow-md h-full">
             <CardHeader>
               <div className="flex items-center">
@@ -182,19 +182,19 @@ export function MainDashboard() {
                 <p className="text-sm text-gray-500 ml-auto">Расписание</p>
               </div>
             </CardHeader>
-            <CardContent className="p-0 h-[746px] relative">
+            <CardContent className="p-0 h-[716px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
                   <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
                   <ScrollArea className="h-full px-6">
-                    <div className="space-y-2 py-4">
+                    <div className="space-y-2 ">
                       {stats.upcomingActivities.activities.map((activity, index) => {
                         const isBackToBack =
                           index > 0 &&
                           stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
 
                         return (
-                          <div key={activity.id} className="pb-1">
+                          <div key={activity.id} >
                             <UpcomingActivityCard
                               startTime={activity.start.toLocaleTimeString("ru-RU", {
                                 hour: "2-digit",
@@ -218,7 +218,7 @@ export function MainDashboard() {
                       })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute -bottom-1 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">

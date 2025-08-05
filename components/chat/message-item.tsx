@@ -184,9 +184,9 @@ export const MessageItem = React.memo(
         // Only allow answer changes before step 3
         if (becomeSpecialistState.step != 2) return
 
-        setPersonalityAnswer(message.content, answer)
+        setPersonalityAnswer(message.testQuestion, answer)
         if (onPersonalityAnswer) {
-          onPersonalityAnswer(message.content, answer)
+          onPersonalityAnswer(message.testQuestion, answer)
         }
       },
       [message, becomeSpecialistState.step, setPersonalityAnswer, onPersonalityAnswer],
@@ -238,7 +238,7 @@ export const MessageItem = React.memo(
     }
 
     const renderPersonalityOptions = (tags: Tag[]) => {
-      const currentAnswer = message.content ? becomeSpecialistState.personalityAnswers[message.content] : null
+      const currentAnswer = message.testQuestion ? becomeSpecialistState.personalityAnswers[message.testQuestion] : null
 
       // Блокируем кнопки, если:
       // 1. Пользователь уже ответил на этот вопрос, ИЛИ
@@ -247,7 +247,10 @@ export const MessageItem = React.memo(
         becomeSpecialistState.step !== 2 || (currentAnswer !== null && currentAnswer !== undefined)
 
       return (
-        <div className="flex flex-col gap-3 ml-auto max-w-xs">
+        <div className={cn(
+            "flex gap-3 ml-auto",
+            isMobile ? "flex-col max-w-xs": "flex-row"
+        )}>
           {tags.map((tag, index) => {
             const isSelected = currentAnswer === tag.name
 
@@ -258,7 +261,7 @@ export const MessageItem = React.memo(
                 disabled={isButtonDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                  "w-full h-[36px] px-4 text-neutral-700",
+                  "w-full py-2 px-4 text-neutral-700",
                   isSelected
                     ? "bg-violet-100"
                     : isButtonDisabled
@@ -293,7 +296,7 @@ export const MessageItem = React.memo(
                 disabled={isDisabled}
                 className={cn(
                   "items-center justify-center rounded-sm text-sm font-medium transition-colors",
-                  "w-[36px] h-[36px] text-neutral-700",
+                  "w-[36px] py-2 text-neutral-700",
                   isSelected
                     ? "bg-violet-100"
                     : isDisabled
@@ -372,7 +375,19 @@ export const MessageItem = React.memo(
 
             {/* Personality test options for profile-test */}
             {message.aiMessageType === "profile-test" && message.tags && message.tags.length > 0 && (
-              <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
+                <div>
+                  <div
+                      className={cn(
+                          "rounded-sm py-3 flex flex-col",
+                          "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                      )}
+                      style={{ wordBreak: "break-word" }}
+                  >
+                    <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
+                    <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                  </div>
+                  <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
+                </div>
             )}
 
             {/* Version-specific test options */}
@@ -385,7 +400,7 @@ export const MessageItem = React.memo(
                   )}
                   style={{ wordBreak: "break-word" }}
                 >
-                  <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex + 1)}</p>
+                  <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 5)}</p>
                   <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
                 </div>
                 <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
@@ -481,13 +496,13 @@ export const MessageItem = React.memo(
           {isAssistant && !isUser && (
             <div
               className={cn(
-                "border-t border-gray-200 dark:border-gray-700 mt-2 w-full",
+                "border-t border-gray-200 mt-2 w-full",
                 message.aiMessageType === "service" && "border-violet-600",
                 message.aiMessageType === "warning" && "border-pink-500",
                 message.aiMessageType === "accept-policy" && "border-violet-600",
                 message.aiMessageType === "become-specialist-drops" && "border-neutral-500",
-                message.aiMessageType === "profile-test" && "border-neutral-500",
-                message.aiMessageType === "version-test" && "border-neutral-500",
+                message.aiMessageType === "profile-test" && "border-0",
+                message.aiMessageType === "version-test" && "border-0",
               )}
             />
           )}

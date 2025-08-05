@@ -1,12 +1,10 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import type {Interval, Restriction} from "@/types/calendar-event"
 import {TvMinimalPlayIcon, Users, Video} from "lucide-react"
 import { useState, useEffect } from "react"
 import {Format} from "@/types/common";
-import {IconPractice} from "@/components/icons/icon-practice";
 import {BurnEntityButton} from "@/components/burn-entity-button";
 import {AddEntityButton} from "@/components/add-entity-button";
 import {SaveEntityButton} from "@/components/save-entity-button";
@@ -75,7 +73,7 @@ export function RestrictionItem({
 
   useEffect(() => {
     if (!restriction.intervals || restriction.intervals.length === 0) {
-      const defaultInterval = { start: '09:00', end: '17:00', formats: [] }
+      const defaultInterval = { start: '09:00', end: '17:00', formats: ["in-person", "video"] }
       setEditedIntervals([defaultInterval])
       setEditedFormats([[]])
       setIntervalCount(1)
@@ -137,7 +135,7 @@ export function RestrictionItem({
     if (intervalCount < 3) {
       setIntervalCount(prev => prev + 1)
       if (editedIntervals.length < intervalCount + 1) {
-        setEditedIntervals([...editedIntervals, { start: '09:00', end: '17:00', formats: [] }])
+        setEditedIntervals([...editedIntervals, { start: '09:00', end: '17:00', formats: ["in-person", "video"] }])
         setEditedFormats([...editedFormats, []])
       }
     }
@@ -264,43 +262,65 @@ export function RestrictionItem({
                                     )}
                                   </motion.div>
 
-                                  <motion.div
-                                      className="flex gap-2 justify-between mx-auto"
-                                      variants={scaleUp}
-                                  >
-                                    <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className={cn(
-                                            "p-1 items-center justify-center rounded-sm",
-                                            isEditMode && editedFormats[i]?.includes('video') && "bg-violet-600 hover:bg-violet-700 text-white",
-                                            isEditMode && !editedFormats[i]?.includes('video') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
-                                        )}
-                                        onClick={isEditMode ? () => toggleFormat(i, 'video') : undefined}
-                                        disabled={!isEditMode}
-                                    >
-                                      <TvMinimalPlayIcon className={cn(
-                                          "w-[18px] h-[18px]",
-                                          !(isEditMode || editedFormats[i]?.includes('video')) && "opacity-0",
-                                      )}/>
-                                    </motion.button>
-                                    <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className={cn(
-                                            "p-1 items-center justify-center rounded-sm",
-                                            isEditMode && editedFormats[i]?.includes('in-person') && "bg-violet-600 hover:bg-violet-700 text-white",
-                                            isEditMode && !editedFormats[i]?.includes('in-person') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
-                                        )}
-                                        onClick={isEditMode ? () => toggleFormat(i, 'in-person') : undefined}
-                                        disabled={!isEditMode}
-                                    >
-                                      <Users className={cn(
-                                          "w-[18px] h-[18px]",
-                                          !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
-                                      )}/>
-                                    </motion.button>
-                                  </motion.div>
+
+                                  {
+                                    !isEditMode ? (
+                                        <div className="flex flex-row">
+                                          <div className="p-1 items-center justify-center rounded-sm">
+                                            <TvMinimalPlayIcon className={cn(
+                                                "w-[18px] h-[18px]",
+                                                !(isEditMode || editedFormats[i]?.includes('video')) && "opacity-0",
+                                            )}/>
+                                          </div>
+                                          <div className="p-1 items-center justify-center rounded-sm">
+                                            <Users className={cn(
+                                                "w-[18px] h-[18px]",
+                                                !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
+                                            )}/>
+                                          </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-row">
+                                          <motion.div
+                                              className="flex gap-2 justify-between mx-auto"
+                                              variants={scaleUp}
+                                          >
+                                            <motion.button
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className={cn(
+                                                    "p-1 items-center justify-center rounded-sm",
+                                                    isEditMode && editedFormats[i]?.includes('video') && "bg-violet-600 hover:bg-violet-700 text-white",
+                                                    isEditMode && !editedFormats[i]?.includes('video') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
+                                                )}
+                                                onClick={isEditMode ? () => toggleFormat(i, 'video') : undefined}
+                                                disabled={!isEditMode}
+                                            >
+                                              <TvMinimalPlayIcon className={cn(
+                                                  "w-[18px] h-[18px]",
+                                                  !(isEditMode || editedFormats[i]?.includes('video')) && "opacity-0",
+                                              )}/>
+                                            </motion.button>
+                                            <motion.button
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className={cn(
+                                                    "p-1 items-center justify-center rounded-sm",
+                                                    isEditMode && editedFormats[i]?.includes('in-person') && "bg-violet-600 hover:bg-violet-700 text-white",
+                                                    isEditMode && !editedFormats[i]?.includes('in-person') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
+                                                )}
+                                                onClick={isEditMode ? () => toggleFormat(i, 'in-person') : undefined}
+                                                disabled={!isEditMode}
+                                            >
+                                              <Users className={cn(
+                                                  "w-[18px] h-[18px]",
+                                                  !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
+                                              )}/>
+                                            </motion.button>
+                                          </motion.div>
+                                        </div>
+                                    )
+                                  }
                                 </div>
                               </motion.div>
                           )
@@ -309,23 +329,11 @@ export function RestrictionItem({
                     </div>
                   </div>
 
-                  <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={fadeIn}
-                      onClick={togglePracticeStatus}
-                      className={cn(
-                          "cursor-pointer ml-auto",
-                          isEditMode && "hover:opacity-80 transition-opacity"
-                      )}
-                      disabled={!isEditMode}
-                  >
-                    <ActivityStatus
-                        status={restriction.isPractice ? 'activePractice' : 'outOfPractice'}
-                        showTitle={intervalCount < 2}
-                        className="ml-auto items-start"
-                    />
-                  </motion.div>
+                  {!isEditMode && <ActivityStatus
+                      status={restriction.isPractice ? 'activePractice' : 'outOfPractice'}
+                      showTitle={intervalCount < 2}
+                      className="ml-auto items-start"
+                  />}
                 </div>
               </CardContent>
             </Card>
@@ -336,18 +344,18 @@ export function RestrictionItem({
                   initial="hidden"
                   animate="visible"
                   variants={scaleUp}
-                  className="flex flex-col justify-between gap-3 py-6"
+                  className="flex flex-col justify-between gap-3"
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <BurnEntityButton onClick={removeInterval}/>
+                  <BurnEntityButton onClick={removeInterval} className="w-8 h-8" iconClassName="w-6 h-6"/>
                 </motion.div>
                 {intervalCount < 3 && (
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <AddEntityButton onClick={addInterval}/>
+                      <AddEntityButton onClick={addInterval} className="w-8 h-8" iconClassName="w-6 h-6"/>
                     </motion.div>
                 )}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <SaveEntityButton onClick={handleSave}/>
+                  <SaveEntityButton onClick={handleSave} className="w-8 h-8" iconClassName="w-6 h-6"/>
                 </motion.div>
               </motion.div>
           )}

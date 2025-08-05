@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import {Calendar, MessageSquare, CheckSquare, BarChart3, CalendarDays, MessageSquareText} from "lucide-react"
+import {Calendar, MessageSquare, CheckSquare, BarChart3, CalendarDays, MessageSquareText, Pentagon} from "lucide-react"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import {cn} from "@/lib/utils";
 import {IconButton} from "@/components/icon-button";
@@ -25,6 +25,8 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
   }
 
   const handleAnalyticsClick = () => {}
+
+  const handleSecrityClick = () => {}
 
   const handleCalendarClick = () => {
     router.push("/calendar")
@@ -65,6 +67,13 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
           />
         </div>
       )}
+
+      {/* Security button */}
+      <IconButton
+          icon={Pentagon}
+          onClick={handleSecrityClick}
+          disabled={false}
+      />
     </>
   )
 }
