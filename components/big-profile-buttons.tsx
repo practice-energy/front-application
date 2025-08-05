@@ -1,110 +1,51 @@
 "use client"
 
-import type { ComponentType } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
-import { IconPractice } from "@/components/icons/icon-practice"
+import {ComponentType} from "react";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {cn} from "@/lib/utils";
 
 interface ButtonConfig {
   id: string
-  Icon: ComponentType<{ className?: string; width?: number; height?: number }>
   topText?: string
   bottomText?: string
-  singleText?: string
-  variant: "two-lines" | "single-line" | "practice"
+  variant: "two-lines" | "single-line" | "practice" | "with-updates" | "with-bottom-text" | "left" | "logout" | "center"
+  hasNew?: boolean
+  updates?: number
   onClick: () => void
   show: boolean
+  icon: ComponentType<{ className?: string; width?: number; height?: number }>
 }
 
 interface BigProfileButtonsProps {
+  buttons: ButtonConfig[]
   user?: User
-  actions: {
-    onCalendar: () => void
-    onChats: () => void
-    onSwitchRole: () => void
-    onFavorites: () => void
-    onBecomeMaster: () => void
-    onInitiatePractice: () => void
-    onDashboard: () => void
+}
+
+// Добавьте эту функцию в ваш компонент или в файл с утилитами
+function getUpdateWord(count: number): string {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return 'обновлений';
   }
-  icons: {
-    calendar: ComponentType<{ className?: string }>
-    chat: ComponentType<{ className?: string }>
-    pentagram: ComponentType<{ className?: string }>
-    switch: ComponentType<{ className?: string }>
-    practice: ComponentType<{ className?: string; width: number; height: number }>
-  }
-  show: {
-    calendar: boolean
-    chat: boolean
-    switchRole: boolean
-    favorites: boolean
-    becomeMaster: boolean
-    initiatePractice: boolean
-    dashboard: boolean
+
+  switch (lastDigit) {
+    case 1:
+      return 'обновление';
+    case 2:
+    case 3:
+    case 4:
+      return 'обновления';
+    default:
+      return 'обновлений';
   }
 }
 
-export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButtonsProps) => {
-  const buttons: ButtonConfig[] = [
-    {
-      id: "calendar",
-      Icon: icons.calendar,
-      topText: "Календарь",
-      variant: "two-lines" as const,
-      onClick: actions.onCalendar,
-      show: show.calendar,
-    },
-    {
-      id: "chats",
-      Icon: icons.chat,
-      topText: "Чаты",
-      variant: "two-lines" as const,
-      onClick: actions.onChats,
-      show: show.chat,
-    },
-    {
-      id: "switch-role",
-      Icon: icons.switch,
-      topText: user?.hat === "master" ? "Инициант" : "Мастер",
-      variant: "two-lines" as const,
-      onClick: actions.onSwitchRole,
-      show: show.switchRole,
-    },
-    {
-      id: "favorites",
-      Icon: icons.pentagram,
-      topText: "Избранные",
-      variant: "two-lines" as const,
-      onClick: actions.onFavorites,
-      show: show.favorites,
-    },
-    {
-      id: "become-master",
-      Icon: icons.switch,
-      singleText: "Стать Мастером",
-      variant: "single-line" as const,
-      onClick: actions.onBecomeMaster,
-      show: show.becomeMaster,
-    },
-    {
-      id: "initiate-practice",
-      Icon: icons.switch,
-      singleText: "Инициировать Практис",
-      variant: "single-line" as const,
-      onClick: actions.onInitiatePractice,
-      show: show.initiatePractice,
-    },
-    {
-      id: "dash",
-      Icon: IconPractice,
-      singleText: "Панель Практис",
-      variant: "practice" as const,
-      onClick: actions.onDashboard,
-      show: show.dashboard,
-    },
-  ] //.filter((button) => button.show)
+export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => {
   return (
       <div className="w-full pl-4 overflow-hidden">
         <div className="flex items-center w-full">
@@ -128,28 +69,87 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
             <div className="flex gap-2 pt-3 overflow-x-auto pb-2 -mx-2 px-2 no-scrollbar">
               <div className="w-4"></div>
               {buttons.map((button) => (
-                  <div key={button.id} className="flex-shrink-0">
+                  <div className="flex-shrink-0">
                     <button
                         onClick={button.onClick}
-                        className="w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform hover:bg-gray-50"
+                        className="w-[74px] h-[74px] bg-white/90 rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1 active:scale-95 transition-transform hover:bg-gray-50"
                     >
-                      <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                        {button.variant === "practice" ? (
-                            <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
-                        ) : (
-                            <button.Icon className="w-full h-full text-gray-700" />
-                        )}
-                      </div>
-
-                      {button.variant === "two-lines" ? (
-                          <>
-                            <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
-                            {button.bottomText && (
-                                <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
-                            )}
-                          </>
-                      ) : (
-                          <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
+                      {button.variant === "practice" && (
+                          <div className="flex-col flex gap-1">
+                            <div className="flex flex-row border rounded-sm justify-between items-center p-1 shadow-sm">
+                              <IconPractice width={24} height={24} />
+                              <div className="text-sm font-semibold">{user?.practice || 999}</div>
+                            </div>
+                            <div className="text-[9px] text-violet-600 items-start justify-start font-semibold">{button.topText}</div>
+                          </div>
+                      )}
+                      {button.variant === "with-updates" && (
+                          <div className="flex-col flex">
+                            <div className="flex flex-row gap-3 items-start">
+                              {button.icon && (<button.icon className="w-8 h-8" />)}
+                              <div className={cn(
+                                  "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
+                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                              )}/>
+                            </div>
+                            <div className="text-[9px] items-start justify-start font-semibold mt-1.5 text-start">{button.topText}</div>
+                            <div className={cn(
+                                "text-[8px] text-violet-600 items-start justify-start font-semibold",
+                                (!button.updates || button.updates === 0) && "text-white"
+                            )}>
+                              {button.updates || 0} {getUpdateWord(button.updates || 0)}
+                            </div>
+                          </div>
+                      )}
+                      {button.variant === "single-line" && (
+                          <div className="flex-col flex">
+                            <div className="flex flex-row justify-between items-center gap-3">
+                              {button.icon && (<button.icon className="w-8 h-8" />)}
+                              <div className={cn(
+                                  "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
+                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                              )}/>
+                            </div>
+                            <div className="text-[9px] items-start justify-start font-semibold">{button.topText}</div>
+                          </div>
+                      )}
+                      {button.variant === "with-bottom-text" && (
+                          <div className="flex-col flex justify-between items-center">
+                            {button.icon && (<button.icon className="w-8 h-8 " />)}
+                            <div className="text-[9px] items-start justify-start font-semibold">{button.topText}</div>
+                            <div className="text-[8px] items-start justify-start font-semibold text-violet-600">{button.bottomText}</div>
+                          </div>
+                      )}
+                      {button.variant === "two-lines" && (
+                          <div className="flex-col flex justify-between items-center">
+                            {button.icon && (<button.icon className="w-8 h-8 top-0" />)}
+                            <div className="text-[9px] items-start justify-start font-semibold">{button.topText}</div>
+                          </div>
+                      )}
+                      {button.variant === "left" && (
+                          <div className="flex-col flex">
+                            <div className="flex flex-row items-start gap-3">
+                              {button.icon && (<button.icon className="w-8 h-8" />)}
+                              <div className={cn(
+                                  "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
+                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                              )}/>
+                            </div>
+                            <div className="text-[9px] items-start justify-start font-semibold mt-1.5 text-start">{button.topText}</div>
+                            <div className="text-[9px] items-start justify-start font-semibold text-start">{button.bottomText}</div>
+                          </div>
+                      )}
+                      {button.variant === "logout" && (
+                          <div className="flex-col flex justify-between items-center">
+                            {button.icon && (<button.icon className="w-8 h-8 top-0 text-red-500" />)}
+                            <div className="text-[9px] items-start justify-start font-semibold mt-1.5">{button.topText}</div>
+                          </div>
+                      )}
+                      {button.variant === "center" && (
+                          <div className="flex-col flex justify-between items-center">
+                            {button.icon && (<button.icon className="w-8 h-8 top-0" />)}
+                            <div className="text-[9px] items-start justify-start font-semibold mt-1.5">{button.topText}</div>
+                          </div>
                       )}
                     </button>
                   </div>

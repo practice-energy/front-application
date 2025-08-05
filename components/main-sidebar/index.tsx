@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import {
-  CalendarDays, MessageSquareText,
+  CalendarDays, LogOutIcon, MessageSquareText, PentagonIcon, SettingsIcon, SlidersVerticalIcon,
   SparklesIcon,
 } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -19,10 +19,13 @@ import {Topper} from "@/components/main-sidebar/components/topper";
 import {ChatsSearchSection} from "@/components/main-sidebar/components/chats-search-section";
 import {DashboardMasterSections} from "@/components/main-sidebar/components/dashboard-master-sections";
 import {mockDashboardStats} from "@/services/mock-dash";
-import {useHeaderState} from "@/components/header/hooks/use-header-state";
 import {BigProfileButtons} from "@/components/big-profile-buttons";
-import {PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
-import {IconPractice} from "@/components/icons/icon-practice";
+import {ChatsIcon, PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
+import {v4 as uuidv4} from "uuid";
+import {messageInitMaster} from "@/components/become-specialist/messages";
+import {useAdeptChats, useBecomeSpecialist, useChatStore, useMasterChats} from "@/stores/chat-store";
+import {boolean} from "zod";
+import {Chat} from "@/types/chats";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -53,6 +56,8 @@ export function MainSidebar() {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const hat = user?.hat
   const [showMasterChats, setShowMasterChats] = useState<boolean>(true)
+  const { addChat: addMasterChat, chats: masterChats } = useMasterChats()
+  const { addChat : addAdeptChat, chats: adeptChats } = useAdeptChats()
 
   const {
     allChats,
@@ -63,6 +68,13 @@ export function MainSidebar() {
     hasNewMessages,
     isActiveChat,
   } = useSidebarData(pathname, hat)
+
+  const {
+    state: becomeSpecialistState,
+    setStep: setBecomeSpecialistStep,
+    setChatId: setBecomeSpecialistChatId,
+    resetState: resetBecomeSpecialistState,
+  } = useBecomeSpecialist()
 
   const { searchQuery, searchResults, isSearching, handleSearch } = useSidebarSearch(allChats)
 
@@ -80,8 +92,139 @@ export function MainSidebar() {
     }
   }
 
-  // Определяем тип контента в зависимости от роли пользователя
-  const isSpecialist = user?.isSpecialist || false
+  const handleBecomeSpecialist = () => {
+    updateUser({
+      hat: "master",
+      isSpecialist: true,
+    })
+
+    const chatId = uuidv4()
+    const newChat = {
+      id: chatId,
+      title: "Стать мастером",
+      isAI: true,
+      isAIEnabled: true,
+      isSpecialChat: "become-specialist" as const,
+      timestamp: Date.now(),
+      createdAt: Date.now(),
+      messages: [
+        messageInitMaster,
+      ],
+    }
+
+    setBecomeSpecialistChatId(chatId)
+
+    addMasterChat(newChat)
+    router.push(`/search/${chatId}`)
+  }
+
+  const checkhasUpdates = (chats: Chat[])=>  {
+    return chats.filter(chat => chat.hasNew).length
+  }
+
+  const buttons = [
+    {
+      id: "dashboard",
+      topText: "Панель Мастер",
+      variant: "practice",
+      onClick: () => setShowMasterChats(false),
+      show: isAuthenticated && user?.hat === "master" && showMasterChats
+    },
+    {
+      id: "calendar-master",
+      topText: "Календарь",
+      variant: "left",
+      bottomText: "Мастер",
+      onClick: () => {
+        router.push('/calendar')
+        toggleSidebar()
+      },
+      show: isAuthenticated && user?.hat === "master",
+      icon: CalendarDays
+    },
+    {
+      id: "calendar-adept",
+      topText: "Календарь",
+      bottomText: "Инициант",
+      variant: "left",
+      onClick: () => {
+        router.push('/calendar')
+        toggleSidebar()
+      },
+      show: isAuthenticated && user?.hat === "adept",
+      icon: CalendarDays
+    },
+    {
+      id: "chats",
+      topText: "Чаты",
+      variant: "with-updates",
+      onClick: () => setShowMasterChats(true),
+      show: user?.hat === "master",
+      updates: checkhasUpdates(masterChats),
+      icon: ChatsIcon
+    },
+    {
+      id: "switch-role",
+      topText: user?.hat === "master" ? "Инициант" : "Мастер",
+      variant: "with-updates",
+      onClick: () => updateUser({ hat: user?.hat === "adept" ? "master" : "adept" }),
+      show: isAuthenticated,
+      updates: checkhasUpdates(user?.hat ==="master" ? adeptChats : masterChats),
+      icon: UserSwitchIcon
+    },
+    {
+      id: "favorites",
+      topText: "Избранные",
+      variant: "center",
+      onClick: () => router.push('/profile?section=saved'),
+      show: user?.hat === "adept",
+      icon: PentagramIcon
+    },
+    {
+      id: "become-master",
+      topText: "Стать Мастером",
+      variant: "two-lines",
+      onClick: () => {
+        toggleSidebar()
+        router.push("/become-specialist")
+      },
+      show: isAuthenticated && user?.hat === "adept" && user?.isSpecialist === false,
+      icon: UserSwitchIcon
+    },
+    {
+      id: "settings-master",
+      topText: "Настройки аккаунт",
+      variant: "two-lines",
+      onClick: () => setShowMasterChats(false),
+      show: user?.hat === "master" && showMasterChats,
+      icon: SettingsIcon
+    },
+    {
+      id: "security",
+      topText: "Безопасность",
+      bottomText: "Активно 100%",
+      variant: "with-bottom-text",
+      onClick: () => setShowMasterChats(false),
+      show: true,
+      icon: PentagonIcon
+    },
+    {
+      id: "settings-account",
+      topText: "Настройки аккаунт",
+      variant: "two-lines",
+      onClick: () => setShowMasterChats(false),
+      show: true,
+      icon: SlidersVerticalIcon
+    },
+    {
+      id: "logout",
+      topText: "Выйти",
+      variant: "logout",
+      onClick: () => logout(),
+      show: true,
+      icon: LogOutIcon
+    },
+  ].filter(button => button.show)
 
   return (
     <div
@@ -103,47 +246,10 @@ export function MainSidebar() {
           isMobile={isMobile}
       />
 
-      {isMobile && (<BigProfileButtons
+      {isMobile && (
+          <BigProfileButtons
+              buttons={buttons}
               user={user}
-              actions={{
-                onCalendar: () => {
-                  router.push('/calendar')
-                  toggleSidebar()
-                },
-                onChats: () => {
-                  setShowMasterChats(true)
-                },
-                onSwitchRole: () => {
-                  updateUser({
-                    hat: hat === "adept" ? "master" : "adept"
-                  })
-                },
-                onFavorites: () => console.log('Favorites clicked'),
-                onBecomeMaster: () => {
-                  toggleSidebar()
-                  router.push("/become-specialist")
-                },
-                onInitiatePractice: () => console.log('Initiate practice clicked'),
-                onDashboard: () => {
-                  setShowMasterChats(false)
-                }
-              }}
-              icons={{
-                calendar: CalendarDays,
-                chat: MessageSquareText,
-                switch: UserSwitchIcon,
-                pentagram: PentagramIcon,
-                dashboard: IconPractice,
-              }}
-              show={{
-                calendar: true,
-                chat: true,
-                switchRole: isAuthenticated,
-                favorites: user?.hat === "adept",
-                initiatePractice: !isAuthenticated,
-                becomeMaster: user?.isSpecialist !== true && isAuthenticated,
-                dashboard: user?.hat === "master" && showMasterChats,
-              }}
           />
       )}
 
