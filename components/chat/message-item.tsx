@@ -357,9 +357,9 @@ export const MessageItem = React.memo(
                     `rounded-sm py-3 ${
                       isUser
                         ? "bg-violet-50 shadow-md px-3 py-3 gap-3 "
-                        : "bg-white text-neutral-700  rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
+                        : "text-neutral-700  rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
                     }`,
-                    isAssistant && "border-none shadow-none px-0 ",
+                    isAssistant ? "border-none shadow-none px-0 bg-none" : "bg-white",
                   )}
                   style={{ wordBreak: "break-word" }}
                 >
@@ -528,6 +528,7 @@ export const MessageItem = React.memo(
             {message.aiMessageType === "service" && (
               // Service-specific buttons
               <div className="flex flex-col w-full pt-2">
+                // TODO
                 <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
               </div>
             )}
