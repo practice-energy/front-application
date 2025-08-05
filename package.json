@@ -49,6 +49,7 @@
     "clsx": "^2.1.1",
     "cmdk": "latest",
     "date-fns": "latest",
+    "embla-carousel": "^8.6.0",
     "embla-carousel-react": "latest",
     "framer-motion": "latest",
     "i18next": "latest",

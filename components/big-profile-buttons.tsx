@@ -1,12 +1,13 @@
 "use client"
 
-import React, { ComponentType } from "react"
+import React, { ComponentType, useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
-import {cn} from "@/lib/utils";
-import {IconPractice} from "@/components/icons/icon-practice";
+import useEmblaCarousel from 'embla-carousel-react'
+import { cn } from "@/lib/utils"
+import { IconPractice } from "@/components/icons/icon-practice"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface ButtonConfig {
   id: string
@@ -106,79 +107,83 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onDashboard,
       show: show.dashboard,
     },
-  ].filter((button) => button.show)
+  ]//.filter((button) => button.show)
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: 'start',
+    slidesToScroll: 1,
+    containScroll: 'keepSnaps',
+    dragFree: true
+  })
 
   return (
-    <div className="flex items-center justify-center w-full pl-4">
-      <div className="flex items-center w-full">
-        {/* Аватарка */}
-        <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
-          {user?.avatar ? (
-            <Image
-              src={user.avatar}
-              alt={user.name}
-              width={80}
-              height={80}
-              className="object-cover"
-            />
-          ) : (
-            <PracticePlaceholder width={80} height={80} />
-          )}
-        </div>
+      <div className="flex items-center justify-center w-screen pl-4 overflow-hidden ">
+        <div className="flex items-center w-full">
+          {/* Аватарка */}
+          <div className="flex-shrink-0 rounded-sm overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
+            {user?.avatar ? (
+                <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={80}
+                    height={80}
+                    className="object-cover"
+                />
+            ) : (
+                <PracticePlaceholder width={80} height={80} />
+            )}
+          </div>
 
-        {/* Карусель кнопок */}
-        <div className="flex-1 relative">
-          <Carousel
-            opts={{
-              align: "start",
-              slidesToScroll: 1,
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              <CarouselItem className="pl-2 md:pl-4 basis-auto">
-                <div className="w-2" />
-              </CarouselItem>
-              {buttons.map((button) => (
-                <CarouselItem key={button.id} className="pl-2 pt-3 md:pl-4 basis-auto">
-                  <button
-                    onClick={button.onClick}
-                    className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
-                  >
-                    <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                      {button.variant === "practice" ? (
-                        <button.Icon
-                            className="w-full h-full text-gray-700"
-                            width={36}
-                            height={36}
-                        />
-                      ) : (<button.Icon className="w-full h-full text-gray-700"/>)}
-                    </div>
+          {/* Карусель кнопок */}
+          <div className="flex-1 relative">
+            <div className="overflow-auto" ref={emblaRef}>
+              <div className="flex touch-pan-x select-none">
+                {buttons.map((button) => (
+                    <div
+                        key={button.id}
+                        className="flex-[0_0_auto] min-w-0 pl-2 pt-3 md:pl-4"
+                        style={{ flex: '0 0 auto', minWidth: 0 }}
+                    >
+                      <button
+                          onClick={button.onClick}
+                          className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
+                      >
+                        <div className="w-9 h-9 mb-1 flex items-center justify-center">
+                          {button.variant === "practice" ? (
+                              <button.Icon
+                                  className="w-full h-full text-gray-700"
+                                  width={36}
+                                  height={36}
+                              />
+                          ) : (
+                              <button.Icon className="w-full h-full text-gray-700" />
+                          )}
+                        </div>
 
-                    {button.variant === "two-lines" ? (
-                      <>
-                        <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
-                        {button.bottomText && (
-                          <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
+                        {button.variant === "two-lines" ? (
+                            <>
+                        <span className="text-xs text-center leading-tight text-neutral-900">
+                          {button.topText}
+                        </span>
+                              {button.bottomText && (
+                                  <span className="text-sm text-center leading-tight text-gray-600">
+                            {button.bottomText}
+                          </span>
+                              )}
+                            </>
+                        ) : (
+                            <span className="text-xs text-center leading-tight text-gray-800">
+                        {button.singleText}
+                      </span>
                         )}
-                      </>
-                    ) : (
-                      <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
-                    )}
-                  </button>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-          <div
-              className={cn(
-                  "sticky  right-0 h-3 bg-gradient-to-l to-transparent pointer-events-none z-10",
-                  "from-white via-white/80 to-transparent",
-              )}
-          />
+                      </button>
+                    </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   )
 }
