@@ -15,8 +15,10 @@ interface ExceptionalSlotsSectionProps {
   onUpdate: (restrictions: CalendarRestrictions) => void
   editingRestrictionId: string | null
   setEditingRestrictionId: (id: string | null) => void
-  isCollapsable: boolean
-  title: string
+  isCollapsable?: boolean
+  title?: string
+  showDatePicker: boolean
+  setShowDatePicker: (show: boolean) => void
 }
 
 export function ExceptionalSlotsSection({
@@ -25,10 +27,11 @@ export function ExceptionalSlotsSection({
   editingRestrictionId,
   setEditingRestrictionId,
   title = "Исключительные слоты",
-  isCollapsable,
+  isCollapsable = false,
+  showDatePicker,
+  setShowDatePicker,
 }: ExceptionalSlotsSectionProps) {
   const [showExceptionalSlots, setShowExceptionalSlots] = useState(false)
-  const [showDatePicker, setShowDatePicker] = useState(false)
   const [repeatDatePickerId, setRepeatDatePickerId] = useState<string | null>(null)
 
   const handleDateSelect = (date: Date) => {
@@ -134,17 +137,15 @@ export function ExceptionalSlotsSection({
                 />
               </div>
             </button>
-            {editingRestrictionId === null && !showDatePicker && !repeatDatePickerId && null}
           </>
         ) : (
           <div className="flex items-center flex-row gap-2">
             <div className="font-semibold justify-start py-3">{title}</div>
-            {editingRestrictionId === null && !showDatePicker && !repeatDatePickerId && null}
           </div>
         )}
       </div>
 
-      {showExceptionalSlots && (
+      {(showExceptionalSlots || !isCollapsable) && (
         <div className="space-y-4">
           {showDatePicker && (
             <div>

@@ -11,7 +11,6 @@ import { PeriodsFormatsSection } from "./settings-sections/periods-formats-secti
 import { ExceptionalSlotsSection } from "./settings-sections/exceptional-slots-section"
 import { SettingsSectionHeader } from "./settings-sections/settings-section-header"
 import { SettingsSectionContent } from "./settings-sections/settings-section-content"
-import { Clock, Calendar } from "lucide-react"
 
 interface CalendarSettingsProps {
   restrictions: CalendarRestrictions
@@ -61,7 +60,6 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             sectionVisibility={sectionVisibility}
             toggleSection={toggleSection}
             isMobile={isMobile}
-            icon={Clock}
             iconStyle="text-violet-600"
           />
           <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
@@ -74,7 +72,6 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             sectionVisibility={sectionVisibility}
             toggleSection={toggleSection}
             isMobile={isMobile}
-            icon={Calendar}
             iconStyle="text-violet-600"
           />
           <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
