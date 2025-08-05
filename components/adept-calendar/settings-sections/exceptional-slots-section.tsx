@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { ChevronDown } from "lucide-react"
 import type { CalendarRestrictions, Restriction } from "@/types/calendar-event"
 import { RestrictionItem } from "../restriction-item"
@@ -33,6 +33,18 @@ export function ExceptionalSlotsSection({
 }: ExceptionalSlotsSectionProps) {
   const [showExceptionalSlots, setShowExceptionalSlots] = useState(false)
   const [repeatDatePickerId, setRepeatDatePickerId] = useState<string | null>(null)
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (showDatePicker && calendarRef.current) {
+      setTimeout(() => {
+        calendarRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        })
+      }, 100)
+    }
+  }, [showDatePicker])
 
   const handleDateSelect = (date: Date) => {
     if (repeatDatePickerId) {
@@ -148,7 +160,7 @@ export function ExceptionalSlotsSection({
       {(showExceptionalSlots || !isCollapsable) && (
         <div className="space-y-4">
           {showDatePicker && (
-            <div>
+            <div ref={calendarRef}>
               <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} isCollapsible={true} />
             </div>
           )}
