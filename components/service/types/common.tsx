@@ -1,4 +1,5 @@
 import {Format} from "@/types/common";
+import {CalendarRestrictions} from "@/types/calendar-event";
 
 export interface ServiceData {
     title: string
@@ -6,7 +7,10 @@ export interface ServiceData {
     location?: string
     description: string
     contents: string
-    price: number
+
+    priceInPerosn: number
+    priceVideo: number
+    calendarRestrictions: CalendarRestrictions
     duration: string
     images: string[]
     includes: string[]

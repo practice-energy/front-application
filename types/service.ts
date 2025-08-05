@@ -9,8 +9,12 @@ export interface Service {
     location?: string
     description: string
     contents: string
-    practice: string
-    price: number
+    practiceVideo: number
+    practiceInPerson: number
+
+    priceInPerosn: number
+    priceVideo: number
+
     duration: string
     images: string[]
     includes: string[]

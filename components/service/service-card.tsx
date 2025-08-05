@@ -22,6 +22,8 @@ import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
 import type { Service } from "@/types/service"
 import type { CalendarRestrictions } from "@/types/calendar-event"
+import {Input} from "@/components/ui/input";
+import {cn} from "@/lib/utils";
 
 interface ServiceCardProps {
   service: Service
@@ -60,6 +62,7 @@ export function ServiceCard({
   // Initialize restrictions from service or create default
   const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
     service.calendarRestrictions || {
+      gmt: "GMT+3",
       commons: {
         Mon: { isActive: true, intervals: [] },
         Tue: { isActive: true, intervals: [] },
@@ -155,7 +158,7 @@ export function ServiceCard({
   }, [editPhotos, onPhotosUpload, isEditMode])
 
   return (
-    <div className="rounded-sm shadow-md overflow-hidden">
+    <div className="rounded-sm shadow-md overflow-hidden mb-28">
       <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
         <div className="rounded-b-sm bg-white ">
           {/* Black background photo section */}
@@ -220,134 +223,184 @@ export function ServiceCard({
             )}
           </div>
 
-          {/* White background content section */}
-          <div className="p-6 space-y-4">
-            {/* Title and price row */}
-            <div className="flex items-center justify-between">
+          <div className="flex flex-row">
+            <div className="p-6 flex flex-col w-2/3">
+              {/* Title and price row */}
+                {isEditMode ? (
+                    <input
+                        value={service.title}
+                        onChange={(e) => onInputChange("title", e.target.value)}
+                        placeholder="Практис"
+                        type="input"
+                        className={cn(
+                            "border-none focus:border-none focus:outline-none focus:ring-0", // Основные стили
+                            "text-neutral-900 w-full text-[36px] h-[36px] font-bold mt-3 px-1", // Текстовые стили
+                        )}
+                    />
+                ) : (
+                    <div className="flex items-center w-full">
+                    <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
+                    </div>
+                )}
+
+              {/* Description */}
               {isEditMode ? (
-                <EnhancedInput
-                  value={service.title}
-                  onChange={(e) => onInputChange("title", e.target.value)}
-                  placeholder="Название"
-                  type="input"
-                  className="text-neutral-900 flex-1"
-                />
+                  <EnhancedInput
+                      value={service.description || ""}
+                      onChange={(e) => onInputChange("description", e.target.value)}
+                      placeholder="Введите описание"
+                      type="input"
+                      className="mt-4 text-sm"
+                  />
               ) : (
-                <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
+                  <p className="text-gray-700 leading-relaxed">{service.description}</p>
               )}
 
+              {/* Location */}
+              {service.location && booked?.length === 0 && !isEditMode && (
+                  <div className="flex items-center text-neutral-600">
+                    <MapPin className="h-5 w-5 mr-2" />
+                    <span>{service.location}</span>
+                  </div>
+              )}
+
+              {isEditMode && (
+                  <LocationInput
+                      value={service.location || ""}
+                      onChange={(value) => onInputChange("location", value)}
+                      error={errors?.location}
+                  />
+              )}
+
+              {/* Tags row */}
+              {!isEditMode && service.format.includes("in-person") && (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
+                      <TimerReset size={16} />
+                      <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
+                    </div>
+                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                      <div className="items-center mx-auto flex flex-row gap-1">
+                        <TvMinimalPlay size={16}  />
+                        <p className="text-gray-600" >
+                          Видео
+                        </p>
+                      </div>
+                    </div>
+                    <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                      <IconPractice width={20} height={18} />
+                      {service.practiceVideo || 0}
+                    </div>
+                  </div>
+              )}
+
+              {/* Tags row 2 */}
+              {!isEditMode && service.format.includes("video") && (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
+                      <TimerReset size={16} />
+                      <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
+                    </div>
+                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                      <div className="items-center mx-auto flex flex-row gap-1">
+                        <Users size={16}  />
+                        <p className="text-gray-600" >
+                          Очно
+                        </p>
+                      </div>
+                    </div>
+                    <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
+                      <IconPractice width={20} height={18} />
+                      {service.practiceInPerson || 0}
+                    </div>
+                  </div>
+              )}
+            </div>
+            <div className="p-6 space-y-4 flex flex-col ml-auto">
               <div className="flex items-center text-[36px] font-bold text-neutral-900 pb-2">
                 {isEditMode ? (
-                  <CurrencyInput
-                    value={service.price}
-                    onChange={(value) => onInputChange("price", value)}
-                    placeholder="0"
-                    error={errors?.price}
-                    className="border border-gray-100"
-                  />
+                    <div className="flex flex-col">
+                      <div className="flex flex-row items-center">
+                        <TvMinimalPlay size={32}/>
+                        <CurrencyInput
+                            value={service.priceInPerosn}
+                            onChange={(value) => onInputChange("priceInPerosn", value)}
+                            placeholder="0"
+                            error={errors?.priceInPerosn}
+                            className="border border-gray-100"
+                        />
+                      </div>
+                      <div className="flex flex-row items-center">
+                        <Users size={32} />
+                        <CurrencyInput
+                            value={service.priceVideo}
+                            onChange={(value) => onInputChange("priceVideo", value)}
+                            placeholder="0"
+                            error={errors?.priceVideo}
+                            className="border border-gray-100"
+                        />
+                      </div>
+                    </div>
                 ) : (
-                  <>
-                    {formatNumber(service.price)}
-                    <RubleIcon size={48} bold={false} className="mb-0.5 ml-1" />
-                  </>
+                    <>
+                      <div className="flex flex-col">
+                        {service.format.includes("in-person") && (
+                            <div className="flex flex-row items-center">
+                              <Users size={32} className="text-violet-600 mr-3"/>
+                              <div className="ml-auto flex flex-row">
+                                {formatNumber(service.priceInPerosn)}
+                                <RubleIcon size={48} bold={false} />
+                              </div>
+                            </div>
+                        )}
+                        {service.format.includes("video") && (
+                            <div className="flex flex-row items-center">
+                              <TvMinimalPlay size={32} className="text-violet-600 mr-3"/>
+                              <div className="ml-auto  flex flex-row">
+                                {formatNumber(service.priceVideo)}
+                                <RubleIcon size={48} bold={false}  />
+                              </div>
+                            </div>
+                        )}
+                      </div>
+                    </>
                 )}
               </div>
             </div>
-
-            {/* Description */}
-            {isEditMode ? (
-              <EnhancedInput
-                value={service.description || ""}
-                onChange={(e) => onInputChange("description", e.target.value)}
-                placeholder="Введите описание"
-                type="input"
-                className="mt-4 text-sm"
-              />
-            ) : (
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{service.description}</p>
-            )}
-
-            {/* Location */}
-            {service.location && booked?.length === 0 && !isEditMode && (
-              <div className="flex items-center text-neutral-600">
-                <MapPin className="h-5 w-5 mr-2" />
-                <span>{service.location}</span>
-              </div>
-            )}
-
-            {isEditMode && (
-              <LocationInput
-                value={service.location || ""}
-                onChange={(value) => onInputChange("location", value)}
-                error={errors?.location}
-              />
-            )}
-
-            {/* Tags row */}
-            {!isEditMode && (
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
-                  <TimerReset size={16} />
-                  <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
-                </div>
-                <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                  {service.format.map((f, index) => {
-                    return f === "video" ? (
-                      <>
-                        <TvMinimalPlay size={16} key={`video-${index}`} />
-                        <p className="text-gray-600" key={`text-video-${index}`}>
-                          Видео
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <Users size={16} key={`users-${index}`} />
-                        <p className="text-gray-600" key={`text-users-${index}`}>
-                          Очная
-                        </p>
-                      </>
-                    )
-                  })}
-                </div>
-                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 ml-auto bg-white">
-                  <IconPractice width={20} height={18} />
-                  {service.practice}
-                </div>
-              </div>
-            )}
-
-            {!isEditMode && (
-              <>
-                {booked?.map((booking) => (
-                  <BookingCard
-                    startTime={booking.startTime.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    endTime={booking.endTime.toLocaleTimeString("ru-RU", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    specialist={{
-                      id: specialist.id,
-                      name: specialist.name,
-                      avatar: specialist.avatar,
-                    }}
-                    service={{
-                      id: service.id,
-                      name: service.title,
-                      price: service.price,
-                      description: service.description,
-                    }}
-                    duration={booking.duration}
-                    format={booking.format}
-                    location={service.location}
-                    key={booking.id}
-                  />
-                ))}
-              </>
-            )}
           </div>
+
+          {!isEditMode && (
+              <div className="px-6 space-y-2">
+                {booked?.map((booking) => (
+                    <BookingCard
+                        startTime={booking.startTime.toLocaleTimeString("ru-RU", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        endTime={booking.endTime.toLocaleTimeString("ru-RU", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        specialist={{
+                          id: specialist.id,
+                          name: specialist.name,
+                          avatar: specialist.avatar,
+                        }}
+                        service={{
+                          id: service.id,
+                          name: service.title,
+                          price: booking.format === "in-person" ? service.priceInPerosn : service.priceVideo,
+                          description: service.description,
+                        }}
+                        duration={booking.duration}
+                        format={booking.format}
+                        location={service.location}
+                        key={booking.id}
+                    />
+                ))}
+              </div>
+          )}
+
           <AboutContentsSection
             contents={service.contents}
             included={service.includes}

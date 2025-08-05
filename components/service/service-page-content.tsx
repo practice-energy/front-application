@@ -179,7 +179,7 @@ export function ServicePageContent({
               <BackButton className="text-neutral-700 opacity-80" />
             </div>
 
-            <div className="flex flex-row gap-3 items-center pt-2.5 pr-9">
+            <div className="flex flex-row gap-6 items-center pt-2.5 pr-9">
               {isEditable && (
                 <ModeToggleBar
                   isEditMode={isEditMode}
