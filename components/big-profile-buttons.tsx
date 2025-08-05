@@ -1,6 +1,6 @@
 "use client"
 
-import type { ComponentType } from "react"
+import { useEffect, type ComponentType } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
@@ -107,17 +107,33 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
     },
   ].filter((button) => button.show)
 
-  // Create infinite loop by duplicating buttons
-  const infiniteButtons = [...buttons, ...buttons, ...buttons]
-
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "start",
     slidesToScroll: 1,
     containScroll: false,
     dragFree: true,
-    startIndex: buttons.length, // Start from the middle set
   })
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    const onSelect = () => {
+      const { selectedScrollSnap, scrollSnapList } = emblaApi
+      const isAtEnd = selectedScrollSnap() === scrollSnapList().length - 1
+      const isAtStart = selectedScrollSnap() === 0
+
+      // Handle infinite scroll by jumping to opposite end
+      if (isAtEnd) {
+        emblaApi.scrollTo(0, false)
+      } else if (isAtStart && emblaApi.previousScrollSnap() === scrollSnapList().length - 1) {
+        emblaApi.scrollTo(scrollSnapList().length - 1, false)
+      }
+    }
+
+    emblaApi.on("select", onSelect)
+    return () => emblaApi.off("select", onSelect)
+  }, [emblaApi])
 
   return (
     <div className="flex items-center justify-center w-screen pl-4 overflow-hidden">
@@ -141,9 +157,9 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
         <div className="flex-1 relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-x select-none">
-              {infiniteButtons.map((button, index) => (
+              {buttons.map((button) => (
                 <div
-                  key={`${button.id}-${index}`}
+                  key={button.id}
                   className="flex-[0_0_auto] min-w-0 pl-2 pt-3 md:pl-4"
                   style={{ flex: "0 0 auto", minWidth: 0 }}
                 >
