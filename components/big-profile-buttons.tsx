@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, type ComponentType } from "react"
+import type { ComponentType } from "react"
 import Image from "next/image"
 import type { User } from "@/types/user"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
-import useEmblaCarousel from "embla-carousel-react"
 import { IconPractice } from "@/components/icons/icon-practice"
 
 interface ButtonConfig {
@@ -105,35 +104,7 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
       onClick: actions.onDashboard,
       show: show.dashboard,
     },
-  ]//.filter((button) => button.show)
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    slidesToScroll: 1,
-    containScroll: false,
-    dragFree: true,
-  })
-
-  useEffect(() => {
-    if (!emblaApi) return
-
-    const onSelect = () => {
-      const { selectedScrollSnap, scrollSnapList } = emblaApi
-      const isAtEnd = selectedScrollSnap() === scrollSnapList().length - 1
-      const isAtStart = selectedScrollSnap() === 0
-
-      // Handle infinite scroll by jumping to opposite end
-      if (isAtEnd) {
-        emblaApi.scrollTo(0, false)
-      } else if (isAtStart && emblaApi.previousScrollSnap() === scrollSnapList().length - 1) {
-        emblaApi.scrollTo(scrollSnapList().length - 1, false)
-      }
-    }
-
-    emblaApi.on("select", onSelect)
-    return () => emblaApi.off("select", onSelect)
-  }, [emblaApi])
+  ].filter((button) => button.show)
 
   return (
     <div className="flex items-center justify-center w-screen pl-4 overflow-hidden">
@@ -153,45 +124,56 @@ export const BigProfileButtons = ({ user, actions, icons, show }: BigProfileButt
           )}
         </div>
 
-        {/* Карусель кнопок */}
+        {/* Горизонтальный скролл кнопок */}
         <div className="flex-1 relative">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex touch-pan-x select-none">
-              {buttons.map((button) => (
-                <div
-                  key={button.id}
-                  className="flex-[0_0_auto] min-w-0 pl-2 pt-3 md:pl-4"
-                  style={{ flex: "0 0 auto", minWidth: 0 }}
+          <div
+            className="flex overflow-x-auto scrollbar-hide touch-pan-x select-none gap-2 md:gap-4 pl-2 md:pl-4 pt-3"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              WebkitScrollbar: { display: "none" },
+            }}
+          >
+            {buttons.map((button) => (
+              <div key={button.id} className="flex-shrink-0">
+                <button
+                  onClick={button.onClick}
+                  className="w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
                 >
-                  <button
-                    onClick={button.onClick}
-                    className="flex-shrink-0 w-[74px] h-[74px] bg-white rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1.5 active:scale-95 transition-transform"
-                  >
-                    <div className="w-9 h-9 mb-1 flex items-center justify-center">
-                      {button.variant === "practice" ? (
-                        <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
-                      ) : (
-                        <button.Icon className="w-full h-full text-gray-700" />
-                      )}
-                    </div>
-
-                    {button.variant === "two-lines" ? (
-                      <>
-                        <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
-                        {button.bottomText && (
-                          <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
-                        )}
-                      </>
+                  <div className="w-9 h-9 mb-1 flex items-center justify-center">
+                    {button.variant === "practice" ? (
+                      <button.Icon className="w-full h-full text-gray-700" width={36} height={36} />
                     ) : (
-                      <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
+                      <button.Icon className="w-full h-full text-gray-700" />
                     )}
-                  </button>
-                </div>
-              ))}
-            </div>
+                  </div>
+
+                  {button.variant === "two-lines" ? (
+                    <>
+                      <span className="text-xs text-center leading-tight text-neutral-900">{button.topText}</span>
+                      {button.bottomText && (
+                        <span className="text-sm text-center leading-tight text-gray-600">{button.bottomText}</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-xs text-center leading-tight text-gray-800">{button.singleText}</span>
+                  )}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   )
 }
