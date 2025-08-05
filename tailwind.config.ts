@@ -9,7 +9,54 @@ const config: Config = {
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ["var(--font-inter)", "Inter", "sans-serif"],
+    },
     extend: {
+      fontSize: {
+        simple: ["14px", {fontWeight: "900"}],
+        bold: ["16px", {fontWeight: "700"}],
+        description: ["14px", {fontWeight: "900"}],
+        accent: ["12px", {fontWeight: "600", color: "#374151"}],
+        stat: [
+          "30px",
+          {
+            fontWeight: "700",
+            lineHeight: "1",
+          }
+        ],
+        statDescription: [
+          "14px",
+          {
+            fontWeight: "900",
+            lineHeight: "1.25",
+          }
+        ],
+        statSubtext: [
+          "12px",
+          {
+            fontWeight: "600",
+            lineHeight: "1",
+            color: "#374151"
+          }
+        ],
+        mobilebase: [
+          "18px",
+          {
+            fontWeight: "400",
+            color: "#404040" // neutral-700
+          },
+        ],
+      },
+      backgroundImage: {
+        "allura-pattern": "url('/allura-logo.svg')",
+        'gradient-from-neutral-150': 'linear-gradient(to top, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
+        'gradient-to-left-neutral-150': 'linear-gradient(to left, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
+        'gradient-to-right-neutral-150': 'linear-gradient(to right, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
+      },
+      backgroundSize: {
+        "allura-tile": "20px 20px",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -51,6 +98,11 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        colors: {
+          neutral: {
+            150: '#f8f9fa',
+          },
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -61,11 +113,10 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Enhanced dark theme palette
         "theme-light": {
-          bg: "#ffffff",
-          "bg-secondary": "#f8fafc",
-          "bg-tertiary": "#f1f5f9",
+          bg: "#fafaf9",
+          "bg-secondary": "#fafaf9",
+          "bg-tertiary": "#fafaf9",
           text: "#0f172a",
           "text-secondary": "#475569",
           "text-muted": "#64748b",
@@ -74,23 +125,31 @@ const config: Config = {
           accent: "#8b5cf6",
           "accent-hover": "#7c3aed",
         },
-        "theme-dark": {
-          bg: "#0f172a",
-          "bg-secondary": "#1e293b",
-          "bg-tertiary": "#334155",
-          text: "#f8fafc",
-          "text-secondary": "#cbd5e1",
-          "text-muted": "#94a3b8",
-          border: "#334155",
-          "border-light": "#475569",
-          accent: "#8b5cf6",
-          "accent-hover": "#7c3aed",
+        button: {
+          DEFAULT: "#ffffff",
+          hover: "#f5f3ff",
+          active: "#8b5cf6",
+          text: "#0f172a",
+          "text-active": "#ffffff",
+          border: "#e5e7eb",
+          "border-active": "#8b5cf6",
+          borderRadius: "calc(var(--radius) - 4px)",
+          dark: {
+            DEFAULT: "#374151",
+            hover: "#7c3aed",
+            active: "#8b5cf6",
+            text: "#ffffff",
+            "text-active": "#ffffff",
+            border: "#4b5563",
+            "border-active": "#8b5cf6",
+          },
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        DEFAULT: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {

@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    // Отключаем предупреждения о params
+    suppressParamsWarning: true
+  }
 }
 
 export default nextConfig

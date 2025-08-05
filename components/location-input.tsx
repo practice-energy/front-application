@@ -49,8 +49,7 @@ function debounce<T extends (...args: any[]) => any>(func: T, wait: number) {
 export function LocationInput({
   value,
   onChange,
-  placeholder = "Enter city in CIS countries",
-  label = "Location",
+  placeholder = "Страна, город",
   className,
   error,
   disabled = false,
@@ -207,8 +206,7 @@ export function LocationInput({
               "bg-white dark:bg-gray-800",
               "text-gray-900 dark:text-gray-100",
               "focus:border-violet-500 dark:focus:border-violet-400",
-              "focus:ring focus:ring-violet-500/20 dark:focus:ring-violet-400/20",
-              error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
+              error && "border-red-500 focus:border-red-500",
               className,
             )}
             onFocus={() => setShowSuggestions(true)}
@@ -253,7 +251,7 @@ export function LocationInput({
             {isFetchingSuggestions ? (
               <div className="px-4 py-3 text-gray-500 dark:text-gray-400 flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Loading CIS locations...
+                Загрузка...
               </div>
             ) : locationSuggestions.length > 0 ? (
               <ul className="py-1">
@@ -268,9 +266,9 @@ export function LocationInput({
                 ))}
               </ul>
             ) : locationInput.length > 2 ? (
-              <div className="px-4 py-3 text-gray-500 dark:text-gray-400">No locations found in CIS countries</div>
+              <div className="px-4 py-3 text-gray-500 dark:text-gray-400">Не найдено</div>
             ) : (
-              <div className="px-4 py-3 text-gray-500 dark:text-gray-400">Type at least 3 characters to search</div>
+              <div className="px-4 py-3 text-gray-500 dark:text-gray-400">Введите хотя бы 3 буквы для поиска</div>
             )}
           </div>
         )}

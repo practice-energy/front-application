@@ -1,23 +1,14 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-
-interface User {
-  email: string
-  name: string
-  isSpecialist?: boolean
-  specialistProfile?: {
-    id: string
-    title: string
-    specialties: string[]
-    status: "pending" | "approved" | "rejected"
-  } | null
-}
+import type { User } from "@/types/user"
+import { mockUser } from "@/services/mock-user"
+import { useProfileStore } from "@/stores/profile-store"
 
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
-  login: (user: User) => void
+  login: () => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
 }
@@ -25,25 +16,35 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
-  login: () => {},
+  login: async () => {
+    return Promise.resolve()
+  },
   logout: () => {},
   updateUser: () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const setProfileUser = useProfileStore(state => state.setUser)
 
   // Check for saved user on mount
   useEffect(() => {
     const savedUser = localStorage.getItem("user")
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const parsedUser = JSON.parse(savedUser)
+      setUser(parsedUser)
+      setProfileUser(parsedUser)
     }
-  }, [])
+  }, []) // Убрали setProfileUser из зависимостей
 
-  const login = (userData: User) => {
-    setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
+  const login = async () => {
+    // Simulate backend request
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    const newUser = mockUser
+    setUser(newUser)
+    localStorage.setItem("user", JSON.stringify(newUser))
+    setProfileUser(newUser)
   }
 
   const logout = () => {
@@ -56,13 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const updatedUser = { ...user, ...updates }
       setUser(updatedUser)
       localStorage.setItem("user", JSON.stringify(updatedUser))
+      setProfileUser(updatedUser)
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, updateUser }}>
+        {children}
+      </AuthContext.Provider>
   )
 }
 

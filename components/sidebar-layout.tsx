@@ -3,9 +3,11 @@
 import type React from "react"
 
 import { useAuth } from "@/hooks/use-auth"
-import { Header } from "@/components/header"
-import { MainSidebar } from "@/components/main-sidebar"
+import { Header } from "@/components/header/index"
+import { MainSidebar } from "@/components/main-sidebar/index"
 import { useSidebar } from "@/contexts/sidebar-context"
+import { usePathname } from "next/navigation"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { useEffect } from "react"
 
 interface SidebarLayoutProps {
@@ -14,7 +16,25 @@ interface SidebarLayoutProps {
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
   const { isAuthenticated } = useAuth()
+  const pathname = usePathname()
+  const isMobile = useIsMobile()
   const { isCollapsed } = useSidebar()
+
+  // Определяем нужно ли показывать header
+  const shouldShowHeader = () => {
+    // На мобильных устройствах не показываем header на странице календаря
+    if (isMobile) {
+        return false
+    }
+
+    if (pathname === "/" && !isAuthenticated) {
+      return false
+    }
+    // На всех остальных страницах показываем header
+    return true
+  }
+
+  const showHeader = shouldShowHeader()
 
   // Update body margin when sidebar state changes
   useEffect(() => {
@@ -22,13 +42,14 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
       // Используем custom event для уведомления компонентов о изменении состояния сайдбара
       window.dispatchEvent(
         new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 320 }
-        })
+          detail: { isCollapsed, width: isCollapsed ? 0 : 400 },
+        }),
       )
 
       // Отложенная установка стилей для лучшей синхронизации рендеринга
       const applyStyles = () => {
-        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? "320px" : "0"
+        const sidebarWidth = window.innerWidth < 768 ? "0" : "400px"
+        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
         document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }
 
@@ -42,10 +63,10 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
   }, [isAuthenticated, isCollapsed])
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
+    <div className="min-h-screen">
+      {showHeader && <Header />}
       {isAuthenticated && <MainSidebar />}
-      <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+      <main className={showHeader ? "min-h-[calc(100vh-3rem)]" : "min-h-screen"}>{children}</main>
     </div>
   )
 }

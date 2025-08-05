@@ -1,6 +1,10 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { ProfileSection, User, ProfileStats, SavedSpecialist, CalendarEvent, SortOption } from "@/types/profile"
+import type { ProfileSection } from "@/types/profile"
+import { User } from "@/types/user"
+import { ProfileStats } from "@/types/profile-stats"
+
+import {Specialist} from "@/types/specialist";
 
 interface ProfileState {
   // UI State
@@ -11,11 +15,9 @@ interface ProfileState {
   // User Data
   user: User | null
   stats: ProfileStats | null
-  savedSpecialists: SavedSpecialist[]
-  calendarEvents: CalendarEvent[]
+  savedSpecialists: Specialist[]
 
   // UI Controls
-  sortOption: SortOption
   isLoading: boolean
 
   // Actions
@@ -24,16 +26,12 @@ interface ProfileState {
   setIsMobile: (mobile: boolean) => void
   setUser: (user: User) => void
   setStats: (stats: ProfileStats) => void
-  setSavedSpecialists: (specialists: SavedSpecialist[]) => void
-  setCalendarEvents: (events: CalendarEvent[]) => void
-  setSortOption: (option: SortOption) => void
+  setSavedSpecialists: (specialists: Specialist[]) => void
   setLoading: (loading: boolean) => void
 
   // Data Actions
   removeSpecialist: (id: string) => void
   clearAllSpecialists: () => void
-  cancelEvent: (id: string) => void
-  updateEventStatus: (id: string, status: CalendarEvent["status"]) => void
 }
 
 export const useProfileStore = create<ProfileState>()(
@@ -46,8 +44,6 @@ export const useProfileStore = create<ProfileState>()(
       user: null,
       stats: null,
       savedSpecialists: [],
-      calendarEvents: [],
-      sortOption: "recent",
       isLoading: false,
 
       // Actions
@@ -57,8 +53,6 @@ export const useProfileStore = create<ProfileState>()(
       setUser: (user) => set({ user }),
       setStats: (stats) => set({ stats }),
       setSavedSpecialists: (specialists) => set({ savedSpecialists: specialists }),
-      setCalendarEvents: (events) => set({ calendarEvents: events }),
-      setSortOption: (option) => set({ sortOption: option }),
       setLoading: (loading) => set({ isLoading: loading }),
 
       // Data Actions
@@ -67,27 +61,12 @@ export const useProfileStore = create<ProfileState>()(
         set({ savedSpecialists: savedSpecialists.filter((s) => s.id !== id) })
       },
       clearAllSpecialists: () => set({ savedSpecialists: [] }),
-      cancelEvent: (id) => {
-        const { calendarEvents } = get()
-        set({
-          calendarEvents: calendarEvents.map((event) =>
-            event.id === id ? { ...event, status: "cancelled" as const } : event,
-          ),
-        })
-      },
-      updateEventStatus: (id, status) => {
-        const { calendarEvents } = get()
-        set({
-          calendarEvents: calendarEvents.map((event) => (event.id === id ? { ...event, status } : event)),
-        })
-      },
     }),
     {
       name: "profile-store",
       partialize: (state) => ({
         activeSection: state.activeSection,
         sidebarCollapsed: state.sidebarCollapsed,
-        sortOption: state.sortOption,
       }),
     },
   ),

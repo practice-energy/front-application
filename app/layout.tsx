@@ -3,12 +3,15 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/hooks/use-auth"
-import { I18nProvider } from "@/components/i18n-provider"
-import { ThemeProvider } from "@/hooks/use-theme"
 import { SidebarProvider } from "@/contexts/sidebar-context"
 import { SidebarLayout } from "@/components/sidebar-layout"
 
-const inter = Inter({ subsets: ["latin"] })
+// Load Inter with all subsets needed
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Practice Energy - Find Your Perfect Specialist",
@@ -22,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -41,16 +44,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <I18nProvider>
+      <body className={`font-sans bg-theme-light-bg text-gray-900 `}>
             <AuthProvider>
               <SidebarProvider>
                 <SidebarLayout>{children}</SidebarLayout>
               </SidebarProvider>
             </AuthProvider>
-          </I18nProvider>
-        </ThemeProvider>
       </body>
     </html>
   )

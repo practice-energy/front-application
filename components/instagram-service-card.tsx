@@ -1,154 +1,202 @@
 "use client"
 
 import type React from "react"
-import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ClockIcon } from "@heroicons/react/24/outline"
-import { useDoubleTap } from "@/hooks/use-double-tap"
-import { useLikes } from "@/hooks/use-likes"
+import {TimerReset} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
+import {formatNumber} from "@/utils/format";
+import {BurnEntityButton} from "@/components/burn-entity-button";
+import {RepeatEntityButton} from "@/components/repeat-entity-button";
+import {EditEntityButton} from "@/components/edit-entity-button";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {PracticePlaceholder} from "@/components/practice-placeholder";
+import { motion, AnimatePresence } from "framer-motion";
 import {cn} from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
-
-interface Service {
-  id: string
-  name: string
-  duration: string
-  price: number
-  images: string[]
-  description: string
-}
+import {Service} from "@/types/service";
 
 interface InstagramServiceCardProps {
-  service: Service
-  onClick?: () => void
+    service: Service
+    onClick?: () => void
+    specialistId?: string // ID of specialist for reply functionality
+    isEditMode? : boolean
+    onCopy?: () => void
+    onEdit?: () => void
+    onBurn?: () => void
 }
 
-export function InstagramServiceCard({ service, onClick }: InstagramServiceCardProps) {
-  const router = useRouter()
-  const { isLiked, toggleLike } = useLikes()
-  const [showLikeAnimation, setShowLikeAnimation] = useState(false)
+export function InstagramServiceCard({
+                                         service,
+                                         onClick,
+                                         isEditMode,
+                                         onCopy,
+                                         onEdit,
+                                         onBurn
+                                     }: InstagramServiceCardProps) {
+    const router = useRouter()
+    const [isBurning, setIsBurning] = useState(false)
 
-  const liked = isLiked("service", service.id)
-
-  const handleDoubleTap = () => {
-    toggleLike("service", service.id)
-    setShowLikeAnimation(true)
-    setTimeout(() => setShowLikeAnimation(false), 1000)
-  }
-
-  const doubleTapHandler = useDoubleTap({ onDoubleTap: handleDoubleTap })
-
-  const handleCardClick = () => {
-    if (onClick) {
-      onClick()
-    } else {
-      router.push(`/service/${service.id}`)
+    const handleCardClick = () => {
+        if (onClick && !isBurning) {
+            onClick()
+        } else if (!isBurning) {
+            router.push(`/service/${service.id}`)
+        }
     }
-  }
 
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    toggleLike("service", service.id)
-  }
+    const handleBurn = () => {
+        setIsBurning(true)
+        setTimeout(() => {
+            onBurn?.()
+        }, 300) // Даем время для анимации перед вызовом onBurn
+    }
 
-  // Truncate long text
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text
-  }
+    return (
+        <div className="relative">
+            <AnimatePresence>
+                {isEditMode && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex flex-row ml-auto mr-1.5 gap-6 items-end justify-end p-2"
+                    >
+                        <RepeatEntityButton onClick={onCopy}/>
+                        <EditEntityButton onClick={onEdit}/>
+                        <BurnEntityButton onClick={handleBurn}/>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-  return (
-      <div className="w-full min-w-[250px] max-w-sm mx-auto">
-        <div
-            className="bg-white dark:bg-gray-800 rounded-sm shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600"
-            onClick={handleCardClick}
-            onTouchEnd={doubleTapHandler}
-        >
-          {/* Image Container - 4:5 aspect ratio */}
-          <div className="relative aspect-square overflow-hidden">
-            <img
-                src={service.images[0] || "/placeholder.svg?height=320&width=320"}
-                alt={service.name}
-                className="w-full h-full object-cover"
-            />
+            <AnimatePresence>
+                {!isBurning && (
+                    <motion.div
+                        layout // Анимация изменения layout
+                        initial={{ scale: 1, opacity: 1 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{
+                            scale: 0.8,
+                            opacity: 0,
+                            transition: { duration: 0.3 }
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="md:w-[240px]"
+                    >
+                        <motion.div
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 1 }}
+                            className="w-full h-full bg-white rounded-sm shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:border-gray-200 dark:hover:border-gray-600"
+                            onClick={handleCardClick}
+                        >
+                            {/* Image Container - фиксированный размер */}
+                            <motion.div
+                                className="relative w-full h-[225px] overflow-hidden" // Фиксированная высота как у SVG
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                {service.images && service.images.length > 0 ? (
+                                    <motion.img
+                                        src={service.images[0] || "/placeholder.svg"}
+                                        alt={service.title}
+                                        className="w-full h-full object-cover"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                        exit={{ opacity: 0 }}
+                                    />
+                                ) : (
+                                    <motion.svg
+                                        viewBox="0 0 251 225"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={cn(
+                                            "w-full h-full object-cover bg-neutral-100 rounded-b-none stroke-current",
+                                            "text-gray-400",
+                                        )}
+                                        preserveAspectRatio="xMidYMid meet"
+                                    >
+                                        {/* Группа с трансформацией масштабирования и смещением вверх */}
+                                        <g transform="scale(0.33) translate(250, 240)"> {/* Уменьшили Y-координату с 340 до 240 */}
+                                            <path d="M44 224.421L44 0.999961" stroke="currentColor" stroke-width="30"/>
+                                            <line x1="8.60365" y1="32.7127" x2="241.415" y2="195.729" stroke="currentColor" stroke-width="30"/>
+                                            <line x1="241.415" y1="30.2873" x2="8.60355" y2="193.304" stroke="currentColor" stroke-width="30"/>
+                                            <path d="M206 224.421L206 0.999962" stroke="currentColor" stroke-width="30"/>
+                                        </g>
+                                    </motion.svg>
+                                )}
+                            </motion.div>
 
-            {/* Double Tap Like Animation */}
-            {showLikeAnimation && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="bg-violet-600 rounded-sm p-1">
-                    <Image
-                        src="/star-pentagram-icon.svg"
-                        alt="Star"
-                        width={64}
-                        height={64}
-                        className="h-16 w-16 animate-ping filter invert"
-                    />
-                  </div>
-                </div>
-            )}
-          </div>
+                            {/* Content */}
+                            {service.title !== "" ? (
+                                <motion.div
+                                    className="px-1.5 pb-1.5 min-h-[65px] bg-colors-neutral-150 h-full"
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.1, duration: 0.3 }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    {/* First row: Title on left, Price on right */}
+                                    <div className="flex justify-between items-center mb-1.5">
+                                        <motion.div
+                                            className="font-bold text-base text-gray-900 line-clamp-1 flex-1"
+                                            whileHover={{ x: 2 }}
+                                            transition={{ type: "spring", stiffness: 300 }}
+                                        >
+                                            {service.title}
+                                        </motion.div>
+                                        <motion.div
+                                            className="text-[18px] font-semibold whitespace-nowrap"
+                                            whileHover={{ scale: 1.05 }}
+                                        >
+                                            {service.price > 0 && (
+                                                <>
+                                                    {formatNumber(service.price)}
+                                                    <RubleIcon size={20} bold={false} className="inline mb-0.5" />
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    </div>
 
-          {/* Content */}
-          <div className="p-4">
-            <div className="flex justify-between items-start">
-              {/* Service Name - truncated */}
-              <h3 className="font-bold text-lg text-gray-900 dark:text-white transition-colors duration-300 flex-1 pr-2">
-                {truncateText(service.name, 50)}
-              </h3>
+                                    {/* Second row: Duration with icon */}
+                                    <motion.div
+                                        className="flex items-center gap-1 mb-1.5"
+                                        whileHover={{ x: 2 }}
+                                    >
+                                        {service.duration && service.duration !== "" && (
+                                            <>
+                                                <TimerReset className="text-gray-500 w-[14px] h-[14px]" size={14}/>
+                                                <span className="text-xs text-neutral-700">
+                                                    {service.duration}
+                                                </span>
+                                            </>
+                                        )}
+                                    </motion.div>
 
-              {/* Star Button */}
-              <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleLikeClick}
-                  className={`
-                rounded-sm h-9 w-9 flex items-center justify-center border transition-colors duration-200
-                ${
-                      liked
-                          ? "bg-violet-600 border-violet-600 hover:bg-violet-500"
-                          : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-violet-50 dark:hover:bg-violet-700"
-                  }
-                active:bg-violet-600 dark:active:bg-violet-600
-                active:text-white dark:active:text-white
-                active:border-violet-600 dark:active:border-violet-600
-                text-black dark:text-white
-                focus:outline-none
-              `}
-              >
-                <Sparkles
-                    width={20}
-                    height={20}
-                    className={cn(
-                        "bold",
-                        liked ? "filter brightness-0 invert" : "dark:filter dark:brightness-0 dark:invert")}
-                />
-              </Button>
-            </div>
-
-            {/* Duration and Price - moved price to left with gap-3 */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
-                <ClockIcon className="h-4 w-4 mr-1" />
-                <span>{service.duration}</span>
-              </div>
-              <div className="text-lg font-bold text-violet-600 dark:text-violet-400 transition-colors duration-300">
-                {service.price}
-                <RubleIcon
-                    size={18}
-                    bold={true}
-                    className="text-violet-700 dark:text-violet-400"
-                />
-              </div>
-            </div>
-
-            {/* Description */}
-            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed transition-colors duration-300">
-              {truncateText(service.description, 80)}
-            </p>
-          </div>
+                                    {/* Third row: Description */}
+                                    <motion.div
+                                        className="text-xs text-neutral-900 opacity-80 line-clamp-1"
+                                        whileHover={{ x: 2 }}
+                                    >
+                                        {service.description}
+                                    </motion.div>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    className="p-1.5 bg-colors-neutral-150 h-full items-center justify-center"
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                >
+                                    <div className={"flex flex-col items-center justify-center gap-1 md:w-[240px] min-h-[65px] text-gray-400 md:h-[65px] text-sm"}/>
+                                </motion.div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
-      </div>
-  )
+    )
 }

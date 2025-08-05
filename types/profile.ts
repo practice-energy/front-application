@@ -1,1 +1,1 @@
-export type ProfileSection = "overview" | "calendar" | "saved" | "security" | "preferences" | "balance"
+export type ProfileSection = "overview" | "calendar" | "saved" | "security" | "balance"
