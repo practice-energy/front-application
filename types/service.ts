@@ -2,21 +2,24 @@ import {Format} from "@/types/common";
 import {CalendarRestrictions} from "@/types/calendar-event";
 import {Feedback} from "@/types/feedback";
 
+
+export interface Practice {
+    id: string
+    slots: number
+    duration: number
+    price: number
+    format: Format
+}
+
+
 export interface Service {
     id: string
     title: string
-    format: Format[]
+
     location?: string
     description: string
     contents: string
-    practiceVideo: number
-    practiceInPerson: number
 
-    priceInPerson: number
-    priceVideo: number
-
-    durationVideo: number
-    durationInPerson: number
     images: string[]
     includes: string[]
     specialist: {
@@ -25,6 +28,8 @@ export interface Service {
         title: string
         avatar: string
     }
+    practice: Practice[]
+
     tags: string[]
     reviews: Feedback[]
     bookings?: {

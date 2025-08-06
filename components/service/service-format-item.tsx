@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { Format } from "@/types/common"
+import { Practice } from "@/types/service"
 import { BurnEntityButton } from "@/components/burn-entity-button"
 import { AddEntityButton } from "@/components/add-entity-button"
 import { SaveEntityButton } from "@/components/save-entity-button"
@@ -22,22 +23,20 @@ import { RubleIcon } from "@/components/ui/ruble-sign"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
-interface PracticeItem {
-  id: string
-  count: number
-  duration: number
-  price: number
-}
+// Utility function to format numbers with commas
+const formatNumberWithCommas = (num: number): string => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
 interface ServiceFormatItemProps {
   format: Format
   duration: number
-  practices: PracticeItem[]
+  practices: Practice[]
   totalPrice: number
   isActive: boolean
   isEditMode: boolean
   onUpdate: (data: {
-    practices: PracticeItem[]
+    practices: Practice[]
     totalPrice: number
     isActive: boolean
   }) => void
@@ -76,10 +75,10 @@ export function ServiceFormatItem({
                                     onEditToggle,
                                     onStatusToggle
                                   }: ServiceFormatItemProps) {
-  const [editedPractices, setEditedPractices] = useState<PracticeItem[]>(
+  const [editedPractices, setEditedPractices] = useState<Practice[]>(
       practices.map(p => ({
         ...p,
-        duration: p.count * 30
+        duration: p.slots * 30
       }))
   )
   const [editedTotalPrice, setEditedTotalPrice] = useState(totalPrice)
@@ -88,7 +87,7 @@ export function ServiceFormatItem({
     if (!isEditMode) {
       setEditedPractices(practices.map(p => ({
         ...p,
-        duration: p.count * 30
+        duration: p.slots * 30
       })))
       setEditedTotalPrice(totalPrice)
     }
@@ -96,7 +95,7 @@ export function ServiceFormatItem({
 
   useEffect(() => {
     // Пересчитываем общую сумму при изменении практис
-    const newTotal = editedPractices.reduce((sum, practice) => sum + (practice.price), 0)
+    const newTotal = editedPractices.reduce((sum, practice) => sum + practice.price, 0)
     setEditedTotalPrice(newTotal)
   }, [editedPractices])
 
@@ -122,12 +121,15 @@ export function ServiceFormatItem({
 
   const handlePracticePriceChange = (index: number, price: number) => {
     const newPractices = [...editedPractices]
-    newPractices[index] = { ...newPractices[index], price: Math.max(0, price) }
+    newPractices[index] = {
+      ...newPractices[index],
+      price: Math.min(100000, Math.max(0, price))
+    }
     setEditedPractices(newPractices)
   }
 
   const addPractice = () => {
-    const newPractice: PracticeItem = {
+    const newPractice: Practice = {
       id: `practice-${Date.now()}`,
       count: 1,
       duration: 30, // 1 * 30 minutes
@@ -156,9 +158,7 @@ export function ServiceFormatItem({
         >
           <Card className="py-2 px-1.5">
             <CardContent className="p-0">
-              <div className={cn(
-                  "flex",
-              )}>
+              <div className={cn("flex")}>
                 <div className={cn(
                     "flex",
                     isEditMode ? "flex-col" : "flex-row",
@@ -171,7 +171,7 @@ export function ServiceFormatItem({
                     </div>
                     {!isEditMode && (
                         <div className="text-[18px] ml-2 font-semibold items-center text-neutral-900">
-                          {totalPrice.toLocaleString()}
+                          {formatNumberWithCommas(totalPrice)}
                           <RubleIcon size={24} bold={false} />
                         </div>
                     )}
@@ -179,7 +179,7 @@ export function ServiceFormatItem({
 
                   {/* Список практис */}
                   {isEditMode ? (
-                      <div className="flex flex-col">
+                      <div className="flex flex-col ml-1">
                         <AnimatePresence>
                           {editedPractices.map((practice, index) => (
                               <motion.div
@@ -196,20 +196,20 @@ export function ServiceFormatItem({
 
                                 <input
                                     type="number"
-                                    value={practice.count}
+                                    value={practice.slots}
                                     onChange={(e) => handlePracticeCountChange(index, parseInt(e.target.value) || 1)}
-                                    className=" focus:outline-none focus:ring-0 w-8 px-0.5 py-0.5 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                    className="focus:outline-none focus:ring-0 w-8 px-0.5 py-0.5 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     min="1"
                                 />
 
                                 <div className="flex flex-row min-w-[90px] items-center">
                                   <X size={18}/>
-                                  <div className="text-sm">{practice.count * 30} минут</div>
+                                  <div className="text-sm">30 минут</div>
                                 </div>
 
-                                <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 ">
+                                <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 w-[60px]">
                                   <TimerReset size={16} className="text-white" />
-                                  <div>{practice.count * 30}</div>
+                                  <div>{practice.slots * 30}</div>
                                 </div>
 
                                 <div className="flex items-center py-1 ml-auto">
@@ -221,7 +221,6 @@ export function ServiceFormatItem({
                                       min="0"
                                       max={100000}
                                   />
-
                                   <RubleIcon size={24} bold={false} />
                                 </div>
                               </motion.div>
@@ -232,7 +231,7 @@ export function ServiceFormatItem({
                         <div className="flex justify-end ml-auto mt-1">
                           <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
                             <div className="text-end ml-auto">
-                              {editedTotalPrice.toLocaleString()}
+                              {formatNumberWithCommas(editedTotalPrice)}
                             </div>
                           </div>
                           <RubleIcon size={24} className="text-violet-600" bold={false}/>
@@ -242,10 +241,10 @@ export function ServiceFormatItem({
                       <div className="flex flex-col px-3 gap-3">
                         {practices.map((practice, index) => (
                             <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700 min-w-40">
-                              <div>{`${practice.count} практис по`}</div>
+                              <div>{`${practice.slots} практис по`}</div>
                               <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-xs">
                                 <TimerReset size={16} className="text-white" />
-                                <span>{practice.count * 30}</span>
+                                <span>{practice.slots * 30}</span>
                               </div>
                             </div>
                         ))}

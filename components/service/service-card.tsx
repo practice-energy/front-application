@@ -65,22 +65,9 @@ export function ServiceCard({
   // Состояние для форматов услуг
   const [serviceFormats, setServiceFormats] = useState([
     {
-      format: "video" as Format,
-      duration: 30,
-      practices: [
-        { id: "1", count: 4, duration: 30, price: 5000 },
-        { id: "2", count: 4, duration: 60, price: 7500 }
-      ],
-      totalPrice: 50000,
-      isActive: true,
-      isEditMode: false
-    },
-    {
       format: "in-person" as Format,
       duration: 60,
-      practices: [
-        { id: "3", count: 2, duration: 60, price: 8000 }
-      ],
+      practices: [],
       totalPrice: 16000,
       isActive: false,
       isEditMode: false
