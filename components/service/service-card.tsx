@@ -24,6 +24,7 @@ import type { Service } from "@/types/service"
 import type { CalendarRestrictions } from "@/types/calendar-event"
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
+import {AddEntityButton} from "@/components/add-entity-button";
 
 interface ServiceCardProps {
   service: Service
@@ -55,6 +56,9 @@ export function ServiceCard({
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
+  const [formatTags, setFormatTags] = useState<"video" | "in-person">(
+      service.format.includes("video") ? "video" : "in-person"
+  )
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
@@ -159,8 +163,12 @@ export function ServiceCard({
 
   return (
     <div className="rounded-sm shadow-md overflow-hidden mb-28">
-      <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md ">
-        <div className="rounded-b-sm bg-white ">
+      <div className={cn(
+          "relative rounded-b-sm shadow-md ",
+          isEditMode ? "bg-white" : "bg-colors-neutral-150"
+        )}
+      >
+        <div className="rounded-b-sm ">
           {/* Black background photo section */}
           <div className="bg-neutral-800 p-6 flex gap-2 rounded-sm">
             {/* Main image */}
@@ -234,11 +242,11 @@ export function ServiceCard({
                         type="input"
                         className={cn(
                             "border-none focus:border-none focus:outline-none focus:ring-0", // Основные стили
-                            "text-neutral-900 w-full text-[36px] h-[36px] font-bold mt-3 px-1", // Текстовые стили
+                            "text-neutral-900 w-full text-[36px] h-[36px] font-bold p-3 px-1", // Текстовые стили
                         )}
                     />
                 ) : (
-                    <div className="flex items-center w-full">
+                    <div className="flex items-center w-full py-3">
                     <div className="text-2xl font-bold text-neutral-900  flex-1">{service.title}</div>
                     </div>
                 )}
@@ -257,8 +265,10 @@ export function ServiceCard({
               )}
 
               {/* Location */}
-              {service.location && booked?.length === 0 && !isEditMode && (
-                  <div className="flex items-center text-neutral-600">
+              {service.location &&
+                  // booked?.length === 0 &&
+                  !isEditMode && (
+                  <div className="flex items-center text-neutral-600 pt-5">
                     <MapPin className="h-5 w-5 mr-2" />
                     <span>{service.location}</span>
                   </div>
@@ -271,103 +281,72 @@ export function ServiceCard({
                       error={errors?.location}
                   />
               )}
-
-              {/* Tags row */}
-              {!isEditMode && service.format.includes("in-person") && (
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
-                      <TimerReset size={16} />
-                      <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
-                    </div>
-                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                      <div className="items-center mx-auto flex flex-row gap-1">
-                        <TvMinimalPlay size={16}  />
-                        <p className="text-gray-600" >
-                          Видео
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                      <IconPractice width={20} height={18} />
-                      {service.practiceVideo || 0}
-                    </div>
-                  </div>
-              )}
-
-              {/* Tags row 2 */}
-              {!isEditMode && service.format.includes("video") && (
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1 gap-1 bg-white">
-                      <TimerReset size={16} />
-                      <div className="text-gray-600 text-simple font-normal">{service.duration}</div>
-                    </div>
-                    <div className="inline-flex w-[96px] h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                      <div className="items-center mx-auto flex flex-row gap-1">
-                        <Users size={16}  />
-                        <p className="text-gray-600" >
-                          Очно
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 gap-1 bg-white">
-                      <IconPractice width={20} height={18} />
-                      {service.practiceInPerson || 0}
-                    </div>
-                  </div>
-              )}
             </div>
             <div className="p-6 space-y-4 flex flex-col ml-auto">
               <div className="flex items-center text-[36px] font-bold text-neutral-900 pb-2">
                 {isEditMode ? (
                     <div className="flex flex-col">
-                      <div className="flex flex-row items-center">
-                        <TvMinimalPlay size={32}/>
-                        <CurrencyInput
-                            value={service.priceInPerosn}
-                            onChange={(value) => onInputChange("priceInPerosn", value)}
-                            placeholder="0"
-                            error={errors?.priceInPerosn}
-                            className="border border-gray-100"
-                        />
-                      </div>
-                      <div className="flex flex-row items-center">
-                        <Users size={32} />
-                        <CurrencyInput
-                            value={service.priceVideo}
-                            onChange={(value) => onInputChange("priceVideo", value)}
-                            placeholder="0"
-                            error={errors?.priceVideo}
-                            className="border border-gray-100"
-                        />
-                      </div>
+                      {
+                       //here
+                      }
                     </div>
                 ) : (
                     <>
                       <div className="flex flex-col">
-                        {service.format.includes("in-person") && (
-                            <div className="flex flex-row items-center">
-                              <Users size={32} className="text-violet-600 mr-3"/>
-                              <div className="ml-auto flex flex-row">
-                                {formatNumber(service.priceInPerosn)}
-                                <RubleIcon size={48} bold={false} />
-                              </div>
-                            </div>
-                        )}
-                        {service.format.includes("video") && (
-                            <div className="flex flex-row items-center">
-                              <TvMinimalPlay size={32} className="text-violet-600 mr-3"/>
-                              <div className="ml-auto  flex flex-row">
-                                {formatNumber(service.priceVideo)}
-                                <RubleIcon size={48} bold={false}  />
-                              </div>
-                            </div>
-                        )}
+                        <div className="ml-auto flex flex-row items-center">
+                          {formatNumber(
+                              (formatTags === "video" ? service.priceVideo : service.priceInPerson)) || 0
+                          }
+                          <RubleIcon size={48} bold={false} />
+                        </div>
                       </div>
                     </>
                 )}
               </div>
             </div>
           </div>
+
+          {/* Tags row */}
+          {!isEditMode && (
+              <div className="flex items-center gap-6 flex-wrap rounded-sm px-6 py-2">
+                {service.format.length > 1 && (
+                    <div className="flex flex-row border border-violet-600 rounded-sm ">
+                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
+                          formatTags === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
+                      )}
+                              onClick={() => setFormatTags("video")}
+                      >
+                        <TvMinimalPlay size={16}/>
+                        <p>Онлайн</p>
+                      </button>
+                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
+                          formatTags === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
+                      )}
+                              onClick={() => setFormatTags("in-person")}
+                      >
+                        <Users size={16}/>
+                        <p>Очно</p>
+                      </button>
+                    </div>
+                )}
+                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1 px-2 gap-1 bg-white">
+                  <TimerReset size={16} />
+                  <div className="text-gray-600 text-simple font-normal">{(
+                      formatTags === "video" ? service.durationVideo : service.durationInPerson) || 0}</div>
+                </div>
+                {service.tags.map((tag) => <div>
+                  <div className="inline-flex w-min-[106px] h-[36px] shadow-sm items-center justify-start rounded-sm px-2 gap-1 bg-white">
+                    <div className="items-center mx-auto flex flex-row gap-1">
+                      <p className="text-neutral-700 text-xs" >{tag}</p>
+                    </div>
+                  </div>
+                </div>)}
+                <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 px-2 gap-1 bg-white">
+                  <IconPractice width={20} height={18} />
+                  {service.practiceVideo || 0}
+                </div>
+              </div>
+          )}
 
           {!isEditMode && (
               <div className="px-6 space-y-2">
@@ -389,7 +368,7 @@ export function ServiceCard({
                         service={{
                           id: service.id,
                           name: service.title,
-                          price: booking.format === "in-person" ? service.priceInPerosn : service.priceVideo,
+                          price: booking.format === "in-person" ? service.priceInPerson : service.priceVideo,
                           description: service.description,
                         }}
                         duration={booking.duration}
@@ -418,14 +397,21 @@ export function ServiceCard({
             // TODO
             // booked?.length === 0 &&
             !isEditMode && (
-              <div className=" relative flex flex-row px-6 pb-3">
-                <div className="w-80 flex-shrink-0">
-                  <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+                <div>
+                  <div className="flex flex-row justify-between items-center px-6 pt-3 bg-white rounded-sm">
+                    <div className="text-base font-bold text-neutral-900">
+                      Выбрать свой слот
+                    </div>
+                  </div>
+                  <div className=" relative flex flex-row px-4 pb-3 bg-white">
+                    <div className="w-80 flex-shrink-0">
+                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+                    </div>
+                    <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
+                    <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                    <div ref={calendarBottomRef} />
+                  </div>
                 </div>
-                <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-                <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-                <div ref={calendarBottomRef} />
-              </div>
             )}
 
           {/* Practice Service Restrictions - only in edit mode */}

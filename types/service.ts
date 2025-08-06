@@ -12,10 +12,11 @@ export interface Service {
     practiceVideo: number
     practiceInPerson: number
 
-    priceInPerosn: number
+    priceInPerson: number
     priceVideo: number
 
-    duration: string
+    durationVideo: number
+    durationInPerson: number
     images: string[]
     includes: string[]
     specialist: {

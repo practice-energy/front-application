@@ -144,7 +144,7 @@ export function AboutContentsSection({
             {!isEditMode && shouldShowToggle && !isExpanded && (
                 <div className={cn(
                     "absolute w-full h-14 left-0 right-0 to-transparent pointer-events-none transition-opacity duration-500",
-                    "bottom-[50px]", isMobile ? "bg-gradient-from-neutral-150" : "bg-gradient-to-t from-white via-white/80"
+                    "bottom-[50px]", isMobile ? "bg-gradient-from-neutral-150" : "bg-gradient-from-neutral-150"
                 )}/>
             )}
 
