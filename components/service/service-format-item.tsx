@@ -160,7 +160,7 @@ export function ServiceFormatItem({
       onUpdate({
         practices: newPractices,
         totalPrice: 5000,
-        enabled: isActive
+        enabled: true // Автоматически активируем при добавлении первого практиса
       })
       
       // Автоматически переходим в режим редактирования
