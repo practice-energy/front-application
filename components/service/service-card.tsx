@@ -26,6 +26,7 @@ import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
 import {AddEntityButton} from "@/components/add-entity-button";
 import { ServiceFormatItem } from "@/components/service/service-format-item"
+import { motion } from 'framer-motion'
 
 interface ServiceCardProps {
   service: Service
@@ -276,7 +277,11 @@ export function ServiceCard({
           </div>
 
           <div className="flex flex-row">
-            <div className="p-6 flex flex-col w-2/3">
+            <motion.div
+              layout
+              transition={{ duration: 0.1 }}
+              className="p-6 flex flex-col w-2/3"
+            >
               {/* Title and price row */}
                 {isEditMode ? (
                     <EnhancedInput
@@ -325,7 +330,7 @@ export function ServiceCard({
                       error={errors?.location}
                   />
               )}
-            </div>
+            </motion.div>
             <div className="p-6 space-y-4 flex flex-col ml-auto">
               <div className="flex items-center text-neutral-900 pb-2">
                 {isEditMode ? (

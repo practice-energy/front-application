@@ -66,29 +66,37 @@ const scaleUp = {
 }
 
 export function ServiceFormatItem({
-  format,
-  duration,
-  practices,
-  totalPrice,
-  isActive,
-  isEditMode,
-  onUpdate,
-  onEditToggle,
-  onStatusToggle
-}: ServiceFormatItemProps) {
-  const [editedPractices, setEditedPractices] = useState<PracticeItem[]>(practices)
+                                    format,
+                                    duration,
+                                    practices,
+                                    totalPrice,
+                                    isActive,
+                                    isEditMode,
+                                    onUpdate,
+                                    onEditToggle,
+                                    onStatusToggle
+                                  }: ServiceFormatItemProps) {
+  const [editedPractices, setEditedPractices] = useState<PracticeItem[]>(
+      practices.map(p => ({
+        ...p,
+        duration: p.count * 30
+      }))
+  )
   const [editedTotalPrice, setEditedTotalPrice] = useState(totalPrice)
 
   useEffect(() => {
     if (!isEditMode) {
-      setEditedPractices(practices)
+      setEditedPractices(practices.map(p => ({
+        ...p,
+        duration: p.count * 30
+      })))
       setEditedTotalPrice(totalPrice)
     }
   }, [isEditMode, practices, totalPrice])
 
   useEffect(() => {
     // Пересчитываем общую сумму при изменении практис
-    const newTotal = editedPractices.reduce((sum, practice) => sum + (practice.price * practice.count), 0)
+    const newTotal = editedPractices.reduce((sum, practice) => sum + (practice.price), 0)
     setEditedTotalPrice(newTotal)
   }, [editedPractices])
 
@@ -103,7 +111,12 @@ export function ServiceFormatItem({
 
   const handlePracticeCountChange = (index: number, count: number) => {
     const newPractices = [...editedPractices]
-    newPractices[index] = { ...newPractices[index], count: Math.max(1, count) }
+    const newCount = Math.max(1, count)
+    newPractices[index] = {
+      ...newPractices[index],
+      count: newCount,
+      duration: newCount * 30
+    }
     setEditedPractices(newPractices)
   }
 
@@ -117,7 +130,7 @@ export function ServiceFormatItem({
     const newPractice: PracticeItem = {
       id: `practice-${Date.now()}`,
       count: 1,
-      duration: duration,
+      duration: 30, // 1 * 30 minutes
       price: 5000
     }
     setEditedPractices([...editedPractices, newPractice])
@@ -132,171 +145,173 @@ export function ServiceFormatItem({
   const formatLabel = format === "video" ? "Онлайн" : "Очно"
 
   return (
-    <div className={cn(
-        "space-y-2 flex gap-1.5",
-        isEditMode ? "flex-row" : "flex-col",
-    )}>
-      <motion.div
-        layout
-        transition={{ duration: 0.2 }}
-        className="w-full"
-      >
-        <Card className="py-2 px-1.5">
-          <CardContent className="p-0">
-            <div className={cn(
-                "flex",
-            )}>
+      <div className={cn(
+          "space-y-2 flex gap-1.5",
+          isEditMode ? "flex-row" : "flex-col",
+      )}>
+        <motion.div
+            layout
+            transition={{ duration: 0.2 }}
+            className="w-full"
+        >
+          <Card className="py-2 px-1.5">
+            <CardContent className="p-0">
               <div className={cn(
                   "flex",
-                  isEditMode ? "flex-col" : "flex-row",
               )}>
-                {/* Заголовок формата */}
-                <div className="flex flex-col items-start gap-2 justify-start">
-                  <div className="flex items-center gap-1 h-[36px] bg-violet-600 text-white px-3 rounded-sm text-sm">
-                    {format === "video" ? (<TvMinimalPlay size={18} />) : (<Users size={18} />)}
-                    {formatLabel}
-                  </div>
-                  {!isEditMode && (
-                    <div className="text-[18px] ml-2 font-semibold items-center text-neutral-900">
-                      {totalPrice.toLocaleString()} 
-                      <RubleIcon size={24} bold={false} />
+                <div className={cn(
+                    "flex",
+                    isEditMode ? "flex-col" : "flex-row",
+                )}>
+                  {/* Заголовок формата */}
+                  <div className="flex flex-col items-start gap-2 justify-start">
+                    <div className="flex items-center gap-1 h-[36px] bg-violet-600 text-white px-3 rounded-sm text-sm">
+                      {format === "video" ? (<TvMinimalPlay size={18} />) : (<Users size={18} />)}
+                      {formatLabel}
                     </div>
-                  )}
-                </div>
+                    {!isEditMode && (
+                        <div className="text-[18px] ml-2 font-semibold items-center text-neutral-900">
+                          {totalPrice.toLocaleString()}
+                          <RubleIcon size={24} bold={false} />
+                        </div>
+                    )}
+                  </div>
 
-                {/* Список практис */}
-                {isEditMode ? (
-                  <div className="flex flex-col">
-                    <AnimatePresence>
-                      {editedPractices.map((practice, index) => (
-                        <motion.div
-                          key={practice.id}
-                          initial="hidden"
-                          animate="visible"
-                          exit="exit"
-                          variants={itemVariants}
-                          className="flex flex-row items-center gap-2 rounded-sm"
-                        >
+                  {/* Список практис */}
+                  {isEditMode ? (
+                      <div className="flex flex-col">
+                        <AnimatePresence>
+                          {editedPractices.map((practice, index) => (
+                              <motion.div
+                                  key={practice.id}
+                                  initial="hidden"
+                                  animate="visible"
+                                  exit="exit"
+                                  variants={itemVariants}
+                                  className="flex flex-row items-center gap-2 rounded-sm"
+                              >
                           <span className="text-sm font-medium min-w-[70px]">
                             {index + 1} практис
                           </span>
 
-                          <input
-                              type="number"
-                              value={practice.count}
-                              onChange={(e) => handlePracticeCountChange(index, parseInt(e.target.value) || 1)}
-                              className=" focus:outline-none focus:ring-0 w-8 px-0.5 py-0.5 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
-                              min="1"
-                          />
+                                <input
+                                    type="number"
+                                    value={practice.count}
+                                    onChange={(e) => handlePracticeCountChange(index, parseInt(e.target.value) || 1)}
+                                    className=" focus:outline-none focus:ring-0 w-8 px-0.5 py-0.5 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                    min="1"
+                                />
 
-                          <div className="flex flex-row min-w-[90px] items-center">
-                            <X size={18}/>
-                            <div className="text-sm">{practice.duration} минут</div>
-                          </div>
-                          
-                          <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 ">
-                            <TimerReset size={16} className="text-white" />
-                            <div>{practice.duration}</div>
-                          </div>
-                          
-                          <div className="flex items-center py-1 ml-auto">
-                            <input
-                              type="number"
-                              value={practice.price}
-                              onChange={(e) => handlePracticePriceChange(index, parseInt(e.target.value) || 0)}
-                              className=" focus:outline-none focus:ring-0 px-0.5 py-0.5 w-16 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
-                              min="0"
-                              max={100000}
-                            />
+                                <div className="flex flex-row min-w-[90px] items-center">
+                                  <X size={18}/>
+                                  <div className="text-sm">{practice.count * 30} минут</div>
+                                </div>
 
-                            <RubleIcon size={24} bold={false} />
+                                <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 ">
+                                  <TimerReset size={16} className="text-white" />
+                                  <div>{practice.count * 30}</div>
+                                </div>
+
+                                <div className="flex items-center py-1 ml-auto">
+                                  <input
+                                      type="number"
+                                      value={practice.price}
+                                      onChange={(e) => handlePracticePriceChange(index, parseInt(e.target.value) || 0)}
+                                      className="text-end focus:outline-none focus:ring-0 px-1 py-0.5 w-16 border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                      min="0"
+                                      max={100000}
+                                  />
+
+                                  <RubleIcon size={24} bold={false} />
+                                </div>
+                              </motion.div>
+                          ))}
+                        </AnimatePresence>
+
+                        {/* Общая сумма в режиме редактирования */}
+                        <div className="flex justify-end ml-auto mt-1">
+                          <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
+                            <div className="text-end ml-auto">
+                              {editedTotalPrice.toLocaleString()}
+                            </div>
                           </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                    
-                    {/* Общая сумма в режиме редактирования */}
-                    <div className="flex justify-end mt-1">
-                      <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16">
-                        {editedTotalPrice.toLocaleString()}
-                      </div>
-                      <RubleIcon size={24} className="text-violet-600" bold={false}/>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col px-3 gap-3">
-                    {practices.map((practice, index) => (
-                      <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700 min-w-40">
-                        <div>{`${practice.count} практис по`}</div>
-                        <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-xs">
-                          <TimerReset size={16} className="text-white" />
-                          <span>{practice.duration}</span>
+                          <RubleIcon size={24} className="text-violet-600" bold={false}/>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                  ) : (
+                      <div className="flex flex-col px-3 gap-3">
+                        {practices.map((practice, index) => (
+                            <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700 min-w-40">
+                              <div>{`${practice.count} практис по`}</div>
+                              <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-xs">
+                                <TimerReset size={16} className="text-white" />
+                                <span>{practice.count * 30}</span>
+                              </div>
+                            </div>
+                        ))}
+                      </div>
+                  )}
+                </div>
+
+                {/* Статус активности */}
+                {!isEditMode && (
+                    <div className="ml-auto">
+                      <ActivityStatus
+                          status={isActive ? 'activePractice' : 'outOfPractice'}
+                          showTitle={false}
+                          className="items-start"
+                      />
+                    </div>
                 )}
               </div>
-
-              {/* Статус активности */}
-              {!isEditMode && (
-                <div className="ml-auto">
-                  <ActivityStatus
-                    status={isActive ? 'activePractice' : 'outOfPractice'}
-                    showTitle={false}
-                    className="items-start"
-                  />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Кнопки редактирования */}
-      {isEditMode && (
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={scaleUp}
-          className="flex flex-col gap-3"
-        >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <BurnEntityButton onClick={removePractice} className="w-8 h-8" iconClassName="w-6 h-6" />
-          </motion.div>
-          
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <AddEntityButton onClick={addPractice} className="w-8 h-8" iconClassName="w-6 h-6" />
-          </motion.div>
-          
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <SaveEntityButton onClick={handleSave} className="w-8 h-8" iconClassName="w-6 h-6" />
-          </motion.div>
+            </CardContent>
+          </Card>
         </motion.div>
-      )}
 
-      {/* Кнопки управления */}
-      {!isEditMode && (
-          <div className="flex justify-end gap-2 mt-3">
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onStatusToggle}
-                className="flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-sm"
+        {/* Кнопки редактирования */}
+        {isEditMode && (
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={scaleUp}
+                className="flex flex-col gap-3"
             >
-              {isActive ? <Pause size={16} /> : <Play size={16} />}
-            </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <BurnEntityButton onClick={removePractice} className="w-8 h-8" iconClassName="w-6 h-6" />
+              </motion.div>
 
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onEditToggle}
-                className="flex items-center justify-center w-8 h-8 bg-violet-600 hover:bg-violet-700 text-white rounded-sm"
-            >
-              <Edit size={16} />
-            </motion.button>
-          </div>
-      )}
-    </div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <AddEntityButton onClick={addPractice} className="w-8 h-8" iconClassName="w-6 h-6" />
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <SaveEntityButton onClick={handleSave} className="w-8 h-8" iconClassName="w-6 h-6" />
+              </motion.div>
+            </motion.div>
+        )}
+
+        {/* Кнопки управления */}
+        {!isEditMode && (
+            <div className="flex justify-end gap-2 mt-3">
+              <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onStatusToggle}
+                  className="flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-sm"
+              >
+                {isActive ? <Pause size={16} /> : <Play size={16} />}
+              </motion.button>
+
+              <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onEditToggle}
+                  className="flex items-center justify-center w-8 h-8 bg-violet-600 hover:bg-violet-700 text-white rounded-sm"
+              >
+                <Edit size={16} />
+              </motion.button>
+            </div>
+        )}
+      </div>
   )
 }
