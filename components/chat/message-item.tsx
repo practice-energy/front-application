@@ -400,7 +400,7 @@ export const MessageItem = React.memo(
                   )}
                   style={{ wordBreak: "break-word" }}
                 >
-                  <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 5)}</p>
+                  <p className="text-sm leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
                   <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
                 </div>
                 <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
