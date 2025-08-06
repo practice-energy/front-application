@@ -16,8 +16,6 @@ interface PeriodsFormatsSectionProps {
   onUpdate: (restrictions: CalendarRestrictions) => void
   editingRestrictionId: string | null
   setEditingRestrictionId: (id: string | null) => void
-  isCollapsable: boolean
-  title: string
 }
 
 const dayNames = [
@@ -35,8 +33,6 @@ export function PeriodsFormatsSection({
   onUpdate,
   editingRestrictionId,
   setEditingRestrictionId,
-    title = "Периоды и форматы",
-    isCollapsable,
 }: PeriodsFormatsSectionProps) {
   const [selectedDay, setSelectedDay] = useState<string | null>("Mon")
   const [showPeriodsFormats, setShowPeriodsFormats] = useState(true)
@@ -152,7 +148,7 @@ export function PeriodsFormatsSection({
                     <Button
                       variant="outline"
                       size="sm"
-                      className={`w-[18px] h-[18px] p-0 border-none ${isActive ? "bg-teal-400 hover:bg-teal-500" : "bg-neutral-300 hover:bg-neutral-400"}`}
+                      className={`w-[24px] h-[24px] p-0 border-none ${isActive ? "bg-teal-400 hover:bg-teal-500" : "bg-neutral-300 hover:bg-neutral-400"}`}
                       onClick={() => handleDayToggle(day.key)}
                       disabled={editingRestrictionId !== null}
                     >
