@@ -168,6 +168,23 @@ export function ServiceFormatItem({
 
   const formatLabel = format === "video" ? "Онлайн" : "Очно"
 
+  // Empty practices state
+  if (practices.length === 0) {
+    return (
+      <div className="flex items-center gap-4">
+        <AddEntityButton onClick={addPractice} className="w-12 h-12" iconClassName="w-6 h-6" />
+        <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-lg border">
+          {format === "video" ? (
+            <TvMinimalPlay size={20} className="text-gray-600" />
+          ) : (
+            <Users size={20} className="text-gray-600" />
+          )}
+          <span className="text-gray-700 font-medium">{formatLabel}</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
       <div className={cn(
           "space-y-2 flex gap-1.5",
