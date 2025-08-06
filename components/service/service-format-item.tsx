@@ -190,7 +190,7 @@ export function ServiceFormatItem({
           ) : (
             <Users size={20} className="text-neutral-700" />
           )}
-          <span className="text-gray-700 font-medium">{formatLabel}</span>
+          <span className="text-gray-700">{formatLabel}</span>
         </div>
       </div>
     )
