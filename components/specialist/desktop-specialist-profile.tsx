@@ -2,7 +2,7 @@
 
 import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp } from "lucide-react"
+import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp, MonitorPlayIcon as TvMinimalPlay, Users } from 'lucide-react'
 import { BackButton } from "@/components/ui/button-back"
 import type {Education, Experience} from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
@@ -48,6 +48,8 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false)
   const avatarInputRef = useRef<HTMLInputElement>(null)
+
+  const [format, setFormat] = useState<'video' | 'inPerson'>('video')
 
   // Saved data (what's displayed in View mode)
   const [savedData, setSavedData] = useState<SpecialistData>({
@@ -190,6 +192,16 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
   const handleRemoveExperience = (index: number) => {
     const updatedExp = draftData.experience.filter((_, i) => i !== index)
     handleInputChange("experience", updatedExp)
+  }
+
+  const getFilteredServices = () => {
+    return draftData.services.filter(service => {
+      if (format === 'video') {
+        return service.settings?.video?.enabled
+      } else {
+        return service.settings?.inPerson?.enabled
+      }
+    })
   }
 
   const validateForm = () => {
@@ -450,8 +462,37 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                   {/* Experience and Certificates Section */}
                   <div className="bg-colors-neutral-150 relative rounded-b-sm shadow-md">
                     <div className="relative px-6 pt-6 pb-4">
+                      {/* Format Toggle */}
+                      {!isEditMode && draftData.services.length > 0 && (
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="text-sm font-medium text-neutral-700">Практис</span>
+                          <div className="flex bg-gray-100 rounded-sm p-1">
+                            <button
+                              onClick={() => setFormat('video')}
+                              className={`flex items-center gap-1 px-3 py-1 rounded-sm text-sm transition-colors ${
+                                format === 'video'
+                                  ? 'bg-white text-violet-600 shadow-sm'
+                                  : 'text-gray-600 hover:text-gray-800'
+                              }`}
+                            >
+                              <TvMinimalPlay size={16} />
+                            </button>
+                            <button
+                              onClick={() => setFormat('inPerson')}
+                              className={`flex items-center gap-1 px-3 py-1 rounded-sm text-sm transition-colors ${
+                                format === 'inPerson'
+                                  ? 'bg-white text-violet-600 shadow-sm'
+                                  : 'text-gray-600 hover:text-gray-800'
+                              }`}
+                            >
+                              <Users size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
                       <PracticeBlockSection
-                          services={draftData.services}
+                          services={getFilteredServices()}
                           isEditMode={isEditMode}
                           errors={errors}
                           onInputChange={handleInputChange}
