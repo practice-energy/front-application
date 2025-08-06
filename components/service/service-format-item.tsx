@@ -1,7 +1,17 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { TvIcon as TvMinimalPlayIcon, Users, Play, Pause, Edit } from 'lucide-react'
+import {
+  TvIcon as TvMinimalPlayIcon,
+  Users,
+  Play,
+  Pause,
+  Edit,
+  CrossIcon,
+  TvMinimalPlay,
+  X,
+  TimerReset
+} from 'lucide-react'
 import { useState, useEffect } from "react"
 import { Format } from "@/types/common"
 import { BurnEntityButton } from "@/components/burn-entity-button"
@@ -119,37 +129,44 @@ export function ServiceFormatItem({
     }
   }
 
-  const formatIcon = format === "video" ? TvMinimalPlayIcon : Users
   const formatLabel = format === "video" ? "Онлайн" : "Очно"
 
   return (
-    <div className="space-y-2 flex flex-row gap-2">
+    <div className={cn(
+        "space-y-2 flex gap-1.5",
+        isEditMode ? "flex-row" : "flex-col",
+    )}>
       <motion.div
         layout
         transition={{ duration: 0.2 }}
         className="w-full"
       >
-        <Card className="p-3 w-full">
+        <Card className="py-2 px-1.5">
           <CardContent className="p-0">
-            <div className="flex flex-row">
-              <div className="flex-1">
+            <div className={cn(
+                "flex",
+            )}>
+              <div className={cn(
+                  "flex",
+                  isEditMode ? "flex-col" : "flex-row",
+              )}>
                 {/* Заголовок формата */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center gap-1 bg-violet-600 text-white px-3 py-1 rounded-sm text-sm">
-                    {React.createElement(formatIcon, { size: 16 })}
+                <div className="flex flex-col items-start gap-2 justify-start">
+                  <div className="flex items-center gap-1 h-[36px] bg-violet-600 text-white px-3 rounded-sm text-sm">
+                    {format === "video" ? (<TvMinimalPlay size={18} />) : (<Users size={18} />)}
                     {formatLabel}
                   </div>
                   {!isEditMode && (
-                    <div className="text-2xl font-bold text-neutral-900">
+                    <div className="text-[18px] ml-2 font-semibold items-center text-neutral-900">
                       {totalPrice.toLocaleString()} 
-                      <RubleIcon size={32} bold={false} className="ml-1" />
+                      <RubleIcon size={24} bold={false} />
                     </div>
                   )}
                 </div>
 
                 {/* Список практис */}
                 {isEditMode ? (
-                  <div className="space-y-2">
+                  <div className="flex flex-col">
                     <AnimatePresence>
                       {editedPractices.map((practice, index) => (
                         <motion.div
@@ -158,55 +175,61 @@ export function ServiceFormatItem({
                           animate="visible"
                           exit="exit"
                           variants={itemVariants}
-                          className="flex items-center gap-3 p-2 bg-gray-50 rounded-sm"
+                          className="flex flex-row items-center gap-2 rounded-sm"
                         >
-                          <span className="text-sm font-medium min-w-[80px]">
+                          <span className="text-sm font-medium min-w-[70px]">
                             {index + 1} практис
                           </span>
-                          {React.createElement(formatIcon, { size: 16, className: "text-violet-600" })}
-                          
+
                           <input
-                            type="number"
-                            value={practice.count}
-                            onChange={(e) => handlePracticeCountChange(index, parseInt(e.target.value) || 1)}
-                            className="w-12 px-1 py-0.5 text-center border rounded text-sm"
-                            min="1"
+                              type="number"
+                              value={practice.count}
+                              onChange={(e) => handlePracticeCountChange(index, parseInt(e.target.value) || 1)}
+                              className=" focus:outline-none focus:ring-0 w-8 px-0.5 py-0.5 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                              min="1"
                           />
-                          
-                          <span className="text-sm">× {practice.duration} минут</span>
-                          
-                          <div className="flex items-center gap-1 bg-violet-600 text-white px-2 py-1 rounded-sm text-xs">
-                            <span>{practice.duration}</span>
+
+                          <div className="flex flex-row min-w-[90px] items-center">
+                            <X size={18}/>
+                            <div className="text-sm">{practice.duration} минут</div>
                           </div>
                           
-                          <div className="flex items-center gap-1 ml-auto">
+                          <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 ">
+                            <TimerReset size={16} className="text-white" />
+                            <div>{practice.duration}</div>
+                          </div>
+                          
+                          <div className="flex items-center py-1 ml-auto">
                             <input
                               type="number"
                               value={practice.price}
                               onChange={(e) => handlePracticePriceChange(index, parseInt(e.target.value) || 0)}
-                              className="w-20 px-2 py-1 border rounded text-sm text-right"
+                              className=" focus:outline-none focus:ring-0 px-0.5 py-0.5 w-16 text-center border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                               min="0"
+                              max={100000}
                             />
-                            <RubleIcon size={16} />
+
+                            <RubleIcon size={24} bold={false} />
                           </div>
                         </motion.div>
                       ))}
                     </AnimatePresence>
                     
                     {/* Общая сумма в режиме редактирования */}
-                    <div className="flex justify-end mt-3">
-                      <div className="flex items-center gap-1 bg-violet-600 text-white px-3 py-2 rounded-sm font-bold">
+                    <div className="flex justify-end mt-1">
+                      <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16">
                         {editedTotalPrice.toLocaleString()}
-                        <RubleIcon size={20} className="text-white" />
                       </div>
+                      <RubleIcon size={24} className="text-violet-600" bold={false}/>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-1">
+                  <div className="flex flex-col px-3 gap-3">
                     {practices.map((practice, index) => (
-                      <div key={practice.id} className="flex items-center gap-2 text-sm text-gray-600">
-                        <span>{practice.count} практис по</span>
-                        <div className="flex items-center gap-1 bg-violet-600 text-white px-2 py-1 rounded-sm text-xs">
+                      <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700 min-w-40">
+                        <div>{`${practice.count} практис по`}</div>
+                        <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-xs">
+                          <TimerReset size={16} className="text-white" />
                           <span>{practice.duration}</span>
                         </div>
                       </div>
@@ -226,29 +249,6 @@ export function ServiceFormatItem({
                 </div>
               )}
             </div>
-
-            {/* Кнопки управления */}
-            {!isEditMode && (
-              <div className="flex justify-end gap-2 mt-3">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onStatusToggle}
-                  className="flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-sm"
-                >
-                  {isActive ? <Pause size={16} /> : <Play size={16} />}
-                </motion.button>
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onEditToggle}
-                  className="flex items-center justify-center w-8 h-8 bg-violet-600 hover:bg-violet-700 text-white rounded-sm"
-                >
-                  <Edit size={16} />
-                </motion.button>
-              </div>
-            )}
           </CardContent>
         </Card>
       </motion.div>
@@ -259,7 +259,7 @@ export function ServiceFormatItem({
           initial="hidden"
           animate="visible"
           variants={scaleUp}
-          className="flex flex-col justify-between gap-3"
+          className="flex flex-col gap-3"
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <BurnEntityButton onClick={removePractice} className="w-8 h-8" iconClassName="w-6 h-6" />
@@ -273,6 +273,29 @@ export function ServiceFormatItem({
             <SaveEntityButton onClick={handleSave} className="w-8 h-8" iconClassName="w-6 h-6" />
           </motion.div>
         </motion.div>
+      )}
+
+      {/* Кнопки управления */}
+      {!isEditMode && (
+          <div className="flex justify-end gap-2 mt-3">
+            <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onStatusToggle}
+                className="flex items-center justify-center w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-sm"
+            >
+              {isActive ? <Pause size={16} /> : <Play size={16} />}
+            </motion.button>
+
+            <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onEditToggle}
+                className="flex items-center justify-center w-8 h-8 bg-violet-600 hover:bg-violet-700 text-white rounded-sm"
+            >
+              <Edit size={16} />
+            </motion.button>
+          </div>
       )}
     </div>
   )

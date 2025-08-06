@@ -279,14 +279,14 @@ export function ServiceCard({
             <div className="p-6 flex flex-col w-2/3">
               {/* Title and price row */}
                 {isEditMode ? (
-                    <input
+                    <EnhancedInput
                         value={service.title}
                         onChange={(e) => onInputChange("title", e.target.value)}
                         placeholder="Практис"
                         type="input"
                         className={cn(
-                            "border-none focus:border-none focus:outline-none focus:ring-0", // Основные стили
-                            "text-neutral-900 w-full text-[36px] h-[36px] font-bold p-3 px-1", // Текстовые стили
+                            // "border-none focus:border-none focus:outline-none focus:ring-0", // Основные стили
+                            // "text-neutral-900 w-full text-[36px] h-[36px] font-bold p-3 px-1 line-clamp-1", // Текстовые стили
                         )}
                     />
                 ) : (
@@ -365,7 +365,7 @@ export function ServiceCard({
           {!isEditMode && (
               <div className="flex items-center gap-6 flex-wrap rounded-sm px-6 py-2">
                 {service.format.length > 1 && (
-                    <div className="flex flex-row border border-violet-600 rounded-sm ">
+                    <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
                       <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
                           formatTags === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
                       )}
