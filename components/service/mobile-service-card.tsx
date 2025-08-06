@@ -43,6 +43,7 @@ interface MobileServiceCardProps {
   isSaving?: boolean
   hasChanges?: boolean
   isEditable: boolean
+  onServiceUpdate?: (updatedService: Service) => void
 }
 
 // Эмуляция загрузки файлов в хранилище
@@ -69,6 +70,7 @@ export function MobileServiceCard({
   isSaving,
   hasChanges,
   isEditable,
+  onServiceUpdate,
 }: MobileServiceCardProps) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -76,8 +78,6 @@ export function MobileServiceCard({
   const searchParams = useSearchParams()
 
   const [isEditMode, setIsEditMode] = useState(searchParams.get("mode") === "edit" && isEditable)
-  const [savedData, setSavedData] = useState<Service>(service)
-  const [draftData, setDraftData] = useState<Service>(service)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const specialist = service.specialist
@@ -124,11 +124,11 @@ export function MobileServiceCard({
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
-    if (isEditMode && draftData.images.length > 0 && editPhotos.length === 0) {
+    if (isEditMode && service.images.length > 0 && editPhotos.length === 0) {
       const initializePhotos = async () => {
         try {
           const photoFiles = await Promise.all(
-            draftData.images.map((url, index) => createFileFromUrl(url, `photo-${index}.jpg`)),
+            service.images.map((url, index) => createFileFromUrl(url, `photo-${index}.jpg`)),
           )
           setEditPhotos(photoFiles)
         } catch (error) {
@@ -142,15 +142,16 @@ export function MobileServiceCard({
     } else if (!isEditMode) {
       setEditPhotos([])
     }
-  }, [isEditMode, draftData.images])
+  }, [isEditMode, service.images])
 
   const handlePhotosUpload = async (photos: File[]) => {
     try {
       // Загружаем фотографии в хранилище
       const uploadedUrls = await uploadPhotosToStorage(photos)
 
-      // Обновляем draftData с новыми URL
-      setDraftData((prev) => ({ ...prev, images: uploadedUrls }))
+      // Обновляем service с новыми URL
+      const updatedService = { ...service, images: uploadedUrls }
+      onServiceUpdate?.(updatedService)
 
       console.log("Photos uploaded successfully:", uploadedUrls)
     } catch (error) {
@@ -162,13 +163,13 @@ export function MobileServiceCard({
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!draftData.title.trim()) {
+    if (!service.title.trim()) {
       newErrors.title = "Title is required"
     }
-    if (!draftData.price || draftData.price <= 0) {
+    if (!service.price || service.price <= 0) {
       newErrors.price = "Price must be greater than 0"
     }
-    if (!draftData.duration.trim()) {
+    if (!service.duration.trim()) {
       newErrors.duration = "Duration is required"
     }
 
@@ -184,8 +185,6 @@ export function MobileServiceCard({
       if (isEditMode && (window as any).uploadServicePhotos) {
         await (window as any).uploadServicePhotos()
       }
-
-      setSavedData(draftData)
 
       if (onPublish) {
         await onPublish()
@@ -226,7 +225,9 @@ export function MobileServiceCard({
   }
 
   const handleInputChange = (field: keyof Service, value: string | string[] | Format[] | any) => {
-    setDraftData((prev) => ({ ...prev, [field]: value }))
+    const updatedService = { ...service, [field]: value }
+    onServiceUpdate?.(updatedService)
+    
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
@@ -249,10 +250,14 @@ export function MobileServiceCard({
     setServiceFormats(newFormats)
     
     // Обновляем основные данные сервиса
-    handleInputChange("settings", {
-      video: formatType === "video" ? newFormats.video : serviceFormats.video,
-      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
-    })
+    const updatedService = {
+      ...service,
+      settings: {
+        video: formatType === "video" ? newFormats.video : serviceFormats.video,
+        inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+      }
+    }
+    onServiceUpdate?.(updatedService)
   }
 
   const handleFormatEditToggle = (formatType: "video" | "inPerson") => {
@@ -276,10 +281,14 @@ export function MobileServiceCard({
     setServiceFormats(newFormats)
     
     // Обновляем основные данные сервиса
-    handleInputChange("settings", {
-      video: formatType === "video" ? newFormats.video : serviceFormats.video,
-      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
-    })
+    const updatedService = {
+      ...service,
+      settings: {
+        video: formatType === "video" ? newFormats.video : serviceFormats.video,
+        inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+      }
+    }
+    onServiceUpdate?.(updatedService)
   }
 
   // Scroll to calendar bottom when calendar opens
@@ -302,14 +311,14 @@ export function MobileServiceCard({
       if (navigator.share) {
         navigator
           .share({
-            title: isEditMode ? draftData.title : savedData.title,
-            text: isEditMode ? draftData.description : savedData.description,
+            title: service.title,
+            text: service.description,
             url: window.location.href,
           })
           .catch(console.error)
       }
     },
-    [isEditMode, draftData, savedData],
+    [service.title, service.description],
   )
 
   const handleReply = useCallback(
@@ -329,25 +338,24 @@ export function MobileServiceCard({
   )
 
   const handleIncludedChange = (index: number, value: string) => {
-    const updatedSkills = [...draftData.includes]
+    const updatedSkills = [...service.includes]
     updatedSkills[index] = value
     handleInputChange("includes", updatedSkills)
   }
 
   const handleAddIncluded = () => {
-    const updatedSkills = [...draftData.includes, ""]
+    const updatedSkills = [...service.includes, ""]
     handleInputChange("includes", updatedSkills)
   }
 
   const handleRemoveIncluded = (index: number) => {
-    const updatedSkills = draftData.includes.filter((_, i) => i !== index)
+    const updatedSkills = service.includes.filter((_, i) => i !== index)
     handleInputChange("includes", updatedSkills)
   }
 
   const memoizedImages = useMemo(() => {
-    const images = isEditMode ? draftData.images : savedData.images
-    return images && images.length > 0 ? images : []
-  }, [isEditMode, draftData.images, savedData.images])
+    return service.images && service.images.length > 0 ? service.images : []
+  }, [service.images])
 
   return (
     <div>
@@ -453,7 +461,7 @@ export function MobileServiceCard({
                             <div className="aspect-square w-full relative">
                               <Image
                                 src={image || "/placeholder.svg"}
-                                alt={`${draftData.title} ${index + 1}`}
+                                alt={`${service.title} ${index + 1}`}
                                 fill
                                 className="object-cover"
                                 priority={index === 0}
@@ -477,14 +485,14 @@ export function MobileServiceCard({
                   <div className="text-gray-900 flex-1 pr-2">
                     {isEditMode ? (
                       <EnhancedInput
-                        value={draftData.title}
+                        value={service.title}
                         onChange={(e) => handleInputChange("title", e.target.value)}
                         placeholder="Название"
                         type="input"
                         className="text-neutral-900 flex-1 w-min-2/3"
                       />
                     ) : (
-                      <div className="text-2xl font-semibold">{draftData.title}</div>
+                      <div className="text-2xl font-semibold">{service.title}</div>
                     )}
                   </div>
                   <div className="flex items-center font-bold text-gray-900">
@@ -528,14 +536,14 @@ export function MobileServiceCard({
 
                 {isEditMode ? (
                   <EnhancedInput
-                    value={draftData.description || ""}
+                    value={service.description || ""}
                     onChange={(e) => handleInputChange("description", e.target.value)}
                     placeholder="Введите описание"
                     type="input"
                     className="mt-4 text-sm"
                   />
                 ) : (
-                  <p className="text-gray-700">{draftData.description}</p>
+                  <p className="text-gray-700">{service.description}</p>
                 )}
 
                 {!isEditMode && booked?.length === 0 && (
@@ -566,7 +574,7 @@ export function MobileServiceCard({
                       </span>
                     </div>
 
-                    {draftData.tags?.map((tag, index) => (
+                    {service.tags?.map((tag, index) => (
                       <div key={index} className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
                         <p className="text-sm text-gray-600">{tag}</p>
                       </div>
@@ -581,25 +589,25 @@ export function MobileServiceCard({
                   </div>
                 )}
 
-                {draftData.location && booked?.length === 0 && (
+                {service.location && booked?.length === 0 && (
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-5 w-5 mr-2" />
                     {isEditMode ? (
                       <input
                         type="text"
-                        value={draftData.location || ""}
+                        value={service.location || ""}
                         onChange={(e) => handleInputChange("location", e.target.value)}
                         className="w-full p-1 border rounded"
                       />
                     ) : (
-                      <span>{draftData.location}</span>
+                      <span>{service.location}</span>
                     )}
                   </div>
                 )}
 
                 {isEditMode && (
                   <LocationInput
-                    value={draftData.location || ""}
+                    value={service.location || ""}
                     onChange={(value) => handleInputChange("location", value)}
                     error={errors?.location}
                   />
@@ -640,8 +648,8 @@ export function MobileServiceCard({
 
               <div>
                 <AboutContentsSection
-                  contents={draftData.contents}
-                  included={draftData.includes}
+                  contents={service.contents}
+                  included={service.includes}
                   onContentsChange={(e) => {
                     handleInputChange("contents", e)
                   }}
@@ -658,7 +666,7 @@ export function MobileServiceCard({
                   <div className="px-4">
                     <Bullets
                       title="Наполнение"
-                      items={draftData.includes}
+                      items={service.includes}
                       isEditMode={isEditMode}
                       onChange={handleIncludedChange}
                       onAdd={handleAddIncluded}
