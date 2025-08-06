@@ -63,16 +63,27 @@ export function ServiceCard({
   )
 
   // Состояние для форматов услуг
-  const [serviceFormats, setServiceFormats] = useState([
-    {
-      format: "in-person" as Format,
-      duration: 60,
-      practices: [],
-      totalPrice: 16000,
-      isActive: false,
-      isEditMode: false
+  const [serviceFormats, setServiceFormats] = useState(() => {
+    if (!service.practice || service.practice.length === 0) {
+      return [{
+        format: "in-person" as Format,
+        duration: 60,
+        practices: [],
+        totalPrice: 0,
+        isActive: false,
+        isEditMode: false
+      }]
     }
-  ])
+
+    return service.practice.map(practice => ({
+      format: practice.format,
+      duration: practice.duration,
+      practices: practice.practices || [],
+      totalPrice: practice.practices?.reduce((sum, p) => sum + p.price, 0) || 0,
+      isActive: practice.isActive || false,
+      isEditMode: false
+    }))
+  })
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
@@ -390,7 +401,7 @@ export function ServiceCard({
                 </div>)}
                 <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 px-2 gap-1 bg-white">
                   <IconPractice width={20} height={18} />
-                  {service.practiceVideo || 0}
+                  {service.practice?.find(p => p.format === formatTags)?.score || 0}
                 </div>
               </div>
           )}
