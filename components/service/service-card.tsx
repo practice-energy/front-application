@@ -283,16 +283,29 @@ export function ServiceCard({
               )}
             </div>
             <div className="p-6 space-y-4 flex flex-col ml-auto">
-              <div className="flex items-center text-[36px] font-bold text-neutral-900 pb-2">
+              <div className="flex items-center text-neutral-900 pb-2">
                 {isEditMode ? (
                     <div className="flex flex-col">
                       {
-                       //here
+                        // to component
                       }
+                      {!formatTags.includes("in-person") ? (
+                          <div className="flex flex-row items-center gap-3">
+                            <AddEntityButton onClick={() => {}}/>
+                            <div className="flex flex-row items-center border shadow-sm rounded-sm border-gray-200 px-2 w-[250px] h-[36px]">
+                              <Users size={16} className="mr-1"/>
+                              <div className="text-neutral-700 ">Очно</div>
+                            </div>
+                          </div>
+                      ) : (
+                          <div className="flex flex-row items-center gap-3">
+                            // here
+                          </div>
+                      )}
                     </div>
                 ) : (
                     <>
-                      <div className="flex flex-col">
+                      <div className="flex flex-col  font-bold  text-[36px] ">
                         <div className="ml-auto flex flex-row items-center">
                           {formatNumber(
                               (formatTags === "video" ? service.priceVideo : service.priceInPerson)) || 0
