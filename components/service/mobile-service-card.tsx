@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from "lucide-react"
+import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from 'lucide-react'
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Format } from "@/types/common"
 import Image from "next/image"
@@ -31,7 +31,9 @@ import { Bullets } from "@/components/specialist/bullets"
 import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
 import type { CalendarRestrictions } from "@/types/calendar-event"
-import type { Service } from "@/types/service"
+import type { Service, FormatSettings } from "@/types/service"
+import { cn } from "@/lib/utils"
+import { ServiceFormatItem } from "@/components/service/service-format-item"
 
 interface MobileServiceCardProps {
   service: Service
@@ -103,6 +105,22 @@ export function MobileServiceCard({
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
+
+  const [format, setFormat] = useState<"video" | "in-person">(
+    service.settings.video.enabled ? "video" : "in-person"
+  )
+
+  // Состояние для форматов услуг
+  const [serviceFormats, setServiceFormats] = useState({
+    video: {
+      ...service.settings.video,
+      isEditMode: false
+    },
+    inPerson: {
+      ...service.settings.inPerson,
+      isEditMode: false
+    }
+  })
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
@@ -217,6 +235,51 @@ export function MobileServiceCard({
   const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
     setRestrictions(newRestrictions)
     handleInputChange("calendarRestrictions", newRestrictions)
+  }
+
+  // Обработчики для форматов
+  const handleFormatUpdate = (formatType: "video" | "inPerson", data: Partial<FormatSettings>) => {
+    const newFormats = {
+      ...serviceFormats,
+      [formatType]: {
+        ...serviceFormats[formatType],
+        ...data
+      }
+    }
+    setServiceFormats(newFormats)
+    
+    // Обновляем основные данные сервиса
+    handleInputChange("settings", {
+      video: formatType === "video" ? newFormats.video : serviceFormats.video,
+      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+    })
+  }
+
+  const handleFormatEditToggle = (formatType: "video" | "inPerson") => {
+    setServiceFormats(prev => ({
+      ...prev,
+      [formatType]: {
+        ...prev[formatType],
+        isEditMode: !prev[formatType].isEditMode
+      }
+    }))
+  }
+
+  const handleFormatStatusToggle = (formatType: "video" | "inPerson") => {
+    const newFormats = {
+      ...serviceFormats,
+      [formatType]: {
+        ...serviceFormats[formatType],
+        enabled: !serviceFormats[formatType].enabled
+      }
+    }
+    setServiceFormats(newFormats)
+    
+    // Обновляем основные данные сервиса
+    handleInputChange("settings", {
+      video: formatType === "video" ? newFormats.video : serviceFormats.video,
+      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+    })
   }
 
   // Scroll to calendar bottom when calendar opens
@@ -426,20 +489,38 @@ export function MobileServiceCard({
                   </div>
                   <div className="flex items-center font-bold text-gray-900">
                     {isEditMode ? (
-                      <div className="mt-2">
-                        <CurrencyInput
-                          value={draftData.price}
-                          onChange={(value) => handleInputChange("price", value)}
-                          placeholder="0"
-                          error={errors?.price}
-                          className="border border-gray-100 text-mobilebase max-w-1/3"
-                          iconSize={24}
+                      <div className="flex flex-col space-y-4">
+                        <ServiceFormatItem
+                          format={"video"}
+                          practices={serviceFormats.video.practices}
+                          totalPrice={serviceFormats.video.practices.reduce((sum, p) => sum + p.price, 0)}
+                          isActive={serviceFormats.video.enabled}
+                          isEditMode={serviceFormats.video.isEditMode}
+                          onUpdate={(data) => handleFormatUpdate("video", data)}
+                          onEditToggle={() => handleFormatEditToggle("video")}
+                          onStatusToggle={() => handleFormatStatusToggle("video")}
+                        />
+                        <ServiceFormatItem
+                          format={"in-person"}
+                          practices={serviceFormats.inPerson.practices}
+                          totalPrice={serviceFormats.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
+                          isActive={serviceFormats.inPerson.enabled}
+                          isEditMode={serviceFormats.inPerson.isEditMode}
+                          onUpdate={(data) => handleFormatUpdate("inPerson", data)}
+                          onEditToggle={() => handleFormatEditToggle("inPerson")}
+                          onStatusToggle={() => handleFormatStatusToggle("inPerson")}
                         />
                       </div>
                     ) : (
-                      <div className="text-2xl">
-                        {formatNumber(draftData.price)}
-                        <RubleIcon size={28} className="mb-1 ml-1" bold={false} />
+                      <div className="flex flex-col font-bold text-[24px]">
+                        <div className="ml-auto flex flex-row items-center">
+                          {(() => {
+                            const currentPractice = format === "video" ? service.settings.video : service.settings.inPerson;
+                            const price = currentPractice?.practices?.reduce((sum, p) => sum + p.price, 0) || 0;
+                            return formatNumber(price);
+                          })()}
+                          <RubleIcon size={28} className="mb-1 ml-1" bold={false} />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -457,41 +538,45 @@ export function MobileServiceCard({
                   <p className="text-gray-700">{draftData.description}</p>
                 )}
 
-                {booked?.length === 0 && (
+                {!isEditMode && booked?.length === 0 && (
                   <div className="flex flex-wrap gap-2">
-                    <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-                      <TimerReset size={14} />
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={draftData.duration}
-                          onChange={(e) => handleInputChange("duration", e.target.value)}
-                          className="w-24 p-1 border rounded"
-                        />
-                      ) : (
-                        <span className="text-sm text-gray-600">{draftData.duration}</span>
+                    <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
+                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
+                        format === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
                       )}
+                        onClick={() => setFormat("video")}
+                      >
+                        <TvMinimalPlay size={14}/>
+                        <p className="text-sm">Онлайн</p>
+                      </button>
+                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
+                        format === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
+                      )}
+                        onClick={() => setFormat("in-person")}
+                      >
+                        <Users size={14}/>
+                        <p className="text-sm">Очно</p>
+                      </button>
                     </div>
 
-                    {draftData.format.map((f, index) => (
+                    <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
+                      <TimerReset size={14} />
+                      <span className="text-sm text-gray-600">
+                        {(format === "video" ? service.settings.video.score : service.settings.inPerson.score) || 0}
+                      </span>
+                    </div>
+
+                    {draftData.tags?.map((tag, index) => (
                       <div key={index} className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm">
-                        {f === "video" ? (
-                          <>
-                            <TvMinimalPlay size={14} />
-                            <p className="text-gray-600">Видео</p>
-                          </>
-                        ) : (
-                          <>
-                            <Users size={14} />
-                            <p className="text-gray-600">Очная</p>
-                          </>
-                        )}
+                        <p className="text-sm text-gray-600">{tag}</p>
                       </div>
                     ))}
 
                     <div className="flex items-center h-8 px-2 gap-1 bg-white shadow-sm rounded-sm ml-auto">
                       <IconPractice width={16} height={14} />
-                      <span className="text-sm">{draftData.practice}</span>
+                      <span className="text-sm">
+                        {(format === "video" ? service.settings.video.score : service.settings.inPerson.score) || 0}
+                      </span>
                     </div>
                   </div>
                 )}
