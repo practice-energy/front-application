@@ -482,32 +482,29 @@ export default function SearchPage() {
               <div ref={messagesEndRef} />
             </div>
           </div>
-
-          <div
-            className="fixed bottom-0 left-0 right-0 flex justify-center"
-            style={{
-              left: "500px",
-            }}
-          >
-            <div className="w-full max-w-4xl px-4 pb-4 pt-4">
-              <Mufi
-                onSearch={handleSearch}
-                showHeading={false}
-                dynamicWidth={false}
-                showPractice={currentChat?.isAI === true}
-                disableFileApply={true}
-                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
-                onCancelReply={() => {}}
-                chatTitle="Alura"
-                mode={mode}
-                canAccept={canAccept}
-                selectedTags={becomeSpecialistState.selectedTags}
-                onContinue={handleContinue}
-              />
-            </div>
-          </div>
         </>
       )}
+
+      <div
+          className="fixed bottom-0 left-0 right-0 flex justify-center"
+      >
+        <div className="w-full max-w-4xl px-4 pb-4 pt-4">
+          <Mufi
+              onSearch={handleSearch}
+              showHeading={false}
+              dynamicWidth={false}
+              showPractice={currentChat?.isAI === true}
+              disableFileApply={true}
+              placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+              onCancelReply={() => {}}
+              chatTitle="Alura"
+              mode={mode}
+              canAccept={canAccept}
+              selectedTags={becomeSpecialistState.selectedTags}
+              onContinue={handleContinue}
+          />
+        </div>
+      </div>
 
       <ShareModal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} message={messageToShare} />
     </div>
