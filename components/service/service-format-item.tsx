@@ -23,9 +23,13 @@ import { RubleIcon } from "@/components/ui/ruble-sign"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
-// Utility function to format numbers with commas
+// Utility functions for number formatting
 const formatNumberWithCommas = (num: number): string => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const parseFormattedNumber = (str: string): number => {
+  return parseInt(str.replace(/,/g, '')) || 0;
 };
 
 interface ServiceFormatItemProps {
@@ -82,6 +86,12 @@ export function ServiceFormatItem({
       }))
   )
   const [editedTotalPrice, setEditedTotalPrice] = useState(totalPrice)
+  const [formattedPrices, setFormattedPrices] = useState<Record<string, string>>(
+      practices.reduce((acc, practice) => ({
+        ...acc,
+        [practice.id]: formatNumberWithCommas(practice.price)
+      }), {})
+  )
 
   useEffect(() => {
     if (!isEditMode) {
@@ -90,11 +100,16 @@ export function ServiceFormatItem({
         duration: p.slots * 30
       })))
       setEditedTotalPrice(totalPrice)
+      setFormattedPrices(
+          practices.reduce((acc, practice) => ({
+            ...acc,
+            [practice.id]: formatNumberWithCommas(practice.price)
+          }), {})
+      )
     }
   }, [isEditMode, practices, totalPrice])
 
   useEffect(() => {
-    // Пересчитываем общую сумму при изменении практис
     const newTotal = editedPractices.reduce((sum, practice) => sum + practice.price, 0)
     setEditedTotalPrice(newTotal)
   }, [editedPractices])
@@ -113,34 +128,54 @@ export function ServiceFormatItem({
     const newCount = Math.max(1, count)
     newPractices[index] = {
       ...newPractices[index],
-      count: newCount,
+      slots: newCount,
       duration: newCount * 30
     }
     setEditedPractices(newPractices)
   }
 
-  const handlePracticePriceChange = (index: number, price: number) => {
+  const handlePracticePriceChange = (index: number, formattedValue: string) => {
     const newPractices = [...editedPractices]
+    const practiceId = newPractices[index].id
+    const numericValue = parseFormattedNumber(formattedValue)
+    const limitedValue = Math.min(100000, Math.max(0, numericValue))
+
     newPractices[index] = {
       ...newPractices[index],
-      price: Math.min(100000, Math.max(0, price))
+      price: limitedValue
     }
+
     setEditedPractices(newPractices)
+    setFormattedPrices({
+      ...formattedPrices,
+      [practiceId]: formatNumberWithCommas(limitedValue)
+    })
   }
 
   const addPractice = () => {
+    const newId = `practice-${Date.now()}`
     const newPractice: Practice = {
-      id: `practice-${Date.now()}`,
-      count: 1,
-      duration: 30, // 1 * 30 minutes
+      id: newId,
+      slots: 1,
+      duration: 30,
       price: 5000
     }
     setEditedPractices([...editedPractices, newPractice])
+    setFormattedPrices({
+      ...formattedPrices,
+      [newId]: formatNumberWithCommas(5000)
+    })
   }
 
   const removePractice = () => {
     if (editedPractices.length > 1) {
-      setEditedPractices(editedPractices.slice(0, -1))
+      const newPractices = editedPractices.slice(0, -1)
+      const removedId = editedPractices[editedPractices.length - 1].id
+      const newFormattedPrices = {...formattedPrices}
+      delete newFormattedPrices[removedId]
+
+      setEditedPractices(newPractices)
+      setFormattedPrices(newFormattedPrices)
     }
   }
 
@@ -214,12 +249,10 @@ export function ServiceFormatItem({
 
                                 <div className="flex items-center py-1 ml-auto">
                                   <input
-                                      type="number"
-                                      value={practice.price}
-                                      onChange={(e) => handlePracticePriceChange(index, parseInt(e.target.value) || 0)}
-                                      className="text-end focus:outline-none focus:ring-0 px-1 py-0.5 w-16 border rounded text-sm appearance-none [-moz-appearance:_textfield] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
-                                      min="0"
-                                      max={100000}
+                                      type="text"
+                                      value={formattedPrices[practice.id] || ''}
+                                      onChange={(e) => handlePracticePriceChange(index, e.target.value)}
+                                      className="text-end focus:outline-none focus:ring-0 px-1 py-0.5 w-16 border rounded text-sm"
                                   />
                                   <RubleIcon size={24} bold={false} />
                                 </div>
