@@ -147,11 +147,22 @@ export function ServiceFormatItem({
       duration: 30,
       price: 5000
     }
-    setEditedPractices([...editedPractices, newPractice])
+    
+    const newPractices = [...editedPractices, newPractice]
+    setEditedPractices(newPractices)
     setFormattedPrices({
       ...formattedPrices,
       [newId]: formatNumberWithCommas(5000)
     })
+    
+    // Если это первый практис и есть onUpdate, сразу обновляем данные
+    if (practices.length === 0 && onUpdate) {
+      onUpdate({
+        practices: newPractices,
+        totalPrice: 5000,
+        enabled: isActive
+      })
+    }
   }
 
   const removePractice = () => {
