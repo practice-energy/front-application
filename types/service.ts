@@ -2,14 +2,17 @@ import {Format} from "@/types/common";
 import {CalendarRestrictions} from "@/types/calendar-event";
 import {Feedback} from "@/types/feedback";
 
-
 export interface Practice {
     id: string
     slots: number
     duration: number
     price: number
-    format: Format
+}
+
+export interface FormatSettings {
+    practices: Practice[]
     score: number
+    format: Format
 }
 
 export interface Service {
@@ -28,7 +31,11 @@ export interface Service {
         title: string
         avatar: string
     }
-    practice: Practice[]
+
+    settings: {
+        video: FormatSettings
+        inPerson: FormatSettings
+    }
 
     tags: string[]
     reviews: Feedback[]

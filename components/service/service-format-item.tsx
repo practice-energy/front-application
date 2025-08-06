@@ -2,12 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import {
-  TvIcon as TvMinimalPlayIcon,
   Users,
   Play,
   Pause,
   Edit,
-  CrossIcon,
   TvMinimalPlay,
   X,
   TimerReset
