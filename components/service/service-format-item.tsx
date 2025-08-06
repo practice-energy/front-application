@@ -171,13 +171,13 @@ export function ServiceFormatItem({
   // Empty practices state
   if (practices.length === 0) {
     return (
-      <div className="flex items-center gap-4">
-        <AddEntityButton onClick={addPractice} className="w-12 h-12" iconClassName="w-6 h-6" />
-        <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-lg border">
+      <div className="flex items-center gap-2 flex-1 w-full">
+        <AddEntityButton onClick={addPractice} />
+        <div className="flex items-center gap-2 px-2 h-[36px] rounded-sm border border-gray-200 w-full">
           {format === "video" ? (
-            <TvMinimalPlay size={20} className="text-gray-600" />
+            <TvMinimalPlay size={20} className="text-neutral-700" />
           ) : (
-            <Users size={20} className="text-gray-600" />
+            <Users size={20} className="text-neutral-700" />
           )}
           <span className="text-gray-700 font-medium">{formatLabel}</span>
         </div>

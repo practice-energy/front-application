@@ -24,7 +24,6 @@ import type { CalendarRestrictions } from "@/types/calendar-event"
 import {cn} from "@/lib/utils";
 import { ServiceFormatItem } from "@/components/service/service-format-item"
 import { motion } from 'framer-motion'
-import {AddEntityButton} from "@/components/add-entity-button";
 
 interface ServiceCardProps {
   service: Service
