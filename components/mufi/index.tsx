@@ -255,7 +255,14 @@ export const Mufi = React.memo(function DesktopSearchBar({
   }, [router, chatTitle])
 
   return (
-    <div ref={containerRef} className="p-4" data-animating={isAnimating ? "true" : "false"}>
+    <div
+        ref={containerRef}
+        className="p-4"
+        data-animating={isAnimating ? "true" : "false"}
+        styles={{
+          zIndex: 1000,
+        }}
+    >
       {/* On-page messages display */}
       {isOnPage && onPageMessages.length > 0 && (
         <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
