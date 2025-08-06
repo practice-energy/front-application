@@ -162,6 +162,11 @@ export function ServiceFormatItem({
         totalPrice: 5000,
         enabled: isActive
       })
+      
+      // Автоматически переходим в режим редактирования
+      if (onEditToggle) {
+        onEditToggle()
+      }
     }
   }
 
