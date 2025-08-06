@@ -332,33 +332,35 @@ export function ServiceCard({
             <div className="p-6 space-y-4 flex flex-col ml-auto">
               <div className="flex items-center text-neutral-900 pb-2">
                 {isEditMode ? (
-                    <div className="flex flex-col space-y-4">
-                      {serviceFormats.map((formatData, index) => (
-                        <ServiceFormatItem
-                          key={`${formatData.format}-${index}`}
-                          format={formatData.format}
-                          duration={formatData.duration}
-                          practices={formatData.practices}
-                          totalPrice={formatData.totalPrice}
-                          isActive={formatData.isActive}
-                          isEditMode={formatData.isEditMode}
-                          onUpdate={(data) => handleFormatUpdate(index, data)}
-                          onEditToggle={() => handleFormatEditToggle(index)}
-                          onStatusToggle={() => handleFormatStatusToggle(index)}
-                        />
-                      ))}
-                    </div>
+                  <div className="flex flex-col space-y-4">
+                    {serviceFormats.map((formatData, index) => (
+                      <ServiceFormatItem
+                        key={`${formatData.format}-${index}`}
+                        format={formatData.format}
+                        duration={formatData.duration}
+                        practices={formatData.practices}
+                        totalPrice={formatData.totalPrice}
+                        isActive={formatData.isActive}
+                        isEditMode={formatData.isEditMode}
+                        onUpdate={(data) => handleFormatUpdate(index, data)}
+                        onEditToggle={() => handleFormatEditToggle(index)}
+                        onStatusToggle={() => handleFormatStatusToggle(index)}
+                      />
+                    ))}
+                  </div>
                 ) : (
-                    <>
-                      <div className="flex flex-col  font-bold  text-[36px] ">
-                        <div className="ml-auto flex flex-row items-center">
-                          {formatNumber(
-                              (formatTags === "video" ? service.priceVideo : service.priceInPerson)) || 0
-                          }
-                          <RubleIcon size={48} bold={false} />
-                        </div>
+                  <>
+                    <div className="flex flex-col  font-bold  text-[36px] ">
+                      <div className="ml-auto flex flex-row items-center">
+                        {(() => {
+                          const currentPractice = service.practice?.find(p => p.format === formatTags);
+                          const price = currentPractice?.practices?.reduce((sum, p) => sum + p.price, 0) || 0;
+                          return formatNumber(price);
+                        })()}
+                        <RubleIcon size={48} bold={false} />
                       </div>
-                    </>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -389,8 +391,9 @@ export function ServiceCard({
                 )}
                 <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1 px-2 gap-1 bg-white">
                   <TimerReset size={16} />
-                  <div className="text-gray-600 text-simple font-normal">{(
-                      formatTags === "video" ? service.durationVideo : service.durationInPerson) || 0}</div>
+                  <div className="text-gray-600 text-simple font-normal">
+                    {service.practice?.find(p => p.format === formatTags)?.duration || 0}
+                  </div>
                 </div>
                 {service.tags.map((tag) => <div>
                   <div className="inline-flex w-min-[106px] h-[36px] shadow-sm items-center justify-start rounded-sm px-2 gap-1 bg-white">
