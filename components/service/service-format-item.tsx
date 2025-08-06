@@ -261,14 +261,16 @@ export function ServiceFormatItem({
                         </AnimatePresence>
 
                         {/* Общая сумма в режиме редактирования */}
-                        <div className="flex justify-end ml-auto mt-1">
-                          <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
-                            <div className="text-end ml-auto">
-                              {formatNumberWithCommas(editedTotalPrice)}
+                        {practices.length > 0 && (
+                            <div className="flex justify-end ml-auto mt-1">
+                              <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
+                                <div className="text-end ml-auto">
+                                  {formatNumberWithCommas(editedTotalPrice)}
+                                </div>
+                              </div>
+                              <RubleIcon size={24} className="text-violet-600" bold={false}/>
                             </div>
-                          </div>
-                          <RubleIcon size={24} className="text-violet-600" bold={false}/>
-                        </div>
+                        )}
                       </div>
                   ) : (
                       <div className="flex flex-col px-3 gap-3">
