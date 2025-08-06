@@ -87,12 +87,6 @@ export function ServicePageContent({
     if (!draftData.title.trim()) {
       newErrors.title = "Title is required"
     }
-    if (!draftData.price || draftData.price <= 0) {
-      newErrors.price = "Price must be greater than 0"
-    }
-    if (!draftData.duration.trim()) {
-      newErrors.duration = "Duration is required"
-    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0

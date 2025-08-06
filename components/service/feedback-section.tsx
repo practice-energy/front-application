@@ -79,7 +79,7 @@ export function FeedbackSection({ feedbacks, title = "Реко и отзывы",
 
   return (
     <div className={className}>
-      <div className="text-xl font-bold text-gray-900 dark:text-gray-100 px-4 mb-6">{title}</div>
+      <div className="text-xl font-bold text-gray-900 dark:text-gray-100 px-4 py-2">{title}</div>
 
       {/* Top row (even indexes) */}
       <div className="relative mb-3">

@@ -22,8 +22,8 @@ export interface Booking {
   createdAt: Date
   updatedAt: Date
   isRepeat?: boolean
+  price: number
 }
-
 
 export interface BookingSlot {
   date: Date

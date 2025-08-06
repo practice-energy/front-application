@@ -34,14 +34,6 @@ export function Bullets({
     return (
         <div className="flex flex-col">
             <div className="flex flex-row gap-2 items-center mb-4 ">
-                <span
-                    className={cn(
-                        "font-semibold text-neutral-900 line-clamp-1 leading-relaxed ",
-                        isMobile ? "text-mobilebase" : "text-base",
-                    )}
-                >
-                    {title}
-                </span>
                 <div>
                     {isEditMode && (
                         <motion.div
@@ -53,6 +45,14 @@ export function Bullets({
                         </motion.div>
                     )}
                 </div>
+                <span
+                    className={cn(
+                        "font-semibold text-neutral-900 line-clamp-1 leading-relaxed ",
+                        isMobile ? "text-mobilebase" : "text-base",
+                    )}
+                >
+                    {title}
+                </span>
             </div>
 
             {isEditMode ? (

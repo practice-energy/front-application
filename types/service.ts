@@ -12,7 +12,7 @@ export interface Practice {
 export interface FormatSettings {
     practices: Practice[]
     score: number
-    format: Format
+    enabled: boolean
 }
 
 export interface Service {
@@ -49,6 +49,7 @@ export interface Service {
         isRepeat?: boolean
         duration: number
         format: Format
+        price: number
     }[]
     calendarRestrictions?: CalendarRestrictions
 }

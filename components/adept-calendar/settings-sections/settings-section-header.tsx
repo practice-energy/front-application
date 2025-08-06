@@ -56,7 +56,7 @@ export function SettingsSectionHeader({
 
   return (<div className={cn("flex items-center w-full py-3 group transition-all duration-100 ease-in-out gap-3 text-simple text-neutral-900",
       "rounded-sm",)}>
-    <div className={cn(trackingWider && "tracking-wider", "font-semibold")}>{title}</div>
     {showAddButton && onAddClick && <AddEntityButton onClick={onAddClick} />}
+    <div className={cn(trackingWider && "tracking-wider", "font-semibold")}>{title}</div>
   </div>)
 }

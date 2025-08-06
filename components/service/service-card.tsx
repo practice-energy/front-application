@@ -17,16 +17,14 @@ import { BookingCard } from "@/components/service/booking-card"
 import type { ServiceData } from "@/components/service/types/common"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
-import { CurrencyInput } from "@/components/currency-input"
 import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
 import type { Service } from "@/types/service"
 import type { CalendarRestrictions } from "@/types/calendar-event"
-import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
-import {AddEntityButton} from "@/components/add-entity-button";
 import { ServiceFormatItem } from "@/components/service/service-format-item"
 import { motion } from 'framer-motion'
+import {AddEntityButton} from "@/components/add-entity-button";
 
 interface ServiceCardProps {
   service: Service
@@ -58,52 +56,15 @@ export function ServiceCard({
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [editPhotos, setEditPhotos] = useState<File[]>([])
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
-  const [formatTags, setFormatTags] = useState<"video" | "in-person">(
-      service.format.includes("video") ? "video" : "in-person"
+  const [format, setFormat] = useState<"video" | "in-person">(
+      service.settings.video.enabled ? "video" : "in-person"
   )
-
-  // Состояние для форматов услуг
-  const [serviceFormats, setServiceFormats] = useState(() => {
-    if (!service.practice || service.practice.length === 0) {
-      return [{
-        format: "in-person" as Format,
-        duration: 60,
-        practices: [],
-        totalPrice: 0,
-        isActive: false,
-        isEditMode: false
-      }]
-    }
-
-    return service.practice.map(practice => ({
-      format: practice.format,
-      duration: practice.duration,
-      practices: practice.practices || [],
-      totalPrice: practice.practices?.reduce((sum, p) => sum + p.price, 0) || 0,
-      isActive: practice.isActive || false,
-      isEditMode: false
-    }))
-  })
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
 
   // Initialize restrictions from service or create default
-  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
-    service.calendarRestrictions || {
-      gmt: "GMT+3",
-      commons: {
-        Mon: { isActive: true, intervals: [] },
-        Tue: { isActive: true, intervals: [] },
-        Wed: { isActive: true, intervals: [] },
-        Thu: { isActive: true, intervals: [] },
-        Fri: { isActive: true, intervals: [] },
-        Sat: { isActive: false, intervals: [] },
-        Sun: { isActive: false, intervals: [] },
-      },
-      restrictions: [],
-    },
-  )
+  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(service.calendarRestrictions || CalendarRestrictions.createDefault())
 
   // Инициализация editPhotos из service.images при входе в режим редактирования
   useEffect(() => {
@@ -155,24 +116,6 @@ export function ServiceCard({
   const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
     setRestrictions(newRestrictions)
     onInputChange("calendarRestrictions", newRestrictions)
-  }
-
-  const handleFormatUpdate = (formatIndex: number, data: any) => {
-    const newFormats = [...serviceFormats]
-    newFormats[formatIndex] = { ...newFormats[formatIndex], ...data }
-    setServiceFormats(newFormats)
-  }
-
-  const handleFormatEditToggle = (formatIndex: number) => {
-    const newFormats = [...serviceFormats]
-    newFormats[formatIndex].isEditMode = !newFormats[formatIndex].isEditMode
-    setServiceFormats(newFormats)
-  }
-
-  const handleFormatStatusToggle = (formatIndex: number) => {
-    const newFormats = [...serviceFormats]
-    newFormats[formatIndex].isActive = !newFormats[formatIndex].isActive
-    setServiceFormats(newFormats)
   }
 
   // Scroll to calendar bottom when calendar opens
@@ -287,10 +230,6 @@ export function ServiceCard({
                         onChange={(e) => onInputChange("title", e.target.value)}
                         placeholder="Практис"
                         type="input"
-                        className={cn(
-                            // "border-none focus:border-none focus:outline-none focus:ring-0", // Основные стили
-                            // "text-neutral-900 w-full text-[36px] h-[36px] font-bold p-3 px-1 line-clamp-1", // Текстовые стили
-                        )}
                     />
                 ) : (
                     <div className="flex items-center w-full py-3">
@@ -333,34 +272,38 @@ export function ServiceCard({
               <div className="flex items-center text-neutral-900 pb-2">
                 {isEditMode ? (
                   <div className="flex flex-col space-y-4">
-                    {serviceFormats.map((formatData, index) => (
-                      <ServiceFormatItem
-                        key={`${formatData.format}-${index}`}
-                        format={formatData.format}
-                        duration={formatData.duration}
-                        practices={formatData.practices}
-                        totalPrice={formatData.totalPrice}
-                        isActive={formatData.isActive}
-                        isEditMode={formatData.isEditMode}
-                        onUpdate={(data) => handleFormatUpdate(index, data)}
-                        onEditToggle={() => handleFormatEditToggle(index)}
-                        onStatusToggle={() => handleFormatStatusToggle(index)}
-                      />
-                    ))}
+                    <ServiceFormatItem
+                        format={"video"}
+                        practices={service.settings.video.practices}
+                        totalPrice={service.settings.video.practices.reduce((sum, p) => sum + p.price, 0)}
+                        isActive={service.settings.video.enabled}
+                        // isEditMode={/*here*/}
+                        // onUpdate={/*here*/}
+                        // onEditToggle={/*here*/}
+                        // onStatusToggle={/*here*/}
+                    />
+                    <ServiceFormatItem
+                        format={"in-person"}
+                        practices={service.settings.inPerson.practices}
+                        totalPrice={service.settings.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
+                        isActive={service.settings.inPerson.enabled}
+                    // isEditMode={/*here*/}
+                    // onUpdate={/*here*/}
+                    // onEditToggle={/*here*/}
+                    // onStatusToggle={/*here*/}
+                    />
                   </div>
                 ) : (
-                  <>
                     <div className="flex flex-col  font-bold  text-[36px] ">
                       <div className="ml-auto flex flex-row items-center">
                         {(() => {
-                          const currentPractice = service.practice?.find(p => p.format === formatTags);
+                          const currentPractice = format === "video" ? service.settings.video : service.settings.inPerson;
                           const price = currentPractice?.practices?.reduce((sum, p) => sum + p.price, 0) || 0;
                           return formatNumber(price);
                         })()}
                         <RubleIcon size={48} bold={false} />
                       </div>
                     </div>
-                  </>
                 )}
               </div>
             </div>
@@ -369,30 +312,28 @@ export function ServiceCard({
           {/* Tags row */}
           {!isEditMode && (
               <div className="flex items-center gap-6 flex-wrap rounded-sm px-6 py-2">
-                {service.format.length > 1 && (
-                    <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
-                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
-                          formatTags === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
-                      )}
-                              onClick={() => setFormatTags("video")}
-                      >
-                        <TvMinimalPlay size={16}/>
-                        <p>Онлайн</p>
-                      </button>
-                      <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
-                          formatTags === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
-                      )}
-                              onClick={() => setFormatTags("in-person")}
-                      >
-                        <Users size={16}/>
-                        <p>Очно</p>
-                      </button>
-                    </div>
-                )}
+                <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
+                  <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
+                      format === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
+                  )}
+                          onClick={() => setFormat("video")}
+                  >
+                    <TvMinimalPlay size={16}/>
+                    <p>Онлайн</p>
+                  </button>
+                  <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
+                      format === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
+                  )}
+                          onClick={() => setFormat("in-person")}
+                  >
+                    <Users size={16}/>
+                    <p>Очно</p>
+                  </button>
+                </div>
                 <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1 px-2 gap-1 bg-white">
                   <TimerReset size={16} />
                   <div className="text-gray-600 text-simple font-normal">
-                    {service.practice?.find(p => p.format === formatTags)?.duration || 0}
+                    {(format === "video" ? service.settings.video.score :service.settings.inPerson.score) || 0}
                   </div>
                 </div>
                 {service.tags.map((tag) => <div>
@@ -404,7 +345,7 @@ export function ServiceCard({
                 </div>)}
                 <div className="inline-flex h-[36px] shadow-sm items-center justify-start rounded-sm p-1.5 px-2 gap-1 bg-white">
                   <IconPractice width={20} height={18} />
-                  {service.practice?.find(p => p.format === formatTags)?.score || 0}
+                  {(format === "video" ? service.settings.video.score :service.settings.inPerson.score) || 0}
                 </div>
               </div>
           )}
@@ -429,7 +370,7 @@ export function ServiceCard({
                         service={{
                           id: service.id,
                           name: service.title,
-                          price: booking.format === "in-person" ? service.priceInPerson : service.priceVideo,
+                          price: booking.format === "in-person" ? booking.price : booking.price,
                           description: service.description,
                         }}
                         duration={booking.duration}
@@ -464,12 +405,12 @@ export function ServiceCard({
                       Выбрать свой слот
                     </div>
                   </div>
-                  <div className=" relative flex flex-row px-4 pb-3 bg-white">
+                  <div className=" relative flex flex-row px-4 bg-white">
                     <div className="w-80 flex-shrink-0">
                       <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                     </div>
                     <BookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-                    <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                    {/*<div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />*/}
                     <div ref={calendarBottomRef} />
                   </div>
                 </div>
@@ -490,7 +431,7 @@ export function ServiceCard({
         </div>
 
         {!isEditMode && (
-          <div className="relative px-2 pt-6 pb-4">
+          <div className="relative px-2 py-4">
             <FeedbackSection feedbacks={service.reviews} />
           </div>
         )}

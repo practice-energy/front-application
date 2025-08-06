@@ -68,7 +68,6 @@ const scaleUp = {
 
 export function ServiceFormatItem({
                                     format,
-                                    duration,
                                     practices,
                                     totalPrice,
                                     isActive,

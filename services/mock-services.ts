@@ -10,10 +10,6 @@ export const mockServices: Service[] = [
         id: service1Id,
         title: "Натальная карта",
         description: "Подробный разбор натальной карты с рекомендациями",
-        priceInPerson: 3500,
-        priceVideo: 300,
-        durationVideo: 300,
-        durationInPerson: 300,
         images: [
             "/placeholder.jpg",
             "/placeholder.jpg",
@@ -23,10 +19,19 @@ export const mockServices: Service[] = [
         tags: ["астрология", "натальная карта", "личность"],
         reviews: mockFeedbacks,
         includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
-        format: ["video", "in-person"],
-        practiceInPerson: 30,
-        practiceVideo: 30,
         location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
+        },
         bookings: [
             {
                 id: uuidv4(),
@@ -37,7 +42,8 @@ export const mockServices: Service[] = [
                 updatedAt: new Date(),
                 isRepeat: false,
                 duration: 30,
-                format: "video"
+                format: "video",
+                price: 3000
             },
             {
                 id: uuidv4(),
@@ -48,118 +54,604 @@ export const mockServices: Service[] = [
                 updatedAt: new Date(),
                 isRepeat: false,
                 duration: 240,
-                format: "in-person"
+                format: "in-person",
+                price: 3000
             },
-        ]
+        ],
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
     },
     {
-        id: service2Id,
-        title: "Коучинг сессия",
-        description: "Индивидуальная коучинг сессия для достижения целей",
-        priceInPerson: 3500,
-        priceVideo: 300,
-        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
-        duration: "90 минут",
-        images: ["/placeholder.jpg"],
-        specialist: mockSpecialists[0],
-        tags: ["коучинг", "цели", "развитие"],
-        reviews: mockFeedbacks,
-        includes: ["Wipes", "Pencils", "Markers"],
-        format: ["video"],
-        practice: "30 минут",
-    },
-    {
-        id: uuidv4(),
+        id: service1Id,
         title: "Натальная карта",
-        description: "Полный анализ натальной карты с разбором основных аспектов и домов",
-        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
-        priceInPerson: 3500,
-        priceVideo: 300,
-        duration: "1.5 часа",
-        images: ["/astrology-service1.jpg", "/astrology-service2.jpg"],
-        includes: [
-            "Подробный разбор планет в знаках",
-            "Анализ аспектов",
-            "Рекомендации по развитию",
-            "Запись консультации",
+        description: "Подробный разбор натальной карты с рекомендациями",
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
         ],
-        specialist: {
-            id: specialist1Id,
-            name: "Анна Петрова",
-            title: "Астролог и таролог",
-            avatar: "placeholder.svg"
-        },
-        tags: ["натальная карта", "астрология", "индивидуальная консультация"],
-        reviews: [],
-        format: ["video", "in-person"],
-        practice: "30 минут",
-    },
-    {
-        id: uuidv4(),
-        title: "Гадание на Таро",
-        description: "Ответы на вопросы с помощью карт Таро с детальным толкованием",
-        priceInPerson: 3500,
-        priceVideo: 300,
-        duration: "1 час",
         contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
-        images: ["/taro-service1.jpg"],
-        includes: ["Ответы на 3 ключевых вопроса", "Разбор текущей ситуации", "Рекомендации на ближайший месяц"],
-        specialist: {
-            id: specialist1Id,
-            name: "Анна Петрова",
-            title: "Астролог и таролог",
-            avatar: "placeholder.svg"
+        specialist: mockSpecialists[0],
+        tags: ["астрология", "натальная карта", "личность"],
+        reviews: mockFeedbacks,
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
+        location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
         },
-        tags: ["таро", "гадание", "предсказание"],
-        reviews: [],
-        format: ["video", "in-person"],
-        practice: "30 минут",
-    },
-    {
-        id: uuidv4(),
-        title: "Карьерный коучинг",
-        description: "Индивидуальная сессия по поиску профессионального пути",
-        priceInPerson: 3500,
-        priceVideo: 300,
-        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
-        duration: "1.5 часа",
-        images: ["/coaching-service1.jpg", "/coaching-service2.jpg"],
-        includes: [
-            "Анализ текущей ситуации",
-            "Определение сильных сторон",
-            "Разработка плана развития",
-            "Дополнительные материалы",
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+                format: "video",
+                price: 3000
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+                format: "in-person",
+                price: 3000
+            },
         ],
-        specialist: {
-            id: specialist2Id,
-            name: "Михаил Сидоров",
-            title: "Лайф-коуч и бизнес-тренер",
-            avatar: "placeholder.svg"
-        },
-        tags: ["карьера", "коучинг", "профессиональное развитие"],
-        reviews: [],
-        format: ["video", "in-person"],
-        practice: "30 минут",
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
     },
     {
-        id: uuidv4(),
-        title: "Пакет из 5 коуч-сессий",
-        description: "Комплексная работа над достижением целей с сопровождением",
-        priceInPerson: 3500,
-        priceVideo: 300,
+        id: service1Id,
+        title: "Натальная карта",
+        description: "Подробный разбор натальной карты с рекомендациями",
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+        ],
         contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
-        duration: "5 сессий по 1 часу",
-        images: ["/coaching-package.jpg"],
-        includes: ["Первичная диагностика", "5 индивидуальных сессий", "Промежуточные задания", "Поддержка между сессиями"],
-        specialist: {
-            id: specialist2Id,
-            name: "Михаил Сидоров",
-            title: "Лайф-коуч и бизнес-тренер",
-            avatar: "placeholder.svg"
+        specialist: mockSpecialists[0],
+        tags: ["астрология", "натальная карта", "личность"],
+        reviews: mockFeedbacks,
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
+        location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
         },
-        tags: ["пакет", "коучинг", "личное развитие"],
-        reviews: [],
-        format: ["video", "in-person"],
-        practice: "30 минут",
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+                format: "video",
+                price: 3000
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+                format: "in-person",
+                price: 3000
+            },
+        ],
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
+    },
+    {
+        id: service1Id,
+        title: "Натальная карта",
+        description: "Подробный разбор натальной карты с рекомендациями",
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+        ],
+        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
+        specialist: mockSpecialists[0],
+        tags: ["астрология", "натальная карта", "личность"],
+        reviews: mockFeedbacks,
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
+        location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
+        },
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+                format: "video",
+                price: 3000
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+                format: "in-person",
+                price: 3000
+            },
+        ],
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
+    },
+    {
+        id: service1Id,
+        title: "Натальная карта",
+        description: "Подробный разбор натальной карты с рекомендациями",
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+        ],
+        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
+        specialist: mockSpecialists[0],
+        tags: ["астрология", "натальная карта", "личность"],
+        reviews: mockFeedbacks,
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
+        location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
+        },
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+                format: "video",
+                price: 3000
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+                format: "in-person",
+                price: 3000
+            },
+        ],
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
+    },
+    {
+        id: service1Id,
+        title: "Натальная карта",
+        description: "Подробный разбор натальной карты с рекомендациями",
+        images: [
+            "/placeholder.jpg",
+            "/placeholder.jpg",
+        ],
+        contents: "Подробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациямиПодробный разбор натальной карты с рекомендациями",
+        specialist: mockSpecialists[0],
+        tags: ["астрология", "натальная карта", "личность"],
+        reviews: mockFeedbacks,
+        includes: ["Wipes", "Pencils", "Markers", "Wipes", "Pencils", "Markers"],
+        location: "Бибирево, Большая Ленина",
+        settings: {
+            video: {
+                practices: [],
+                score: 1,
+                enabled: false,
+            },
+            inPerson: {
+                practices: [],
+                score: 2,
+                enabled: false,
+            },
+        },
+        bookings: [
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 30,
+                format: "video",
+                price: 3000
+            },
+            {
+                id: uuidv4(),
+                startTime: new Date(),
+                endTime: new Date(),
+                status: "confirmed",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isRepeat: false,
+                duration: 240,
+                format: "in-person",
+                price: 3000
+            },
+        ],
+        calendarRestrictions: {
+            gmt: "GMT+3",
+            commons: {
+                Mon: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Tue: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Wed: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Thu: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Fri: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sat: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                },
+                Sun: {
+                    id: "",
+                    name: "",
+                    isActive: false,
+                    intervals: [],
+                    isPractice: false
+                }
+            },
+            restrictions: []
+        }
     },
 ]
