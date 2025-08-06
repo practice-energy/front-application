@@ -19,7 +19,7 @@ import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { PhotoUpload } from "@/components/photo-upload"
 import { PracticeServiceRestrictions } from "@/components/service/components/practice-service-restrictions"
-import type { Service } from "@/types/service"
+import type { Service, FormatSettings } from "@/types/service"
 import type { CalendarRestrictions } from "@/types/calendar-event"
 import {cn} from "@/lib/utils";
 import { ServiceFormatItem } from "@/components/service/service-format-item"
@@ -59,6 +59,18 @@ export function ServiceCard({
   const [format, setFormat] = useState<"video" | "in-person">(
       service.settings.video.enabled ? "video" : "in-person"
   )
+
+  // Состояние для форматов услуг
+  const [serviceFormats, setServiceFormats] = useState({
+    video: {
+      ...service.settings.video,
+      isEditMode: false
+    },
+    inPerson: {
+      ...service.settings.inPerson,
+      isEditMode: false
+    }
+  })
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
@@ -116,6 +128,51 @@ export function ServiceCard({
   const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
     setRestrictions(newRestrictions)
     onInputChange("calendarRestrictions", newRestrictions)
+  }
+
+  // Обработчики для форматов
+  const handleFormatUpdate = (formatType: "video" | "inPerson", data: Partial<FormatSettings>) => {
+    const newFormats = {
+      ...serviceFormats,
+      [formatType]: {
+        ...serviceFormats[formatType],
+        ...data
+      }
+    }
+    setServiceFormats(newFormats)
+    
+    // Обновляем основные данные сервиса
+    onInputChange("settings", {
+      video: formatType === "video" ? newFormats.video : serviceFormats.video,
+      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+    })
+  }
+
+  const handleFormatEditToggle = (formatType: "video" | "inPerson") => {
+    setServiceFormats(prev => ({
+      ...prev,
+      [formatType]: {
+        ...prev[formatType],
+        isEditMode: !prev[formatType].isEditMode
+      }
+    }))
+  }
+
+  const handleFormatStatusToggle = (formatType: "video" | "inPerson") => {
+    const newFormats = {
+      ...serviceFormats,
+      [formatType]: {
+        ...serviceFormats[formatType],
+        enabled: !serviceFormats[formatType].enabled
+      }
+    }
+    setServiceFormats(newFormats)
+    
+    // Обновляем основные данные сервиса
+    onInputChange("settings", {
+      video: formatType === "video" ? newFormats.video : serviceFormats.video,
+      inPerson: formatType === "inPerson" ? newFormats.inPerson : serviceFormats.inPerson
+    })
   }
 
   // Scroll to calendar bottom when calendar opens
@@ -274,23 +331,23 @@ export function ServiceCard({
                   <div className="flex flex-col space-y-4">
                     <ServiceFormatItem
                         format={"video"}
-                        practices={service.settings.video.practices}
-                        totalPrice={service.settings.video.practices.reduce((sum, p) => sum + p.price, 0)}
-                        isActive={service.settings.video.enabled}
-                        // isEditMode={/*here*/}
-                        // onUpdate={/*here*/}
-                        // onEditToggle={/*here*/}
-                        // onStatusToggle={/*here*/}
+                        practices={serviceFormats.video.practices}
+                        totalPrice={serviceFormats.video.practices.reduce((sum, p) => sum + p.price, 0)}
+                        isActive={serviceFormats.video.enabled}
+                        isEditMode={serviceFormats.video.isEditMode}
+                        onUpdate={(data) => handleFormatUpdate("video", data)}
+                        onEditToggle={() => handleFormatEditToggle("video")}
+                        onStatusToggle={() => handleFormatStatusToggle("video")}
                     />
                     <ServiceFormatItem
                         format={"in-person"}
-                        practices={service.settings.inPerson.practices}
-                        totalPrice={service.settings.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
-                        isActive={service.settings.inPerson.enabled}
-                    // isEditMode={/*here*/}
-                    // onUpdate={/*here*/}
-                    // onEditToggle={/*here*/}
-                    // onStatusToggle={/*here*/}
+                        practices={serviceFormats.inPerson.practices}
+                        totalPrice={serviceFormats.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
+                        isActive={serviceFormats.inPerson.enabled}
+                        isEditMode={serviceFormats.inPerson.isEditMode}
+                        onUpdate={(data) => handleFormatUpdate("inPerson", data)}
+                        onEditToggle={() => handleFormatEditToggle("inPerson")}
+                        onStatusToggle={() => handleFormatStatusToggle("inPerson")}
                     />
                   </div>
                 ) : (

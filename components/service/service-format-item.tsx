@@ -1,15 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  Users,
-  Play,
-  Pause,
-  Edit,
-  TvMinimalPlay,
-  X,
-  TimerReset
-} from 'lucide-react'
+import { Users, Play, Pause, Edit, MonitorPlayIcon as TvMinimalPlay, X, TimerReset } from 'lucide-react'
 import { useState, useEffect } from "react"
 import { Format } from "@/types/common"
 import { Practice } from "@/types/service"
@@ -32,18 +24,17 @@ const parseFormattedNumber = (str: string): number => {
 
 interface ServiceFormatItemProps {
   format: Format
-  duration: number
   practices: Practice[]
   totalPrice: number
   isActive: boolean
-  isEditMode: boolean
-  onUpdate: (data: {
+  isEditMode?: boolean
+  onUpdate?: (data: {
     practices: Practice[]
     totalPrice: number
-    isActive: boolean
+    enabled: boolean
   }) => void
-  onEditToggle: () => void
-  onStatusToggle: () => void
+  onEditToggle?: () => void
+  onStatusToggle?: () => void
 }
 
 const itemVariants = {
@@ -56,11 +47,6 @@ const itemVariants = {
   exit: { opacity: 0, y: -10 }
 }
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.2 } }
-}
-
 const scaleUp = {
   hidden: { scale: 0.9, opacity: 0 },
   visible: { scale: 1, opacity: 1, transition: { duration: 0.2 } }
@@ -71,7 +57,7 @@ export function ServiceFormatItem({
                                     practices,
                                     totalPrice,
                                     isActive,
-                                    isEditMode,
+                                    isEditMode = false,
                                     onUpdate,
                                     onEditToggle,
                                     onStatusToggle
@@ -112,12 +98,16 @@ export function ServiceFormatItem({
   }, [editedPractices])
 
   const handleSave = () => {
-    onUpdate({
-      practices: editedPractices,
-      totalPrice: editedTotalPrice,
-      isActive
-    })
-    onEditToggle()
+    if (onUpdate) {
+      onUpdate({
+        practices: editedPractices,
+        totalPrice: editedTotalPrice,
+        enabled: isActive
+      })
+    }
+    if (onEditToggle) {
+      onEditToggle()
+    }
   }
 
   const handlePracticeCountChange = (index: number, count: number) => {
@@ -300,7 +290,7 @@ export function ServiceFormatItem({
         </motion.div>
 
         {/* Кнопки редактирования */}
-        {isEditMode && (
+        {isEditMode && onUpdate && onEditToggle && (
             <motion.div
                 initial="hidden"
                 animate="visible"
@@ -322,7 +312,7 @@ export function ServiceFormatItem({
         )}
 
         {/* Кнопки управления */}
-        {!isEditMode && (
+        {!isEditMode && onStatusToggle && onEditToggle && (
             <div className="flex justify-end gap-2 mt-3">
               <motion.button
                   whileHover={{ scale: 1.05 }}
