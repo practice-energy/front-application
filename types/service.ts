@@ -9,8 +9,8 @@ export interface Practice {
     duration: number
     price: number
     format: Format
+    score: number
 }
-
 
 export interface Service {
     id: string
