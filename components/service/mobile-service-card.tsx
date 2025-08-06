@@ -87,20 +87,7 @@ export function MobileServiceCard({
   const [editPhotos, setEditPhotos] = useState<File[]>([])
 
   // Initialize restrictions from service or create default
-  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(
-    service.calendarRestrictions || {
-      commons: {
-        Mon: { isActive: true, intervals: [] },
-        Tue: { isActive: true, intervals: [] },
-        Wed: { isActive: true, intervals: [] },
-        Thu: { isActive: true, intervals: [] },
-        Fri: { isActive: true, intervals: [] },
-        Sat: { isActive: false, intervals: [] },
-        Sun: { isActive: false, intervals: [] },
-      },
-      restrictions: [],
-    },
-  )
+  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(service.calendarRestrictions || CalendarRestrictions.createDefault())
   const [editingRestrictionId, setEditingRestrictionId] = useState<string | null>(null)
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
@@ -162,16 +149,6 @@ export function MobileServiceCard({
   // Передаем фотографии для загрузки на сервер через пропс
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
-
-    if (!service.title.trim()) {
-      newErrors.title = "Title is required"
-    }
-    if (!service.price || service.price <= 0) {
-      newErrors.price = "Price must be greater than 0"
-    }
-    if (!service.duration.trim()) {
-      newErrors.duration = "Duration is required"
-    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -291,13 +268,6 @@ export function MobileServiceCard({
     onServiceUpdate?.(updatedService)
   }
 
-  // Scroll to calendar bottom when calendar opens
-  useEffect(() => {
-    if (selectedDate && calendarBottomRef.current) {
-      calendarBottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" })
-    }
-  }, [selectedDate])
-
   // Scroll to restriction bottom when editing restriction
   useEffect(() => {
     if (editingRestrictionId && restrictionBottomRef.current) {
@@ -361,7 +331,7 @@ export function MobileServiceCard({
     <div>
       <div className="w-full bg-colors-neutral-150">
         {/* Header with Back Button and Action Buttons */}
-        <div className="flex items-center justify-between p-4 sticky top-0 bg-white z-10 border-b">
+        <div className="flex items-center justify-between p-4 top-0 bg-white z-10 border-b">
           <BackButton className="text-neutral-700 opacity-80" />
 
           <div className="flex gap-6">
@@ -496,30 +466,7 @@ export function MobileServiceCard({
                     )}
                   </div>
                   <div className="flex items-center font-bold text-gray-900">
-                    {isEditMode ? (
-                      <div className="flex flex-col space-y-4">
-                        <ServiceFormatItem
-                          format={"video"}
-                          practices={serviceFormats.video.practices}
-                          totalPrice={serviceFormats.video.practices.reduce((sum, p) => sum + p.price, 0)}
-                          isActive={serviceFormats.video.enabled}
-                          isEditMode={serviceFormats.video.isEditMode}
-                          onUpdate={(data) => handleFormatUpdate("video", data)}
-                          onEditToggle={() => handleFormatEditToggle("video")}
-                          onStatusToggle={() => handleFormatStatusToggle("video")}
-                        />
-                        <ServiceFormatItem
-                          format={"in-person"}
-                          practices={serviceFormats.inPerson.practices}
-                          totalPrice={serviceFormats.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
-                          isActive={serviceFormats.inPerson.enabled}
-                          isEditMode={serviceFormats.inPerson.isEditMode}
-                          onUpdate={(data) => handleFormatUpdate("inPerson", data)}
-                          onEditToggle={() => handleFormatEditToggle("inPerson")}
-                          onStatusToggle={() => handleFormatStatusToggle("inPerson")}
-                        />
-                      </div>
-                    ) : (
+                    {!isEditMode && (
                       <div className="flex flex-col font-bold text-[24px]">
                         <div className="ml-auto flex flex-row items-center">
                           {(() => {
@@ -533,6 +480,29 @@ export function MobileServiceCard({
                     )}
                   </div>
                 </div>
+
+                {isEditMode && (<div className="flex flex-col space-y-4">
+                  <ServiceFormatItem
+                      format={"video"}
+                      practices={serviceFormats.video.practices}
+                      totalPrice={serviceFormats.video.practices.reduce((sum, p) => sum + p.price, 0)}
+                      isActive={serviceFormats.video.enabled}
+                      isEditMode={serviceFormats.video.isEditMode}
+                      onUpdate={(data) => handleFormatUpdate("video", data)}
+                      onEditToggle={() => handleFormatEditToggle("video")}
+                      onStatusToggle={() => handleFormatStatusToggle("video")}
+                  />
+                  <ServiceFormatItem
+                      format={"in-person"}
+                      practices={serviceFormats.inPerson.practices}
+                      totalPrice={serviceFormats.inPerson.practices.reduce((sum, p) => sum + p.price, 0)}
+                      isActive={serviceFormats.inPerson.enabled}
+                      isEditMode={serviceFormats.inPerson.isEditMode}
+                      onUpdate={(data) => handleFormatUpdate("inPerson", data)}
+                      onEditToggle={() => handleFormatEditToggle("inPerson")}
+                      onStatusToggle={() => handleFormatStatusToggle("inPerson")}
+                  />
+                </div>)}
 
                 {isEditMode ? (
                   <EnhancedInput
@@ -632,9 +602,9 @@ export function MobileServiceCard({
                           avatar: specialist.avatar,
                         }}
                         service={{
-                          id: service.id,
+                          id: booking.id,
                           name: service.title,
-                          price: service.price,
+                          price: booking.price,
                           description: service.description,
                         }}
                         duration={booking.duration}
@@ -704,7 +674,6 @@ export function MobileServiceCard({
                   <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
                 </div>
                 <MobileBookingSection selectedDate={selectedDate} bookingSlots={bookingSlots} />
-                <div ref={calendarBottomRef} />
               </>
             )}
 

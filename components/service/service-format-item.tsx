@@ -189,14 +189,14 @@ export function ServiceFormatItem({
     return (
       <div className="flex items-center gap-2 flex-1 w-full">
         <AddEntityButton onClick={addPractice} />
-        <div className="flex items-center gap-2 px-2 h-[36px] rounded-sm border border-gray-200 w-full">
+        <div className="flex items-center gap-2 px-2 h-[36px] rounded-sm border bg-white border-gray-200 w-full">
           {format === "video" ? (
             <TvMinimalPlay size={20} className="text-neutral-700" />
           ) : (
             <Users size={20} className="text-neutral-700" />
           )}
           <span className="text-gray-700">{formatLabel}</span>
-        </div>
+       </div>
       </div>
     )
   }
