@@ -234,7 +234,7 @@ export function ServiceFormatItem({
 
                   {/* Список практис */}
                   {isEditMode ? (
-                      <div className="flex flex-col ml-1">
+                      <div className="flex flex-col ml-1 mt-1">
                         <AnimatePresence>
                           {editedPractices.map((practice, index) => (
                               <motion.div
@@ -295,9 +295,9 @@ export function ServiceFormatItem({
                   ) : (
                       <div className="flex flex-col px-3 gap-3">
                         {practices.map((practice, index) => (
-                            <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700 min-w-40">
-                              <div>{`${practice.slots} практис по`}</div>
-                              <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-xs">
+                            <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700">
+                              <p className="w-full whitespace-nowrap">{`${index+1} практис по`}</p>
+                              <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-2 py-1 rounded-sm text-xs">
                                 <TimerReset size={16} className="text-white" />
                                 <span>{practice.slots * 30}</span>
                               </div>
