@@ -1,6 +1,6 @@
 "use client"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from "lucide-react"
+import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from 'lucide-react'
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Format } from "@/types/common"
 import Image from "next/image"
@@ -25,6 +25,7 @@ import type { CalendarRestrictions } from "@/types/calendar-event"
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
 import {AddEntityButton} from "@/components/add-entity-button";
+import { ServiceFormatItem } from "@/components/service/service-format-item"
 
 interface ServiceCardProps {
   service: Service
@@ -59,6 +60,31 @@ export function ServiceCard({
   const [formatTags, setFormatTags] = useState<"video" | "in-person">(
       service.format.includes("video") ? "video" : "in-person"
   )
+
+  // Состояние для форматов услуг
+  const [serviceFormats, setServiceFormats] = useState([
+    {
+      format: "video" as Format,
+      duration: 30,
+      practices: [
+        { id: "1", count: 4, duration: 30, price: 5000 },
+        { id: "2", count: 4, duration: 60, price: 7500 }
+      ],
+      totalPrice: 50000,
+      isActive: true,
+      isEditMode: false
+    },
+    {
+      format: "in-person" as Format,
+      duration: 60,
+      practices: [
+        { id: "3", count: 2, duration: 60, price: 8000 }
+      ],
+      totalPrice: 16000,
+      isActive: false,
+      isEditMode: false
+    }
+  ])
 
   const calendarBottomRef = useRef<HTMLDivElement>(null)
   const restrictionBottomRef = useRef<HTMLDivElement>(null)
@@ -130,6 +156,24 @@ export function ServiceCard({
   const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
     setRestrictions(newRestrictions)
     onInputChange("calendarRestrictions", newRestrictions)
+  }
+
+  const handleFormatUpdate = (formatIndex: number, data: any) => {
+    const newFormats = [...serviceFormats]
+    newFormats[formatIndex] = { ...newFormats[formatIndex], ...data }
+    setServiceFormats(newFormats)
+  }
+
+  const handleFormatEditToggle = (formatIndex: number) => {
+    const newFormats = [...serviceFormats]
+    newFormats[formatIndex].isEditMode = !newFormats[formatIndex].isEditMode
+    setServiceFormats(newFormats)
+  }
+
+  const handleFormatStatusToggle = (formatIndex: number) => {
+    const newFormats = [...serviceFormats]
+    newFormats[formatIndex].isActive = !newFormats[formatIndex].isActive
+    setServiceFormats(newFormats)
   }
 
   // Scroll to calendar bottom when calendar opens
@@ -285,23 +329,21 @@ export function ServiceCard({
             <div className="p-6 space-y-4 flex flex-col ml-auto">
               <div className="flex items-center text-neutral-900 pb-2">
                 {isEditMode ? (
-                    <div className="flex flex-col">
-                      {
-                        // to component
-                      }
-                      {!formatTags.includes("in-person") ? (
-                          <div className="flex flex-row items-center gap-3">
-                            <AddEntityButton onClick={() => {}}/>
-                            <div className="flex flex-row items-center border shadow-sm rounded-sm border-gray-200 px-2 w-[250px] h-[36px]">
-                              <Users size={16} className="mr-1"/>
-                              <div className="text-neutral-700 ">Очно</div>
-                            </div>
-                          </div>
-                      ) : (
-                          <div className="flex flex-row items-center gap-3">
-                            // here
-                          </div>
-                      )}
+                    <div className="flex flex-col space-y-4">
+                      {serviceFormats.map((formatData, index) => (
+                        <ServiceFormatItem
+                          key={`${formatData.format}-${index}`}
+                          format={formatData.format}
+                          duration={formatData.duration}
+                          practices={formatData.practices}
+                          totalPrice={formatData.totalPrice}
+                          isActive={formatData.isActive}
+                          isEditMode={formatData.isEditMode}
+                          onUpdate={(data) => handleFormatUpdate(index, data)}
+                          onEditToggle={() => handleFormatEditToggle(index)}
+                          onStatusToggle={() => handleFormatStatusToggle(index)}
+                        />
+                      ))}
                     </div>
                 ) : (
                     <>
