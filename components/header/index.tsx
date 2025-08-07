@@ -149,11 +149,36 @@ export function Header() {
   const isBecomeSpecialist = pathname === `/search/${becomeSpecialistState.chatId}`
 
   return (
-    <div className="fixed top-0 h-[66px] w-full z-30">
-      <div>
-        {/* Логотип - фиксированная позиция */}
-        {!isHomePage && <Logo onClick={handleLogoClick} />}
+    <div className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
+      {/* Кнопка сайдбара - фиксированная позиция */}
+      <div
+          className="items-center ml-[346px] gap-3 flex flex-row h-full justify-start "
+          style={{
+            zIndex: 60
+          }}
+      >
+        <button
+            onClick={handleOpenSidebar}
+            className={cn("px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
+            style={{
+              zIndex: 60,
+            }}
+        >
+          <PanelRightClose width={24} height={24} />
+        </button>
+
+        <div
+            className="fixed left-0"
+            style={{
+              zIndex: 60,
+              left: 440,
+              position: "fixed",
+            }}
+        >
+          <Logo onClick={handleLogoClick} />
+        </div>
       </div>
+
       {/* Правая секция */}
       <div
         className="items-center justify-end flex animate-none z-50"
@@ -165,15 +190,15 @@ export function Header() {
         }}
       >
         <div className="flex items-center gap-[24px]">
-          {isAuthenticated && !user?.isSpecialist && (
-            <button
-              className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"
-              onClick={handleBecomeSpecialist}
-            >
-              <div className="font-medium"> Стать мастером</div>
-              <UserSwitchIcon size={36} />
-            </button>
-          )}
+          {/*{isAuthenticated && !user?.isSpecialist && (*/}
+          {/*  <button*/}
+          {/*    className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"*/}
+          {/*    onClick={handleBecomeSpecialist}*/}
+          {/*  >*/}
+          {/*    <div className="font-medium"> Стать мастером</div>*/}
+          {/*    <UserSwitchIcon size={36} />*/}
+          {/*  </button>*/}
+          {/*)}*/}
 
           {isAuthenticated && hat === "adept" && (
             <IconButton
@@ -211,9 +236,6 @@ export function Header() {
           {/* User likes icon */}
           {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />)}
 
-          {/* User switch icon */}
-          {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} />)}
-
           {isAuthenticated && (
             <>
               <ProfileMenu
@@ -228,28 +250,11 @@ export function Header() {
               />
             </>
           )}
+
+          {/* User switch icon */}
+          {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} iconClassName="text-violet-600"/>)}
         </div>
       </div>
-
-      <header
-        className="top-0 z-50 h-24 bg-background opacity-70 backdrop-blur-lg fixed items-end w-full"
-      >
-        {/* Кнопка сайдбара - фиксированная позиция */}
-        {shouldShowSidebar && (
-          <button
-            onClick={handleOpenSidebar}
-            className={cn("h-full px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
-            style={{
-              position: "fixed",
-              top: "0",
-              left: "30px",
-              zIndex: 60,
-            }}
-          >
-            <PanelRightClose width={24} height={24} />
-          </button>
-        )}
-      </header>
     </div>
   )
 }

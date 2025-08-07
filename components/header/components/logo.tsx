@@ -27,9 +27,9 @@ export function Logo({ onClick }: LogoProps) {
   const renderIcon = () => {
       if (!isAuthenticated) {
           return (<IconPractice1
-              width={60}
+              width={48}
               height={60}
-              // className="text-neutral-900 bg-none rounded-sm"
+              className="text-neutral-900 bg-none rounded-sm"
           />)
       }
 
@@ -38,7 +38,7 @@ export function Logo({ onClick }: LogoProps) {
               return (<IconPractice1
                   width={60}
                   height={60}
-                  // className="text-neutral-900 bg-none rounded-sm"
+                  className="text-neutral-900 bg-none rounded-sm"
               />)
           }
 
@@ -46,7 +46,7 @@ export function Logo({ onClick }: LogoProps) {
               return (<IconPractice2
                   width={60}
                   height={60}
-                  // className="text-neutral-900 bg-none rounded-sm"
+                  className="text-neutral-900 bg-none rounded-sm"
               />)
           }
       }
@@ -61,9 +61,8 @@ export function Logo({ onClick }: LogoProps) {
   return (
     <button
         onClick={onClick}
-        className="space-x-2"
     >
-      <div className="h-20 w-20 rounded-sm">
+      <div className="rounded-sm">
           {renderIcon()}
       </div>
     </button>
