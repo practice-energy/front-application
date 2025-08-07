@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { PanelRightClose, CalendarDays } from "lucide-react"
+import { PanelRightClose, CalendarDays } from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -232,10 +232,7 @@ export function Header() {
       </div>
 
       <header
-        className={cn(
-          "top-0 z-50 h-24 bg-background opacity-70 backdrop-blur-lg fixed items-end",
-          isCollapsed ? "w-full" : "w-[calc(100%-400px)]",
-        )}
+        className="top-0 z-50 h-24 bg-background opacity-70 backdrop-blur-lg fixed items-end w-full"
       >
         {/* Кнопка сайдбара - фиксированная позиция */}
         {shouldShowSidebar && (
@@ -245,7 +242,7 @@ export function Header() {
             style={{
               position: "fixed",
               top: "0",
-              left: isHomePage ? "30px" : "340px",
+              left: "30px",
               zIndex: 60,
             }}
           >
