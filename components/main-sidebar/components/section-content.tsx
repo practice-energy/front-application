@@ -46,7 +46,7 @@ export function SectionContent({ children, sectionKey, sectionVisibility }: Sect
         opacity: isVisible ? 1 : 0,
       }}
     >
-      <div className="pb-2">{children}</div>
+      {children}
     </div>
   )
 }

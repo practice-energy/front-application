@@ -57,7 +57,7 @@ export function InstagramSpecialistCard({
           {/* Карточка специалиста */}
           <div className="relative flex-1 min-w-0 max-w-[300px]">
             <div
-                className="bg-white w-full rounded-sm shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md dark:hover:shadow-lg transition-all duration-200 hover:border-gray-100"
+                className="bg-white w-full rounded-sm shadow-md shadow-violet-50 hover:shadow-violet-50 border border-gray-100 overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:border-gray-200"
                 onClick={handleCardClick}
             >
               {/* Image Container with 4:5 aspect ratio */}
