@@ -76,7 +76,7 @@ export const ChatsSections = ({
                                 sectionKey={section.key}
                                 sectionVisibility={sectionVisibility}
                             >
-                                <div className="gap-2">
+                                <div className="gap-1">
                                     {section.chats.map((chat) => (
                                         <ChatItem
                                             key={chat.id}

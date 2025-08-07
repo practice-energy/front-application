@@ -20,7 +20,7 @@ export function SectionHeader({
       <div>
         <button
             className={cn(
-                "flex items-center w-full py-3 px-1 pl-2 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
+                "flex items-center w-full py-3 px-1 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
                 "rounded-sm",
                 isCollapsed && !isMobile ? "hidden" : "flex",
             )}
@@ -30,7 +30,7 @@ export function SectionHeader({
             }}
         >
           <Icon className={cn(
-              "h-6 w-6 mb-0.5 ml-3",
+              "h-6 w-6 mb-0.5",
               iconStyle,
           )}/>
           <h3 className="tracking-wider font-semibold">

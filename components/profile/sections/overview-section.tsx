@@ -7,14 +7,13 @@ import { useProfileStore } from "@/stores/profile-store"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ImageUp, MapPin, Share } from "lucide-react"
+import {ImageUp, MapPinHouse, Share} from "lucide-react"
 import { formatNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { AboutSection } from "@/components/profile/about-section"
 import type { Education, Experience } from "@/types/common"
 import { Bullets } from "@/components/specialist/bullets"
 import { Certificates } from "@/components/specialist/certificates"
-import { PracticePlaceholder } from "@/components/practice-placeholder"
 import { BackButton } from "@/components/ui/button-back"
 import { LocationInput } from "@/components/location-input"
 import { EnhancedInput } from "@/components/enhanced-input"
@@ -363,7 +362,7 @@ export function OverviewSection() {
                       </div>
                       {currentData.location && (
                         <div className="flex items-center mt-3 text-neutral-600">
-                          <MapPin className="w-4 h-4 mr-1" />
+                          <MapPinHouse className="w-4 h-4 mr-1" />
                           <div className="text-base font-normal">{currentData.location}</div>
                         </div>
                       )}
@@ -543,7 +542,7 @@ export function OverviewSection() {
 
                       {currentData.location && !isEditMode && (
                         <div className="flex items-center mt-4 text-neutral-600">
-                          <MapPin className="w-4 h-4 mr-1" />
+                          <MapPinHouse className="w-4 h-4 mr-1" />
                           <span>{currentData.location}</span>
                         </div>
                       )}

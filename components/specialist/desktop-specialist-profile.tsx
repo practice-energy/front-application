@@ -2,13 +2,18 @@
 
 import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp, MonitorPlayIcon as TvMinimalPlay, Users } from 'lucide-react'
+import {
+  Share,
+  MessagesSquare,
+  ImageUp,
+  MonitorPlayIcon as TvMinimalPlay,
+  Users,
+  MapPinHouse
+} from 'lucide-react'
 import { BackButton } from "@/components/ui/button-back"
 import type {Education, Experience} from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { useLikes } from "@/hooks/use-likes"
-import { IconPractice } from "@/components/icons/icon-practice"
-import { formatNumber } from "@/utils/format"
 import { Certificates } from "./certificates"
 import { Bullets } from "./bullets"
 import { AboutSkillsSection } from "./about-skills-section"
@@ -426,7 +431,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                                 </div>
                                 {draftData.location && (
                                     <div className="flex items-center mt-4 text-neutral-600">
-                                      <MapPin className="w-4 h-4 mr-1" />
+                                      <MapPinHouse className="w-4 h-4 mr-1" />
                                       <span>{draftData.location}</span>
                                     </div>
                                 )}
@@ -465,29 +470,29 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                       {/* Format Toggle */}
                       {!isEditMode && draftData.services.length > 0 && (
                         <div className="flex items-center gap-2 mb-4">
-                          <span className="text-sm font-medium text-neutral-700">Практис</span>
-                          <div className="flex bg-gray-100 rounded-sm p-1">
+                          <div className="flex bg-white rounded-sm ">
                             <button
-                              onClick={() => setFormat('video')}
-                              className={`flex items-center gap-1 px-3 py-1 rounded-sm text-sm transition-colors ${
-                                format === 'video'
-                                  ? 'bg-white text-violet-600 shadow-sm'
-                                  : 'text-gray-600 hover:text-gray-800'
-                              }`}
+                                onClick={() => setFormat('video')}
+                                className={`flex items-center gap-1 w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
+                                    format === 'video'
+                                        ? 'bg-violet-600 text-white shadow-sm'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`}
                             >
                               <TvMinimalPlay size={16} />
                             </button>
                             <button
-                              onClick={() => setFormat('inPerson')}
-                              className={`flex items-center gap-1 px-3 py-1 rounded-sm text-sm transition-colors ${
-                                format === 'inPerson'
-                                  ? 'bg-white text-violet-600 shadow-sm'
-                                  : 'text-gray-600 hover:text-gray-800'
-                              }`}
+                                onClick={() => setFormat('inPerson')}
+                                className={`flex items-center gap-1  w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
+                                    format === 'inPerson'
+                                        ? 'bg-violet-600 text-white shadow-sm'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`}
                             >
                               <Users size={16} />
                             </button>
                           </div>
+                          <span className="text-base font-bold text-neutral-700">Практис</span>
                         </div>
                       )}
 

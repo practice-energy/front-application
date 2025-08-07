@@ -2,7 +2,15 @@
 
 import type React from "react"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MessagesSquare, Share } from 'lucide-react'
+import {
+  MapPin,
+  TimerReset,
+  MonitorPlayIcon as TvMinimalPlay,
+  Users,
+  MessagesSquare,
+  Share,
+  MapPinHouse
+} from 'lucide-react'
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Format } from "@/types/common"
 import Image from "next/image"
@@ -24,7 +32,6 @@ import { MobileBookingCard } from "@/components/service/mobile-booking-card"
 import { ModeToggleBar } from "@/components/profile/mode-toggle-bar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CurrencyInput } from "@/components/currency-input"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { LocationInput } from "@/components/location-input"
 import { Bullets } from "@/components/specialist/bullets"
@@ -561,7 +568,7 @@ export function MobileServiceCard({
 
                 {service.location && booked?.length === 0 && (
                   <div className="flex items-center text-gray-600">
-                    <MapPin className="h-5 w-5 mr-2" />
+                    <MapPinHouse className="h-5 w-5 mr-2" />
                     {isEditMode ? (
                       <input
                         type="text"

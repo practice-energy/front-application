@@ -1,6 +1,6 @@
 "use client"
 
-import { MapPin, TimerReset, MonitorPlayIcon as TvMinimalPlay, Users } from 'lucide-react'
+import {TimerReset, MonitorPlayIcon as TvMinimalPlay, Users, MapPinHouse} from 'lucide-react'
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import type { Format } from "@/types/common"
 import Image from "next/image"
@@ -311,7 +311,7 @@ export function ServiceCard({
                   // booked?.length === 0 &&
                   !isEditMode && (
                   <div className="flex items-center text-neutral-600 pt-5">
-                    <MapPin className="h-5 w-5 mr-2" />
+                    <MapPinHouse className="h-5 w-5 mr-2" />
                     <span>{service.location}</span>
                   </div>
               )}

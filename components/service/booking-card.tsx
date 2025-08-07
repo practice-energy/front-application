@@ -1,6 +1,6 @@
 "use client"
 
-import {Repeat2, TimerReset, User, MessagesSquare, MapPin, TvMinimalPlay} from "lucide-react"
+import {TimerReset, MessagesSquare, TvMinimalPlay, MapPinHouse} from "lucide-react"
 import { RubleIcon } from "@/components/ui/ruble-sign"
 import Image from "next/image"
 import { ActivityStatus } from "@/components/ui/activity-status"
@@ -114,7 +114,7 @@ export function BookingCard({
 
                     {format === "in-person" ?  (
                         <div className="flex items-center text-violet-500 text-sm line-clamp-1">
-                            <MapPin className="h-[18px] w-[18px] mr-2" />
+                            <MapPinHouse className="h-[18px] w-[18px] mr-2" />
                             <div className="text-sm line-clamp-1">{location}</div>
                         </div>
                     ) : (

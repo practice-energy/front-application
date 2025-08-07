@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { MapPin, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 

@@ -489,20 +489,22 @@ export default function SearchPage() {
           className="fixed bottom-0 left-0 right-0 flex justify-center"
       >
         <div className="w-full max-w-4xl px-4 pb-4 pt-4">
-          <Mufi
-              onSearch={handleSearch}
-              showHeading={false}
-              dynamicWidth={false}
-              showPractice={currentChat?.isAI === true}
-              disableFileApply={true}
-              placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
-              onCancelReply={() => {}}
-              chatTitle="Alura"
-              mode={mode}
-              canAccept={canAccept}
-              selectedTags={becomeSpecialistState.selectedTags}
-              onContinue={handleContinue}
-          />
+          {!isMobile && (
+              <Mufi
+                  onSearch={handleSearch}
+                  showHeading={false}
+                  dynamicWidth={false}
+                  showPractice={currentChat?.isAI === true}
+                  disableFileApply={true}
+                  placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                  onCancelReply={() => {}}
+                  chatTitle="Alura"
+                  mode={mode}
+                  canAccept={canAccept}
+                  selectedTags={becomeSpecialistState.selectedTags}
+                  onContinue={handleContinue}
+              />
+          )}
         </div>
       </div>
 

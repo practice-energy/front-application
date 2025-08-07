@@ -528,7 +528,9 @@ export const MessageItem = React.memo(
             {message.aiMessageType === "service" && (
               // Service-specific buttons
               <div className="flex flex-col w-full pt-2">
-                // TODO
+                {
+                  // TODO
+                }
                 <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
               </div>
             )}

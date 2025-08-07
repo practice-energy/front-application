@@ -71,6 +71,18 @@ export const mockSpecialists: Specialist[] = [
                 },
                 tags: ["натальная карта", "астрология", "индивидуальная консультация"],
                 reviews: [],
+                settings: {
+                    video: {
+                        practices: [],
+                        score: 1,
+                        enabled: true,
+                    },
+                    inPerson: {
+                        practices: [],
+                        score: 2,
+                        enabled: false,
+                    },
+                },
             },
             {
                 id: service2Id,
@@ -89,6 +101,18 @@ export const mockSpecialists: Specialist[] = [
                 },
                 tags: ["таро", "гадание", "предсказание"],
                 reviews: [],
+                settings: {
+                    video: {
+                        practices: [],
+                        score: 1,
+                        enabled: false,
+                    },
+                    inPerson: {
+                        practices: [],
+                        score: 2,
+                        enabled: false,
+                    },
+                },
             },
             {
                 id: uuidv4(),

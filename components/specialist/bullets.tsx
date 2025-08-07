@@ -34,17 +34,15 @@ export function Bullets({
     return (
         <div className="flex flex-col">
             <div className="flex flex-row gap-2 items-center mb-4 ">
-                <div>
-                    {isEditMode && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <AddEntityButton onClick={onAdd} />
-                        </motion.div>
-                    )}
-                </div>
+                {isEditMode && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <AddEntityButton onClick={onAdd} />
+                    </motion.div>
+                )}
                 <span
                     className={cn(
                         "font-semibold text-neutral-900 line-clamp-1 leading-relaxed ",

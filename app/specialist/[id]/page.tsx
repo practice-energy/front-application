@@ -93,8 +93,9 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
           <MobileSpecialistProfile specialist={specialist} />
           ) :
           (<>
-            <div className="h-24"/>
+            <div className="h-16"/>
             <DesctopSpecialistProfile specialist={specialist} />
+            <div className="h-28"/>
           </>)}
 
       <div className={cn(
@@ -103,7 +104,6 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
         <Mufi
             onSearch={handleSearch}
             chatTitle="Alura"
-            showPractice={false}
             disableFileApply={true}
         />
       </div>

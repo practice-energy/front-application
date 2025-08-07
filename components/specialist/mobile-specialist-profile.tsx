@@ -2,7 +2,16 @@
 
 import React, {useEffect, useRef, useState} from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Share, MessagesSquare, ChevronDown, ImageUp, MonitorPlayIcon as TvMinimalPlay, Users } from 'lucide-react'
+import {
+    MapPin,
+    Share,
+    MessagesSquare,
+    ChevronDown,
+    ImageUp,
+    MonitorPlayIcon as TvMinimalPlay,
+    Users,
+    MapPinHouse
+} from 'lucide-react'
 import { InstagramServiceCard } from "@/components/instagram-service-card"
 import { BackButton } from "@/components/ui/button-back"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
@@ -429,7 +438,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                         </div>
                                         {draftData.location && (
                                             <div className="flex items-center mt-3 text-neutral-600">
-                                                <MapPin className="w-4 h-4 mr-1" />
+                                                <MapPinHouse className="w-4 h-4 mr-1" />
                                                 <div className="text-base font-normal">{draftData.location}</div>
                                             </div>
                                         )}
@@ -454,34 +463,34 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
 
                         {/* Services, Experience and Certificates */}
                         <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
-                            {/* Format Toggle */}
                             {!isEditMode && draftData.services.length > 0 && (
                                 <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-sm font-medium text-neutral-700">Практис</span>
-                                    <div className="flex bg-gray-100 rounded-sm p-1">
+                                    <div className="flex bg-white rounded-sm ">
                                         <button
                                             onClick={() => setFormat('video')}
-                                            className={`flex items-center gap-1 px-2 py-1 rounded-sm text-sm transition-colors ${
+                                            className={`flex items-center gap-1 w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                                 format === 'video'
-                                                    ? 'bg-white text-violet-600 shadow-sm'
+                                                    ? 'bg-violet-600 text-white shadow-sm'
                                                     : 'text-gray-600 hover:text-gray-800'
                                             }`}
                                         >
-                                            <TvMinimalPlay size={14} />
+                                            <TvMinimalPlay size={16} />
                                         </button>
                                         <button
                                             onClick={() => setFormat('inPerson')}
-                                            className={`flex items-center gap-1 px-2 py-1 rounded-sm text-sm transition-colors ${
+                                            className={`flex items-center gap-1  w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                                 format === 'inPerson'
-                                                    ? 'bg-white text-violet-600 shadow-sm'
+                                                    ? 'bg-violet-600 text-white shadow-sm'
                                                     : 'text-gray-600 hover:text-gray-800'
                                             }`}
                                         >
-                                            <Users size={14} />
+                                            <Users size={16} />
                                         </button>
                                     </div>
+                                    <span className="text-base font-bold text-neutral-700">Практис</span>
                                 </div>
                             )}
+
                             <PracticeBlockSection
                                 services={getFilteredServices()}
                                 isEditMode={isEditMode}
