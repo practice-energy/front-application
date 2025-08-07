@@ -1,4 +1,4 @@
-import { PanelRightOpen, Search } from "lucide-react";
+import {PanelRightClose, PanelRightOpen, Search} from "lucide-react";
 import { Input } from "@/components/ui/input"
 import {cn} from "@/lib/utils";
 
@@ -34,8 +34,7 @@ export const Topper = ({
                     onClick={toggleSidebar}
                     className="rounded-sm hover:bg-none p-1"
                 >
-                    <PanelRightOpen width={24} height={24} />
-                    <span className="sr-only">Закрыть сайдбар</span>
+                    <PanelRightOpen width={36} height={36}  className="border border-neutral-900 text-neutral-900 p-1 rounded-sm"/>
                 </button>
             </div>
         </div>

@@ -60,7 +60,7 @@ export const ChatsSections = ({
             {sections.map(
                 (section) => {
                     return (
-                        <div key={section.key} className="px-1.5">
+                        <div key={section.key} className="px-1">
                             <SectionHeader
                                 title={section.title}
                                 sectionKey={section.key}

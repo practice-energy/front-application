@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { PanelRightClose, CalendarDays } from 'lucide-react'
+import {PanelRightClose, CalendarDays, SlidersHorizontalIcon, SlidersVerticalIcon} from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -152,7 +152,7 @@ export function Header() {
     <div className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
       {/* Кнопка сайдбара - фиксированная позиция */}
       <div
-          className="items-center ml-[356px] gap-3 flex flex-row h-full justify-start "
+          className="items-center ml-[340px] gap-3 flex flex-row h-full justify-start "
           style={{
             zIndex: 60
           }}
@@ -164,14 +164,14 @@ export function Header() {
               zIndex: 60,
             }}
         >
-          <PanelRightClose width={24} height={24} />
+          <PanelRightClose width={36} height={36}  className="border border-neutral-900 text-neutral-900 p-1 rounded-sm"/>
         </button>
 
         <div
             className="fixed left-0 shadow-sm items-center border border-gray-200 rounded-sm gap-3 flex flex-row px-1 py-0"
             style={{
               zIndex: 60,
-              left: 440,
+              left: 420,
               position: "fixed",
             }}
         >
@@ -187,7 +187,7 @@ export function Header() {
         className="items-center justify-end flex animate-none z-50"
         style={{
           position: "fixed",
-          right: "10px",
+          right: "30px",
           top: "0px",
           zIndex: 60,
         }}
@@ -237,7 +237,7 @@ export function Header() {
           )}
 
           {/* User likes icon */}
-          {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={true} />)}
+          {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={false} />)}
 
           {isAuthenticated && (
             <>
@@ -256,6 +256,9 @@ export function Header() {
 
           {/* User switch icon */}
           {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} iconClassName="text-violet-600"/>)}
+
+          {/* User likes icon */}
+          {!isBecomeSpecialist && (<IconButton icon={SlidersVerticalIcon} onClick={() => {}} disabled={false} />)}
         </div>
       </div>
     </div>

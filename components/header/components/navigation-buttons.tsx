@@ -69,11 +69,11 @@ export function NavigationButtons({ isAuthenticated, hat, router }: NavigationBu
       )}
 
       {/* Security button */}
-      <IconButton
-          icon={Pentagon}
-          onClick={handleSecrityClick}
-          disabled={false}
-      />
+      {/*<IconButton*/}
+      {/*    icon={Pentagon}*/}
+      {/*    onClick={handleSecrityClick}*/}
+      {/*    disabled={false}*/}
+      {/*/>*/}
     </>
   )
 }
