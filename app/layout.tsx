@@ -1,69 +1,55 @@
+import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/hooks/use-auth"
 import { SidebarProvider } from "@/contexts/sidebar-context"
 import { SidebarLayout } from "@/components/sidebar-layout"
-import { Header } from "@/components/header/index"
-import { useAuth } from "@/hooks/use-auth"
-import { usePathname } from "next/navigation"
-import { useIsMobile } from "@/hooks/use-mobile"
 
-const inter = Inter({ subsets: ["latin"] })
+// Load Inter with all subsets needed
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
-  title: "Practice App",
-  description: "A practice application",
-    generator: 'v0.dev'
-}
-
-function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth()
-  const pathname = usePathname()
-  const isMobile = useIsMobile()
-
-  // Определяем нужно ли показывать header
-  const shouldShowHeader = () => {
-    // На мобильных устройствах не показываем header на странице календаря
-    if (isMobile) {
-        return false
-    }
-
-    if (pathname === "/" && !isAuthenticated) {
-      return false
-    }
-    // На всех остальных страницах показываем header
-    return true
-  }
-
-  const showHeader = shouldShowHeader()
-
-  return (
-    <>
-      {showHeader && <Header />}
-      <SidebarLayout>{children}</SidebarLayout>
-    </>
-  )
+  title: "Practice Energy - Find Your Perfect Specialist",
+  description: "Connect with experts in astrology, coaching, wellness, and more",
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider>
-            <LayoutContent>{children}</LayoutContent>
-          </SidebarProvider>
-        </ThemeProvider>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const savedTheme = localStorage.getItem('theme') || 'system';
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (savedTheme === 'system' && systemDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`font-sans bg-theme-light-bg text-gray-900 `}>
+            <AuthProvider>
+              <SidebarProvider>
+                <SidebarLayout>{children}</SidebarLayout>
+              </SidebarProvider>
+            </AuthProvider>
       </body>
     </html>
   )

@@ -39,7 +39,7 @@ export function SectionHeader({
           <ChevronDown
               className={cn(
                   "w-6 h-6 text-violet-600 transition-all duration-200 ease-in-out transform ml-auto",
-                  isVisible ? "rotate-180" : "rotate-0",
+                  isVisible ?  "rotate-0" : "rotate-180",
               )}
           />
         </button>

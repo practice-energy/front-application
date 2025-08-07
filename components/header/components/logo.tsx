@@ -62,12 +62,6 @@ export function Logo({ onClick }: LogoProps) {
     <button
         onClick={onClick}
         className="space-x-2"
-        style={{
-          position: "fixed",
-          left: "430px",
-          top: "20px",
-          zIndex: 60,
-        }}
     >
       <div className="h-20 w-20 rounded-sm">
           {renderIcon()}
