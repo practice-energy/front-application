@@ -26,7 +26,7 @@ export function DayColumnHeader({ date, isSelectedDay }: Pick<DayColumnProps, "d
     const [weekday, day] = formatted.split(" ")
 
     return (
-        <div className="flex flex-row items-center justify-center w-full h-[50px] gap-1 pt-5">
+        <div className="flex flex-row items-center justify-center w-full h-[30px] gap-1">
           <div className="text-sm font-medium ">
             {weekday.replace(/^./, (letter) => letter.toUpperCase())}
           </div>

@@ -85,7 +85,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
 
   return (
       <div className="h-full flex flex-col">
-        <div className="flex h-full mt-24">
+        <div className="flex h-full mt-[66px]">
           <CalendarSidebar
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}

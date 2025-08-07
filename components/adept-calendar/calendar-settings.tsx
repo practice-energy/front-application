@@ -37,7 +37,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
   return (
     <div className="flex flex-col h-screen bg-white rounded-sm">
-      <div className="flex flex-row items-center gap-3 py-4 px-3">
+      <div className="flex flex-row items-center gap-3 pb-2 px-3">
         <SettingsButton
           onClick={disableSettings}
           className="bg-violet-600 hover:bg-violet-700 border-0 flex"

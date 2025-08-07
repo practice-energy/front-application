@@ -20,15 +20,11 @@ export function Logo({ onClick }: LogoProps) {
   } = useBecomeSpecialist()
     const { isAuthenticated } = useAuth()
 
-  if (isHomePage) {
-    return null
-  }
-
   const renderIcon = () => {
       if (!isAuthenticated) {
           return (<IconPractice1
               width={48}
-              height={60}
+              height={48}
               className="text-neutral-900 bg-none rounded-sm"
           />)
       }
@@ -36,24 +32,24 @@ export function Logo({ onClick }: LogoProps) {
       if (pathname === `/search/${becomeSpecialistState.chatId}`) {
           if (becomeSpecialistState.step === 1) {
               return (<IconPractice1
-                  width={60}
-                  height={60}
+                  width={48}
+                  height={48}
                   className="text-neutral-900 bg-none rounded-sm"
               />)
           }
 
           if (becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) {
               return (<IconPractice2
-                  width={60}
-                  height={60}
+                  width={48}
+                  height={48}
                   className="text-neutral-900 bg-none rounded-sm"
               />)
           }
       }
 
       return (<IconPractice
-          width={60}
-          height={60}
+          width={48}
+          height={48}
           className="text-neutral-900 bg-none rounded-sm"
       />)
   }

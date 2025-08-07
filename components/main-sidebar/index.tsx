@@ -255,6 +255,7 @@ export function MainSidebar() {
 
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className={cn("flex-1 relative")}>
+
         {/* Исчезающий градиент сверху */}
         {/*<div*/}
         {/*  className={cn(*/}

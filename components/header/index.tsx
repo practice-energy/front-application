@@ -152,7 +152,7 @@ export function Header() {
     <div className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
       {/* Кнопка сайдбара - фиксированная позиция */}
       <div
-          className="items-center ml-[346px] gap-3 flex flex-row h-full justify-start "
+          className="items-center ml-[356px] gap-3 flex flex-row h-full justify-start "
           style={{
             zIndex: 60
           }}
@@ -168,7 +168,7 @@ export function Header() {
         </button>
 
         <div
-            className="fixed left-0"
+            className="fixed left-0 shadow-sm items-center border border-gray-200 rounded-sm gap-3 flex flex-row px-1 py-0"
             style={{
               zIndex: 60,
               left: 440,
@@ -176,6 +176,9 @@ export function Header() {
             }}
         >
           <Logo onClick={handleLogoClick} />
+          <div className="flex items-center font-semibold text-base text-neutral-900">
+            {user?.practice || 0}
+          </div>
         </div>
       </div>
 

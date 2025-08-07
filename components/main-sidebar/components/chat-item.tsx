@@ -37,7 +37,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
   return (
       <div
           className={cn(
-              "relative rounded-sm transition-colors cursor-pointer mt-1",
+              "relative rounded-sm transition-colors cursor-pointer mt-0.5",
               "pl-0 px-1 shadow-md border border-gray-300",
               isMobile ? "w-full" : "w-[390px]",
               isCollapsed && !isMobile ? "cursor-default" : "cursor-pointer",
@@ -49,11 +49,11 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           )}
           onClick={() => onChatClick(chat.id)}
       >
-        <div className={cn("flex items-start w-full, hover:bg-opacity-100", isMobile ? "gap-1.5" : "gap-3")}>
+        <div className={cn("flex items-center w-full, hover:bg-opacity-100", isMobile ? "gap-1.5" : "gap-3")}>
           {/* Profile Image - spans all three rows */}
           <div className={cn(
               "flex-shrink-0 flex items-center",
-              "h-[90px]" // Высота аватара под три строки
+              // "h-[90px]" // Высота аватара под три строки
           )}>
             {chat.isAI ? (
                 <IconAlura
@@ -75,7 +75,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
           {/* Two columns layout */}
           <div className="flex-1 min-w-0 flex flex-col">
             {/* Row 1: Title and Status */}
-            <div className="flex items-center justify-between mt-1.5">
+            <div className="flex items-center justify-between mt-1">
               <h3 className={cn("text-base font-medium truncate flex-1",
 
               )}>{chat.title}</h3>
@@ -93,7 +93,7 @@ export function ChatItem({ chat, onChatClick, isActiveChat, hasNewMessages, isCo
 
               {/* Правый блок (иконки) - не сжимает описание */}
               <div className="flex-shrink-0 ml-2">  {/* flex-shrink-0 + ml-2 для отступа */}
-                <div className="flex flex-col items-end gap-1 py-1.5">  {/* Вертикальное выравнивание */}
+                <div className="flex flex-col items-end gap-1 py-1">  {/* Вертикальное выравнивание */}
                   {/* Индикатор непрочитанного */}
                   <ActivityStatus status={hasUnread ? 'new': undefined} className="items-end pl-1"/>
 

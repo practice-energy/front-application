@@ -17,7 +17,7 @@ export const Topper = ({
                        }: TopperProps) => {
     return (
         <div className={cn(
-            "relative py-3 px-1" ,
+            "relative pt-3 px-1" ,
         )}>
             <div className="flex items-center gap-1">
                 <div className="relative w-full">

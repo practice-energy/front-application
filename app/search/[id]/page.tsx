@@ -73,13 +73,29 @@ export default function SearchPage() {
     }
   }, [params.id, getChatDataById])
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [])
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior,
+        block: "end",
+        inline: "nearest"
+      });
+    });
+  }, []);
 
   useEffect(() => {
-    scrollToBottom()
-  }, [currentChat?.messages, scrollToBottom])
+    // Первый скролл при монтировании (instant)
+    if (messagesEndRef.current) {
+      scrollToBottom("auto");
+    }
+  }, []);
+
+  useEffect(() => {
+    // Скролл при изменении сообщений (smooth)
+    if (currentChat?.messages?.length) {
+      scrollToBottom();
+    }
+  }, [currentChat?.messages, scrollToBottom]);
 
   useEffect(() => {
     if (!currentChat || currentChat.messages.length === 0) {
@@ -431,7 +447,10 @@ export default function SearchPage() {
                 onVersionAnswer={handleVersionAnswer}
               />
             )}
-            <div ref={messagesEndRef} />
+            <div
+                ref={messagesEndRef}
+                style={{ float: "left", clear: "both" }}
+            />
           </div>
           <div className="absolute bottom-0 w-full">
             <Mufi
