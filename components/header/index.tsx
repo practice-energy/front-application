@@ -149,14 +149,15 @@ export function Header() {
   const isBecomeSpecialist = pathname === `/search/${becomeSpecialistState.chatId}`
 
   return (
-    <div className="fixed top-0 h-[66px] w-full z-30">
+    <>
       <div>
         {/* Логотип - фиксированная позиция */}
         {!isHomePage && <Logo onClick={handleLogoClick} />}
       </div>
+
       {/* Правая секция */}
       <div
-        className="items-center justify-end flex animate-none z-50"
+        className="items-center justify-end space-x-3 py-4 pr-3 flex animate-none z-50 fixed"
         style={{
           position: "fixed",
           right: "10px",
@@ -226,6 +227,7 @@ export function Header() {
                 handleRoleToggle={handleRoleToggle}
                 isSpecialist={isSpecialist}
               />
+              {!isBecomeSpecialist ? (<EasyNotifications hat={user?.hat || "adept"} />) : (<div className="w-6"/>)}
             </>
           )}
         </div>
@@ -253,6 +255,6 @@ export function Header() {
           </button>
         )}
       </header>
-    </div>
+    </>
   )
 }
