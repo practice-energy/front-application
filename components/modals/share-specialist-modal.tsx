@@ -29,16 +29,11 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
-      // Добавляем класс к body при открытии модального окна
       document.body.classList.add('modal-open')
     } else {
-      document.body.style.overflow = ''
-      // Удаляем класс при закрытии
       document.body.classList.remove('modal-open')
     }
     return () => {
-      document.body.style.overflow = ''
       document.body.classList.remove('modal-open')
     }
   }, [isOpen])
@@ -82,7 +77,7 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
       <>
         {/* Затемнение для fixed элементов */}
         <div
-            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[9998]"
+            className="modal-overlay"
             onClick={onClose}
         />
 
@@ -91,13 +86,13 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
             className="fixed inset-0 flex items-center justify-center p-4 z-[9999] pointer-events-none"
         >
           <div
-              className="relative  blur-none bg-white rounded-sm shadow-xl border w-[394px] pointer-events-auto"
+              className="modal-content bg-white rounded-sm shadow-xl border w-[394px] pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
           >
             {/* Modal content */}
             <div>
               {/* Specialist Preview */}
-              <div className="items-start gap-3  blur-none bg-white rounded-sm flex flex-row border border-gray-200">
+              <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200">
                 {specialist.avatar ? (
                     <img
                         src={specialist.avatar || "/placeholder.svg"}
