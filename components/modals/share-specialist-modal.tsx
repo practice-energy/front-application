@@ -4,13 +4,18 @@ import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Copy, Check, MessageCircle, Mail, Link, X, TextIcon as Telegram } from 'lucide-react'
+import {Copy, Check, MessageCircle, Mail, Link, X, TextIcon as Telegram, MapPinHouseIcon} from 'lucide-react'
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { EnhancedInput } from "@/components/enhanced-input"
 import { Specialist } from "@/types/specialist"
 import { PracticePlaceholder } from "@/components/practice-placeholder"
 import { MapPinIcon as MapPinHouse } from 'lucide-react'
+import {SpecialistStatsCard} from "@/components/specialist/specilist-stats";
+import {PentagramIcon, TelegramLogoIcon, WhatsappLogoIcon} from "@phosphor-icons/react";
+import {formatCompactNumber, formatNumber} from "@/utils/format";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {IconButton} from "@/components/icon-button";
 
 interface ShareSpecialistModalProps {
   isOpen: boolean
@@ -54,92 +59,106 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
     const shareUrls = {
       telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
       whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
-      email: `mailto:?subject=${encodeURIComponent(`Check out ${specialist.name}`)}&body=${encodedText}%0A%0A${encodedUrl}`,
     }
 
     if (shareUrls[platform as keyof typeof shareUrls]) {
-      window.open(shareUrls[platform as keyof shareUrls], "_blank", "width=600,height=400")
+      window.open(shareUrls[platform], "_blank", "width=600,height=400")
     }
   }
 
+  useEffect(() => {
+    const fixedElements = document.querySelectorAll('header, footer, .fixed-element')
+
+    if (isOpen) {
+      fixedElements.forEach(el => {
+        el.style.zIndex = 'auto'
+      })
+    } else {
+      fixedElements.forEach(el => {
+        el.style.zIndex = ''
+      })
+    }
+  }, [isOpen])
+
   const shareOptions = [
-    { id: "telegram", name: "Telegram", icon: Telegram, color: "hover:bg-violet-50 hover:text-violet-600" },
-    { id: "whatsapp", name: "WhatsApp", icon: MessageCircle, color: "hover:bg-violet-50 hover:text-violet-600" },
+    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: "bg-blue-500 hover:bg-blue-600 border-none" },
+    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: "bg-green-500 hover:bg-green-600 border-none" },
   ]
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="fixed inset-0 overflow-y-auto"
+         style={{
+           zIndex: 9999,
+           isolation: 'isolate'
+    }}
+    >
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black/80 transition-opacity" onClick={onClose} />
-
-      {/* Modal container */}
-      <div className="flex min-h-full items-center justify-center p-3 text-center">
-        <div className="relative transform overflow-hidden rounded-sm bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-gray-200 dark:border-gray-700">
-          {/* Modal content */}
-          <div className="p-6">
-            {/* Header */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100">
-                Share Specialist
-              </h3>
-            </div>
-
-            <div className="space-y-6">
+      <div className="fixed inset-0 bg-black/80 transition-opacity" onClick={onClose} style={{ zIndex: 9999 }}>
+        {/* Modal container */}
+        <div className="flex min-h-full items-center justify-center text-center">
+          <div className="relative transform overflow-hidden rounded-sm bg-white text-left shadow-xl transition-all border w-[394px]">
+            {/* Modal content */}
+            <div>
               {/* Specialist Preview */}
-              <div className="flex items-center gap-3 p-3 bg-violet-50 dark:bg-gray-700 rounded-sm">
+              <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200">
                 {specialist.avatar ? (
-                  <img
-                    src={specialist.avatar || "/placeholder.svg"}
-                    alt={specialist.name}
-                    className="w-[74px] h-[84px] rounded-sm object-cover"
-                  />
+                    <img
+                        src={specialist.avatar || "/placeholder.svg"}
+                        alt={specialist.name}
+                        className="w-[74px] h-[84px] rounded-sm object-cover"
+                    />
                 ) : (
-                  <PracticePlaceholder width={74} height={84} />
+                    <PracticePlaceholder width={74} height={84} />
                 )}
+
                 <div>
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100">{specialist.name}</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{specialist.title}</p>
-                  <div className="flex items-center mt-1 text-neutral-600">
-                    <MapPinHouse className="w-4 h-4 mr-1" />
+                  <div className="font-medium text-gray-900  text-sm line-clamp-1">{specialist.name}</div>
+                  <p className="text-sm text-gray-600 line-clamp-2">{specialist.title}</p>
+                  <div className="flex items-center text-neutral-900/80 text-sm ">
+                    <MapPinHouseIcon className="w-4 h-4 mr-1" />
                     <span>{specialist.location}</span>
+                  </div>
+                </div>
+
+                <div className={cn(
+                    "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100  p-0.5 w-[80px] mr-1 mt-0.5 gap-2",
+                )}>
+                  <div className="flex flex-row w-full bg-white items-center gap-1 text-violet-600 border border-gray-200 h-1/2 p-1 rounded-sm shadow-sm">
+                    <PentagramIcon />
+                    <div className="ml-auto">{formatCompactNumber(specialist.likes)}</div>
+                  </div>
+                  <div className="flex flex-row bg-white items-center gap-1 w-full border border-gray-200  h-1/2 p-1 mt-1 rounded-sm shadow-sm">
+                    <IconPractice />
+                    <div className="ml-auto">{formatCompactNumber(specialist.practices)}</div>
                   </div>
                 </div>
               </div>
 
               {/* Share Options */}
-              <div className="space-y-3">
-                <Label className="text-gray-700 dark:text-gray-300">Share to</Label>
-                <div className="flex gap-2">
-                  {shareOptions.map((option) => (
-                    <motion.button
-                      key={option.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleShare(option.id)}
-                      className={cn(
-                        "flex items-center justify-center p-3 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors w-[48px] h-[48px]",
-                        option.color,
-                        "dark:hover:bg-gray-700"
-                      )}
+              <div className="flex gap-6 items-end justify-end p-6">
+                {shareOptions.map((option) => (
+                    <motion.div
+                        key={option.id}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleShare(option.id)}
                     >
-                      <option.icon className="w-5 h-5" />
-                    </motion.button>
-                  ))}
-                  <motion.button
+                      <IconButton icon={option.icon} className={option.color} iconClassName="text-white"/>
+                    </motion.div>
+                ))}
+                <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleCopyLink}
-                    className="flex items-center justify-center p-3 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors w-[48px] h-[48px] hover:bg-violet-50 dark:hover:bg-gray-700"
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    )}
-                  </motion.button>
-                </div>
+                >
+                  {copied ? (
+                      <IconButton icon={Check} className="hover:border-gray-200"/>
+                  ) : (
+                      <IconButton icon={Link} className="hover:border-gray-200"/>
+                  )}
+                </motion.div>
               </div>
             </div>
           </div>
