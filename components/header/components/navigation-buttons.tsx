@@ -14,7 +14,7 @@ import {
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import {cn} from "@/lib/utils";
 import {IconButton} from "@/components/icon-button";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {CalendarButton} from "@/components/calendar-button";
 import {PentagramIcon} from "@phosphor-icons/react";
 
@@ -80,7 +80,14 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
       {!isBecomeSpecialist && (<IconButton icon={SettingsIcon} onClick={() => {}} disabled={false} />)}
 
       {/* User likes icon */}
-      {!isBecomeSpecialist && hat === "adept" && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={false} />)}
+      {!isBecomeSpecialist && hat === "adept" && (
+          <IconButton icon={PentagramIcon}
+                      onClick={() => {
+                        router.push("/saved")
+                      }}
+                      disabled={false}
+                      className={cn(pathname === "/saved" && " border border-neutral-900 shadow-md")}
+        />)}
 
       {/* Security button */}
       {/*<IconButton*/}
