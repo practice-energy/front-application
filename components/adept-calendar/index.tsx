@@ -1,158 +1,100 @@
 "use client"
 
 import { useState } from "react"
-import { CalendarWidget } from "./calendar-widget"
 import { CalendarSidebar } from "./calendar-sidebar"
-import { CalendarSettings } from "./calendar-settings"
 import { ScheduleView } from "./schedule-view"
+import { CalendarWidget } from "./calendar-widget"
 import type { Booking } from "@/types/booking"
-import type { CalendarRestrictions } from "@/types/calendar-event"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { cn } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
+import {CalendarMobileHeader} from "@/components/header/components/calendar-mobile-header";
+import {useProfileStore} from "@/stores/profile-store";
+import {usePathname, useRouter} from "next/navigation";
+import {useAuth} from "@/hooks/use-auth";
+import {CalendarRestrictions} from "@/types/calendar-event";
+import {CalendarSettings} from "@/components/adept-calendar/calendar-settings";
+import { useSidebar } from "@/contexts/sidebar-context";
 
 interface AdeptCalendarProps {
   bookings: Booking[]
-  timezone: string
-}
-
-const mockRestrictions: CalendarRestrictions = {
-  timezone: "GMT+3",
-  weeklyRestrictions: [
-    {
-      id: "1",
-      dayOfWeek: 1,
-      startTime: "09:00",
-      endTime: "18:00",
-      isEnabled: true,
-    },
-    {
-      id: "2", 
-      dayOfWeek: 2,
-      startTime: "09:00",
-      endTime: "18:00",
-      isEnabled: true,
-    },
-  ],
-  exceptionalSlots: [],
+  timezone?: string
 }
 
 export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [restrictions, setRestrictions] = useState<CalendarRestrictions>(mockRestrictions)
-  const [showSettings, setShowSettings] = useState(false)
   const isMobile = useIsMobile()
+  const { user } = useProfileStore()
+  const { isAuthenticated } = useAuth()
+  const [showSettings, setShowSettings] = useState(false)
+  const { toggleSidebar, isCollapsed } = useSidebar()
 
-  const enableSettings = () => setShowSettings(true)
-  const disableSettings = () => setShowSettings(false)
+    const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
+        gmt: "GMT+3",
+        commons: {
+            Mon: { isActive: true, intervals: [] },
+            Tue: { isActive: true, intervals: [] },
+            Wed: { isActive: true, intervals: [] },
+            Thu: { isActive: true, intervals: [] },
+            Fri: { isActive: true, intervals: [] },
+            Sat: { isActive: false, intervals: [] },
+            Sun: { isActive: false, intervals: [] },
+        },
+        restrictions: [],
+    })
 
-  const handleRestrictionsUpdate = (newRestrictions: CalendarRestrictions) => {
-    setRestrictions(newRestrictions)
-  }
 
-  if (isMobile) {
+    if (isMobile) {
     return (
-      <div className="flex flex-col h-screen bg-white">
-        <AnimatePresence mode="wait">
-          {showSettings ? (
-            <motion.div
-              key="settings"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-              className="h-full"
-            >
-              <CalendarSettings
-                restrictions={restrictions}
-                onUpdate={handleRestrictionsUpdate}
-                disableSettings={disableSettings}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="calendar"
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-              className="h-full"
-            >
-              <ScheduleView
-                bookings={bookings}
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                restrictions={restrictions}
-                enableSettings={enableSettings}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        <div className="h-full flex flex-col">
+            {isCollapsed && (<CalendarMobileHeader
+                user={user}
+                onSettings={() => {setShowSettings(true)}}
+                onCalendar={() => {setShowSettings(false)}}
+                isAuthenticated={isAuthenticated}
+                isSettingsOpen={showSettings}
+                toggleSidebar={toggleSidebar}
+            />)}
+
+            {!showSettings ? (
+                <>
+                    <div className="flex-shrink-0">
+                        <div className="flex flex-col px-4 items-start justify-between">
+                            <div className="flex-1 w-full">
+                                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={isMobile}/>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile Schedule */}
+                    <div className="flex-1 overflow-y-auto border-t border-gray-100">
+                        <div className="flex h-full px-2 justify-center">
+                            <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <CalendarSettings
+                    restrictions={calendarRestrictions}
+                    onRestrictionsChange={setCalendarRestrictions}
+                    disableSettings={() => {setShowSettings(false)}}
+                    onUpdate={(r) => {setCalendarRestrictions(r)}}
+                />
+            )}
+        </div>
     )
   }
 
   return (
-    <div className="flex h-screen bg-white">
-      <div className="flex-1 flex">
-        <motion.div
-          animate={{ width: showSettings ? "60%" : "75%" }}
-          transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-          className="flex"
-        >
-          <ScheduleView
-            bookings={bookings}
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            restrictions={restrictions}
-            enableSettings={enableSettings}
+      <div className="h-full flex flex-col">
+        <div className="flex h-full mt-[66px]">
+          <CalendarSidebar
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              timezone={timezone}
+              onSettings={() => {setShowSettings(!setShowSettings)}}
+              showSettings={showSettings}
           />
-        </motion.div>
-
-        <AnimatePresence>
-          {showSettings && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "40%", opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-              className="border-l border-gray-200 overflow-hidden"
-            >
-              <CalendarSettings
-                restrictions={restrictions}
-                onUpdate={handleRestrictionsUpdate}
-                disableSettings={disableSettings}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+        </div>
       </div>
-
-      <motion.div
-        animate={{ width: showSettings ? 0 : "25%" }}
-        transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-        className={cn("border-l border-gray-200 overflow-hidden", showSettings && "w-0")}
-      >
-        <AnimatePresence>
-          {!showSettings && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, delay: showSettings ? 0 : 0.1 }}
-              className="h-full"
-            >
-              <CalendarSidebar>
-                <CalendarWidget
-                  selectedDate={selectedDate}
-                  onDateSelect={setSelectedDate}
-                  bookings={bookings}
-                />
-              </CalendarSidebar>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </div>
   )
 }
