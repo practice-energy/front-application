@@ -1,14 +1,12 @@
 "use client"
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import {
-  CalendarDays, LogOutIcon, MessageSquareText, PentagonIcon, SettingsIcon, SlidersVerticalIcon,
-  SparklesIcon,
-} from "lucide-react"
+import { CalendarDays, LogOutIcon, MessageSquareText, PentagonIcon, SettingsIcon, SlidersVerticalIcon, SparklesIcon } from 'lucide-react'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/contexts/sidebar-context"
 import { useAuth } from "@/hooks/use-auth"
+import { motion, AnimatePresence } from "framer-motion"
 
 import { useSidebarData } from "./hooks/use-sidebar-data"
 import { useSidebarSearch } from "./hooks/use-sidebar-search"
@@ -27,6 +25,8 @@ import {useAdeptChats, useBecomeSpecialist, useChatStore, useMasterChats} from "
 import {boolean} from "zod";
 import {Chat} from "@/types/chats";
 import {IconPractice} from "@/components/icons/icon-practice";
+import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
+import { mockSpecialists } from "@/services/mock-specialists"
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -57,6 +57,8 @@ export function MainSidebar() {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const hat = user?.hat
   const [showMasterChats, setShowMasterChats] = useState<boolean>(true)
+  const [showShareCard, setShowShareCard] = useState<boolean>(false)
+  const [copied, setCopied] = useState(false)
   const { addChat: addMasterChat, chats: masterChats } = useMasterChats()
   const { addChat : addAdeptChat, chats: adeptChats } = useAdeptChats()
 
@@ -78,6 +80,9 @@ export function MainSidebar() {
   } = useBecomeSpecialist()
 
   const { searchQuery, searchResults, isSearching, handleSearch } = useSidebarSearch(allChats)
+
+  // Используем первого специалиста из мок данных для демонстрации
+  const mockSpecialist = mockSpecialists[0]
 
   const handleChatClick = (chatId: string) => {
     if (isCollapsed && !isMobile) return
@@ -117,6 +122,37 @@ export function MainSidebar() {
 
     addMasterChat(newChat)
     router.push(`/search/${chatId}`)
+  }
+
+  const handleEarlyAccessClick = () => {
+    setShowShareCard(!showShareCard)
+  }
+
+  const handleCopyLink = async () => {
+    try {
+      const shareUrl = `${window.location.origin}/specialist/${mockSpecialist.id}`
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error("Failed to copy link:", error)
+    }
+  }
+
+  const handleShare = (platform: string) => {
+    const shareUrl = `${window.location.origin}/specialist/${mockSpecialist.id}`
+    const shareText = `Check out ${mockSpecialist.name}, ${mockSpecialist.title}`
+    const encodedText = encodeURIComponent(shareText)
+    const encodedUrl = encodeURIComponent(shareUrl)
+
+    const shareUrls = {
+      telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+      whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    }
+
+    if (shareUrls[platform as keyof typeof shareUrls]) {
+      window.open(shareUrls[platform], "_blank", "width=600,height=400")
+    }
   }
 
   const checkhasUpdates = (chats: Chat[])=>  {
@@ -256,15 +292,6 @@ export function MainSidebar() {
 
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className={cn("flex-1 relative")}>
-
-        {/* Исчезающий градиент сверху */}
-        {/*<div*/}
-        {/*  className={cn(*/}
-        {/*    "sticky top-[-1px] left-0 right-0 h-3 bg-gradient-to-b to-transparent pointer-events-none z-10",*/}
-        {/*     "from-white via-white/80 to-transparent",*/}
-        {/*  )}*/}
-        {/*/>*/}
-
         <div>
           {isSearching ? (
               <ChatsSearchSection
@@ -312,15 +339,38 @@ export function MainSidebar() {
         <div className="h-12" />
       </ScrollArea>
 
-        <button className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4" >
-          <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
-            <div className="text-base font-medium text-start w-full px-1 whitespace-nowrap ">Ранний доступ для мастера </div>
-            <div className="flex flex-row items-center justify-end w-full font-semibold text-2xl gap-3">
-              {"+10"}
-              <IconPractice width={48} height={48} className="text-white"/>
-            </div>
+      {/* Share Card Animation */}
+      <AnimatePresence>
+        {showShareCard && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50"
+          >
+            <SpecialistShareCard
+              specialist={mockSpecialist}
+              copied={copied}
+              onCopyLink={handleCopyLink}
+              onShare={handleShare}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button 
+        className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4" 
+        onClick={handleEarlyAccessClick}
+      >
+        <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
+          <div className="text-base font-medium text-start w-full px-1 whitespace-nowrap ">Ранний доступ для мастера </div>
+          <div className="flex flex-row items-center justify-end w-full font-semibold text-2xl gap-3">
+            {"+10"}
+            <IconPractice width={48} height={48} className="text-white"/>
           </div>
-        </button>
+        </div>
+      </button>
     </div>
   )
 }
