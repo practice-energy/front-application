@@ -36,7 +36,6 @@ interface SpecialistProfileProps {
 }
 
 export default function DesktopSpecialistProfile({ specialist }: SpecialistProfileProps) {
-  const { user } = useProfileStore()
   const router = useRouter()
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const { isLiked, toggleLike } = useLikes()
@@ -274,18 +273,16 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
 
   return (
       <main className="min-h-screen relative">
-        <div className="w-full mx-auto px-4 sm:px-6 py-8 md:w-[845px]">
+        <div className="w-full mx-auto md:w-[845px]">
           <AnimatePresence mode="wait">
             {isTransitioning ? (
-                <motion.div
+                <div
                     key="loading"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="space-y-6"
                 >
-                  <Skeleton className="h-[900px] w-full rounded-sm" />
-                </motion.div>
+                </div>
             ) : (
                 <motion.div
                     key="content"
@@ -295,7 +292,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                     transition={{ duration: 0.3 }}
                 >
                   {/* Header with Back Button and Action Buttons */}
-                  <div className="flex items-center justify-between mb-8 relative">
+                  <div className="flex items-center justify-between relative mb-3">
                     <div className="flex-1">
                       <BackButton className="text-neutral-700 opacity-80" />
                     </div>

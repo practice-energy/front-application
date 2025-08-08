@@ -93,9 +93,9 @@ export default function SpecialistPage({ params }: { params: { id: string } }) {
           <MobileSpecialistProfile specialist={specialist} />
           ) :
           (<>
-            <div className="h-16"/>
+            <div className="h-[66px]"/>
             <DesctopSpecialistProfile specialist={specialist} />
-            <div className="h-28"/>
+            <div className="h-[146px]"/>
           </>)}
 
       <div className={cn(

@@ -166,9 +166,9 @@ export function ServicePageContent({
         }}
         data-animating={isAnimating ? "true" : "false"}
       >
-        <div className="max-w-[845px] mx-auto py-8 px-6">
+        <div className="max-w-[845px] mx-auto">
           {/* Header with Back Button and Action Buttons */}
-          <div className="flex items-center justify-between mb-8 relative">
+          <div className="flex items-center justify-between relative mb-3">
             <div className="flex-1">
               <BackButton className="text-neutral-700 opacity-80" />
             </div>

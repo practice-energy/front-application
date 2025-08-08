@@ -91,10 +91,10 @@ export default function ServicePage({ params }: { params: { id: string } }) {
       {isMobile ? (
         <MobileServiceCard service={service} bookingSlots={bookingSlots} isEditable={isEditable}/>
       ) : (
-        <div className="mx-auto px-4 sm:px-6 py-8">
-          {/* Service Page Content */}
-          <div className="h-24" />
+        <div className="mx-auto px-4">
+          <div className="h-[66px]"/>
           <ServicePageContent service={service} bookingSlots={bookingSlots} isEditable={isEditable}/>
+          <div className="h-[138px]"/>
         </div>
       )}
 

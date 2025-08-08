@@ -204,7 +204,7 @@ export function ServiceCard({
   }, [editPhotos, onPhotosUpload, isEditMode])
 
   return (
-    <div className="rounded-sm shadow-md overflow-hidden mb-28">
+    <div className="rounded-sm shadow-md overflow-hidden mb-2">
       <div className={cn(
           "relative rounded-b-sm shadow-md ",
           isEditMode ? "bg-white" : "bg-colors-neutral-150"

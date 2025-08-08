@@ -174,7 +174,7 @@ export function Header() {
         />
 
         <div
-            className="fixed left-0 shadow-sm items-center border border-gray-200 rounded-sm gap-3 flex flex-row px-1 py-0"
+            className="fixed left-0 shadow-sm items-center border border-gray-200 bg-white rounded-sm gap-3 flex flex-row px-1 py-0"
             style={{
               zIndex: 60,
               left: 420,
@@ -233,7 +233,6 @@ export function Header() {
           )}
 
           {isAuthenticated && !isBecomeSpecialist
-              // && user?.isSpecialist
               && user?.hat === "master"
               && (
                   <div className={cn(
