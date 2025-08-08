@@ -349,7 +349,7 @@ export function MainSidebar() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className={cn(
                 "absolute transform -translate-x-1/2 z-[49]",
-                isMobile ? "px-2 bottom-14" : "bottom-14 left-1"
+                isMobile ? "px-1 bottom-14 items-center" : "bottom-14 left-1"
             )}
           >
             <SpecialistShareCard
