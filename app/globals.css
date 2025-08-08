@@ -91,6 +91,7 @@
   }
 }
 
+
 /* Diagonal stripes pattern for non-working days */
 .bg-diagonal-stripes {
   background-image: repeating-linear-gradient(
@@ -112,26 +113,25 @@
   display: none;  /* Chrome, Safari и Opera */
 }
 
-/* Modal overlay styles */
-.modal-overlay {
+/* Убираем скролл при открытом модальном окне */
+body.modal-open {
+  overflow: hidden;
+}
+
+body.modal-open::before {
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(2px);
-  z-index: 9998;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(5px);
+  z-index: 500;
 }
 
-.modal-content {
-  position: relative;
-  z-index: 9999;
-  filter: none !important;
-  backdrop-filter: none !important;
-}
-
-/* Убираем скролл при открытом модальном окне */
-body.modal-open {
-  overflow: hidden;
+.modal-content::before {
+  position: fixed;
+  z-index: 1000; /* выше overlay */
+  background: rgba(255, 255, 255, 1);
 }
