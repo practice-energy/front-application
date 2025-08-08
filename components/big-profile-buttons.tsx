@@ -47,10 +47,10 @@ function getUpdateWord(count: number): string {
 
 export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => {
   return (
-      <div className="w-full pl-4 overflow-hidden">
-        <div className="flex items-center w-full">
+      <div className="w-full overflow-hidden">
+        <div className="flex items-center w-full pt-1 ml-0.5">
           {/* Аватарка */}
-          <div className="flex-shrink-0 rounded-sm z-50 overflow-hidden aspect-square flex items-center justify-center w-20 h-20">
+          <div className="flex-shrink-0 rounded-sm z-50 overflow-hidden aspect-square flex items-center justify-center w-20 h-20 bg-none">
             {user?.avatar ? (
                 <Image
                     src={user.avatar || "/placeholder.svg"}
@@ -66,10 +66,10 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
 
           {/* Горизонтальный скролл кнопок */}
           <div className="flex-1 min-w-0">
-            <div className="flex gap-2 pt-3 overflow-x-auto pb-2 -mx-2 px-2 no-scrollbar">
+            <div className="flex gap-2 items-center overflow-x-auto pb-2 -mx-2 px-2 no-scrollbar">
               <div className="w-4"></div>
               {buttons.map((button) => (
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 pt-[9px]">
                     <button
                         onClick={button.onClick}
                         className="w-[74px] h-[74px] bg-white/90 rounded-sm border border-gray-200 shadow-sm flex flex-col items-center justify-center p-1 active:scale-95 transition-transform hover:bg-gray-50"
