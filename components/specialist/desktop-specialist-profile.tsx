@@ -2,14 +2,7 @@
 
 import React, { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Share,
-  MessagesSquare,
-  ImageUp,
-  MonitorPlayIcon as TvMinimalPlay,
-  Users,
-  MapPinHouse
-} from 'lucide-react'
+import { Share, MessagesSquare, ImageUp, MonitorPlayIcon as TvMinimalPlay, Users, MapPinIcon as MapPinHouse } from 'lucide-react'
 import { BackButton } from "@/components/ui/button-back"
 import type {Education, Experience} from "@/types/common"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
@@ -30,18 +23,20 @@ import {PracticeBlockSection} from "@/components/specialist/practice";
 import {Service} from "@/types/service";
 import {Specialist} from "@/types/specialist";
 import {SpecialistStatsCard} from "@/components/specialist/specilist-stats";
+import { ShareSpecialistModal } from "@/components/modals/share-specialist-modal"
 
 interface SpecialistProfileProps {
   specialist: Specialist
 }
 
 export default function DesktopSpecialistProfile({ specialist }: SpecialistProfileProps) {
+  const { user } = useProfileStore()
   const router = useRouter()
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const { isLiked, toggleLike } = useLikes()
 
   const [isExpanded, setIsExpanded] = useState(false)
-  const [shouldShowToggle, setShouldShowToggle] = useState(false)
+  const [shouldShowToggle, setShouldShowToggle] = useState(0)
   const [contentHeight, setContentHeight] = useState(0)
   const expRef = useRef<HTMLDivElement>(null)
   const isEditable = true //user?.specialistProfile?.id === specialist.id
@@ -90,7 +85,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
     if (targetElement) {
       const height = targetElement.scrollHeight
       setContentHeight(height)
-      setShouldShowToggle(height > 130)
+      setShouldShowToggle(height > 130 ? 1 : 0)
     }
   }, [draftData.experience])
 
@@ -557,6 +552,11 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
             )}
           </AnimatePresence>
         </div>
+        <ShareSpecialistModal
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          specialist={specialist}
+        />
       </main>
   )
 }
