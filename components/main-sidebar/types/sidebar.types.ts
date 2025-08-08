@@ -23,6 +23,7 @@ export interface SectionHeaderProps {
   sectionKey: string
   sectionVisibility: boolean
   count: number
+  toggleStyle: string
 }
 
 export interface SectionContentProps {

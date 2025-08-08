@@ -19,7 +19,7 @@ interface DashboardMasterSectionsProps {
     handleChatClick: (chatId: string) => void
 }
 
-export const DashboardMasterSections = ({
+export const DashboardActivitySections = ({
                                        stats,
                                        sectionVisibility,
                                        toggleSection,
@@ -44,6 +44,7 @@ export const DashboardMasterSections = ({
             activities: stats.upcomingActivities.activities.filter((activity: UpcomingActivity) => {
                 return activity.status === "waiting"
             }),
+            toggleStyle: "bg-orange-500 text-white rounded-sm opacity-100"
         },
         {
             key: "requested",
@@ -53,6 +54,7 @@ export const DashboardMasterSections = ({
             activities: stats.upcomingActivities.activities.filter((activity: UpcomingActivity) => {
                 return activity.status === "request"
             }),
+            toggleStyle: "bg-neutral-900 text-white rounded-sm"
         },
         // {
         //     key: "older",
@@ -80,6 +82,7 @@ export const DashboardMasterSections = ({
                                 isMobile={isMobile}
                                 icon={section.icon}
                                 iconStyle={section.iconStyle}
+                                toggleStyle={section.activities.length > 0 && section.toggleStyle}
                             />
                             <div className="py-1">
                                 <SectionContent

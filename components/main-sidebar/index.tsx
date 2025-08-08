@@ -15,7 +15,7 @@ import { useProfileStore } from "@/stores/profile-store"
 import {ChatsSections} from "@/components/main-sidebar/components/chat-adept-sections";
 import {Topper} from "@/components/main-sidebar/components/topper";
 import {ChatsSearchSection} from "@/components/main-sidebar/components/chats-search-section";
-import {DashboardMasterSections} from "@/components/main-sidebar/components/dashboard-master-sections";
+import {DashboardActivitySections} from "@/components/main-sidebar/components/dashboard-activity-sections";
 import {mockDashboardStats} from "@/services/mock-dash";
 import {BigProfileButtons} from "@/components/big-profile-buttons";
 import {ChatsIcon, PentagramIcon, UserSwitchIcon} from "@phosphor-icons/react";
@@ -308,7 +308,7 @@ export function MainSidebar() {
               />
           ) : (<>
             {hat === "master" &&  isMobile && showMasterChats? (
-               <DashboardMasterSections
+               <DashboardActivitySections
                    stats={mockDashboardStats}
                    sectionVisibility={sectionVisibility}
                    toggleSection={toggleSection}
@@ -347,13 +347,17 @@ export function MainSidebar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute bottom-14 left-1 transform -translate-x-1/2 z-[49]"
+            className={cn(
+                "absolute transform -translate-x-1/2 z-[49]",
+                isMobile ? "px-2 bottom-14" : "bottom-14 left-1"
+            )}
           >
             <SpecialistShareCard
               specialist={mockSpecialist}
               copied={copied}
               onCopyLink={handleCopyLink}
               onShare={handleShare}
+              isMobile={isMobile}
             />
           </motion.div>
         )}

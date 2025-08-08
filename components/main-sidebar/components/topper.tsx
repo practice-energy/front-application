@@ -34,7 +34,7 @@ export const Topper = ({
                 <IconButton
                     onClick={toggleSidebar}
                     className={cn(
-                        "rounded-sm hover:bg-none border border-gray-200",
+                        "rounded-sm hover:bg-none border border-gray-200 flex",
                         isMobile && "hover:none",
                     )}
                     icon={PanelRightOpen}

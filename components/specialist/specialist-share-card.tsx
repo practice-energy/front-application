@@ -16,16 +16,18 @@ interface SpecialistShareCardProps {
   copied: boolean
   onCopyLink: () => void
   onShare: (platform: string) => void
+  isMobile: boolean
 }
 
-export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }: SpecialistShareCardProps) {
+export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare, isMobile }: SpecialistShareCardProps) {
   const shareOptions = [
-    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: "bg-blue-500 hover:bg-blue-600 border-none" },
-    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: "bg-green-500 hover:bg-green-600 border-none" },
+    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: "bg-blue-500 hover:bg-blue-600 border-none flex" },
+    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: "bg-green-500 hover:bg-green-600 border-none flex" },
   ]
 
   return (
-    <div className="bg-white rounded-sm shadow-xl border w-[390px]">
+    <div className={cn("bg-white rounded-sm shadow-xl border flex flex-col z-[1000]",
+      isMobile ? "w-full" :"w-[390px]")}>
       {/* Specialist Preview */}
       <div className="items-center p-1.5 gap-3 bg-white rounded-sm flex flex-row border border-gray-200">
         {specialist.avatar ? (
@@ -62,13 +64,14 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
       </div>
 
       {/* Share Options */}
-      <div className="flex gap-6 items-center justify-end p-6">
+      <div className="flex gap-6 items-center justify-end p-6 z-[10000]">
         {shareOptions.map((option) => (
           <motion.div
             key={option.id}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onShare(option.id)}
+            className=" w-12 h-12 "
           >
             <IconButton icon={option.icon} className={option.color} iconClassName="text-white" />
           </motion.div>
@@ -77,11 +80,12 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onCopyLink}
+          className=" w-12 h-12"
         >
           {copied ? (
-            <IconButton icon={Check} className="hover:border-gray-200" />
+            <IconButton icon={Check} className="hover:border-gray-200 flex" />
           ) : (
-            <IconButton icon={Link} className="hover:border-gray-200" />
+            <IconButton icon={Link} className="hover:border-gray-200 flex " />
           )}
         </motion.div>
       </div>

@@ -12,7 +12,8 @@ export function SectionHeader({
   isCollapsed,
   isMobile,
   icon: Icon = GalleryHorizontalEnd,
-  iconStyle = ""
+  iconStyle = "",
+  toggleStyle
 }: SectionHeaderProps) {
   const isVisible = sectionVisibility[sectionKey]
 
@@ -20,7 +21,7 @@ export function SectionHeader({
       <div>
         <button
             className={cn(
-                "flex items-center w-full py-3 px-1 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700 opacity-80",
+                "flex items-center w-full py-3 px-1 group transition-all duration-100 ease-in-out gap-3 text-simple text-gray-700/80",
                 "rounded-sm",
                 isCollapsed && !isMobile ? "hidden" : "flex",
             )}
@@ -36,10 +37,12 @@ export function SectionHeader({
           <h3 className="tracking-wider font-semibold">
         {title}
       </h3>
+
           <ChevronDown
               className={cn(
                   "w-6 h-6 text-violet-600 transition-all duration-200 ease-in-out transform ml-auto",
                   isVisible ?  "rotate-0" : "rotate-180",
+                  toggleStyle || "",
               )}
           />
         </button>
