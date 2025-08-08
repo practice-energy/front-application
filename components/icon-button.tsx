@@ -17,15 +17,16 @@ export function IconButton({
                                iconClassName = ""
                            }: IconButtonProps) {
     return (
-        <div className={cn(
+        <button className={cn(
             "hidden md:flex items-center justify-center",
-            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 borderborder-neutral-100",
-            disabled ? "opacity-50 cursor-not-allowed " : "cursor-pointer",
+            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 border border-neutral-100",
+            disabled ? "opacity-50 cursor-not-allowed " : "cursor-pointer hover:border-violet-500 hover:shadow-md transition-colors hover:shadow-violet-100",
             className
-        )}>
-            <button
+        )}
                 onClick={onClick}
                 disabled={disabled}
+        >
+            <div
                 className="w-full h-full flex items-center justify-center"
             >
                 <Icon className={cn(
@@ -33,7 +34,7 @@ export function IconButton({
                     disabled ? "text-neutral-900 opacity-20" : "text-neutral-900",
                     iconClassName
                 )} />
-            </button>
-        </div>
+            </div>
+        </button>
     )
 }

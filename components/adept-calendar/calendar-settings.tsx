@@ -37,21 +37,22 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
 
   return (
     <div className="flex flex-col h-screen bg-white rounded-sm">
-      <div className="flex flex-row items-center gap-3 pb-2 px-3">
-        <SettingsButton
-          onClick={disableSettings}
-          className="bg-violet-600 hover:bg-violet-700 border-0 flex"
-          iconClassName="text-white"
-        />
-        <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
-      </div>
       <ScrollArea className="flex-1 flex h-screen">
-        <div
-          className={cn(
-            "sticky top-[-1px] left-0 right-0 h-2 bg-gradient-to-b to-transparent pointer-events-none z-50",
-            "from-white via-white/80 to-transparent",
-          )}
-        />
+        <div className="flex flex-row items-center gap-3 pb-2 px-3">
+          <SettingsButton
+              onClick={disableSettings}
+              className="bg-violet-600 hover:bg-violet-700 border-0 flex"
+              iconClassName="text-white"
+          />
+          <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
+        </div>
+
+        {/*<div*/}
+        {/*  className={cn(*/}
+        {/*    "sticky top-[-1px] left-0 right-0 h-2 bg-gradient-to-b to-transparent pointer-events-none z-50",*/}
+        {/*    "from-white via-white/80 to-transparent",*/}
+        {/*  )}*/}
+        {/*/>*/}
 
         <div className="space-y-2 px-4">
           <SettingsSectionHeader
@@ -111,7 +112,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           </SettingsSectionContent>
         </div>
 
-        <div className="flex items-center justify-center h-24" />
+        <div className="flex items-center justify-center h-48" />
       </ScrollArea>
     </div>
   )

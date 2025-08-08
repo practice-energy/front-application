@@ -41,36 +41,28 @@ export function ExceptionalSlotsSection({
         if (calendarRef.current) {
           console.log("Calendar ref found, scrolling...")
 
-          // Find the scroll container (ScrollArea)
-          const scrollContainer = calendarRef.current.closest("[data-radix-scroll-area-viewport]")
+          // Вариант 1: Простой скролл к верху элемента
+          calendarRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start", // Изменено с "end" на "start"
+          })
 
-          if (scrollContainer) {
-            console.log("Scroll container found")
-            const calendarRect = calendarRef.current.getBoundingClientRect()
-            const containerRect = scrollContainer.getBoundingClientRect()
+          // Вариант 2: Более точный контроль позиции (если нужно смещение)
+          /*
+          const elementPosition = calendarRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - 20; // 20px отступ сверху
 
-            // Calculate the position to scroll to
-            const scrollTop = scrollContainer.scrollTop + calendarRect.bottom - containerRect.bottom + 20
-
-            scrollContainer.scrollTo({
-              top: scrollTop,
-              behavior: "smooth",
-            })
-          } else {
-            console.log("No scroll container found, using window scroll")
-            // Fallback to window scroll
-            calendarRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "end",
-            })
-          }
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+          */
         }
       }
 
-      // Use requestAnimationFrame to ensure DOM is updated
-      requestAnimationFrame(() => {
-        setTimeout(scrollToCalendar, 100)
-      })
+      // Добавляем небольшую задержку для гарантии рендеринга
+      const timer = setTimeout(scrollToCalendar, 50);
+      return () => clearTimeout(timer);
     }
   }, [showDatePicker])
 

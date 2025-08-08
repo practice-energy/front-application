@@ -2,7 +2,14 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import {PanelRightClose, CalendarDays, SlidersHorizontalIcon, SlidersVerticalIcon} from 'lucide-react'
+import {
+  PanelRightClose,
+  CalendarDays,
+  SlidersHorizontalIcon,
+  SlidersVerticalIcon,
+  SettingsIcon,
+  PanelRightOpen
+} from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -157,15 +164,14 @@ export function Header() {
             zIndex: 60
           }}
       >
-        <button
+        <IconButton
             onClick={handleOpenSidebar}
-            className={cn("px-3 flex items-center", !isCollapsed && "opacity-0 pointer-events-none")}
-            style={{
-              zIndex: 60,
-            }}
-        >
-          <PanelRightClose width={36} height={36}  className="border border-neutral-900 text-neutral-900 p-1 rounded-sm"/>
-        </button>
+            className={cn(
+                "rounded-sm hover:bg-none border border-gray-200",
+                !isCollapsed && "opacity-0 pointer-events-none"
+                )}
+            icon={PanelRightClose}
+        />
 
         <div
             className="fixed left-0 shadow-sm items-center border border-gray-200 rounded-sm gap-3 flex flex-row px-1 py-0"
@@ -203,16 +209,6 @@ export function Header() {
           {/*  </button>*/}
           {/*)}*/}
 
-          {isAuthenticated && hat === "adept" && (
-            <IconButton
-              icon={CalendarDays}
-              onClick={handleCalendarClick}
-              disabled={false}
-              className={cn(pathname === "/calendar" && "  bg-violet-600 border-0 shadow-md")}
-              iconClassName={cn(pathname === "/calendar" && " text-white")}
-            />
-          )}
-
           {isBecomeSpecialist ? (
               <>
               {/* Content without opacity */}
@@ -233,31 +229,51 @@ export function Header() {
               </div>
               </>
               ) : (
-              <NavigationButtons isAuthenticated={isAuthenticated} hat={hat} router={router} />
+              <NavigationButtons isAuthenticated={isAuthenticated} isBecomeSpecialist={isBecomeSpecialist} hat={hat} router={router} />
           )}
 
-          {/* User likes icon */}
-          {!isBecomeSpecialist && (<IconButton icon={PentagramIcon} onClick={() => {}} disabled={false} />)}
+          {isAuthenticated && !isBecomeSpecialist
+              // && user?.isSpecialist
+              && user?.hat === "master"
+              && (
+                  <div className={cn(
+                      "hidden md:flex items-center justify-center",
+                      "aspect-square rounded-sm shadow-sm h-10 p-1 border border-neutral-100",
+                  )}>
+                    <div
+                        className="w-full h-full flex items-center justify-center text-violet-600 gap-3"
+                    >
+                      <PentagramIcon size={30} className={cn(
+                          "h-[30px] w-[30px] ",
+                      )} />
+                      <div className="font-semibold text-base">{user?.specialistProfile?.likes || 0}</div>
+                    </div>
+                  </div>
+          )}
 
           {isAuthenticated && (
-            <>
               <ProfileMenu
-                isAuthenticated={isAuthenticated}
-                user={user}
-                showProfileMenu={showProfileMenu}
-                toggleProfileMenu={toggleProfileMenu}
-                setShowProfileMenu={setShowProfileMenu}
-                handleLogout={handleLogout}
-                handleRoleToggle={handleRoleToggle}
-                isSpecialist={isSpecialist}
+                  isAuthenticated={isAuthenticated}
+                  user={user}
+                  showProfileMenu={showProfileMenu}
+                  toggleProfileMenu={toggleProfileMenu}
+                  setShowProfileMenu={setShowProfileMenu}
+                  handleLogout={handleLogout}
+                  handleRoleToggle={handleRoleToggle}
+                  isSpecialist={isSpecialist}
               />
-            </>
           )}
 
           {/* User switch icon */}
-          {!isBecomeSpecialist &&(<IconButton icon={UserSwitchIcon} onClick={handleRoleToggle} disabled={false} iconClassName="text-violet-600"/>)}
+          {!isBecomeSpecialist &&(
+              <IconButton
+                  icon={UserSwitchIcon}
+                  onClick={handleRoleToggle}
+                  disabled={false}
+                  iconClassName={user?.hat === "adept" ? "text-violet-600" : ""}
+              />
+          )}
 
-          {/* User likes icon */}
           {!isBecomeSpecialist && (<IconButton icon={SlidersVerticalIcon} onClick={() => {}} disabled={false} />)}
         </div>
       </div>

@@ -40,7 +40,7 @@ export function ActionButton({
     return (
         <button
             onClick={onClick}
-            className={`flex rounded-sm w-8 h-8 items-center justify-center shadow-md ${buttonStyles[type]} ${className}`}
+            className={`flex rounded-sm w-8 h-8 items-center justify-center shadow-sm ${buttonStyles[type]} ${className}`}
         >
             {icons[type]}
         </button>

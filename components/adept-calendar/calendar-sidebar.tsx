@@ -30,7 +30,7 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
 
     return (
         <div className="w-[370px] bg-white border-t border-gray-100">
-            <div className="fixed mt-24 w-[370px] top-0 z-30 border-gray-100">
+            <div className="fixed mt-[66px] w-[370px] top-0 z-30 border-gray-100">
                 {!showSettings ? (
                     <div className="px-4 ">
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={calendarRestrictions.gmt}/>

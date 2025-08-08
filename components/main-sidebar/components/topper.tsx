@@ -1,6 +1,7 @@
 import {PanelRightClose, PanelRightOpen, Search} from "lucide-react";
 import { Input } from "@/components/ui/input"
 import {cn} from "@/lib/utils";
+import {IconButton} from "@/components/icon-button";
 
 interface TopperProps {
     toggleSidebar: () => void;
@@ -17,9 +18,9 @@ export const Topper = ({
                        }: TopperProps) => {
     return (
         <div className={cn(
-            "relative pt-3 px-1" ,
+            "relative pt-3 px-0.5" ,
         )}>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-3">
                 <div className="relative w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 " />
                     <Input
@@ -30,12 +31,16 @@ export const Topper = ({
                     />
                 </div>
 
-                <button
+                <IconButton
                     onClick={toggleSidebar}
-                    className="rounded-sm hover:bg-none p-1"
-                >
-                    <PanelRightOpen width={36} height={36}  className="border border-neutral-900 text-neutral-900 p-1 rounded-sm"/>
-                </button>
+                    className={cn(
+                        "rounded-sm hover:bg-none border border-gray-200",
+                        isMobile && "hover:none",
+                    )}
+                    icon={PanelRightOpen}
+                />
+                {/*    <PanelRightOpen width={40} height={40}  className="border border-gray-200 text-neutral-900 p-1 rounded-sm shadow-sm"/>*/}
+                {/*</IconButton>*/}
             </div>
         </div>
     );

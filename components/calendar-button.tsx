@@ -19,11 +19,10 @@ export function CalendarButton({
         icon={CalendarDays}
         onClick={onClick}
         className={cn(
-            pathname === "/calendar" && " bg-violet-600 border-0 shadow-md",
+            pathname === "/calendar" && " border border-neutral-900 shadow-md",
             className,
         )}
         iconClassName={cn(
-            pathname === "/calendar" && " text-white",
             iconClassName
         )}
     />)

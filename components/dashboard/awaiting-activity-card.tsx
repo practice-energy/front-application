@@ -53,7 +53,7 @@ export function AwaitingActivityCard({
           {/* Строка с датой и кнопками действий */}
           <div className="flex items-center gap-4">
               {/* Дата слева */}
-              <div className="text-base font-semibold text-neutral-900 min-w-[100px]">
+              <div className="text-base font-semibold text-neutral-900 min-w-[100px] pl-1.5">
                   {new Date(date).toLocaleDateString('ru-RU', {
                       day: '2-digit',
                       month: '2-digit',

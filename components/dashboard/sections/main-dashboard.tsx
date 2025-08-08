@@ -83,37 +83,35 @@ export function MainDashboard() {
           </Card>
 
           {/* Overview Stats Card */}
-          <Card className="border-0 shadow-md">
+          <Card className="border-0 shadow-md p-1">
             <CardHeader>
               <div className="flex items-center">
                 <CardTitle className="text-lg text-black">Обзор практик</CardTitle>
                 <p className="text-sm text-gray-500 ml-auto">Cледующие 30 дней</p>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <OverviewStatCard
+            <div className="grid grid-cols-2 gap-4 p-2">
+              <OverviewStatCard
                   value={stats.practiceOverview.confirmedSlots}
                   label="Подтвержденные слоты"
                   icon={<CheckCheck size={24} className="text-neutral-600" />}
-                />
-                <OverviewStatCard
+              />
+              <OverviewStatCard
                   value={stats.practiceOverview.newInitiants}
                   label="Новые иницианты"
                   icon={<User size={24} className="text-neutral-600" />}
-                />
-                <OverviewStatCard
+              />
+              <OverviewStatCard
                   value={stats.practiceOverview.personalMeetings}
                   label="Очные встречи"
                   icon={<Users size={24} className="text-neutral-600" />}
-                />
-                <OverviewStatCard
+              />
+              <OverviewStatCard
                   value={stats.practiceOverview.repeatingMeetings}
                   label="Повторные"
                   icon={<Repeat2 size={24} className="text-neutral-600" />}
-                />
-              </div>
-            </CardContent>
+              />
+            </div>
           </Card>
 
           {/* Upcoming Activities block for left section */}
@@ -124,8 +122,8 @@ export function MainDashboard() {
             <CardContent className="p-0 relative h-[278px] rounded-sm">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
-                  <div className="absolute -top-1 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
-                  <ScrollArea className="h-full px-6">
+                  {/*<div className="absolute -top-1 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />*/}
+                  <ScrollArea className="h-full">
                     <div className="space-y-2 py-4">
                       {stats.upcomingActivities.activities
                           .filter(activity => activity.status === "waiting")
@@ -135,7 +133,7 @@ export function MainDashboard() {
                                 stats.upcomingActivities.activities[index - 1].end.getTime() === activity.start.getTime()
 
                             return (
-                                <div key={activity.id} className="pb-1">
+                                <div key={activity.id}>
                                   <AwaitingActivityCard
                                       startTime={activity.start.toLocaleTimeString("ru-RU", {
                                         hour: "2-digit",
@@ -159,7 +157,7 @@ export function MainDashboard() {
                           })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  {/*<div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />*/}
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -175,7 +173,7 @@ export function MainDashboard() {
         <div className="flex-1 h-[800px]">
           <Card className="border-0 shadow-md h-full">
             <CardHeader>
-              <div className="flex items-center">
+              <div className="flex items-center px-1">
                 <CardTitle className="text-lg text-black">
                   Предстоящие активности на {weekday} {day} {month}
                 </CardTitle>
@@ -185,9 +183,9 @@ export function MainDashboard() {
             <CardContent className="p-0 h-[716px] relative">
               {stats.upcomingActivities.activities.length > 0 ? (
                 <>
-                  <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
-                  <ScrollArea className="h-full px-6">
-                    <div className="space-y-2 ">
+                  {/*<div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />*/}
+                  <ScrollArea className="h-full px-1">
+                    <div className="space-y-1">
                       {stats.upcomingActivities.activities.map((activity, index) => {
                         const isBackToBack =
                           index > 0 &&
@@ -218,7 +216,7 @@ export function MainDashboard() {
                       })}
                     </div>
                   </ScrollArea>
-                  <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                  {/*<div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />*/}
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
