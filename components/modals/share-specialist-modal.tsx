@@ -82,22 +82,32 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
       <>
         {/* Затемнение для fixed элементов */}
         <div
-            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[9998]"
+            className="fixed inset-0 bg-black/10 backdrop-blur-sm"
             onClick={onClose}
         />
 
         {/* Модальное окно */}
         <div
-            className="fixed inset-0 flex items-center justify-center p-4 z-[9999] pointer-events-none"
+            className="fixed inset-0 flex items-center justify-center p-4 modal-content pointer-events-none"
+            style={{
+              transform: 'translateZ(0)',
+              isolation: 'isolate',
+              zIndex: 1001
+            }}
         >
           <div
-              className="relative  blur-none bg-white rounded-sm shadow-xl border w-[394px] pointer-events-auto"
+              className="relative bg-white rounded-sm shadow-xl border w-[394px] pointer-events-auto modal-content z-[1002]"
               onClick={(e) => e.stopPropagation()}
+              style={{
+                transform: 'translateZ(0)',
+                isolation: 'isolate',
+                zIndex: 1002
+              }}
           >
             {/* Modal content */}
             <div>
               {/* Specialist Preview */}
-              <div className="items-start gap-3  blur-none bg-white rounded-sm flex flex-row border border-gray-200">
+              <div className="items-start gap-3  blur-none rounded-sm flex flex-row border border-gray-200">
                 {specialist.avatar ? (
                     <img
                         src={specialist.avatar || "/placeholder.svg"}
@@ -158,6 +168,11 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
             </div>
           </div>
         </div>
+
+        <div
+            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[500]"
+            onClick={onClose}
+        />
       </>
   )
 }
