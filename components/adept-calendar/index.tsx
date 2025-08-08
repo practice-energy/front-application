@@ -13,6 +13,7 @@ import {useAuth} from "@/hooks/use-auth";
 import {CalendarRestrictions} from "@/types/calendar-event";
 import {CalendarSettings} from "@/components/adept-calendar/calendar-settings";
 import { useSidebar } from "@/contexts/sidebar-context";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AdeptCalendarProps {
   bookings: Booking[]
@@ -54,31 +55,49 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                 toggleSidebar={toggleSidebar}
             />)}
 
-            {!showSettings ? (
-                <>
-                    <div className="flex-shrink-0">
-                        <div className="flex flex-col px-4 items-start justify-between">
-                            <div className="flex-1 w-full">
-                                <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={isMobile}/>
+            <AnimatePresence mode="wait">
+                {!showSettings ? (
+                    <motion.div
+                        key="calendar"
+                        initial={{ x: "-100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "-100%" }}
+                        transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
+                        className="h-full"
+                    >
+                        <div className="flex-shrink-0">
+                            <div className="flex flex-col px-4 items-start justify-between">
+                                <div className="flex-1 w-full">
+                                    <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={isMobile}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Mobile Schedule */}
-                    <div className="flex-1 overflow-y-auto border-t border-gray-100">
-                        <div className="flex h-full px-2 justify-center">
-                            <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                        {/* Mobile Schedule */}
+                        <div className="flex-1 overflow-y-auto border-t border-gray-100">
+                            <div className="flex h-full px-2 justify-center">
+                                <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                            </div>
                         </div>
-                    </div>
-                </>
-            ) : (
-                <CalendarSettings
-                    restrictions={calendarRestrictions}
-                    onRestrictionsChange={setCalendarRestrictions}
-                    disableSettings={() => {setShowSettings(false)}}
-                    onUpdate={(r) => {setCalendarRestrictions(r)}}
-                />
-            )}
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="settings"
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
+                        className="h-full"
+                    >
+                        <CalendarSettings
+                            restrictions={calendarRestrictions}
+                            onRestrictionsChange={setCalendarRestrictions}
+                            disableSettings={() => {setShowSettings(false)}}
+                            onUpdate={(r) => {setCalendarRestrictions(r)}}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
   }
@@ -90,7 +109,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
               timezone={timezone}
-              onSettings={() => {setShowSettings(!setShowSettings)}}
+              onSettings={() => {setShowSettings(!showSettings)}}
               showSettings={showSettings}
           />
           <ScheduleView selectedDate={selectedDate} bookings={bookings} />
