@@ -25,9 +25,9 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
   ]
 
   return (
-    <div className="bg-white rounded-sm shadow-xl border w-[300px] h-full">
+    <div className="bg-white rounded-sm shadow-xl border w-[300px] flex flex-col justify-between" style={{ height: 'calc(300px * 1.25 + 158px)' }}>
       {/* Specialist Preview */}
-      <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3">
+      <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3 flex-shrink-0">
         {specialist.avatar ? (
           <img
             src={specialist.avatar || "/placeholder.svg"}
@@ -61,30 +61,36 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
         </div>
       </div>
 
-      {/* Share Options */}
-      <div className="flex gap-4 items-center justify-center p-4">
-        {shareOptions.map((option) => (
+      {/* Spacer to push share options to center */}
+      <div className="flex-1 flex items-center justify-center">
+        {/* Share Options */}
+        <div className="flex gap-4 items-center justify-center">
+          {shareOptions.map((option) => (
+            <motion.div
+              key={option.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onShare(option.id)}
+            >
+              <IconButton icon={option.icon} className={option.color} iconClassName="text-white" />
+            </motion.div>
+          ))}
           <motion.div
-            key={option.id}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onShare(option.id)}
+            onClick={onCopyLink}
           >
-            <IconButton icon={option.icon} className={option.color} iconClassName="text-white" />
+            {copied ? (
+              <IconButton icon={Check} className="hover:border-gray-200" />
+            ) : (
+              <IconButton icon={Link} className="hover:border-gray-200" />
+            )}
           </motion.div>
-        ))}
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onCopyLink}
-        >
-          {copied ? (
-            <IconButton icon={Check} className="hover:border-gray-200" />
-          ) : (
-            <IconButton icon={Link} className="hover:border-gray-200" />
-          )}
-        </motion.div>
+        </div>
       </div>
+
+      {/* Bottom spacer to match original card height */}
+      <div className="flex-shrink-0 h-[30px]"></div>
     </div>
   )
 }

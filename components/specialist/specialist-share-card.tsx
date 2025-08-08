@@ -25,66 +25,66 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
   ]
 
   return (
-      <div className="bg-white rounded-sm shadow-xl w-[394px]">
-        {/* Specialist Preview */}
-        <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3">
-          {specialist.avatar ? (
-              <img
-                  src={specialist.avatar || "/placeholder.svg"}
-                  alt={specialist.name}
-                  className="w-[74px] h-[84px] rounded-sm object-cover"
-              />
-          ) : (
-              <PracticePlaceholder width={74} height={84} />
-          )}
+    <div className="bg-white rounded-sm shadow-xl border w-[394px]">
+      {/* Specialist Preview */}
+      <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3">
+        {specialist.avatar ? (
+          <img
+            src={specialist.avatar || "/placeholder.svg"}
+            alt={specialist.name}
+            className="w-[80px] h-[90px] rounded-sm object-cover"
+          />
+        ) : (
+          <PracticePlaceholder width={80} height={90} />
+        )}
 
-          <div className="flex-1">
-            <div className="font-medium text-gray-900 text-sm line-clamp-1">{specialist.name}</div>
-            <p className="text-sm text-gray-600 line-clamp-2">{specialist.title}</p>
-            <div className="flex items-center text-neutral-900/80 text-sm">
-              <MapPinIcon className="w-4 h-4 mr-1" />
-              <span>{specialist.location}</span>
-            </div>
-          </div>
-
-          <div className={cn(
-              "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100 p-0.5 w-[80px] gap-2",
-          )}>
-            <div className="flex flex-row w-full bg-white items-center gap-1 text-violet-600 border border-gray-200 h-1/2 p-1 rounded-sm shadow-sm">
-              <PentagramIcon />
-              <div className="ml-auto">{formatCompactNumber(specialist.likes)}</div>
-            </div>
-            <div className="flex flex-row bg-white items-center gap-1 w-full border border-gray-200 h-1/2 p-1 mt-1 rounded-sm shadow-sm">
-              <IconPractice />
-              <div className="ml-auto">{formatCompactNumber(specialist.practices)}</div>
-            </div>
+        <div className="flex-1">
+          <div className="font-medium text-gray-900 text-base line-clamp-1">{specialist.name}</div>
+          <p className="text-base text-gray-600 line-clamp-2">{specialist.title}</p>
+          <div className="flex items-center text-neutral-900/80 text-base">
+            <MapPinIcon className="w-5 h-5 mr-1" />
+            <span>{specialist.location}</span>
           </div>
         </div>
 
-        {/* Share Options */}
-        <div className="flex gap-6 items-end justify-end p-6">
-          {shareOptions.map((option) => (
-              <motion.div
-                  key={option.id}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => onShare(option.id)}
-              >
-                <IconButton icon={option.icon} className={option.color} iconClassName="text-white" />
-              </motion.div>
-          ))}
-          <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onCopyLink}
-          >
-            {copied ? (
-                <IconButton icon={Check} className="hover:border-gray-200" />
-            ) : (
-                <IconButton icon={Link} className="hover:border-gray-200" />
-            )}
-          </motion.div>
+        <div className={cn(
+          "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100 p-1 w-[80px] gap-2",
+        )}>
+          <div className="flex flex-row w-full bg-white items-center gap-1 text-violet-600 border border-gray-200 h-1/2 p-1.5 rounded-sm shadow-sm">
+            <PentagramIcon size={16} />
+            <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
+          </div>
+          <div className="flex flex-row bg-white items-center gap-1 w-full border border-gray-200 h-1/2 p-1.5 mt-1 rounded-sm shadow-sm">
+            <IconPractice width={16} height={16} />
+            <div className="ml-auto text-sm">{formatCompactNumber(specialist.practices)}</div>
+          </div>
         </div>
       </div>
+
+      {/* Share Options */}
+      <div className="flex gap-4 items-center justify-center p-6">
+        {shareOptions.map((option) => (
+          <motion.div
+            key={option.id}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onShare(option.id)}
+          >
+            <IconButton icon={option.icon} className={option.color} iconClassName="text-white" />
+          </motion.div>
+        ))}
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onCopyLink}
+        >
+          {copied ? (
+            <IconButton icon={Check} className="hover:border-gray-200" />
+          ) : (
+            <IconButton icon={Link} className="hover:border-gray-200" />
+          )}
+        </motion.div>
+      </div>
+    </div>
   )
 }
