@@ -7,7 +7,7 @@ import { Share, Reply, MapPinIcon as MapPinHouse, Eye } from 'lucide-react'
 import { useLikes } from "@/hooks/use-likes"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { IconPractice } from "@/components/icons/icon-practice"
-import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
+import { SpecialistFlipShareCard } from "@/components/specialist/specialist-flip-share-card"
 import { Specialist } from "@/types/specialist"
 import { cn } from "@/lib/utils"
 
@@ -161,7 +161,7 @@ export function InstagramSpecialistCard({
               }}
             >
               <div className="w-full flex justify-center">
-                <SpecialistShareCard
+                <SpecialistFlipShareCard
                   specialist={specialist}
                   copied={copied}
                   onCopyLink={handleCopyLink}
