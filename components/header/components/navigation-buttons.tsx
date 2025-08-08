@@ -23,12 +23,11 @@ interface NavigationButtonsProps {
   isBecomeSpecialist: boolean
   hat: "adept" | "master" | "superviser"
   router: AppRouterInstance
+  onChatsClick: () => void
 }
 
-export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, router }: NavigationButtonsProps) {
+export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, router, onChatsClick }: NavigationButtonsProps) {
   const pathname = usePathname()
-
-  const handleChatsClick = () => {}
 
   const handleTasksClick = () => {
     // Placeholder for tasks functionality
@@ -36,8 +35,6 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
   }
 
   const handleAnalyticsClick = () => {}
-
-  const handleSecrityClick = () => {}
 
   const handleCalendarClick = () => {
     router.push("/calendar")
@@ -47,35 +44,32 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
 
   return (
     <>
-      {/* Navigation buttons for authenticated specialists only */}
-      <div className="items-center gap-6 flex flex-row">
-        {/* Chat button */}
-        {hat === "master" && (<IconButton
-            icon={MessageSquareText}
-            onClick={handleChatsClick}
-            disabled={true}
-        />)}
+      {/* Chat button */}
+      {!isBecomeSpecialist && (<IconButton
+          icon={MessageSquareText}
+          onClick={onChatsClick}
+          disabled={false}
+      />)}
 
-        {/* Calendar button */}
-        <CalendarButton
-            onClick={handleCalendarClick}
-            pathname={pathname}
-        />
+      {/* Calendar button */}
+      {!isBecomeSpecialist && (<CalendarButton
+          onClick={handleCalendarClick}
+          pathname={pathname}
+      />)}
 
-        {/* Tasks button */}
-        {hat === "master" && ( <IconButton
-            icon={CheckSquare}
-            onClick={handleTasksClick}
-            disabled={true}
-        />)}
+      {/* Tasks button */}
+      {!isBecomeSpecialist && hat === "master" && ( <IconButton
+          icon={CheckSquare}
+          onClick={handleTasksClick}
+          disabled={true}
+      />)}
 
-        {/* Analytics button */}
-        {hat === "master" && (<IconButton
-            icon={BarChart3}
-            onClick={handleAnalyticsClick}
-            disabled={true}
-        />)}
-      </div>
+      {/* Analytics button */}
+      {!isBecomeSpecialist && hat === "master" && (<IconButton
+          icon={BarChart3}
+          onClick={handleAnalyticsClick}
+          disabled={true}
+      />)}
 
       {!isBecomeSpecialist && (<IconButton icon={SettingsIcon} onClick={() => {}} disabled={false} />)}
 

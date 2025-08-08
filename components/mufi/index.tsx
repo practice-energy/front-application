@@ -377,7 +377,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     disabled={disableFileApply || mode === "accept" || mode === "continue"} // Добавлен disabled проп
                     className={`rounded-sm aspect-square px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                       disableFileApply
-                        ? "bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100"
+                        ? "bg-white text-gray-400 cursor-not-allowed opacity-100"
                         : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white"
                     }`}
                   >
@@ -407,10 +407,10 @@ export const Mufi = React.memo(function DesktopSearchBar({
                   <button
                     type="button"
                     onClick={togglePractice}
-                    className={`rounded-sm aspect-square px-2 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100`}
+                    className={`rounded-sm bg-white aspect-square px-2 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm bg-violet-50/30 text-gray-400 cursor-not-allowed opacity-100`}
                     disabled={true}
                   >
-                    <Bolt className="opacity-50" />
+                    <Bolt className="text-gray-400 " />
                   </button>
                 </div>
 

@@ -25,14 +25,14 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
   ]
 
   return (
-    <div className="bg-white rounded-sm shadow-xl border w-[394px]">
+    <div className="bg-white rounded-sm shadow-xl border w-[390px]">
       {/* Specialist Preview */}
-      <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3">
+      <div className="items-center p-1.5 gap-3 bg-white rounded-sm flex flex-row border border-gray-200">
         {specialist.avatar ? (
           <img
             src={specialist.avatar || "/placeholder.svg"}
             alt={specialist.name}
-            className="w-[80px] h-[90px] rounded-sm object-cover"
+            className="w-[76px] h-[88px] rounded-sm object-cover"
           />
         ) : (
           <PracticePlaceholder width={80} height={90} />
@@ -41,21 +41,21 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
         <div className="flex-1">
           <div className="font-medium text-gray-900 text-base line-clamp-1">{specialist.name}</div>
           <p className="text-base text-gray-600 line-clamp-2">{specialist.title}</p>
-          <div className="flex items-center text-neutral-900/80 text-base">
-            <MapPinIcon className="w-5 h-5 mr-1" />
+          <div className="flex items-center text-neutral-700/80 text-sm">
+            <MapPinIcon className="w-4 h-4 mr-1" />
             <span>{specialist.location}</span>
           </div>
         </div>
 
         <div className={cn(
-          "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100 p-1 w-[80px] gap-2",
+          "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100 p-1  w-[80px] gap-2",
         )}>
           <div className="flex flex-row w-full bg-white items-center gap-1 text-violet-600 border border-gray-200 h-1/2 p-1.5 rounded-sm shadow-sm">
-            <PentagramIcon size={16} />
+            <PentagramIcon size={20} />
             <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
           </div>
           <div className="flex flex-row bg-white items-center gap-1 w-full border border-gray-200 h-1/2 p-1.5 mt-1 rounded-sm shadow-sm">
-            <IconPractice width={16} height={16} />
+            <IconPractice width={20} height={18} />
             <div className="ml-auto text-sm">{formatCompactNumber(specialist.practices)}</div>
           </div>
         </div>

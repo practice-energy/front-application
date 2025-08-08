@@ -347,7 +347,7 @@ export function MainSidebar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute bottom-14 transform -translate-x-1/2 z-[49]"
+            className="absolute bottom-14 left-1 transform -translate-x-1/2 z-[49]"
           >
             <SpecialistShareCard
               specialist={mockSpecialist}

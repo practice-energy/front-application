@@ -1,14 +1,9 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Button } from "@/components/ui/button"
 import {
   PanelRightClose,
-  CalendarDays,
-  SlidersHorizontalIcon,
   SlidersVerticalIcon,
-  SettingsIcon,
-  PanelRightOpen
 } from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter, usePathname } from "next/navigation"
@@ -22,9 +17,8 @@ import { ProfileMenu } from "./components/profile-menu"
 import { PentagramIcon, UserSwitchIcon } from "@phosphor-icons/react"
 import { IconButton } from "@/components/icon-button"
 import { useProfileStore } from "@/stores/profile-store"
-import { useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
+import {useAdeptChats, useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
 import { v4 as uuidv4 } from "uuid"
-import {EasyNotifications} from "@/components/easy-notifications";
 import {messageInitMaster} from "@/components/become-specialist/messages";
 import RomanStep from "@/components/roman-step";
 import {useIsMobile} from "@/hooks/use-mobile";
@@ -38,6 +32,7 @@ export function Header() {
   const { isCollapsed, toggleSidebar } = useSidebar()
   const hat = user?.hat
   const { addChat } = useMasterChats()
+  const { chats } = user?.hat === "master" ? useMasterChats() : useAdeptChats()
   const {
     state: becomeSpecialistState,
     setStep: setBecomeSpecialistStep,
@@ -60,7 +55,9 @@ export function Header() {
     return user?.isSpecialist || false
   }, [user?.isSpecialist])
 
-  const isHomePage = pathname === "/"
+  const handleChatsClick = () => {
+    router.push(`/search/${chats.length > 0 ? chats[0].id : uuidv4()}`)
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -229,7 +226,13 @@ export function Header() {
               </div>
               </>
               ) : (
-              <NavigationButtons isAuthenticated={isAuthenticated} isBecomeSpecialist={isBecomeSpecialist} hat={hat} router={router} />
+              <NavigationButtons
+                  isAuthenticated={isAuthenticated}
+                  isBecomeSpecialist={isBecomeSpecialist}
+                  hat={hat}
+                  router={router}
+                  onChatsClick={handleChatsClick}
+              />
           )}
 
           {isAuthenticated && !isBecomeSpecialist
