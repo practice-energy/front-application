@@ -19,7 +19,7 @@ export function IconButton({
     return (
         <button className={cn(
             "hidden md:flex items-center justify-center",
-            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 border border-neutral-100",
+            "aspect-square rounded-sm shadow-sm h-10 w-10 p-1 border border-neutral-100/70 bg-white",
             disabled ? "opacity-50 cursor-not-allowed " : "cursor-pointer hover:border-violet-500 hover:shadow-md transition-colors hover:shadow-violet-100",
             className
         )}

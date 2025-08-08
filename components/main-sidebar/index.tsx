@@ -26,6 +26,7 @@ import {messageInitMaster} from "@/components/become-specialist/messages";
 import {useAdeptChats, useBecomeSpecialist, useChatStore, useMasterChats} from "@/stores/chat-store";
 import {boolean} from "zod";
 import {Chat} from "@/types/chats";
+import {IconPractice} from "@/components/icons/icon-practice";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -313,8 +314,11 @@ export function MainSidebar() {
 
         <button className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4" >
           <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
-            <p className="text-base font-medium text-start w-full ">Активировать подписку </p>
-            <SparklesIcon />
+            <div className="text-base font-medium text-start w-full px-1 whitespace-nowrap ">Ранний доступ для мастера </div>
+            <div className="flex flex-row items-center justify-end w-full font-semibold text-2xl gap-3">
+              {"+10"}
+              <IconPractice width={48} height={48} className="text-white"/>
+            </div>
           </div>
         </button>
     </div>
