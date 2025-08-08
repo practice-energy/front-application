@@ -25,7 +25,7 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare }:
   ]
 
   return (
-    <div className="bg-white rounded-sm shadow-xl border w-[394px]">
+    <div className="bg-white rounded-sm shadow-xl w-[394px]">
       {/* Specialist Preview */}
       <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3">
         {specialist.avatar ? (
