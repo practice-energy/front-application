@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { Copy, Check, Link, MapPinIcon } from 'lucide-react'
+import {Copy, Check, Link, MapPinIcon, CopyCheck} from 'lucide-react'
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Specialist } from "@/types/specialist"
@@ -26,7 +26,7 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare, i
   ]
 
   return (
-    <div className={cn("bg-white rounded-sm shadow-xl border flex flex-col z-[1000]",
+    <div className={cn("bg-white rounded-sm shadow-xl flex flex-col z-[1000]",
       isMobile ? "w-full" :"w-[390px]")}>
       {/* Specialist Preview */}
       <div className="items-center p-1.5 gap-3 bg-white rounded-sm flex flex-row border border-gray-200">
@@ -83,7 +83,7 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare, i
           className=" w-12 h-12"
         >
           {copied ? (
-            <IconButton icon={Check} className="hover:border-gray-200 flex" />
+            <IconButton icon={CopyCheck} className="bg-violet-600 flex" iconClassName="text-white" />
           ) : (
             <IconButton icon={Link} className="hover:border-gray-200 flex " />
           )}

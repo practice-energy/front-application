@@ -8,9 +8,8 @@ import { cn } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { IconAlura } from "@/components/icons/icon-alura"
-import { useIsMobile } from "@/hooks/use-mobile"
 import {IconPractice1} from "@/components/icons/practice-1-logo";
-import {PentagramIcon} from "@phosphor-icons/react";
+import {ChatsIcon,} from "@phosphor-icons/react";
 
 interface MufiBarProps {
   onSearch?: (query: string, title?: string, files?: File[], isPractice?: boolean) => void
@@ -339,7 +338,11 @@ export const Mufi = React.memo(function DesktopSearchBar({
           className="rounded-sm border bg-white h-14 w-14 aspect-square hover:bg-violet-50 shadow-sm shadow-violet-500/10 text-white font-medium flex items-center justify-center border-violet-200"
           disabled={isOnPage}
       >
-        <MessagesSquareIcon className="text-neutral-900" size={36} />
+        <ChatsIcon
+            className="text-neutral-900"
+            size={36}
+            style={{ transform: 'scaleX(-1)' }} // Flips horizontally
+        />
       </button>
     </div>)
   }
@@ -543,7 +546,11 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     className="shadow-sm rounded-sm border-gray-200 bg-white h-9 w-9 hover:bg-violet-50 text-white font-medium flex items-center"
                     disabled={isOnPage}
                   >
-                    <MessagesSquareIcon className="w-8 h-8 text-neutral-900 ml-0.5 p-1" />
+                    <ChatsIcon
+                        className="w-8 h-8 text-neutral-900 ml-0.5 p-1"
+                        size={36}
+                        style={{ transform: 'scaleX(-1)' }} // Flips horizontally
+                    />
                   </button>
                 ) : (<div className="bg-violet-200  h-9 w-9 p-0  items-center justify-center flex  rounded-sm text-white cursor-not-allowed">
                   <ArrowUp className="w-6 h-8" />
