@@ -120,7 +120,7 @@ export default function HomePage() {
         )}
 
         <main className="flex-1 flex flex-col items-center justify-center">
-          {(!isAuthenticated || transitioning) && (
+          {(isAuthenticated || transitioning) && (
               <div className={`flex items-center justify-center transition-opacity duration-600 ${showMufi ? 'opacity-100' : 'opacity-0'}`}>
                 <IconPractice
                     width={180}
@@ -140,7 +140,7 @@ export default function HomePage() {
           )}
 
           <div className={cn(
-              isMobile ? "fixed bottom-0 w-full" : "absolute bottom-0 w-[800px] left-[calc(50%-400px)]",
+              isMobile ? "fixed bottom-2 px-1 w-full" : "absolute bottom-0 w-[800px] left-[calc(50%-400px)]",
               `transition-opacity duration-300 ${showMufi ? 'opacity-100' : 'opacity-0'}`
           )}>
             {showMufi && (
@@ -151,6 +151,7 @@ export default function HomePage() {
                     isOnPage={!isAuthenticated}
                     disableFileApply={true}
                     onPushOnPage={handlePushOnPage}
+                    isMobile={isMobile}
                 />
             )}
           </div>

@@ -12,7 +12,7 @@ interface AuthButtonsProps {
 export const AuthButtons = ({ login, isMobile, className }: AuthButtonsProps) => {
     return (
         <div className={cn(
-            "justify-center items-center mx-auto my-auto flex gap-20  w-full h-full",
+            "justify-center inset-0 items-center mx-auto my-auto flex gap-20  w-full h-full",
             isMobile ? "flex-col w-full" : "flex-row",
         )}>
             <IconPractice1 width={60} height={60}/>
