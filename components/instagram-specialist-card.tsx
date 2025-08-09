@@ -98,7 +98,7 @@ export function InstagramSpecialistCard({
               {/* Передняя сторона карточки */}
               <div
                   className={cn(
-                      "bg-white w-full rounded-sm shadow-md shadow-violet-50 hover:shadow-violet-50 overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200",
+                      "bg-colors-custom-specialistCardBg w-full rounded-sm shadow-md shadow-violet-50 hover:shadow-violet-50 overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200",
                       "backface-hidden"
                   )}
                   style={{ backfaceVisibility: 'hidden' }}

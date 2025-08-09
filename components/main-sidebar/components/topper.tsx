@@ -18,16 +18,16 @@ export const Topper = ({
                        }: TopperProps) => {
     return (
         <div className={cn(
-            "relative pt-3 px-1.5" ,
+            "relative pt-4 px-1.5" ,
         )}>
-            <div className="flex items-center gap-2">
-                <div className="relative w-full text-neutral-500 ">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 " />
-                    <Input
+            <div className="flex items-center gap-4 ">
+                <div className="relative w-full text-colors-custom-search">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-colors-custom-search " />
+                    <input
                         placeholder="Поиск в чатах"
                         value={searchQuery}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className="pl-10 w-full px-3 bg-neutral-200 rounded-sm text-neutral-500 border-neutral-100"
+                        className="pl-10 w-full py-1 h-[30px] bg-colors-custom-searchBg rounded-sm text-colors-custom-search border-neutral-100 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-colors-custom-search focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:border-input"
                     />
                 </div>
 

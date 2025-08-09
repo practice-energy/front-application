@@ -27,6 +27,7 @@ import {Chat} from "@/types/chats";
 import {IconPractice} from "@/components/icons/icon-practice";
 import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
 import { mockSpecialists } from "@/services/mock-specialists"
+import {Mufi} from "@/components/mufi";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -272,7 +273,7 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full 1. md:w-[400px] bg-neutral-100 shadow-sm flex flex-col z-40 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
+        "fixed left-0 top-0 h-full w-full 1. md:w-[400px] bg-colors-custom-sidebar shadow-sm flex flex-col z-40 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
     >
@@ -339,42 +340,48 @@ export function MainSidebar() {
         <div className="h-12" />
       </ScrollArea>
 
-      {/* Share Card Animation */}
+      {/* Share Card Animation - now with lower z-index */}
       <AnimatePresence>
         {showShareCard && (
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className={cn(
-                "absolute transform -translate-x-1/2 z-[49]",
-                isMobile ? "px-1 bottom-14 items-center" : "bottom-14 left-1"
-            )}
-          >
-            <SpecialistShareCard
-              specialist={mockSpecialist}
-              copied={copied}
-              onCopyLink={handleCopyLink}
-              onShare={handleShare}
-              isMobile={isMobile}
-            />
-          </motion.div>
+            <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 100, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={cn(
+                    "absolute transform -translate-x-1/2 z-40", // Changed from z-[49] to z-40
+                    isMobile ? "px-1 bottom-28 items-center" : "bottom-14 left-1"
+                )}
+            >
+              <SpecialistShareCard
+                  specialist={mockSpecialist}
+                  copied={copied}
+                  onCopyLink={handleCopyLink}
+                  onShare={handleShare}
+                  isMobile={isMobile}
+              />
+            </motion.div>
         )}
       </AnimatePresence>
 
-      <button 
-        className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4" 
-        onClick={handleEarlyAccessClick}
+      {/* Button remains with higher z-index */}
+      <button
+          className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4"
+          onClick={handleEarlyAccessClick}
       >
         <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
-          <div className="text-base font-medium text-start w-full px-1 whitespace-nowrap ">Ранний доступ для мастера </div>
+          <div className="text-base font-medium text-start w-full px-1 whitespace-nowrap">Ранний доступ для мастера</div>
           <div className="flex flex-row items-center justify-end w-full font-semibold text-2xl gap-3">
             {"+10"}
             <IconPractice width={48} height={48} className="text-white"/>
           </div>
         </div>
       </button>
+
+      <div className="px-1 mb-2 z-[1000] w-full">
+        {isMobile && (<Mufi showPractice={true} disableFileApply={true} isMobile={isMobile}/>)}
+      </div>
+
     </div>
   )
 }

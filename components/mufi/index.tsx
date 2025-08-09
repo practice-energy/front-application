@@ -29,6 +29,7 @@ interface MufiBarProps {
   canAccept?: boolean
   isOnPage?: boolean
   onPushOnPage?: (s: string) => string
+  isMobile?: boolean
 }
 
 export const Mufi = React.memo(function DesktopSearchBar({
@@ -42,18 +43,17 @@ export const Mufi = React.memo(function DesktopSearchBar({
   canAccept,
   isOnPage = false,
   onPushOnPage,
+  isMobile = false,
 }: MufiBarProps) {
   const router = useRouter()
   const [message, setMessage] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [sidebarWidth, setSidebarWidth] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [isPractice, setIsPractice] = useState(false)
   const [isAccepted, setIsAccepted] = useState(false)
-  const isMobile = useIsMobile()
 
   const [onPageMessages, setOnPageMessages] = useState<
     Array<{ id: string; content: string; type: "user" | "response"; timestamp: number }>
@@ -253,6 +253,96 @@ export const Mufi = React.memo(function DesktopSearchBar({
     const searchId = uuidv4()
     router.push(`/search/${searchId}`)
   }, [router, chatTitle])
+
+  if (isMobile) {
+    return (<div
+        ref={containerRef}
+        data-animating={isAnimating ? "true" : "false"}
+        styles={{
+          zIndex: 1000,
+        }}
+        className="flex flex-row gap-1.5 "
+    >
+      <div
+        className={cn(
+            "border rounded-sm  bg-violet-50 border-violet-100 bg-opacity-80 shadow-sm w-full shadow-violet-500/10",
+            isAccepted ? "border-violet-600" : "border-violet-200",
+        )}
+    >
+      <form onSubmit={handleSubmit} className="w-full bg-white/80 shadow-md rounded-sm backdrop-blur-sm shadow-violet-200 p-1.5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex-shrink-0 flex items-center justify-center">
+            <IconAlura width={36} height={36} className="mb-1.5 mr-1" />
+          </div>
+          <div className="flex-1 min-w-0">
+                  <textarea
+                      inputMode="text"
+                      ref={textareaRef}
+                      value={message}
+                      onChange={handleMessageChange}
+                      onKeyDown={handleKeyDown}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      placeholder={placeholder}
+                      className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-900 dark:text-white leading-6"
+                      rows={1}
+                      style={{
+                        scrollbarWidth: "thin",
+                        msOverflowStyle: "auto",
+                        minHeight: "24px",
+                        maxHeight: "120px",
+                      }}
+                  />
+          </div>
+
+          {/* Action Button */}
+          {mode === "accept" ? (
+              <button
+                  type="button"
+                  onClick={handleContinue}
+                  className={cn(
+                      "h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
+                      canAccept ? "" : "cursor-not-allowed opacity-50",
+                  )}
+              >
+                <Check className={"text-white mx-auto"} />
+              </button>
+          ) : mode === "continue" ? (
+              <button
+                  type="button"
+                  onClick={handleContinue}
+                  className="h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-neutral-900 text-white font-medium"
+              >
+                <IconPractice width={25} height={22} className={"text-white mx-auto"} />
+              </button>
+          ) : message.trim() || uploadedFiles.length > 0 ? (
+              <button
+                  type="submit"
+                  disabled={!canSubmit}
+                  className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
+                      canSubmit
+                          ? "bg-violet-600 hover:bg-violet-700 text-white"
+                          : "bg-violet-200  text-white cursor-not-allowed"
+                  }`}
+              >
+                <ArrowUp className="w-6 h-8" />
+              </button>
+          ) : !isOnPage && (<div className="bg-violet-200  h-9 w-9 p-0  items-center justify-center flex  rounded-sm text-white cursor-not-allowed">
+            <ArrowUp className="w-6 h-8" />
+          </div>)}
+        </div>
+      </form>
+      </div>
+      <button
+          type="button"
+          onClick={handleNewChat}
+          className="rounded-sm border bg-white h-14 w-14 aspect-square hover:bg-violet-50 shadow-sm shadow-violet-500/10 text-white font-medium flex items-center justify-center border-violet-200"
+          disabled={isOnPage}
+      >
+        <MessagesSquareIcon className="text-neutral-900" size={36} />
+      </button>
+    </div>)
+  }
 
   return (
     <div

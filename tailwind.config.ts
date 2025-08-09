@@ -103,7 +103,11 @@ const config: Config = {
             150: '#f8f9fa',
           },
           custom: {
-            1: '#f8f8f9'
+            1: '#f8f8f9',
+            sidebar: "#fafafb",
+            specialistCardBg: "#fafafb",
+            search: "#9095a0",
+            searchBg: "#f3f4f6",
           }
         },
         sidebar: {

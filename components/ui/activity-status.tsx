@@ -62,7 +62,7 @@ export const ActivityStatus = React.memo(({
       </span>)}
             {currentStatus.dotClass && (
                 <div className={cn(
-                    "w-5 h-5 rounded-sm flex-shrink-0",
+                    "w-[18px] h-[18px] rounded-sm flex-shrink-0",
                     currentStatus.dotClass,
                     dotClassName
                 )}/>

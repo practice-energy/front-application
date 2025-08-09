@@ -156,3 +156,13 @@ body.modal-open::before {
   -webkit-backdrop-filter: none !important;
   filter: none !important;
 }
+
+.line-clamp-conditional {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all; /* Переносит длинные слова */
+}
+
+/* Альтернативный вариант с JavaScript */

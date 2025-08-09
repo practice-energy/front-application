@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import {
-  PanelRightClose,
+  PanelRightClose, PanelRightOpen,
   SlidersVerticalIcon,
 } from 'lucide-react'
 import { useAuth } from "@/hooks/use-auth"
@@ -156,7 +156,7 @@ export function Header() {
     <div className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
       {/* Кнопка сайдбара - фиксированная позиция */}
       <div
-          className="items-center ml-[340px] gap-3 flex flex-row h-full justify-start "
+          className="items-center ml-[360px] gap-3 flex flex-row h-full justify-start "
           style={{
             zIndex: 60
           }}
@@ -164,23 +164,23 @@ export function Header() {
         <IconButton
             onClick={handleOpenSidebar}
             className={cn(
-                "rounded-sm hover:bg-none border border-gray-200",
+                "rounded-sm hover:bg-none border border-gray-200  w-[30px] h-[30px] items-center justify-center ",
                 !isCollapsed && "opacity-0 pointer-events-none"
                 )}
             icon={PanelRightClose}
         />
 
         <div
-            className="fixed left-0 shadow-sm items-center border border-gray-200 bg-white rounded-sm gap-3 flex flex-row px-1 py-0"
+            className="fixed left-0 shadow-sm items-center border bg-white rounded-sm gap-2 flex flex-row px-1 py-0"
             style={{
               zIndex: 60,
-              left: 420,
+              left: 416,
               position: "fixed",
             }}
         >
           <Logo onClick={handleLogoClick} />
           <div className="flex items-center font-semibold text-base text-neutral-900">
-            {user?.practice || 0}
+            {user?.practice || 999}
           </div>
         </div>
       </div>
