@@ -428,7 +428,7 @@ export default function SearchPage() {
             isAuthenticated={isAuthenticated}
           />
 
-          <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 md:pr-40 items-center z-0">
+          <div className="w-full h-full overflow-y-auto pt-20 px-4 pb-16 md:pr-40 items-center z-0">
             <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
             {currentChat && currentChat.messages.length === 0 && !isLoading ? (
               <ChatEmptyState />
@@ -452,20 +452,21 @@ export default function SearchPage() {
                 style={{ float: "left", clear: "both" }}
             />
           </div>
-          <div className="absolute bottom-0 w-full">
+          <div className="absolute bottom-0 px-1 mb-2 z-[1000] w-full">
             <Mufi
                 onSearch={handleSearch}
                 showHeading={false}
                 dynamicWidth={false}
                 showPractice={currentChat?.isAI === true}
                 disableFileApply={true}
-                placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                placeholder={currentChat?.title || "Alura"}
                 onCancelReply={() => {}}
                 chatTitle="Alura"
                 mode={mode}
                 canAccept={canAccept}
                 selectedTags={becomeSpecialistState.selectedTags}
                 onContinue={handleContinue}
+                isMobile={isMobile}
             />
           </div>
         </>
@@ -515,13 +516,14 @@ export default function SearchPage() {
                   dynamicWidth={false}
                   showPractice={currentChat?.isAI === true}
                   disableFileApply={true}
-                  placeholder={`Спроси у ${currentChat?.title || "Alura"}`}
+                  placeholder={currentChat?.title || "Alura"}
                   onCancelReply={() => {}}
                   chatTitle="Alura"
                   mode={mode}
                   canAccept={canAccept}
                   selectedTags={becomeSpecialistState.selectedTags}
                   onContinue={handleContinue}
+                  isMobile={isMobile}
               />
           )}
         </div>

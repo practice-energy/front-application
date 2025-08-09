@@ -23,7 +23,7 @@ import {v4 as uuidv4} from "uuid";
 import {messageInitMaster} from "@/components/become-specialist/messages";
 import {useAdeptChats, useBecomeSpecialist, useChatStore, useMasterChats} from "@/stores/chat-store";
 import {boolean} from "zod";
-import {Chat} from "@/types/chats";
+import {Chat, type Message} from "@/types/chats";
 import {IconPractice} from "@/components/icons/icon-practice";
 import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
 import { mockSpecialists } from "@/services/mock-specialists"
@@ -98,6 +98,37 @@ export function MainSidebar() {
       toggleSidebar()
     }
   }
+
+  const handleNewChat = (query: string, title = "Alura", files: File[] = [], isPractice?: boolean) => {
+    const newChatId = uuidv4()
+    const userMessage: Message = {
+      id: uuidv4(),
+      type: "user",
+      content: query,
+      timestamp: Date.now(),
+      files: files,
+    }
+
+    const newChat: Chat = {
+      id: newChatId,
+      title: "Alura",
+      timestamp: Date.now(),
+      messages: [userMessage],
+      isAI: true,
+      hasNew: false,
+      createdAt: Date.now(),
+      isMuted: false,
+    }
+
+    if (user?.hat === "master") {
+      addMasterChat(newChat)
+    } else {
+      addAdeptChat(newChat)
+    }
+    router.push(`/search/${newChatId}`)
+    toggleSidebar()
+  }
+
 
   const handleBecomeSpecialist = () => {
     updateUser({
@@ -379,7 +410,7 @@ export function MainSidebar() {
       </button>
 
       <div className="px-1 mb-2 z-[1000] w-full">
-        {isMobile && (<Mufi showPractice={true} disableFileApply={true} isMobile={isMobile}/>)}
+        {isMobile && (<Mufi showPractice={true} disableFileApply={true} isMobile={isMobile} onSearch={handleNewChat}/>)}
       </div>
 
     </div>
