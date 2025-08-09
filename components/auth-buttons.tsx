@@ -17,7 +17,7 @@ export const AuthButtons = ({ login, isMobile, className }: AuthButtonsProps) =>
         )}>
             <IconPractice1 width={60} height={60}/>
             <div className={cn(
-                "font-bold text-center text-neutral-900",
+                "font-bold text-center text-neutral-900 whitespace-nowrap",
                 isMobile ? "text-[24px]" : "text-[32px]",
             )}>
                 Поток взаимодействия
