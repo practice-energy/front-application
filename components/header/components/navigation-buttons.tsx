@@ -16,7 +16,7 @@ import {cn} from "@/lib/utils";
 import {IconButton} from "@/components/icon-button";
 import {usePathname, useRouter} from "next/navigation";
 import {CalendarButton} from "@/components/calendar-button";
-import {PentagramIcon} from "@phosphor-icons/react";
+import {ChatsIcon, PentagramIcon} from "@phosphor-icons/react";
 
 interface NavigationButtonsProps {
   isAuthenticated: boolean
@@ -46,9 +46,11 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
     <>
       {/* Chat button */}
       {!isBecomeSpecialist && (<IconButton
-          icon={MessageSquareText}
+          icon={ChatsIcon}
           onClick={onChatsClick}
           disabled={false}
+          iconClassName="transform -scale-x-100"
+          className={cn(pathname.startsWith("/search") && " border border-neutral-900 shadow-md")}
       />)}
 
       {/* Calendar button */}
