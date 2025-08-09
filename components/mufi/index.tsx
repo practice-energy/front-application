@@ -266,7 +266,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
             style={{
               zIndex: 1000,
             }}
-            className="flex flex-col gap-1.5 items-center"
+            className="flex flex-col items-center"
         >
           <div
               className="w-full"
@@ -315,7 +315,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
             )}
           </div>
 
-          <div className="flex flex-row w-full">
+          <div className="flex flex-row w-full gap-1.5">
             <div
                 className={cn(
                     "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-sm shadow-violet-500/10",

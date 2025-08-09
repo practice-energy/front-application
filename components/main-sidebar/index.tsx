@@ -397,7 +397,7 @@ export function MainSidebar() {
 
       {/* Button remains with higher z-index */}
       <button
-          className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-4"
+          className="w-full rounded-sm h-12 bg-none z-50 px-1 border-none mb-2"
           onClick={handleEarlyAccessClick}
       >
         <div className="items-center flex flex-row py-2 bg-neutral-900 text-white rounded-sm opacity-100 px-4 h-[48px]">
