@@ -20,8 +20,8 @@ interface SpecialistFlipShareCardProps {
 
 export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShare }: SpecialistFlipShareCardProps) {
   const shareOptions = [
-    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: " border border-neutral-100  hover:border  hover:border-gray-200" },
-    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: " border border-neutral-100  hover:border hover:border-gray-200" },
+    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: "flex border border-neutral-100  hover:border  hover:border-gray-200" },
+    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: "flex border border-neutral-100  hover:border hover:border-gray-200" },
   ]
 
   return (
@@ -85,9 +85,9 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
                         onClick={onCopyLink}
                     >
                         {copied ? (
-                            <IconButton icon={CopyCheck} className="bg-violet-600" iconClassName="text-white"/>
+                            <IconButton icon={CopyCheck} className="bg-violet-600" iconClassName="text-white flex"/>
                         ) : (
-                            <IconButton icon={Link} className="hover:border-gray-200" />
+                            <IconButton icon={Link} className="hover:border-gray-200 flex" />
                         )}
                     </motion.div>
                 </div>
