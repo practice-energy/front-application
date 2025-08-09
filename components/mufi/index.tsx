@@ -266,34 +266,82 @@ export const Mufi = React.memo(function DesktopSearchBar({
             style={{
               zIndex: 1000,
             }}
-            className="flex flex-row gap-1.5 items-center"
+            className="flex flex-col gap-1.5 items-center"
         >
           <div
-              className={cn(
-                  "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-sm shadow-violet-500/10",
-                  "bg-opacity-80 shadow-md shadow-violet-500/10",
-                  "transition-all duration-500 ease-in-out", // Добавляем плавный переход для всех свойств
-                  isAccepted ? "border-violet-600" : "border-violet-200",
-                  (message.trim() || isFocused || uploadedFiles.length > 0) ? "bg-white" : "bg-violet-50",
-                  "flex-1" // Всегда занимает доступное пространство
-              )}
+              className="w-full"
+              style={{
+                overflow: "hidden", // Основное свойство для скрытия скроллбара
+                scrollbarWidth: "none", // Для Firefox
+                msOverflowStyle: "none", // Для IE/Edge
+              }}
           >
-            <form onSubmit={handleSubmit} className="w-full bg-white/80 shadow-md rounded-sm backdrop-blur-sm shadow-violet-200 p-1.5">
-              <div className="flex items-center gap-2.5">
-                <div className="flex-shrink-0 flex items-center justify-center">
-                  {avatar ? (
-                      <img
-                          width={36}
-                          height={36}
-                          className="rounded-sm"
-                          src={avatar}
-                          alt={""}
-                      />
-                  ) : (
-                      <IconAlura width={24} height={24} />
-                  )}
+            {/* On-page messages display */}
+            {isOnPage && onPageMessages.length > 0 && (
+                <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
+                  <div className="p-4">
+                    {onPageMessages.map((msg) => {
+                      if (msg.type === "user") {
+                        return (<div key={msg.id} className={cn("flex justify-end")}>
+                          <div
+                              className={cn(
+                                  "max-w-[70%] px-3 py-2 rounded-sm text-sm",
+                                  "bg-violet-600/10 text-neutral-900",
+                              )}
+                          >
+                            {msg.content}
+                          </div>
+                        </div>)
+                      }
+
+                      return (<div className="flex flex-col">
+                        <div className="flex flex-row ml-1 ">
+                          <IconAlura width={36} height={36} className="rounded-sm active:bg-none" />
+                          <div className="flex flex-col ml-3 justify-end">
+                            <div className="text-stone-900 font-sans">{"Alura"}</div>
+                            <div className="text-accent text-gray-400">
+                              {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-neutral-700">
+                          {msg.content}
+                        </div>
+                      </div>)
+                    })
+                    }
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0 transition-all duration-300 flex items-center">
+            )}
+          </div>
+
+          <div className="flex flex-row w-full">
+            <div
+                className={cn(
+                    "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-sm shadow-violet-500/10",
+                    "bg-opacity-80 shadow-md shadow-violet-500/10",
+                    "transition-all duration-500 ease-in-out", // Добавляем плавный переход для всех свойств
+                    isAccepted ? "border-violet-600" : "border-violet-200",
+                    (message.trim() || isFocused || uploadedFiles.length > 0) ? "bg-white" : "bg-violet-50",
+                    "flex-1" // Всегда занимает доступное пространство
+                )}
+            >
+              <form onSubmit={handleSubmit} className="w-full bg-white/80 shadow-md rounded-sm backdrop-blur-sm shadow-violet-200 p-1.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex-shrink-0 flex items-center justify-center">
+                    {avatar ? (
+                        <img
+                            width={36}
+                            height={36}
+                            className="rounded-sm"
+                            src={avatar}
+                            alt={""}
+                        />
+                    ) : (
+                        <IconAlura width={24} height={24} />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0 transition-all duration-300 flex items-center">
                   <textarea
                       inputMode="text"
                       ref={textareaRef}
@@ -306,8 +354,6 @@ export const Mufi = React.memo(function DesktopSearchBar({
                       className="w-full border-0 bg-transparent text-[16px] placeholder:text-gray-400 focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-900 leading-6 transition-all duration-300 py-1"
                       rows={1}
                       style={{
-                        scrollbarWidth: "thin",
-                        msOverflowStyle: "auto",
                         minHeight: "24px",
                         maxHeight: "120px",
                         lineHeight: "1.5",
@@ -316,72 +362,73 @@ export const Mufi = React.memo(function DesktopSearchBar({
                         msOverflowStyle: "none", // Для IE/Edge
                       }}
                   />
+                  </div>
+
+                  {/* Action Button */}
+                  {mode === "accept" ? (
+                      <button
+                          type="button"
+                          onClick={handleContinue}
+                          className={cn(
+                              "h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
+                              canAccept ? "" : "cursor-not-allowed opacity-50",
+                          )}
+                      >
+                        <Check className={"text-white mx-auto"} />
+                      </button>
+                  ) : mode === "continue" ? (
+                      <button
+                          type="button"
+                          onClick={handleContinue}
+                          className="h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-neutral-900 text-white font-medium"
+                      >
+                        <IconPractice width={25} height={22} className={"text-white mx-auto"} />
+                      </button>
+                  ) : !isOnPage ? (isFocused  || message.trim()) && (
+                      <button
+                          type="submit"
+                          onClick={handleSubmit}
+                          disabled={!canSubmit}
+                          className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
+                              canSubmit
+                                  ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                  : "bg-violet-200  text-white cursor-not-allowed"
+                          }`}
+                      >
+                        <ArrowUp className="w-6 h-8" />
+                      </button>
+                  ) : (<div className="bg-violet-200  h-9 w-9 p-0  items-center justify-center flex  rounded-sm text-white cursor-not-allowed">
+                    <ArrowUp className="w-6 h-8" />
+                  </div>)}
                 </div>
+              </form>
+            </div>
 
-                {/* Action Button */}
-                {mode === "accept" ? (
-                    <button
-                        type="button"
-                        onClick={handleContinue}
-                        className={cn(
-                            "h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
-                            canAccept ? "" : "cursor-not-allowed opacity-50",
-                        )}
-                    >
-                      <Check className={"text-white mx-auto"} />
-                    </button>
-                ) : mode === "continue" ? (
-                    <button
-                        type="button"
-                        onClick={handleContinue}
-                        className="h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-neutral-900 text-white font-medium"
-                    >
-                      <IconPractice width={25} height={22} className={"text-white mx-auto"} />
-                    </button>
-                ) : !isOnPage ? (isFocused  || message.trim()) && (
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={!canSubmit}
-                        className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
-                            canSubmit
-                                ? "bg-violet-600 hover:bg-violet-700 text-white"
-                                : "bg-violet-200  text-white cursor-not-allowed"
-                        }`}
-                    >
-                      <ArrowUp className="w-6 h-8" />
-                    </button>
-                ) : (<div className="bg-violet-200  h-9 w-9 p-0  items-center justify-center flex  rounded-sm text-white cursor-not-allowed">
-                  <ArrowUp className="w-6 h-8" />
-                </div>)}
-              </div>
-            </form>
-          </div>
-
-          {/* Кнопка нового чата с анимацией */}
-          {!isOnPage && (<AnimatePresence>
-            {addNewChatButtonMobile && !(isFocused || message.trim()) && (
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.2 }}
-                >
-                  <button
-                      type="button"
-                      onClick={handleNewChat}
-                      className="rounded-sm border bg-white h-full w-11 aspect-square hover:bg-violet-50 shadow-sm shadow-violet-500/10 text-white font-medium flex items-center justify-center border-violet-200 transition-all duration-300"
-                      disabled={isOnPage}
+            {/* Кнопка нового чата с анимацией */}
+            {!isOnPage && (<AnimatePresence>
+              {addNewChatButtonMobile && !(isFocused || message.trim()) && (
+                  <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
                   >
-                    <ChatsIcon
-                        className="text-neutral-900"
-                        size={36}
-                        style={{ transform: 'scaleX(-1)' }}
-                    />
-                  </button>
-                </motion.div>
-            )}
-          </AnimatePresence>)}
+                    <button
+                        type="button"
+                        onClick={handleNewChat}
+                        className="rounded-sm border bg-white h-full w-11 aspect-square hover:bg-violet-50 shadow-sm shadow-violet-500/10 text-white font-medium flex items-center justify-center border-violet-200 transition-all duration-300"
+                        disabled={isOnPage}
+                    >
+                      <ChatsIcon
+                          className="text-neutral-900"
+                          size={36}
+                          style={{ transform: 'scaleX(-1)' }}
+                      />
+                    </button>
+                  </motion.div>
+              )}
+            </AnimatePresence>)}
+          </div>
         </div>
     )
   }
@@ -398,7 +445,14 @@ export const Mufi = React.memo(function DesktopSearchBar({
       {/* On-page messages display */}
       {isOnPage && onPageMessages.length > 0 && (
         <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
-          <div className="p-4">
+          <div
+              className="p-4"
+              style={{
+                overflow: "hidden", // Основное свойство для скрытия скроллбара
+                scrollbarWidth: "none", // Для Firefox
+                msOverflowStyle: "none", // Для IE/Edge
+              }}
+          >
             {onPageMessages.map((msg) => {
                   if (msg.type === "user") {
                     return (<div key={msg.id} className={cn("flex justify-end")}>
@@ -493,8 +547,6 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     className="w-full border-0 bg-transparent text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 resize-none overflow-hidden text-gray-900 dark:text-white leading-6"
                     rows={1}
                     style={{
-                      scrollbarWidth: "thin",
-                      msOverflowStyle: "auto",
                       minHeight: "24px",
                       maxHeight: "120px",
                       overflow: "hidden", // Основное свойство для скрытия скроллбара
