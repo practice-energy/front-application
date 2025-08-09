@@ -317,7 +317,7 @@ export const MessageItem = React.memo(
         id={`message-${message.id}`}
         className={`flex ${isUser ? "justify-end" : "justify-start"} transition-all duration-500`}
       >
-        <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-4xl w-full`}>
+        <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} w-full ${!isMobile ? "max-w-4xl" : "mr-4"}`}>
           <div className="flex mb-1">
             {!isUser && (
               <div className="flex ml-1">

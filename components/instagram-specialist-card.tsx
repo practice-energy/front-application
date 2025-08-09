@@ -176,7 +176,7 @@ export function InstagramSpecialistCard({
         {/* Action Buttons - справа от карточки */}
         {showActionButtons && (
             <div className={cn(
-                "flex flex-col gap-3 pl-2 sm:pl-8",
+                "flex flex-col gap-3 pl-8",
             )}>
               {/* Star Button */}
               <button
