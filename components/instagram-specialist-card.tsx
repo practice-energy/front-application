@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Share, Reply, MapPinIcon as MapPinHouse, Eye } from 'lucide-react'
+import {Share, Reply, MapPinIcon as MapPinHouse, Eye, MapPinHouseIcon} from 'lucide-react'
 import { useLikes } from "@/hooks/use-likes"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { IconPractice } from "@/components/icons/icon-practice"
@@ -142,8 +142,8 @@ export function InstagramSpecialistCard({
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-left mt-[30px] text-neutral-700 opacity-80 gap-1.5">
-                    <MapPinHouse
+                  <div className="flex items-left mt-[28px] text-neutral-700 opacity-80 gap-1.5">
+                    <MapPinHouseIcon
                         width={18}
                         height={18}
                     />
