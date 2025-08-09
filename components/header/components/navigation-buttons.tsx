@@ -58,18 +58,18 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
       />)}
 
       {/* Tasks button */}
-      {!isBecomeSpecialist && hat === "master" && ( <IconButton
-          icon={CheckSquare}
-          onClick={handleTasksClick}
-          disabled={true}
-      />)}
+      {/*{!isBecomeSpecialist && hat === "master" && ( <IconButton*/}
+      {/*    icon={CheckSquare}*/}
+      {/*    onClick={handleTasksClick}*/}
+      {/*    disabled={true}*/}
+      {/*/>)}*/}
 
       {/* Analytics button */}
-      {!isBecomeSpecialist && hat === "master" && (<IconButton
-          icon={BarChart3}
-          onClick={handleAnalyticsClick}
-          disabled={true}
-      />)}
+      {/*{!isBecomeSpecialist && hat === "master" && (<IconButton*/}
+      {/*    icon={BarChart3}*/}
+      {/*    onClick={handleAnalyticsClick}*/}
+      {/*    disabled={true}*/}
+      {/*/>)}*/}
 
       {!isBecomeSpecialist && (<IconButton icon={SettingsIcon} onClick={() => {}} disabled={false} />)}
 

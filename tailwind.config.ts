@@ -102,6 +102,9 @@ const config: Config = {
           neutral: {
             150: '#f8f9fa',
           },
+          custom: {
+            1: '#f8f8f9'
+          }
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -114,7 +117,7 @@ const config: Config = {
           ring: "hsl(var(--sidebar-ring))",
         },
         "theme-light": {
-          bg: "#fafaf9",
+          bg: "#f3f4f6",
           "bg-secondary": "#fafaf9",
           "bg-tertiary": "#fafaf9",
           text: "#0f172a",

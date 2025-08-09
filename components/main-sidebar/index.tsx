@@ -272,7 +272,7 @@ export function MainSidebar() {
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
       }}
       className={cn(
-        "fixed left-0 top-0 h-full w-full 1. md:w-[400px] bg-white shadow-sm flex flex-col z-40 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
+        "fixed left-0 top-0 h-full w-full 1. md:w-[400px] bg-neutral-100 shadow-sm flex flex-col z-40 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
         isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
     >
