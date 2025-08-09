@@ -49,13 +49,16 @@ const config: Config = {
         ],
       },
       backgroundImage: {
-        "allura-pattern": "url('/allura-logo.svg')",
+        "practice-pattern": "url('/mastercard_pattern.svg')",
         'gradient-from-neutral-150': 'linear-gradient(to top, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
         'gradient-to-left-neutral-150': 'linear-gradient(to left, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
         'gradient-to-right-neutral-150': 'linear-gradient(to right, rgba(248, 249, 250, 1) 0%, rgba(248, 249, 250, 0) 100%)',
       },
       backgroundSize: {
-        "allura-tile": "20px 20px",
+        "practice-pattern": "340px 92px", // Установите нужный размер
+      },
+      backgroundRepeat: {
+        "practice-pattern": "repeat", // Повторение по X и Y
       },
       colors: {
         background: "hsl(var(--background))",

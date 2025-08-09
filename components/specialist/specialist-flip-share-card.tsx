@@ -25,7 +25,7 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
   ]
 
   return (
-    <div className="bg-white rounded-sm shadow-xl border w-[300px] flex flex-col justify-between" style={{ height: 'calc(300px * 1.25 + 158px)' }}>
+    <div className="bg-practice-pattern rounded-sm shadow-xl border w-[300px] flex flex-col justify-between" style={{ height: 'calc(300px * 1.25 + 158px)' }}>
       {/* Specialist Preview */}
       <div className="items-start gap-3 bg-white rounded-sm flex flex-row border border-gray-200 p-3 flex-shrink-0">
         {specialist.avatar ? (

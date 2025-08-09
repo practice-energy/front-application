@@ -164,5 +164,3 @@ body.modal-open::before {
   overflow: hidden;
   word-break: break-all; /* Переносит длинные слова */
 }
-
-/* Альтернативный вариант с JavaScript */
