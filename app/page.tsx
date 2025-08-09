@@ -140,13 +140,13 @@ export default function HomePage() {
           )}
 
           <div className={cn(
-              isMobile ? "fixed bottom-2 px-1 w-full" : "absolute bottom-0 w-[800px] left-[calc(50%-400px)]",
+              isMobile ? "fixed bottom-2 px-1 w-full" : "absolute items-center w-[800px] left-[calc(50%-400px)]",
               `transition-opacity duration-300 ${showMufi ? 'opacity-100' : 'opacity-0'}`
           )}>
             {showMufi && (
                 <Mufi
                     onSearch={handleSearch}
-                    chatTitle="Alura"
+                    placeholder={isAuthenticated ? "Alura" : "Введите email"}
                     showPractice={true}
                     isOnPage={!isAuthenticated}
                     disableFileApply={true}
