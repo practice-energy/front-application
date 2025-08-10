@@ -1,4 +1,4 @@
-import { SquareSlash, Check, Flame } from "lucide-react";
+import {SquareSlash, Check, Flame, Replace} from "lucide-react";
 import { ReactNode } from "react";
 import {IconPractice} from "@/components/icons/icon-practice";
 
@@ -27,7 +27,7 @@ export function ActionButton({
 
     // Иконки для каждого типа
     const icons = {
-        regenerate: <SquareSlash className={`w-6 h-6 text-white ${iconClassName}`} />,
+        regenerate: <Replace className={`w-6 h-6 text-white ${iconClassName}`} />,
         confirm: <Check className={`w-6 h-6 text-white ${iconClassName}`} />,
         burn: <Flame className={`w-6 h-6 text-white ${iconClassName}`} />,
         practice: <IconPractice
