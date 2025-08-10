@@ -31,7 +31,7 @@ export function InstagramSpecialistCard({
                                           specialist,
                                           onClick,
                                           showActionButtons = false,
-    flipped = false,
+                                          flipped = false,
                                         }: InstagramSpecialistCardProps) {
   const router = useRouter()
   const { isLiked, toggleLike } = useLikes()
