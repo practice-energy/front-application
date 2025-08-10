@@ -3,7 +3,7 @@
 import React, { useCallback, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Copy, Share, Paperclip } from "lucide-react"
+import {Copy, Share, Paperclip, Edit} from "lucide-react"
 import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { InstagramSpecialistCard } from "@/components/instagram-specialist-card"
 import { InstagramServiceCard } from "@/components/instagram-service-card"
@@ -322,9 +322,9 @@ export const MessageItem = React.memo(
             isUser ? "pl-12" : "pr-12",
         )}>
           <div className={`flex flex-col ${isUser ? "items-end " : "items-start "} w-full ${!isMobile ? "max-w-full" : "mr-4"}`}>
-            <div className="flex mb-1">
+            <div className="flex">
               {!isUser && (
-                  <div className="flex flex-row justify-center ml-1">
+                  <div className="flex flex-row justify-center">
                     <button
                         className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
                         onClick={handleViewSpecialistProfile}
@@ -358,11 +358,11 @@ export const MessageItem = React.memo(
                   <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
                     <div
                         className={cn(
-                            isAssistant ? "border-none shadow-none bg-none" : "bg-white",
-                            `rounded-sm py-3 px-1.5  ${
+                            isAssistant ? "border-none shadow-none bg-none mt-1" : "bg-white py-[7px] px-1.5",
+                            `rounded-sm ${
                                 isUser
-                                    ? "bg-colors-custom-userMessage py-3 gap-3 "
-                                    : "text-neutral-700  rounded-Date gap-3"
+                                    ? "bg-colors-custom-userMessage gap-3 py-[7px] px-1.5 "
+                                    : "text-neutral-700  rounded-Date gap-3 "
                             }`,
                         )}
                         style={{ wordBreak: "break-word" }}
@@ -374,7 +374,7 @@ export const MessageItem = React.memo(
 
               {/* Specialty tags for become-specialist-drops */}
               {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
-                  <div className="mt-4 ml-auto">{renderSpecialtyTags(message.tags)}</div>
+                  <div className="mt-6 ml-auto">{renderSpecialtyTags(message.tags)}</div>
               )}
 
               {/* Personality test options for profile-test */}
@@ -382,7 +382,7 @@ export const MessageItem = React.memo(
                   <div>
                     <div
                         className={cn(
-                            "rounded-sm py-3 flex flex-col",
+                            "rounded-sm flex flex-col",
                             "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
                         )}
                         style={{ wordBreak: "break-word" }}
@@ -390,7 +390,7 @@ export const MessageItem = React.memo(
                       <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
                       <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
                     </div>
-                    <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
+                    <div className="mt-6 ml-auto">{renderPersonalityOptions(message.tags)}</div>
                   </div>
               )}
 
@@ -399,7 +399,7 @@ export const MessageItem = React.memo(
                   <div>
                     <div
                         className={cn(
-                            "rounded-sm py-3 flex flex-col",
+                            "rounded-sm  flex flex-col",
                             "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
                         )}
                         style={{ wordBreak: "break-word" }}
@@ -407,7 +407,7 @@ export const MessageItem = React.memo(
                       <p className="text-sm leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
                       <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
                     </div>
-                    <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
+                    <div className="mt-6 ml-auto">{renderVersionOptions()}</div>
                   </div>
               )}
 
@@ -438,7 +438,7 @@ export const MessageItem = React.memo(
               )}
 
               {message.specialists && message.specialists.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ml-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 max-w-4xl">
                     {message.specialists.map((specialist) => (
                         <InstagramSpecialistCard
                             key={specialist.id}
@@ -451,7 +451,7 @@ export const MessageItem = React.memo(
               )}
 
               {message.services && message.services.length > 0 && (
-                  <div className="mt-3 space-y-3 flex justify-end justify-items-end">
+                  <div className="mt-3 flex justify-end justify-items-end my-6">
                     <div className="grid grid-cols-1 gap-6">
                       {message.services.map((service: Service) => (
                           <InstagramServiceCard
@@ -483,22 +483,21 @@ export const MessageItem = React.memo(
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
                       </div>
                       <BookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
-                      <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
                       <div/>
                     </div>
                 )
             )}
 
             {message.footerContent && (isAssistant || isAI) && !isUser && (
-                <div className={cn("mt-3 text-neutral-700")}>
-                  <p className="text-sm leading-relaxed my-1.5">{message.footerContent}</p>
+                <div className={cn("text-neutral-700 mb-2")}>
+                  <p className="text-sm leading-relaxed">{message.footerContent}</p>
                 </div>
             )}
 
             {isAssistant && !isUser && (
                 <div
                     className={cn(
-                        "border-t border-gray-200 w-full ",
+                        "border-t border  border-gray-200 w-full ",
                         message.aiMessageType === "service" && "border-violet-600",
                         message.aiMessageType === "warning" && "border-pink-500",
                         message.aiMessageType === "accept-policy" && "border-violet-600",
@@ -526,51 +525,21 @@ export const MessageItem = React.memo(
                 </div>
             )}
 
-            <div className="flex justify-between pt-2 w-full">
-              {message.aiMessageType === "service" && (
+            <div className="flex justify-between w-full">
+              {message.aiMessageType === "service" ? (
                   // Service-specific buttons
-                  <div className="flex flex-col w-full pt-2">
+                  <div className="flex flex-col w-full mt-2 mb-3">
                     {
                       // TODO
                     }
                     <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
                   </div>
-              )}
-
-              {aiMessageType === "info" && (
-                  // Regular action buttons
-                  <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
-                    {isAI && isAssistant && (
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => onRegenerate(message)}
-                            className="rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                        >
-                          <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                        </motion.button>
-                    )}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => onShare(message)}
-                        className="p-1.5 rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                        title="Share message"
-                    >
-                      <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    </motion.button>
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleCopyMessage}
-                        className="rounded-sm hover:bg-violet-50 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                        title="Copy message"
-                    >
-                      <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                    </motion.button>
-                  </div>
-              )}
+              ) : isUser ? (<button className="ml-auto mt-2 w-3 h-3 mb-1 mr-2">
+                <Edit size={12} className="text-neutral-700 "/>
+              </button>) : (<div className={"h-[38px]"}/>)
+              }
             </div>
+
           </div>
         </div>
       </div>

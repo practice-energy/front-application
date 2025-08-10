@@ -106,7 +106,6 @@ export default function SearchPage() {
 
     if (lastMessage.type === "user" && lastHandledMessageId.current !== lastMessage.id) {
       lastHandledMessageId.current = lastMessage.id
-      setIsLoading(true)
 
       setTimeout(() => {
         const numSpecialists = 2
@@ -117,6 +116,8 @@ export default function SearchPage() {
           content: `Вот результаты поиска по запросу "${lastMessage.content}". Я нашел ${numSpecialists} специалистов, которые могут помочь вам.`,
           timestamp: Date.now(),
           specialists: selectedSpecialists,
+          footerContent: "Если вам нужны дополнительные варианты или уточнения, просто напишите мне!",
+          aiMessageType: Date.now() % 2 > 0 ? "service" : "info",
         }
 
         const updatedChat = addMessageToChat(currentChat.id, assistantMessage)
@@ -125,7 +126,6 @@ export default function SearchPage() {
           setCurrentChat(updatedChat)
         }
 
-        setIsLoading(false)
       }, 1500)
     }
   }, [currentChat, addMessageToChat])
@@ -428,14 +428,13 @@ export default function SearchPage() {
             isAuthenticated={isAuthenticated}
           />
 
-          <div className="w-full h-full overflow-y-auto pt-20 px-4 pb-16 md:pr-40 items-center z-0">
-            <div className={cn("w-full", isMobile ? "h-12" : "h-24")} />
-            {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+          <div className="w-full h-full overflow-y-auto px-4 pb-16 md:pr-40 items-center z-0">
+            <div className={cn("w-full h-12")} />
+            {currentChat && currentChat.messages.length === 0 ? (
               <ChatEmptyState />
             ) : (
               <MessageList
                 chat={currentChat}
-                isLoading={isLoading}
                 onSpecialistClick={handleSpecialistClick}
                 onServiceClick={handleServiceClick}
                 onShare={handleShare}
@@ -479,14 +478,13 @@ export default function SearchPage() {
               right: "0",
             }}
           >
-            <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-[216px] items-center z-0">
-              <div className="h-24" />
-              {currentChat && currentChat.messages.length === 0 && !isLoading ? (
+            <div className="w-full h-full overflow-y-auto pb-32 px-4 pr-[216px] items-center z-0">
+              <div className={cn("w-full h-20")} />
+              {currentChat && currentChat.messages.length === 0 ? (
                 <ChatEmptyState />
               ) : (
                 <MessageList
                   chat={currentChat}
-                  isLoading={isLoading}
                   onSpecialistClick={handleSpecialistClick}
                   onServiceClick={handleServiceClick}
                   onShare={handleShare}
@@ -506,9 +504,9 @@ export default function SearchPage() {
       )}
 
       <div
-          className="fixed bottom-0 left-0 right-0 flex justify-center"
+          className="fixed bottom-0 left-[458px] flex justify-center w-[720px] "
       >
-        <div className="w-full max-w-4xl px-4 pb-4 pt-4">
+        <div className="w-full pb-4 pt-4">
           {!isMobile && (
               <Mufi
                   onSearch={handleSearch}

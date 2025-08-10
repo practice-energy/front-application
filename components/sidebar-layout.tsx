@@ -36,32 +36,6 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
 
   const showHeader = shouldShowHeader()
 
-  // Update body margin when sidebar state changes
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      // Используем custom event для уведомления компонентов о изменении состояния сайдбара
-      window.dispatchEvent(
-        new CustomEvent("sidebarToggle", {
-          detail: { isCollapsed, width: isCollapsed ? 0 : 400 },
-        }),
-      )
-
-      // Отложенная установка стилей для лучшей синхронизации рендеринга
-      const applyStyles = () => {
-        const sidebarWidth = window.innerWidth < 768 ? "0" : "400px"
-        document.body.style.marginLeft = isAuthenticated && !isCollapsed ? sidebarWidth : "0"
-        document.body.style.transition = "margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1)"
-      }
-
-      requestAnimationFrame(applyStyles)
-    }
-    return () => {
-      if (typeof document !== "undefined") {
-        document.body.style.marginLeft = "0"
-      }
-    }
-  }, [isAuthenticated, isCollapsed])
-
   return (
     <div className="min-h-screen">
       {showHeader && <Header />}

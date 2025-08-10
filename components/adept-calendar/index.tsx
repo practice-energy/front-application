@@ -37,7 +37,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
             const offset = -new Date().getTimezoneOffset() / 60
             return `GMT${offset >= 0 ? '+' : ''}${offset}`
         } catch (e) {
-            return "GMT+0" // fallback
+            return "GMT+3" // fallback
         }
     }
 

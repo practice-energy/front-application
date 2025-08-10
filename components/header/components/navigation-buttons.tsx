@@ -73,7 +73,7 @@ export function NavigationButtons({ isAuthenticated, isBecomeSpecialist, hat, ro
       {/*    disabled={true}*/}
       {/*/>)}*/}
 
-      {!isBecomeSpecialist && (<IconButton icon={SettingsIcon} onClick={() => {}} disabled={false} />)}
+      {/*{!isBecomeSpecialist && (<IconButton icon={SettingsIcon} onClick={() => {}} disabled={false} />)}*/}
 
       {/* User likes icon */}
       {!isBecomeSpecialist && hat === "adept" && (

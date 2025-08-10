@@ -264,7 +264,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
             ref={containerRef}
             data-animating={isAnimating ? "true" : "false"}
             style={{
-              zIndex: 1000,
+              zIndex: 10000,
             }}
             className="flex flex-col items-center"
         >
@@ -278,8 +278,8 @@ export const Mufi = React.memo(function DesktopSearchBar({
           >
             {/* On-page messages display */}
             {isOnPage && onPageMessages.length > 0 && (
-                <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
-                  <div className="p-4">
+                <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-active max-h-96 overflow-y-auto backdrop-blur-sm ">
+                  <div className="py-4">
                     {onPageMessages.map((msg) => {
                       if (msg.type === "user") {
                         return (<div key={msg.id} className={cn("flex justify-end")}>
@@ -318,7 +318,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
           <div className="flex flex-row w-full gap-1.5">
             <div
                 className={cn(
-                    "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-sm shadow-violet-500/10",
+                    "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-active",
                     "bg-opacity-80 shadow-md shadow-violet-500/10",
                     "transition-all duration-500 ease-in-out", // Добавляем плавный переход для всех свойств
                     isAccepted ? "border-violet-600" : "border-violet-200",
@@ -510,10 +510,9 @@ export const Mufi = React.memo(function DesktopSearchBar({
 
         <div
             className={cn(
-                "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-md shadow-violet-500/10",
+                "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-active",
                 "transition-all duration-500 ease-in-out", // Добавляем плавный переход для всех свойств
-                isAccepted ? "border-violet-600" : "border-violet-200",
-                (message.trim() || isFocused || uploadedFiles.length > 0) ? "bg-white" : "bg-violet-50"
+                (message.trim() || isFocused || uploadedFiles.length > 0) ? "bg-white shadow-custom" : "bg-violet-50"
             )}
         >
           <div
@@ -609,7 +608,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     type="button"
                     onClick={handleContinue}
                     className={cn(
-                      "h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
+                      "h-9 w-9 items-center justify-center shadow-custom rounded-sm bg-teal-400 hover:bg-teal-500 text-white font-medium",
                       canAccept ? "" : "cursor-not-allowed opacity-50",
                     )}
                   >
@@ -619,7 +618,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                   <button
                     type="button"
                     onClick={handleContinue}
-                    className="h-9 w-9 items-center justify-center shadow-sm rounded-sm bg-neutral-900 text-white font-medium"
+                    className="h-9 w-9 items-center justify-center  shadow-custom rounded-sm bg-neutral-900 text-white font-medium"
                   >
                     <IconPractice width={25} height={22} className={"text-white mx-auto"} />
                   </button>
@@ -627,7 +626,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
+                    className={`h-9 w-9 p-0  shadow-custom rounded-sm items-center justify-center flex ${
                       canSubmit
                         ? "bg-violet-600 hover:bg-violet-700 text-white"
                         : "bg-violet-200  text-white cursor-not-allowed"

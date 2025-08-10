@@ -33,7 +33,7 @@ export function InstagramSpecialistCard({
                                         }: InstagramSpecialistCardProps) {
   const router = useRouter()
   const { isLiked, toggleLike } = useLikes()
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [isFlipped, setIsFlipped] = useState(true)
   const [copied, setCopied] = useState(false)
 
   const liked = isLiked(specialist.id)
@@ -178,6 +178,7 @@ export function InstagramSpecialistCard({
                       copied={copied}
                       onCopyLink={handleCopyLink}
                       onShare={handleSharePlatform}
+                      onClick={onClick}
                   />
                 </div>
               </div>
@@ -188,14 +189,14 @@ export function InstagramSpecialistCard({
         {/* Action Buttons - справа от карточки */}
         {showActionButtons && (
             <div className={cn(
-                "flex flex-col gap-3 pl-8",
+                "flex flex-col gap-3 pl-8 pt-1.5",
             )}>
               {/* Star Button */}
               <button
                   type="button"
                   onClick={handleLikeClick}
                   className={`
-              rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-custom aspect-square p-0 border-none 
+              rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-300 shadow-custom aspect-square p-0 border-none 
               ${
                       liked
                           ? "bg-violet-600  hover:shadow-active text-white"
@@ -218,7 +219,7 @@ export function InstagramSpecialistCard({
                   className="rounded-sm h-9 w-9 flex items-center justify-center bg-white shadow-custom hover:shadow-active transition-colors aspect-square duration-200 text-neutral-700"
                   title="Написать специалисту"
               >
-                <MessageSquareReplyIcon size={24} />
+                <MessageSquareReplyIcon size={24} className="transform -scale-x-100"/>
               </button>
 
               {/* Share/Eye Button */}

@@ -47,10 +47,6 @@ export function Header() {
 
   const { showProfileMenu, setShowProfileMenu, profileMenuRef } = useHeaderState()
 
-  const shouldShowSidebar = useMemo(() => {
-    return isAuthenticated
-  }, [isAuthenticated])
-
   const isSpecialist = useMemo(() => {
     return user?.isSpecialist || false
   }, [user?.isSpecialist])
@@ -71,10 +67,6 @@ export function Header() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [profileMenuRef, setShowProfileMenu])
-
-  const handleCalendarClick = () => {
-    router.push("/calendar")
-  }
 
   const handleLogout = () => {
     logout()
@@ -153,7 +145,7 @@ export function Header() {
   const isBecomeSpecialist = pathname === `/search/${becomeSpecialistState.chatId}`
 
   return (
-    <div className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
+    <header className="fixed top-0 h-[66px] w-full z-30 bg-white/70">
       {/* Кнопка сайдбара - фиксированная позиция */}
       <div
           className="items-center ml-[360px] gap-3 flex flex-row h-full justify-start "
@@ -164,8 +156,8 @@ export function Header() {
         <IconButton
             onClick={handleOpenSidebar}
             className={cn(
-                "rounded-sm hover:bg-none border border-gray-200  w-[30px] h-[30px] items-center justify-center ",
-                !isCollapsed && "opacity-0 pointer-events-none"
+                "rounded-sm hover:bg-none border border-gray-200  w-[30px] h-[30px] items-center justify-center  transition-all duration-300 ease-in-out",
+                // !isCollapsed && "opacity-0 pointer-events-none"
                 )}
             icon={PanelRightClose}
         />
@@ -279,6 +271,6 @@ export function Header() {
           {!isBecomeSpecialist && (<IconButton icon={SlidersVerticalIcon} onClick={() => {}} disabled={false} />)}
         </div>
       </div>
-    </div>
+    </header>
   )
 }
