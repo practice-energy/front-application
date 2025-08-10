@@ -38,7 +38,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
   onSearch,
   placeholder = "Alura",
   chatTitle = "Alura",
-  showPractice = false,
+  showPractice = true,
   disableFileApply = true,
   mode = "input",
   onContinue,

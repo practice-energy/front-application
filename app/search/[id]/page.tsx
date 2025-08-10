@@ -456,7 +456,6 @@ export default function SearchPage() {
                 onSearch={handleSearch}
                 showHeading={false}
                 dynamicWidth={false}
-                showPractice={currentChat?.isAI === true}
                 disableFileApply={true}
                 placeholder={currentChat?.title || "Alura"}
                 onCancelReply={() => {}}

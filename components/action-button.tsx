@@ -19,7 +19,7 @@ export function ActionButton({
                              }: ActionButtonProps) {
     // Стили для кнопок
     const buttonStyles = {
-        regenerate: "bg-violet-600 hover:bg-violet-700 transform -scale-x-100",
+        regenerate: "bg-violet-600 hover:bg-violet-700 transform -scale-y-100 -scale-x-100",
         confirm: "bg-teal-400 hover:bg-teal-500",
         burn: "bg-pink-500 hover:bg-pink-600",
         practice: "bg-neutral-900 hover:bg-neutral-800",
