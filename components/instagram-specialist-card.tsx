@@ -33,7 +33,7 @@ export function InstagramSpecialistCard({
                                         }: InstagramSpecialistCardProps) {
   const router = useRouter()
   const { isLiked, toggleLike } = useLikes()
-  const [isFlipped, setIsFlipped] = useState(true)
+  const [isFlipped, setIsFlipped] = useState(false)
   const [copied, setCopied] = useState(false)
 
   const liked = isLiked(specialist.id)
