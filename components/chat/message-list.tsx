@@ -13,6 +13,7 @@ interface MessageListProps {
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
   onVersionAnswer: (questionId: string, answer: number) => void
+  isMobile: boolean
 }
 
 export function MessageList({
@@ -26,6 +27,7 @@ export function MessageList({
   onPolicyAcceptance,
   onPersonalityAnswer,
   onVersionAnswer,
+  isMobile,
 }: MessageListProps) {
   if (!chat) return null
 
@@ -45,6 +47,7 @@ export function MessageList({
           onPolicyAcceptance={onPolicyAcceptance}
           onPersonalityAnswer={onPersonalityAnswer}
           onVersionAnswer={onVersionAnswer}
+          isMobile={isMobile}
         />
       ))}
     </div>

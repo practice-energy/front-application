@@ -428,7 +428,7 @@ export default function SearchPage() {
             isAuthenticated={isAuthenticated}
           />
 
-          <div className="w-full h-full overflow-y-auto px-4 pb-16 md:pr-40 items-center z-0">
+          <div className="w-full h-full overflow-y-auto px-2 pb-16 items-center z-0">
             <div className={cn("w-full h-12")} />
             {currentChat && currentChat.messages.length === 0 ? (
               <ChatEmptyState />
@@ -444,6 +444,7 @@ export default function SearchPage() {
                 onPolicyAcceptance={handlePolicyAcceptance}
                 onPersonalityAnswer={handlePersonalityAnswer}
                 onVersionAnswer={handleVersionAnswer}
+                isMobile={isMobile}
               />
             )}
             <div
@@ -493,6 +494,7 @@ export default function SearchPage() {
                   onPolicyAcceptance={handlePolicyAcceptance}
                   onPersonalityAnswer={handlePersonalityAnswer}
                   onVersionAnswer={handleVersionAnswer}
+                  isMobile={isMobile}
                 />
               )}
               <div className="h-16" />

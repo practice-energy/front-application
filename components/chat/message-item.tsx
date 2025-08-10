@@ -36,6 +36,7 @@ interface MessageItemProps {
   onPolicyAcceptance?: (accepted: boolean) => void
   onPersonalityAnswer?: (questionId: string, answer: string) => void
   onVersionAnswer: (questionId: string, answer: number) => void
+  isMobile: boolean
 }
 
 export const MessageItem = React.memo(
@@ -52,12 +53,12 @@ export const MessageItem = React.memo(
     onPolicyAcceptance,
     onPersonalityAnswer,
     onVersionAnswer,
+    isMobile,
   }: MessageItemProps) => {
     const router = useRouter()
     const isUser = message.type === "user"
     const isAssistant = message.type === "assistant" || message.type === "become-specialist-drops"
     const isSpecialist = message.type === "specialist"
-    const isMobile = useIsMobile()
 
     const {
       state: becomeSpecialistState,
@@ -319,9 +320,10 @@ export const MessageItem = React.memo(
       >
         <div className={cn(
             "flex w-full",
-            isUser ? "pl-12" : "pr-12",
+            !isMobile && (isUser  ? "pl-12" : "pr-12"),
         )}>
-          <div className={`flex flex-col ${isUser ? "items-end " : "items-start "} w-full ${!isMobile ? "max-w-full" : "mr-4"}`}>
+          <div className={`flex flex-col ${isUser ? "items-end " : "items-start"} w-full ${!isMobile && "max-w-full"}
+          `}>
             <div className="flex">
               {!isUser && (
                   <div className={cn(
@@ -428,7 +430,7 @@ export const MessageItem = React.memo(
                             rel="noopener noreferrer"
                             download={file.name}
                             className={cn(
-                                "inline-flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-sm",
+                                "inline-flex items-center gap-2 p-2 bg-gray-100 hover:bg-gray-200  transition-colors rounded-sm",
                                 isUser ? "justify-end" : "justify-start",
                             )}
                         >
