@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <body className={`font-sans bg-theme-light-bg text-gray-900 `}>
+      <body className={`font-sans bg-theme-light-bg text-neutral-900`}>
             <AuthProvider>
               <SidebarProvider>
                 <SidebarLayout>{children}</SidebarLayout>
