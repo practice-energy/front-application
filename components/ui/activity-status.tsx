@@ -56,8 +56,8 @@ export const ActivityStatus = React.memo(({
     const currentStatus = statusConfig[status || "undefined"];
 
     return (
-        <div className={cn("flex items-center text-accent gap-1 h-5", className)}>
-            {showTitle && (<span className={cn(" text-neutral-500 items-center whitespace-nowrap h-5", textClassName)}>
+        <div className={cn("flex items-center text-accent gap-1 h-[18px]", className)}>
+            {showTitle && (<span className={cn(" text-neutral-500 items-center whitespace-nowrap h-[18px]", textClassName)}>
         {currentStatus.text}
       </span>)}
             {currentStatus.dotClass && (

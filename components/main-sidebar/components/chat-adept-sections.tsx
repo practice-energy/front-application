@@ -60,23 +60,26 @@ export const ChatsSections = ({
             {sections.map(
                 (section) => {
                     return (
-                        <div key={section.key} className="px-1">
-                            <SectionHeader
-                                title={section.title}
-                                sectionKey={section.key}
-                                count={section.chats.length}
-                                sectionVisibility={sectionVisibility}
-                                toggleSection={toggleSection}
-                                isCollapsed={isCollapsed}
-                                isMobile={isMobile}
-                                icon={section.icon}
-                                iconStyle={section.iconStyle}
-                            />
+                        <div key={section.key}>
+                            <div className="px-1.5">
+                                <SectionHeader
+                                    title={section.title}
+                                    sectionKey={section.key}
+                                    count={section.chats.length}
+                                    sectionVisibility={sectionVisibility}
+                                    toggleSection={toggleSection}
+                                    isCollapsed={isCollapsed}
+                                    isMobile={isMobile}
+                                    icon={section.icon}
+                                    iconStyle={section.iconStyle}
+                                    toggleStyle=""
+                                />
+                            </div>
                             <SectionContent
                                 sectionKey={section.key}
                                 sectionVisibility={sectionVisibility}
                             >
-                                <div className="gap-1">
+                                <div className="gap-1.5 flex flex-col">
                                     {section.chats.map((chat) => (
                                         <ChatItem
                                             key={chat.id}
@@ -89,6 +92,7 @@ export const ChatsSections = ({
                                         />
                                     ))}
                                 </div>
+                                {section.chats.length > 0 &&(<div className="w-full h-1.5"/>)}
                             </SectionContent>
                         </div>
                     )

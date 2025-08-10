@@ -3,13 +3,22 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {Share, Reply, MapPinIcon as MapPinHouse, Eye, MapPinHouseIcon} from 'lucide-react'
+import {
+  Share,
+  Reply,
+  MapPinIcon as MapPinHouse,
+  Eye,
+  MapPinHouseIcon,
+  MessageSquareReplyIcon,
+  RefreshCcw
+} from 'lucide-react'
 import { useLikes } from "@/hooks/use-likes"
 import { PentagramIcon } from "@/components/icons/icon-pentagram"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { SpecialistFlipShareCard } from "@/components/specialist/specialist-flip-share-card"
 import { Specialist } from "@/types/specialist"
 import { cn } from "@/lib/utils"
+import {PracticePlaceholder} from "@/components/practice-placeholder";
 
 interface InstagramSpecialistCardProps {
   specialist: Specialist
@@ -98,7 +107,7 @@ export function InstagramSpecialistCard({
               {/* Передняя сторона карточки */}
               <div
                   className={cn(
-                      "bg-colors-custom-specialistCardBg w-full rounded-sm shadow-md shadow-violet-50 hover:shadow-violet-50 overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200",
+                      "bg-colors-custom-specialistCardBg w-full rounded-sm shadow-custom hover:shadow-active overflow-hidden cursor-pointer transition-all duration-200",
                       "backface-hidden"
                   )}
                   style={{ backfaceVisibility: 'hidden' }}
@@ -106,43 +115,46 @@ export function InstagramSpecialistCard({
               >
                 {/* Image Container with 4:5 aspect ratio */}
                 <div className="relative overflow-hidden pt-[125%]"> {/* 5/4 = 1.25 = 125% */}
-                  <img
-                      src={specialist.avatar || "/placeholder.svg?height=300&width=300"}
+                  {specialist.avatar !== "" ? ( <img
+                      src={specialist.avatar}
                       alt={specialist.name}
                       className="absolute top-0 left-0 w-full h-full object-cover"
-                  />
+                  />) : (<PracticePlaceholder
+                      width={300}
+                      height={375}
+                      className="absolute top-0 left-0 w-full h-full object-cover"
+                  />)}
                 </div>
 
                 <div className="px-2 pt-3.5 max-h-[158px] w-full border-gray-100">
                   <div className="flex gap-3">
                     <div className="flex-1 overflow-hidden">
-                      <p className="font-bold text-base text-gray-900 dark:text-white line-clamp-1">
+                      <p className="font-bold text-base text-neutral-700 line-clamp-1">
                         {specialist.name}
                       </p>
-                      <p className="text-neutral-900 opacity-80 leading-relaxed line-clamp-2 pt-2" style={{ minHeight: 'calc(2 * 1rem * 1.725)' }}>
+                      <p className="text-neutral-700 leading-relaxed line-clamp-2 pt-2" style={{ minHeight: 'calc(2 * 1rem * 1.725)' }}>
                         {specialist.title}
                       </p>
                     </div>
 
-                    {/* Правая колонка - метрики (55x55) */}
-                    <div className="w-[55px] h-[55px] flex flex-col items-start justify-center font-bold text-sm gap-[11px] mr-2 pt-1.5">
+                    <div className="w-min-[76px] h-[92px] flex flex-col items-start ml-auto font-bold text-base gap-2 bg-colors-custom-specialistCardStatsBg/80 px-1 py-1.5 rounded-sm">
                       {/* Блок лайков */}
-                      <div className="flex items-center gap-1 text-violet-600">
-                        <PentagramIcon size={20} />
-                        {specialist.likes}
+                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBg flex-1 w-full rounded-sm text-violet-600 justify-between shadow-custom-xs">
+                        <PentagramIcon size={24} />
+                        <p>{specialist.likes}</p>
                       </div>
 
                       {/* Блок практик */}
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center pl-[5px] pr-1 bg-colors-custom-specialistCardStatItemBg flex-1 w-full rounded-sm gap-1 justify-between shadow-custom-xs">
                         <IconPractice
-                            width={20}
-                            height={18}
+                            width={22}
+                            height={20}
                         />
                         {specialist.practices}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-left mt-[28px] text-neutral-700 opacity-80 gap-1.5">
+                  <div className="flex items-left mt-[20px] pb-2 text-neutral-700 gap-1.5">
                     <MapPinHouseIcon
                         width={18}
                         height={18}
@@ -183,16 +195,15 @@ export function InstagramSpecialistCard({
                   type="button"
                   onClick={handleLikeClick}
                   className={`
-              rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
+              rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-custom aspect-square p-0 border-none 
               ${
                       liked
-                          ? "bg-violet-600 hover:bg-violet-700 text-white"
-                          : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
+                          ? "bg-violet-600  hover:shadow-active text-white"
+                          : "bg-white hover:shadow-active  text-neutral-700"
                   }
-              active:bg-violet-600 dark:active:bg-violet-600
-              active:text-white dark:active:text-white
-              active:border-violet-600 dark:active:border-violet-600
-              text-black dark:text-white
+              active:bg-violet-600 active:hover:shadow-active
+              active:text-white 
+              active:border-violet-600 
               focus:outline-none
             `}
                   title="Сохранить в избранное"
@@ -204,10 +215,10 @@ export function InstagramSpecialistCard({
               <button
                   type="button"
                   onClick={handleReply}
-                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white hover:bg-violet-50 shadow-sm transition-colors aspect-square duration-200 text-gray-700 opacity-80"
+                  className="rounded-sm h-9 w-9 flex items-center justify-center bg-white shadow-custom hover:shadow-active transition-colors aspect-square duration-200 text-neutral-700"
                   title="Написать специалисту"
               >
-                <Reply size={24} />
+                <MessageSquareReplyIcon size={24} />
               </button>
 
               {/* Share/Eye Button */}
@@ -215,14 +226,14 @@ export function InstagramSpecialistCard({
                   type="button"
                   onClick={handleShare}
                   className={cn(
-                      "rounded-sm h-9 w-9 flex items-center justify-center shadow-sm transition-colors aspect-square duration-200",
+                      "rounded-sm h-9 w-9 flex items-center justify-center shadow-custom hover:shadow-active transition-colors aspect-square duration-200",
                       isFlipped
-                          ? "bg-violet-600 hover:bg-violet-700 text-white"
-                          : "bg-white hover:bg-violet-50 text-gray-700 opacity-80"
+                          ? "bg-violet-600  text-white"
+                          : "bg-white  text-neutral-700"
                   )}
                   title={isFlipped ? "Вернуться к карточке" : "Поделиться"}
               >
-                {isFlipped ? <Eye size={24} /> : <Share size={24} />}
+                {isFlipped ? <Eye size={24} /> : <RefreshCcw size={24} />}
               </button>
             </div>
         )}

@@ -108,8 +108,39 @@ export default function HomePage() {
     router.push(`/search/${newChatId}`)
   }
 
+  if (isAuthenticated) {
+    return (<div className="bg-white">
+      {(isAuthenticated || transitioning) && (
+          <div className={`flex items-center h-screen justify-center flex-1`}>
+            <IconPractice
+                width={160}
+                height={160}
+                className={cn(
+                    "mx-auto flex",
+                  "rounded-sm object-cover text-neutral-900",
+                  "block", // Убедимся, что это блочный элемент
+                )}
+            />
+          </div>
+      )}
+
+      <div className={cn(
+          isMobile ? "fixed bottom-2 px-1 w-full" : "fixed bottom-0 items-center w-[800px] left-[calc(50%-400px)]",
+      )}>
+        <Mufi
+            onSearch={handleSearch}
+            showPractice={true}
+            isOnPage={!isAuthenticated}
+            disableFileApply={true}
+            onPushOnPage={handlePushOnPage}
+            isMobile={isMobile}
+        />
+      </div>
+    </div>)
+  }
+
   return (
-      <div className="bg-white transition-all duration-300 min-h-screen flex flex-col">
+      <div className="transition-all duration-300 min-h-screen flex flex-col">
         {isCollapsed && isMobile && isAuthenticated && (
             <MainMobileHeader
                 user={user}

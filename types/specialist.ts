@@ -19,4 +19,5 @@ export interface Specialist {
     skills: string[]
     likes: number
     isLiked?:boolean
+    rate5?: number
 }

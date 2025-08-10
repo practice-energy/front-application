@@ -317,257 +317,260 @@ export const MessageItem = React.memo(
         id={`message-${message.id}`}
         className={`flex ${isUser ? "justify-end" : "justify-start"} transition-all duration-500`}
       >
-        <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} w-full ${!isMobile ? "max-w-4xl" : "mr-4"}`}>
-          <div className="flex mb-1">
-            {!isUser && (
-              <div className="flex ml-1">
-                <button
-                  className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
-                  onClick={handleViewSpecialistProfile}
-                  aria-label={isAssistant ? "" : `View ${message.type} profile`}
-                  title={isAssistant ? "Alura" : "View profile"}
-                >
-                  {isAssistant ? (
-                    <IconAlura width={36} height={36} className="rounded-sm active:bg-none" />
-                  ) : (
-                    <Image
-                      src={isSpecialist && specialist ? specialist.avatar : "/placeholder.jpg"}
-                      className={cn("rounded-sm hover:bg-violet-50")}
-                      alt={""}
-                      width={36}
-                      height={36}
-                    />
-                  )}
-                </button>
-                <div className="flex flex-col ml-3 justify-end">
-                  <div className="text-black font-sans">{isAssistant ? "Alura" : specialist?.name}</div>
-                  <div className="text-accent text-gray-500">
-                    {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        <div className={cn(
+            "flex w-full",
+            isUser ? "pl-12" : "pr-12",
+        )}>
+          <div className={`flex flex-col ${isUser ? "items-end " : "items-start "} w-full ${!isMobile ? "max-w-full" : "mr-4"}`}>
+            <div className="flex mb-1">
+              {!isUser && (
+                  <div className="flex flex-row justify-center ml-1">
+                    <button
+                        className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
+                        onClick={handleViewSpecialistProfile}
+                        aria-label={isAssistant ? "" : `View ${message.type} profile`}
+                        title={isAssistant ? "Alura" : "View profile"}
+                    >
+                      {isAssistant ? (
+                          <IconAlura width={36} height={36} className="rounded-sm active:bg-none" />
+                      ) : (
+                          <Image
+                              src={isSpecialist && specialist ? specialist.avatar : "/placeholder.jpg"}
+                              className={cn("rounded-sm hover:bg-violet-50")}
+                              alt={""}
+                              width={36}
+                              height={36}
+                          />
+                      )}
+                    </button>
+                    <div className="flex flex-col ml-3 h-[40px] justify-between text-neutral-700">
+                      <div>{isAssistant ? "Alura" : specialist?.name}</div>
+                      <div className="text-sm text-neutral-500 font-semibold">
+                        {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          <div className="flex-1 min-w-0 w-full">
-            {message.content && (
-              <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
-                <div
-                  className={cn(
-                    `rounded-sm py-3 ${
-                      isUser
-                        ? "bg-violet-50 shadow-md px-3 py-3 gap-3 "
-                        : "text-neutral-700  rounded-Date shadow-md shadow-violet-50 px-3 gap-3"
-                    }`,
-                    isAssistant ? "border-none shadow-none px-0 bg-none" : "bg-white",
-                  )}
-                  style={{ wordBreak: "break-word" }}
-                >
-                  <div className="text-sm leading-relaxed">{message.content}</div>
-                </div>
-              </div>
-            )}
+            <div className="flex-1 min-w-0 w-full">
+              {message.content && (
+                  <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
+                    <div
+                        className={cn(
+                            isAssistant ? "border-none shadow-none bg-none" : "bg-white",
+                            `rounded-sm py-3 px-1.5  ${
+                                isUser
+                                    ? "bg-colors-custom-userMessage py-3 gap-3 "
+                                    : "text-neutral-700  rounded-Date gap-3"
+                            }`,
+                        )}
+                        style={{ wordBreak: "break-word" }}
+                    >
+                      <div className="text-sm leading-relaxed">{message.content}</div>
+                    </div>
+                  </div>
+              )}
 
-            {/* Specialty tags for become-specialist-drops */}
-            {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
-              <div className="mt-4 ml-auto">{renderSpecialtyTags(message.tags)}</div>
-            )}
+              {/* Specialty tags for become-specialist-drops */}
+              {message.aiMessageType === "become-specialist-drops" && message.tags && message.tags.length > 0 && (
+                  <div className="mt-4 ml-auto">{renderSpecialtyTags(message.tags)}</div>
+              )}
 
-            {/* Personality test options for profile-test */}
-            {message.aiMessageType === "profile-test" && message.tags && message.tags.length > 0 && (
-                <div>
+              {/* Personality test options for profile-test */}
+              {message.aiMessageType === "profile-test" && message.tags && message.tags.length > 0 && (
+                  <div>
+                    <div
+                        className={cn(
+                            "rounded-sm py-3 flex flex-col",
+                            "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                        )}
+                        style={{ wordBreak: "break-word" }}
+                    >
+                      <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
+                      <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                    </div>
+                    <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
+                  </div>
+              )}
+
+              {/* Version-specific test options */}
+              {message.aiMessageType === "version-test" && (
+                  <div>
+                    <div
+                        className={cn(
+                            "rounded-sm py-3 flex flex-col",
+                            "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                        )}
+                        style={{ wordBreak: "break-word" }}
+                    >
+                      <p className="text-sm leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
+                      <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                    </div>
+                    <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
+                  </div>
+              )}
+
+              {message.files && message.files.length > 0 && (
                   <div
                       className={cn(
-                          "rounded-sm py-3 flex flex-col",
-                          "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
+                          "space-y-1 mt-2",
+                          isUser ? "flex flex-col items-end" : "inline-flex flex-col items-start",
                       )}
-                      style={{ wordBreak: "break-word" }}
                   >
-                    <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
-                    <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                    {message.files.map((file, index) => (
+                        <a
+                            key={index}
+                            href={URL.createObjectURL(file)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download={file.name}
+                            className={cn(
+                                "inline-flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-sm",
+                                isUser ? "justify-end" : "justify-start",
+                            )}
+                        >
+                          <Paperclip className="w-4 h-4 text-gray-600 dark:text-gray-300 flex-shrink-0" />
+                          <span className="text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
+                        </a>
+                    ))}
                   </div>
-                  <div className="mt-4 ml-auto">{renderPersonalityOptions(message.tags)}</div>
-                </div>
-            )}
-
-            {/* Version-specific test options */}
-            {message.aiMessageType === "version-test" && (
-              <div>
-                <div
-                  className={cn(
-                    "rounded-sm py-3 flex flex-col",
-                    "text-gray-700 font-semibold rounded-Date shadow-violet-50 gap-3 border-none shadow-none px-0 ",
-                  )}
-                  style={{ wordBreak: "break-word" }}
-                >
-                  <p className="text-sm leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
-                  <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
-                </div>
-                <div className="mt-4 ml-auto">{renderVersionOptions()}</div>
-              </div>
-            )}
-
-            {message.files && message.files.length > 0 && (
-              <div
-                className={cn(
-                  "space-y-1 mt-2",
-                  isUser ? "flex flex-col items-end" : "inline-flex flex-col items-start",
-                )}
-              >
-                {message.files.map((file, index) => (
-                  <a
-                    key={index}
-                    href={URL.createObjectURL(file)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download={file.name}
-                    className={cn(
-                      "inline-flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-sm",
-                      isUser ? "justify-end" : "justify-start",
-                    )}
-                  >
-                    <Paperclip className="w-4 h-4 text-gray-600 dark:text-gray-300 flex-shrink-0" />
-                    <span className="text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {message.specialists && message.specialists.length > 0 && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {message.specialists.map((specialist) => (
-                    <InstagramSpecialistCard
-                      key={specialist.id}
-                      specialist={specialist}
-                      onClick={() => onSpecialistClick(specialist.id)}
-                      showActionButtons={true}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {message.services && message.services.length > 0 && (
-              <div className="mt-3 space-y-3 flex justify-end justify-items-end">
-                <div className="grid grid-cols-1 gap-6">
-                  {message.services.map((service: Service) => (
-                    <InstagramServiceCard
-                      key={service.id}
-                      service={service}
-                      onClick={() => onServiceClick(service.id)}
-                      specialistId={service.specialist.id}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {message.bookingTextTitle && (<div className="text-base text-neutral-900 font-semibold">{message.bookingTextTitle}</div>)}
-
-          {message.bookingFrame && (
-              isMobile ? (
-                  <>
-                    <div className="w-full">
-                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
-                    </div>
-                    <MobileBookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
-                    <div/>
-                  </>
-              ) : (
-                  <div className=" relative flex flex-row  pb-3 w-full">
-                    <div className="w-80 flex-shrink-0">
-                      <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
-                    </div>
-                    <BookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
-                    <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-                    <div/>
-                  </div>
-              )
-          )}
-
-          {message.footerContent && (isAssistant || isAI) && !isUser && (
-            <div className={cn("mt-3 text-neutral-700")}>
-              <p className="text-sm leading-relaxed mt-1.5">{message.footerContent}</p>
-            </div>
-          )}
-
-          {isAssistant && !isUser && (
-            <div
-              className={cn(
-                "border-t border-gray-200 mt-2 w-full",
-                message.aiMessageType === "service" && "border-violet-600",
-                message.aiMessageType === "warning" && "border-pink-500",
-                message.aiMessageType === "accept-policy" && "border-violet-600",
-                message.aiMessageType === "become-specialist-drops" && "border-neutral-500",
-                message.aiMessageType === "profile-test" && "border-0",
-                message.aiMessageType === "version-test" && "border-0",
               )}
-            />
-          )}
 
-          {/* Policy acceptance section */}
-          {message.aiMessageType === "become-specialist-drops" && (
-            <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
-              <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
-              <Checkbox
-                id="policy-accept"
-                checked={becomeSpecialistState.policyAccepted}
-                onCheckedChange={handlePolicyChange}
-                disabled={becomeSpecialistState.step > 1}
-                className={cn(
-                  "w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600",
-                  becomeSpecialistState.step > 1 && "opacity-50 cursor-not-allowed",
-                )}
-              />
+              {message.specialists && message.specialists.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ml-1">
+                    {message.specialists.map((specialist) => (
+                        <InstagramSpecialistCard
+                            key={specialist.id}
+                            specialist={specialist}
+                            onClick={() => onSpecialistClick(specialist.id)}
+                            showActionButtons={true}
+                        />
+                    ))}
+                  </div>
+              )}
+
+              {message.services && message.services.length > 0 && (
+                  <div className="mt-3 space-y-3 flex justify-end justify-items-end">
+                    <div className="grid grid-cols-1 gap-6">
+                      {message.services.map((service: Service) => (
+                          <InstagramServiceCard
+                              key={service.id}
+                              service={service}
+                              onClick={() => onServiceClick(service.id)}
+                              specialistId={service.specialist.id}
+                          />
+                      ))}
+                    </div>
+                  </div>
+              )}
             </div>
-          )}
 
-          <div className="flex justify-between pt-2 w-full">
-            {message.aiMessageType === "service" && (
-              // Service-specific buttons
-              <div className="flex flex-col w-full pt-2">
-                {
-                  // TODO
-                }
-                <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
-              </div>
+            {message.bookingTextTitle && (<div className="text-base text-neutral-900 font-semibold">{message.bookingTextTitle}</div>)}
+
+            {message.bookingFrame && (
+                isMobile ? (
+                    <>
+                      <div className="w-full">
+                        <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} isCollapsible={true} />
+                      </div>
+                      <MobileBookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
+                      <div/>
+                    </>
+                ) : (
+                    <div className=" relative flex flex-row  pb-3 w-full">
+                      <div className="w-80 flex-shrink-0">
+                        <CalendarWidget selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+                      </div>
+                      <BookingSection selectedDate={selectedDate} bookingSlots={mockBookingSlots} />
+                      <div className="absolute bottom-2 left-0 right-0 h-2 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
+                      <div/>
+                    </div>
+                )
             )}
 
-            {aiMessageType === "info" && (
-              // Regular action buttons
-              <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
-                {isAI && isAssistant && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => onRegenerate(message)}
-                    className="rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  >
-                    <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                  </motion.button>
-                )}
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => onShare(message)}
-                  className="p-1.5 rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  title="Share message"
-                >
-                  <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleCopyMessage}
-                  className="rounded-sm hover:bg-violet-50 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
-                  title="Copy message"
-                >
-                  <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                </motion.button>
-              </div>
+            {message.footerContent && (isAssistant || isAI) && !isUser && (
+                <div className={cn("mt-3 text-neutral-700")}>
+                  <p className="text-sm leading-relaxed my-1.5">{message.footerContent}</p>
+                </div>
             )}
+
+            {isAssistant && !isUser && (
+                <div
+                    className={cn(
+                        "border-t border-gray-200 w-full ",
+                        message.aiMessageType === "service" && "border-violet-600",
+                        message.aiMessageType === "warning" && "border-pink-500",
+                        message.aiMessageType === "accept-policy" && "border-violet-600",
+                        message.aiMessageType === "become-specialist-drops" && "border-neutral-500",
+                        message.aiMessageType === "profile-test" && "border-0",
+                        message.aiMessageType === "version-test" && "border-0",
+                    )}
+                />
+            )}
+
+            {/* Policy acceptance section */}
+            {message.aiMessageType === "become-specialist-drops" && (
+                <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
+                  <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
+                  <Checkbox
+                      id="policy-accept"
+                      checked={becomeSpecialistState.policyAccepted}
+                      onCheckedChange={handlePolicyChange}
+                      disabled={becomeSpecialistState.step > 1}
+                      className={cn(
+                          "w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600",
+                          becomeSpecialistState.step > 1 && "opacity-50 cursor-not-allowed",
+                      )}
+                  />
+                </div>
+            )}
+
+            <div className="flex justify-between pt-2 w-full">
+              {message.aiMessageType === "service" && (
+                  // Service-specific buttons
+                  <div className="flex flex-col w-full pt-2">
+                    {
+                      // TODO
+                    }
+                    <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
+                  </div>
+              )}
+
+              {aiMessageType === "info" && (
+                  // Regular action buttons
+                  <div className={cn("flex gap-2 text-xs opacity-60 ml-auto", isUser ? "justify-end" : "justify-start")}>
+                    {isAI && isAssistant && (
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => onRegenerate(message)}
+                            className="rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        >
+                          <ArrowPathIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                        </motion.button>
+                    )}
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => onShare(message)}
+                        className="p-1.5 rounded-sm hover:bg-violet-50  dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Share message"
+                    >
+                      <Share className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCopyMessage}
+                        className="rounded-sm hover:bg-violet-50 dark:hover:bg-gray-700 transition-colors duration-200 min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        title="Copy message"
+                    >
+                      <Copy className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    </motion.button>
+                  </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ export function PracticePlaceholder({
     return (
         <div
             className={cn(
-                "bg-colors-neutral-150 rounded-sm flex items-center justify-center",
+                "bg-colors-neutral-150 rounded-sm flex items-center justify-center overflow-hidden",
                 "relative", // Добавляем relative для точного позиционирования
                 className
             )}
@@ -30,7 +30,7 @@ export function PracticePlaceholder({
                     width={iconSize}
                     height={iconSize}
                     className={cn(
-                        "rounded-sm object-cover text-neutral-400",
+                        "rounded-sm object-cover text-neutral-900",
                         "block", // Убедимся, что это блочный элемент
                         iconClassName
                     )}

@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import {Copy, Check, Link, MapPinIcon, MapPinHouseIcon, CopyCheck} from 'lucide-react'
+import {Copy, Check, Link, MapPinIcon, MapPinHouseIcon, CopyCheck, Share} from 'lucide-react'
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Specialist } from "@/types/specialist"
@@ -10,6 +10,7 @@ import { PentagramIcon, TelegramLogoIcon, WhatsappLogoIcon } from "@phosphor-ico
 import { formatCompactNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { IconButton } from "@/components/icon-button"
+import Image from "next/image";
 
 interface SpecialistFlipShareCardProps {
   specialist: Specialist
@@ -25,75 +26,138 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
   ]
 
   return (
-    <div className="bg-practice-pattern rounded-sm shadow-xl border w-[300px] flex flex-col justify-between px-1" style={{ height: 'calc(300px * 1.25 + 158px)' }}>
-      {/* Specialist Preview */}
-      <div className="items-start gap-3 mt-3 bg-white rounded-sm border border-gray-200 p-1.5 flex-shrink-0 flex flex-col">
-          <div className="flex flex-row gap-3">
-              {specialist.avatar ? (
-                  <img
-                      src={specialist.avatar || "/placeholder.svg"}
-                      alt={specialist.name}
-                      className="w-[60px] h-[68px] rounded-sm object-cover"
-                  />
-              ) : (
-                  <PracticePlaceholder width={52} height={60} />
-              )}
-
-              <div className="flex-1 gap-1.5">
-                  <div className="font-medium text-neutral-900 text-sm line-clamp-1">{specialist.name}</div>
-                  <p className="text-xs text-neutral-700/80 line-clamp-2 mt-1.5">{specialist.title}</p>
+      <div
+          className="bg-white relative p-1 border w-[300px] shadow-custom hover:shadow-active overflow-hidden rounded-sm"
+          style={{ height: 'calc(300px * 1.25 + 158px)' }}
+      >
+          <div className="h-9 w-full py-1.5 px-2 bg-white justify-between flex flex-row items-center">
+              <IconPractice width={27} height={24}/>
+              <div className="text-[24px] flex flex-row">
+                  <div className="text-neutral-700">{specialist.rate5 || 0}/</div>
+                  <div className="text-violet-600">5</div>
               </div>
           </div>
+          <div className="bg-colors-custom-specialistCardBg bg-practice-pattern h-full flex flex-col">
+              {/* Specialist Preview */}
+              <div className="items-start gap-3 mt-3 bg-white rounded-sm border border-gray-200 p-1.5 flex-shrink-0 flex flex-col h-[92px]">
+                  <div className="flex flex-row gap-3">
+                      {specialist.avatar ? (
+                          <img
+                              src={specialist.avatar || "/placeholder.svg"}
+                              alt={specialist.name}
+                              className="w-[64px] h-[78px] rounded-sm object-cover"
+                          />
+                      ) : (
+                          <PracticePlaceholder width={64} height={78} className="h-full object-cover overflow-hidden"/>
+                      )}
 
-          <div className="flex items-center text-neutral-700/80 text-sm">
-              <MapPinHouseIcon className="w-4 h-4 mr-1" />
-              <span>{specialist.location}</span>
+                      <div className="flex-1 text-sm">
+                          <div className="font-medium text-neutral-700 line-clamp-2 h-[38px] items-center">{specialist.name}</div>
+                          <p className="text-neutral-700 line-clamp-2">{specialist.title}</p>
+                      </div>
+                  </div>
+              </div>
+
+              {specialist.education.length > 0 ? (
+                  <div className="flex flex-row p-1 bg-white rounded-sm shadow-custom mt-1 py-1.5 px-2">
+                      <div className="flex-1 min-w-0 pr-3">
+                          <div className="font-medium text-neutral-700 line-clamp-1 leading-relaxed">{specialist.education[0].title}</div>
+                          <div className="text-sm text-neutral-700 mt-1 line-clamp-2 leading-relaxed">{specialist.education[0].description}</div>
+                      </div>
+                      <div className="aspect-square flex-shrink-0 bg-colors-neutral-150 rounded-sm border shadow-custom">
+                          {specialist.education[0].certificate ? (
+                              <Image
+                                  src={specialist.education[0].certificate || "/placeholder.svg"}
+                                  alt={`Certificate ${specialist.education[0].title}`}
+                                  width={64}
+                                  height={64}
+                                  className="w-full h-full object-cover rounded-sm"
+                              />
+                          ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-colors-neutral-150 rounded-sm">
+                                  <PracticePlaceholder width={64} height={64} />
+                              </div>
+                          )}
+                      </div>
+                  </div>
+              ) : specialist.certificates.length > 0 && (
+                  <div className="flex flex-row bg-white rounded-sm shadow-custom mt-1 py-1.5 px-2">
+                      <div className="flex-1 min-w-0 pr-3">
+                          <div className="font-medium text-neutral-700 line-clamp-1 leading-relaxed">{specialist.certificates[0].title}</div>
+                          <div className="text-sm text-neutral-700 mt-1 line-clamp-2 leading-relaxed">{specialist.certificates[0].description}</div>
+                      </div>
+                      <div className="aspect-square flex-shrink-0 bg-colors-neutral-150 rounded-sm border shadow-custom">
+                          {specialist.certificates[0].certificate ? (
+                              <Image
+                                  src={specialist.certificates[0].certificate || "/placeholder.svg"}
+                                  alt={`Certificate ${specialist.certificates[0].title}`}
+                                  width={64}
+                                  height={64}
+                                  className="w-full h-full object-cover rounded-sm"
+                              />
+                          ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-colors-neutral-150 rounded-sm">
+                                  <PracticePlaceholder width={64} height={64} />
+                              </div>
+                          )}
+                      </div>
+                  </div>
+              )}
+
+          </div>
+
+          <div className="w-full absolute bottom-0 py-1.5 px-1 bg-white justify-between flex flex-row object-cover flex-1">
+              <div className="flex flex-row justify-between flex-1 ">
+                  <div className="flex flex-col gap-2.5">
+                      <Share size={24} className="text-neutral-700 pl-1"/>
+                      {/* Spacer to push share options to center */}
+                      <div className=" flex items-center justify-center px-1">
+                          {/* Share Options */}
+                          <div className="flex gap-4 items-center justify-center ml-auto">
+                              {shareOptions.map((option) => (
+                                  <motion.div
+                                      key={option.id}
+                                      whileHover={{ scale: 1.02 }}
+                                      whileTap={{ scale: 0.98 }}
+                                      onClick={() => onShare(option.id)}
+                                  >
+                                      <IconButton icon={option.icon} className={option.color} iconClassName="text-neutral-900" />
+                                  </motion.div>
+                              ))}
+                              <motion.div
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onClick={onCopyLink}
+                              >
+                                  {copied ? (
+                                      <IconButton icon={CopyCheck} className="bg-violet-600" iconClassName="text-white flex"/>
+                                  ) : (
+                                      <IconButton icon={Link} className="hover:border-gray-200 flex" />
+                                  )}
+                              </motion.div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 px-2 font-bold">
+                      {/* Блок лайков */}
+                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBgFlip flex-1 w-full rounded-sm text-violet-600 justify-between shadow-custom-xs">
+                          <PentagramIcon size={24} />
+                          <p>{specialist.likes}</p>
+                      </div>
+
+                      {/* Блок практик */}
+                      <div className="flex items-center pl-[5px] pr-1 bg-colors-custom-specialistCardStatItemBgFlip flex-1 w-full rounded-sm gap-1 justify-between shadow-custom-xs">
+                          <IconPractice
+                              width={22}
+                              height={20}
+                          />
+                          {specialist.practices}
+                      </div>
+                  </div>
+
+              </div>
           </div>
       </div>
-
-        <div className="items-start gap-3 mb-3 bg-white rounded-sm border  p-2 flex-shrink-0 flex flex-row ">
-            {/* Spacer to push share options to center */}
-            <div className="flex-1 flex items-center justify-center">
-                <div className="flex-col flex gap-2.5">
-                    <div className="flex flex-row items-center gap-3 w-[64px] h-[28px] px-1 shadow-sm border border-neutral-100 rounded-sm">
-                        <PentagramIcon size={20} className="w-5 h-5 mr-1 text-violet-600" />
-                        <div className="text-violet-600 font-semibold text-xs">{formatCompactNumber(specialist.likes)}</div>
-                    </div>
-                    <div className="flex flex-row items-center gap-3 shadow-sm border border-neutral-100 rounded-sm">
-                        <div className="flex flex-row items-center gap-3 w-[64px] h-[28px] px-1">
-                            <IconPractice className="w-5 h-5 mr-1 text-neutral-900" width={18} height={20} />
-                            <div className="text-neutral-900 font-semibold text-xs">{formatCompactNumber(specialist.likes)}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Share Options */}
-                <div className="flex gap-4 items-center justify-center ml-auto">
-                    {shareOptions.map((option) => (
-                        <motion.div
-                            key={option.id}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => onShare(option.id)}
-                        >
-                            <IconButton icon={option.icon} className={option.color} iconClassName="text-neutral-900" />
-                        </motion.div>
-                    ))}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={onCopyLink}
-                    >
-                        {copied ? (
-                            <IconButton icon={CopyCheck} className="bg-violet-600" iconClassName="text-white flex"/>
-                        ) : (
-                            <IconButton icon={Link} className="hover:border-gray-200 flex" />
-                        )}
-                    </motion.div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-  )
+    )
 }

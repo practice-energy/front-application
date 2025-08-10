@@ -150,20 +150,14 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
 
     return (
         <>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 items-center">
+                {isEditMode && (
+                    <AddEntityButton onClick={handleAddCertificate}/>
+                )}
                 <div className={cn(
-                    "font-semibold text-neutral-900 md:mb-4 line-clamp-1 leading-relaxed",
+                    "font-semibold text-neutral-900 line-clamp-1 leading-relaxed",
                     isMobile ? "text-mobilebase" : "text-base",
                 )}>{title}</div>
-                {isEditMode && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <AddEntityButton onClick={handleAddCertificate}/>
-                    </motion.div>
-                )}
             </div>
             <div className="space-y-3">
                 <AnimatePresence>
@@ -306,8 +300,8 @@ export function Certificates({ title, items, isEditMode, onInputChange, errors, 
                                 ) : (
                                     <div className="flex">
                                         <div className="flex-1 min-w-0 pr-3">
-                                            <div className="font-semibold text-neutral-900 line-clamp-1 leading-relaxed">{item.title}</div>
-                                            <div className="text-sm text-neutral-600 mt-1 line-clamp-2 leading-relaxed">{item.description}</div>
+                                            <div className="font-medium text-neutral-700 line-clamp-1 leading-relaxed">{item.title}</div>
+                                            <div className="text-sm text-neutral-700 mt-1 line-clamp-2 leading-relaxed">{item.description}</div>
                                         </div>
                                         <div className="w-[72px] aspect-square flex-shrink-0 bg-colors-neutral-150 rounded-sm border shadow-md">
                                             {item.certificate ? (

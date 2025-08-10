@@ -60,6 +60,11 @@ const config: Config = {
       backgroundRepeat: {
         "practice-pattern": "repeat", // Повторение по X и Y
       },
+      boxShadow: {
+        'custom': '0px 2px 5px rgba(23, 26, 31, 0.09), 0px 0px 2px rgba(23, 26, 31, 0.12)',
+        'active': '0px 2px 5px rgba(127, 85, 224, 0.3), 0px 0px 2px rgba(127, 85, 224, 0.12)',
+        'custom-xs': '0px 0px 1px rgba(23, 26, 31, 0.07), 0px 0px 2px rgba(23, 26, 31, 0.12)',
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -111,6 +116,10 @@ const config: Config = {
             specialistCardBg: "#fafafb",
             search: "#9095a0",
             searchBg: "#f3f4f6",
+            userMessage: "#d3c9f3",
+            specialistCardStatsBg: "#f3f4f6",
+            specialistCardStatItemBg: "#fdfdfd",
+            specialistCardStatItemBgFlip: "#fafafb",
           }
         },
         sidebar: {

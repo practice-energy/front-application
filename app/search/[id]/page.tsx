@@ -475,11 +475,11 @@ export default function SearchPage() {
           <div
             className="fixed inset-0 flex justify-center overflow-hidden"
             style={{
-              left: "500px",
+              left: "458px",
               right: "0",
             }}
           >
-            <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-40 items-center z-0">
+            <div className="w-full h-full overflow-y-auto pt-20 pb-32 px-4 pr-[216px] items-center z-0">
               <div className="h-24" />
               {currentChat && currentChat.messages.length === 0 && !isLoading ? (
                 <ChatEmptyState />

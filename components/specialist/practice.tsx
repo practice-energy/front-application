@@ -70,6 +70,7 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
     return (
         <div className={cn("w-full ", className)}>
             <div className="flex flex-row gap-2 items-center pb-1">
+                {isEditMode && <AddEntityButton onClick={handleAddService}/>}
                 {(isEditMode || services?.length > 0) && (
                     <div className={cn(
                         "font-semibold text-neutral-900 line-clamp-1 leading-relaxed",
@@ -78,7 +79,6 @@ export function PracticeBlockSection({ services, className, isEditMode, onInputC
                         Практис
                     </div>
                 )}
-                {isEditMode && <AddEntityButton onClick={handleAddService}/>}
             </div>
 
             {(!services || services.length === 0) && (
