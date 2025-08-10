@@ -32,7 +32,7 @@ export function MessageList({
   if (!chat) return null
 
   return (
-    <div className="space-y-6">
+    <div>
       {chat.messages.map((message) => (
         <MessageItem
           key={message.id}
