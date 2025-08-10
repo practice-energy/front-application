@@ -11,6 +11,8 @@ import { formatCompactNumber } from "@/utils/format"
 import { IconPractice } from "@/components/icons/icon-practice"
 import { IconButton } from "@/components/icon-button"
 import Image from "next/image";
+import {IconTelegram} from "@/components/icons/icon-telegram";
+import {IconWhatsapp} from "@/components/icons/icon-whatsapp";
 
 interface SpecialistFlipShareCardProps {
   specialist: Specialist
@@ -22,8 +24,8 @@ interface SpecialistFlipShareCardProps {
 
 export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShare, onClick }: SpecialistFlipShareCardProps) {
   const shareOptions = [
-    { id: "telegram", name: "Telegram", icon: TelegramLogoIcon, color: "flex border border-neutral-100  hover:border  hover:border-gray-200" },
-    { id: "whatsapp", name: "WhatsApp", icon: WhatsappLogoIcon, color: "flex border border-neutral-100  hover:border hover:border-gray-200" },
+    { id: "telegram", name: "Telegram", icon: IconTelegram, color: "flex border border-neutral-100  hover:border  hover:border-gray-200" },
+    { id: "whatsapp", name: "WhatsApp", icon: IconWhatsapp, color: "flex border border-neutral-100  hover:border hover:border-gray-200" },
   ]
 
   return (
