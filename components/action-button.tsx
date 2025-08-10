@@ -19,7 +19,7 @@ export function ActionButton({
                              }: ActionButtonProps) {
     // Стили для кнопок
     const buttonStyles = {
-        regenerate: "bg-violet-600 hover:bg-violet-700",
+        regenerate: "bg-violet-600 hover:bg-violet-700 transform -scale-x-100",
         confirm: "bg-teal-400 hover:bg-teal-500",
         burn: "bg-pink-500 hover:bg-pink-600",
         practice: "bg-neutral-900 hover:bg-neutral-800",
@@ -31,7 +31,7 @@ export function ActionButton({
         confirm: <Check className={`w-6 h-6 text-white ${iconClassName}`} />,
         burn: <Flame className={`w-6 h-6 text-white ${iconClassName}`} />,
         practice: <IconPractice
-            className={`w-6 h-6 text-white ${iconClassName}`}
+            className={`w-6 h-6 transform -scale-x-100 text-white ${iconClassName}`}
             width={25}
             height={22}
         />,

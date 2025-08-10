@@ -215,7 +215,7 @@ export const MessageItem = React.memo(
                 onClick={() => handleSpecialtyTagClick(tag.name, !!tag.subtags?.length)}
                 disabled={isDisabled}
                 className={cn(
-                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "items-center justify-center rounded-sm text-base font-medium transition-colors",
                   "w-[104px] h-[36px] whitespace-nowrap text-neutral-700",
                   becomeSpecialistState.selectedTags.includes(tag.name)
                     ? "bg-violet-50"
@@ -260,7 +260,7 @@ export const MessageItem = React.memo(
                 onClick={() => handlePersonalityAnswer(tag.name)}
                 disabled={isButtonDisabled}
                 className={cn(
-                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "items-center justify-center rounded-sm text-base font-medium transition-colors",
                   "w-full py-2 px-4 text-neutral-700",
                   isSelected
                     ? "bg-violet-100"
@@ -295,7 +295,7 @@ export const MessageItem = React.memo(
                 }}
                 disabled={isDisabled}
                 className={cn(
-                  "items-center justify-center rounded-sm text-sm font-medium transition-colors",
+                  "items-center justify-center rounded-sm text-base font-medium transition-colors",
                   "w-[36px] py-2 text-neutral-700",
                   isSelected
                     ? "bg-violet-100"
@@ -324,11 +324,13 @@ export const MessageItem = React.memo(
           <div className={`flex flex-col ${isUser ? "items-end " : "items-start "} w-full ${!isMobile ? "max-w-full" : "mr-4"}`}>
             <div className="flex">
               {!isUser && (
-                  <div className="flex flex-row justify-center">
+                  <div className={cn(
+                      "flex flex-row justify-center",
+                      !isUser && !isAssistant && "mb-1",
+                  )}>
                     <button
                         className="transition-colors border-none hover:bg-transparent active:bg-none relative rounded-sm self-end"
                         onClick={handleViewSpecialistProfile}
-                        aria-label={isAssistant ? "" : `View ${message.type} profile`}
                         title={isAssistant ? "Alura" : "View profile"}
                     >
                       {isAssistant ? (
@@ -345,7 +347,7 @@ export const MessageItem = React.memo(
                     </button>
                     <div className="flex flex-col ml-3 h-[40px] justify-between text-neutral-700">
                       <div>{isAssistant ? "Alura" : specialist?.name}</div>
-                      <div className="text-sm text-neutral-500 font-semibold">
+                      <div className="text-base text-neutral-500 font-semibold">
                         {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </div>
                     </div>
@@ -367,7 +369,7 @@ export const MessageItem = React.memo(
                         )}
                         style={{ wordBreak: "break-word" }}
                     >
-                      <div className="text-sm leading-relaxed">{message.content}</div>
+                      <div className="text-base leading-relaxed">{message.content}</div>
                     </div>
                   </div>
               )}
@@ -387,8 +389,8 @@ export const MessageItem = React.memo(
                         )}
                         style={{ wordBreak: "break-word" }}
                     >
-                      <p className="text-sm leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
-                      <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                      <p className="text-base leading-relaxed font-semibold">{"1 - " + (message.questionIndex! + 1)}</p>
+                      <p className="text-base leading-relaxed font-semibold">{message.testQuestion}</p>
                     </div>
                     <div className="mt-6 ml-auto">{renderPersonalityOptions(message.tags)}</div>
                   </div>
@@ -404,8 +406,8 @@ export const MessageItem = React.memo(
                         )}
                         style={{ wordBreak: "break-word" }}
                     >
-                      <p className="text-sm leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
-                      <p className="text-sm leading-relaxed font-semibold">{message.testQuestion}</p>
+                      <p className="text-base leading-relaxed font-semibold">{(message.questionIndex! + 5) + " - 14"}</p>
+                      <p className="text-base leading-relaxed font-semibold">{message.testQuestion}</p>
                     </div>
                     <div className="mt-6 ml-auto">{renderVersionOptions()}</div>
                   </div>
@@ -431,7 +433,7 @@ export const MessageItem = React.memo(
                             )}
                         >
                           <Paperclip className="w-4 h-4 text-gray-600 dark:text-gray-300 flex-shrink-0" />
-                          <span className="text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
+                          <span className="text-base text-gray-800 dark:text-gray-200 truncate max-w-xs">{file.name}</span>
                         </a>
                     ))}
                   </div>
@@ -490,14 +492,14 @@ export const MessageItem = React.memo(
 
             {message.footerContent && (isAssistant || isAI) && !isUser && (
                 <div className={cn("text-neutral-700 mb-2")}>
-                  <p className="text-sm leading-relaxed">{message.footerContent}</p>
+                  <p className="text-base leading-relaxed">{message.footerContent}</p>
                 </div>
             )}
 
             {isAssistant && !isUser && (
                 <div
                     className={cn(
-                        "border-t border  border-gray-200 w-full ",
+                        "border-t border border-width-[1px] border-gray-200 w-full ",
                         message.aiMessageType === "service" && "border-violet-600",
                         message.aiMessageType === "warning" && "border-pink-500",
                         message.aiMessageType === "accept-policy" && "border-violet-600",
@@ -511,7 +513,7 @@ export const MessageItem = React.memo(
             {/* Policy acceptance section */}
             {message.aiMessageType === "become-specialist-drops" && (
                 <div className="mt-4 flex flex-row gap-3 ml-auto items-end ">
-                  <div className="font-medium text-sm mb-2">Политика обработки и хранения данных</div>
+                  <div className="font-medium text-base mb-2">Политика обработки и хранения данных</div>
                   <Checkbox
                       id="policy-accept"
                       checked={becomeSpecialistState.policyAccepted}
@@ -528,17 +530,19 @@ export const MessageItem = React.memo(
             <div className="flex justify-between w-full">
               {message.aiMessageType === "service" ? (
                   // Service-specific buttons
-                  <div className="flex flex-col w-full mt-2 mb-3">
+                  <div className="flex flex-col w-full mt-2">
                     {
                       // TODO
                     }
                     <ActionButtonsRow onRegenerate={() => {}} onConfirm={() => {}} onBurn={() => {}} />
                   </div>
-              ) : isUser ? (<button className="ml-auto mt-2 w-3 h-3 mb-1 mr-2">
+              ) : isUser && (<button className="ml-auto mt-2 w-3 h-3 mb-1 mr-2">
                 <Edit size={12} className="text-neutral-700 "/>
-              </button>) : (<div className={"h-[38px]"}/>)
+              </button>)
               }
             </div>
+
+            {!isUser && (<div className="h-9"></div>)}
 
           </div>
         </div>
