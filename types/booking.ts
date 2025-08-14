@@ -6,7 +6,6 @@ export interface Booking {
     description: string
     price: number
     duration: number
-    avatar?: string
   }
   specialist: {
     id: string

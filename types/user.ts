@@ -5,7 +5,6 @@ export interface User {
   id: string
   email: {
     address: string
-    verified: boolean
   }
   bio: string
   name: string
@@ -15,8 +14,6 @@ export interface User {
   createdAt: Date
   preferences?: {
     language: "ru" | "en"
-    notifications: boolean
-    theme: "light" | "dark"
   }
   education: Education[]
   certifcates: Education[]
@@ -26,7 +23,6 @@ export interface User {
   hat: "master" | "adept" | "superviser"
   tier: "unlimited" | "premium" | "basic"
   practice: number
-  stats: UserStats
 }
 
 export interface UserStats {

@@ -7,8 +7,6 @@ export interface Specialist {
     title: string
     avatar: string
     practices: number
-    price: number
-    images: string[]
     location: string
     description: string
     specialties: string[]

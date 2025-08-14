@@ -7,7 +7,6 @@ export const mockUser: User = {
     name: "Снежанна Шлюхтенбург",
     email: {
         address: "ivan.ivanov@example.com",
-        verified: true,
     },
     location: "",
     timezone: "GMT+3",
