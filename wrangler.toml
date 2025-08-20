@@ -1,0 +1,36 @@
+name = "front-application"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "pnpm run build"
+watch_dir = "."
+
+[build.upload]
+format = "service-worker"
+
+[env.production]
+name = "front-application-production"
+route = "practice.energy/*"
+zone_id = "your-zone-id"
+
+[env.staging]
+name = "front-application-staging"
+route = "staging.practice.energy/*"
+zone_id = "your-zone-id"
+
+[env.preview]
+name = "front-application-preview"
+
+# Environment variables
+[vars]
+NODE_ENV = "production"
+
+[env.production.vars]
+NODE_ENV = "production"
+
+[env.staging.vars]
+NODE_ENV = "staging"
+
+[env.preview.vars]
+NODE_ENV = "preview"

@@ -1,0 +1,61 @@
+# Security Headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Cache Control for Static Assets
+*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
+*.gif
+  Cache-Control: public, max-age=31536000, immutable
+
+*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+*.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+*.woff
+  Cache-Control: public, max-age=31536000, immutable
+
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+*.eot
+  Cache-Control: public, max-age=31536000, immutable
+
+# No Cache for HTML files
+*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# API Routes
+/api/*
+  Cache-Control: no-cache, no-store, must-revalidate
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, Authorization
+
+# GraphQL endpoint
+/graphql
+  Cache-Control: no-cache, no-store, must-revalidate
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, POST, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, Authorization

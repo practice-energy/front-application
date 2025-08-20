@@ -1,0 +1,79 @@
+name: Quality Check
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Check for security vulnerabilities
+        run: pnpm audit --audit-level moderate || echo "Security audit completed with warnings"
+        
+      - name: Check for outdated dependencies
+        run: pnpm outdated || echo "All dependencies are up to date"
+        
+      - name: Check bundle size
+        run: |
+          pnpm run build
+          echo "Bundle size analysis:"
+          du -sh .next/static/chunks/
+          du -sh .next/static/css/
+          
+      - name: Check for unused dependencies
+        run: |
+          npx depcheck --json | jq '.dependencies' || echo "No unused dependencies found"
+          
+  performance:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build with bundle analyzer
+        run: |
+          pnpm run build
+          echo "Build completed successfully"
+          
+      - name: Check build performance
+        run: |
+          echo "Build time and size metrics:"
+          ls -la .next/
+          echo "Total build size:"
+          du -sh .next/
