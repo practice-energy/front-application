@@ -320,7 +320,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                                                 rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
                                                 ${
                                   liked
-                                      ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                      ? "bg-colors-custom-accent hover:bg-violet-700 text-white"
                                       : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
                               }
                                             `}
@@ -391,7 +391,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                     {/* Stats block */}
                     {!isEditMode && (
                         <div className="absolute bottom-3 right-3 bg-colors-neutral-150 rounded-sm p-1 w-[78px] h-[84px] gap-3">
-                          <div className="flex flex-row items-center gap-1 text-violet-600 w-full border p-1 rounded-sm h-[36px]">
+                          <div className="flex flex-row items-center gap-1 text-colors-custom-accent w-full border p-1 rounded-sm h-[36px]">
                             <PentagramIcon size={24} />
                             <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
                           </div>
@@ -470,7 +470,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                               onClick={() => setFormat('video')}
                               className={`flex items-center gap-1 w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                   format === 'video'
-                                      ? 'bg-violet-600 text-white shadow-sm'
+                                      ? 'bg-colors-custom-accent text-white shadow-sm'
                                       : 'text-gray-600 hover:text-gray-800'
                               }`}
                           >
@@ -480,7 +480,7 @@ export default function MobileSpecialistProfile({ specialist }: MobileSpecialist
                               onClick={() => setFormat('inPerson')}
                               className={`flex items-center gap-1  w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                   format === 'inPerson'
-                                      ? 'bg-violet-600 text-white shadow-sm'
+                                      ? 'bg-colors-custom-accent text-white shadow-sm'
                                       : 'text-gray-600 hover:text-gray-800'
                               }`}
                           >

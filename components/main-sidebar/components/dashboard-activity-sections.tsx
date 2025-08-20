@@ -31,7 +31,7 @@ export const DashboardActivitySections = ({
             key: "today",
             title: "Активности сегодня",
             icon: Activity,
-            iconStyle: "text-violet-600",
+            iconStyle: "text-colors-custom-accent",
             activities: stats.upcomingActivities.activities.filter((activity:UpcomingActivity) => {
                 return isToday(activity.start)
             }),

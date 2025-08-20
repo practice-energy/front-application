@@ -63,7 +63,7 @@ export function ProfileMenu({
           <div>
             <Link
               href="/profile?section=overview"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-colors-custom-accent dark:hover:text-violet-400 transition-colors"
               onClick={() => setShowProfileMenu(false)}
             >
               <User className="mr-3 h-4 w-4" />
@@ -72,7 +72,7 @@ export function ProfileMenu({
 
             <Link
               href="/profile?section=balance"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-colors-custom-accent dark:hover:text-violet-400 transition-colors"
               onClick={() => setShowProfileMenu(false)}
             >
               <CreditCard className="mr-3 h-4 w-4" />

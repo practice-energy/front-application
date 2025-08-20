@@ -300,12 +300,13 @@ export function MainSidebar() {
       id="main-sidebar"
       data-state={isCollapsed ? "collapsed" : "expanded"}
       style={{
-        transition: `transform ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
+        transition: `all ${ANIMATION_DURATION}ms ${ANIMATION_TIMING}`,
         transform: isCollapsed ? "translateX(-100%)" : "translateX(0)",
+        opacity: isCollapsed ? 0 : 1,
       }}
       className={cn(
         "fixed left-0 top-0 h-full w-full md:w-[400px] bg-colors-custom-sidebar shadow-sm flex flex-col z-40 border-r backdrop-blur-sm focus:outline-none focus:ring-0",
-        isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100",
+        isCollapsed && "pointer-events-none",
       )}
     >
       <Topper

@@ -310,7 +310,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                           rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-200 shadow-sm aspect-square p-0 border-none 
                           ${
                                     liked
-                                        ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                        ? "bg-colors-custom-accent hover:bg-violet-700 text-white"
                                         : "bg-white hover:bg-violet-50 dark:hover:bg-violet-700 text-gray-700 opacity-80"
                                 }
                         `}
@@ -467,7 +467,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                                 onClick={() => setFormat('video')}
                                 className={`flex items-center gap-1 w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                     format === 'video'
-                                        ? 'bg-violet-600 text-white shadow-sm'
+                                        ? 'bg-colors-custom-accent text-white shadow-sm'
                                         : 'text-gray-600 hover:text-gray-800'
                                 }`}
                             >
@@ -477,7 +477,7 @@ export default function DesktopSpecialistProfile({ specialist }: SpecialistProfi
                                 onClick={() => setFormat('inPerson')}
                                 className={`flex items-center gap-1  w-[30px] h-[30px] p-1 rounded-sm text-sm transition-colors justify-center ${
                                     format === 'inPerson'
-                                        ? 'bg-violet-600 text-white shadow-sm'
+                                        ? 'bg-colors-custom-accent text-white shadow-sm'
                                         : 'text-gray-600 hover:text-gray-800'
                                 }`}
                             >

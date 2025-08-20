@@ -37,7 +37,7 @@ export function PracticeServiceRestrictions({
                   sectionKey="periods"
                   sectionVisibility={sectionVisibility}
                   isMobile={isMobile}
-                  iconStyle="text-violet-600"
+                  iconStyle="text-colors-custom-accent"
                   trackingWider={false}
               />
               <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
@@ -58,7 +58,7 @@ export function PracticeServiceRestrictions({
                   sectionKey="exceptional"
                   sectionVisibility={sectionVisibility}
                   isMobile={isMobile}
-                  iconStyle="text-violet-600"
+                  iconStyle="text-colors-custom-accent"
                   showAddButton={editingRestrictionId === null}
                   onAddClick={() => {
                       setShowDatePicker(true)
@@ -89,7 +89,7 @@ export function PracticeServiceRestrictions({
             sectionKey="periods"
             sectionVisibility={sectionVisibility}
             isMobile={isMobile}
-            iconStyle="text-violet-600"
+            iconStyle="text-colors-custom-accent"
             trackingWider={false}
             />
         <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
@@ -111,7 +111,7 @@ export function PracticeServiceRestrictions({
               sectionKey="exceptional"
               sectionVisibility={sectionVisibility}
               isMobile={isMobile}
-              iconStyle="text-violet-600"
+              iconStyle="text-colors-custom-accent"
               showAddButton={editingRestrictionId === null}
               onAddClick={() => {
                   setShowDatePicker(true)

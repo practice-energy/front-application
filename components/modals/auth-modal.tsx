@@ -247,7 +247,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
             case "medium":
                 return "bg-yellow-500"
             case "strong":
-                return "bg-violet-600"
+                return "bg-colors-custom-accent"
             default:
                 return "bg-gray-300"
         }
@@ -391,7 +391,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <Button
                                 type="submit"
                                 disabled={isLoading || !formData.email || !formData.password}
-                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
+                                className="w-full bg-colors-custom-accent hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
                             >
                                 {isLoading ? "Signing in..." : "Sign in"}
                             </Button>
@@ -428,7 +428,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                         <div className="text-center mt-8">
                             <button onClick={() => setIsLoginMode(false)}
                                     className="text-sm text-gray-600 hover:text-gray-900">
-                                Don't have an account? <span className="text-violet-600 font-medium">Sign up</span>
+                                Don't have an account? <span className="text-colors-custom-accent font-medium">Sign up</span>
                             </button>
                         </div>
                     </div>
@@ -495,7 +495,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <div className="space-y-4 mb-8">
                                 <Button
                                     onClick={handleEmailContinue}
-                                    className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
+                                    className="w-full bg-colors-custom-accent hover:bg-violet-700 text-white py-3 rounded-sm font-medium"
                                 >
                                     Continue with Email
                                 </Button>
@@ -531,7 +531,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <div className="text-center">
                                 <button onClick={() => setIsLoginMode(true)}
                                         className="text-sm text-gray-600 hover:text-gray-900">
-                                    Already have an account? <span className="text-violet-600 font-medium">Log in</span>
+                                    Already have an account? <span className="text-colors-custom-accent font-medium">Log in</span>
                                 </button>
                             </div>
                         </div>
@@ -582,7 +582,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                             <Button
                                 onClick={nextStep}
                                 disabled={!formData.email || !validateEmail(formData.email)}
-                                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
+                                className="w-full bg-colors-custom-accent hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
                             >
                                 Continue
                             </Button>
@@ -664,7 +664,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                 <Button
                                     onClick={nextStep}
                                     disabled={!formData.password || formData.password.length < 6}
-                                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium disabled:bg-gray-100 disabled:text-gray-400"
+                                    className="flex-1 bg-colors-custom-accent hover:bg-violet-700 text-white py-3 rounded-lg font-medium disabled:bg-gray-100 disabled:text-gray-400"
                                 >
                                     Continue
                                 </Button>
@@ -791,7 +791,7 @@ export function AuthModal({isOpen, onClose, mode, onSuccess, initialMode}: AuthM
                                 <Button
                                     onClick={nextStep}
                                     disabled={isLoading || !formData.firstName.trim() || !formData.lastName.trim()}
-                                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
+                                    className="flex-1 bg-colors-custom-accent hover:bg-violet-700 text-white py-3 rounded-sm font-medium disabled:bg-gray-100 disabled:text-gray-400"
                                 >
                                     {isLoading ? "Creating account..." : "Finish"}
                                 </Button>

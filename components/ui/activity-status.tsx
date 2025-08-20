@@ -41,7 +41,7 @@ export const ActivityStatus = React.memo(({
         },
         new: {
             text: "",
-            dotClass: "bg-violet-600"
+            dotClass: "bg-colors-custom-accent"
         },
         outOfPractice: {
             text: "Вне практис",

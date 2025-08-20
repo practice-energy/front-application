@@ -36,7 +36,7 @@ export const ChatsSections = ({
             key: "today",
             title: "Активные сегодня",
             icon: Activity,
-            iconStyle: "text-violet-600",
+            iconStyle: "text-colors-custom-accent",
             chats: groupedChats.today,
         },
         {

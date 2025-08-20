@@ -93,7 +93,7 @@ export function TimezoneSection({ restrictions, onUpdate }: TimezoneSectionProps
                 key={tz}
                 onClick={() => handleTimezoneSelect(tz)}
                 className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 ${
-                  restrictions.gmt === tz ? "bg-violet-50 text-violet-600" : ""
+                  restrictions.gmt === tz ? "bg-violet-50 text-colors-custom-accent" : ""
                 }`}
               >
                 {tz}

@@ -278,7 +278,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
           >
             {/* On-page messages display */}
             {isOnPage && onPageMessages.length > 0 && (
-                <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-active max-h-96 overflow-y-auto backdrop-blur-sm ">
+                <div className="border rounded-sm border-violet-100 bg-colors-custom-accent/5 shadow-active max-h-96 overflow-y-auto backdrop-blur-sm ">
                   <div className="py-4">
                     {onPageMessages.map((msg) => {
                       if (msg.type === "user") {
@@ -286,7 +286,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                           <div
                               className={cn(
                                   "max-w-[70%] px-3 py-2 rounded-sm text-sm",
-                                  "bg-violet-600/10 text-neutral-900",
+                                  "bg-colors-custom-accent/10 text-neutral-900",
                               )}
                           >
                             {msg.content}
@@ -321,7 +321,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     "border rounded-sm bg-violet-50 border-violet-100 bg-opacity-80 shadow-active",
                     "bg-opacity-80 shadow-md shadow-violet-500/10",
                     "transition-all duration-500 ease-in-out", // Добавляем плавный переход для всех свойств
-                    isAccepted ? "border-violet-600" : "border-violet-200",
+                    isAccepted ? "border-colors-custom-accent" : "border-violet-200",
                     (message.trim() || isFocused || uploadedFiles.length > 0) ? "bg-white" : "bg-violet-50",
                     "flex-1" // Всегда занимает доступное пространство
                 )}
@@ -391,7 +391,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                           disabled={!canSubmit}
                           className={`h-9 w-9 p-0 shadow-sm rounded-sm items-center justify-center flex ${
                               canSubmit
-                                  ? "bg-violet-600 hover:bg-violet-700 text-white"
+                                  ? "bg-colors-custom-accent hover:bg-violet-700 text-white"
                                   : "bg-violet-200  text-white cursor-not-allowed"
                           }`}
                       >
@@ -444,7 +444,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
     >
       {/* On-page messages display */}
       {isOnPage && onPageMessages.length > 0 && (
-        <div className="border rounded-sm border-violet-100 bg-violet-600/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
+        <div className="border rounded-sm border-violet-100 bg-colors-custom-accent/5 shadow-sm max-h-96 overflow-y-auto backdrop-blur-sm ">
           <div
               className="p-4"
               style={{
@@ -459,7 +459,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                       <div
                           className={cn(
                               "max-w-[70%] px-3 py-2 rounded-sm text-sm",
-                              "bg-violet-600/10 text-neutral-900",
+                              "bg-colors-custom-accent/10 text-neutral-900",
                           )}
                       >
                         {msg.content}
@@ -566,7 +566,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     className={`rounded-sm aspect-square px-3 py-2 h-9 font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                       disableFileApply
                         ? "bg-white text-gray-400 cursor-not-allowed opacity-100"
-                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-violet-600 dark:active:bg-violet-600 text-gray-900 dark:text-white active:text-white dark:active:text-white"
+                        : "bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-700 active:bg-colors-custom-accent dark:active:bg-colors-custom-accent text-gray-900 dark:text-white active:text-white dark:active:text-white"
                     }`}
                   >
                     <Paperclip className={`w-4 h-4 ${disableFileApply ? "opacity-50" : ""}`} />
@@ -579,7 +579,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                       onClick={togglePractice}
                       className={`rounded-sm px-1.5 h-[36px] w-[36px] font-medium transition-colors duration-200 flex items-center gap-1 group shadow-sm ${
                         isPractice
-                          ? "bg-violet-600 text-white hover:bg-violet-500"
+                          ? "bg-colors-custom-accent text-white hover:bg-violet-500"
                           : "bg-white dark:bg-gray-800 dark:hover:bg-violet-700 text-gray-900 dark:text-white"
                       } hover:bg-violet-50`}
                       disabled={mode === "accept" || mode === "continue"}
@@ -628,7 +628,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
                     disabled={!canSubmit}
                     className={`h-9 w-9 p-0  shadow-custom rounded-sm items-center justify-center flex ${
                       canSubmit
-                        ? "bg-violet-600 hover:bg-violet-700 text-white"
+                        ? "bg-colors-custom-accent hover:bg-violet-700 text-white"
                         : "bg-violet-200  text-white cursor-not-allowed"
                     }`}
                   >
@@ -655,7 +655,7 @@ export const Mufi = React.memo(function DesktopSearchBar({
 
             {isDragOver && (
               <div className="absolute inset-0 bg-violet-100/50 rounded-sm flex items-center justify-center pointer-events-none">
-                <div className="text-violet-600 text-center">
+                <div className="text-colors-custom-accent text-center">
                   <FileText className="w-8 h-8 mx-auto mb-2" />
                   <p className="text-sm font-medium">Перетащите файлы сюда</p>
                 </div>

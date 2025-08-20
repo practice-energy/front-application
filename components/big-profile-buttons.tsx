@@ -80,7 +80,7 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
                               <IconPractice width={24} height={24} />
                               <div className="text-sm font-semibold">{user?.practice || 999}</div>
                             </div>
-                            <div className="text-[9px] text-violet-600 items-start justify-start font-semibold">{button.topText}</div>
+                            <div className="text-[9px] text-colors-custom-accent items-start justify-start font-semibold">{button.topText}</div>
                           </div>
                       )}
                       {button.variant === "with-updates" && (
@@ -89,12 +89,12 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
                               {button.icon && (<button.icon className="w-8 h-8" />)}
                               <div className={cn(
                                   "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
-                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                                  button.updates && button.updates > 0 && " bg-colors-custom-accent text-xs"
                               )}/>
                             </div>
                             <div className="text-[9px] items-start justify-start font-semibold mt-1.5 text-start">{button.topText}</div>
                             <div className={cn(
-                                "text-[8px] text-violet-600 items-start justify-start font-semibold",
+                                "text-[8px] text-colors-custom-accent items-start justify-start font-semibold",
                                 (!button.updates || button.updates === 0) && "text-white"
                             )}>
                               {button.updates || 0} {getUpdateWord(button.updates || 0)}
@@ -107,7 +107,7 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
                               {button.icon && (<button.icon className="w-8 h-8" />)}
                               <div className={cn(
                                   "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
-                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                                  button.updates && button.updates > 0 && " bg-colors-custom-accent text-xs"
                               )}/>
                             </div>
                             <div className="text-[9px] items-start justify-start font-semibold">{button.topText}</div>
@@ -117,7 +117,7 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
                           <div className="flex-col flex justify-between items-center">
                             {button.icon && (<button.icon className="w-8 h-8 " />)}
                             <div className="text-[9px] items-start justify-start font-semibold">{button.topText}</div>
-                            <div className="text-[8px] items-start justify-start font-semibold text-violet-600">{button.bottomText}</div>
+                            <div className="text-[8px] items-start justify-start font-semibold text-colors-custom-accent">{button.bottomText}</div>
                           </div>
                       )}
                       {button.variant === "two-lines" && (
@@ -132,7 +132,7 @@ export const BigProfileButtons = ({ buttons, user }: BigProfileButtonsProps) => 
                               {button.icon && (<button.icon className="w-8 h-8" />)}
                               <div className={cn(
                                   "flex items-center justify-center w-3 h-3 rounded-sm ml-auto",
-                                  button.updates && button.updates > 0 && " bg-violet-600 text-xs"
+                                  button.updates && button.updates > 0 && " bg-colors-custom-accent text-xs"
                               )}/>
                             </div>
                             <div className="text-[9px] items-start justify-start font-semibold mt-1.5 text-start">{button.topText}</div>

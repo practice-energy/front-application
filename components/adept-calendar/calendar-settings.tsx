@@ -41,7 +41,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
         <div className="flex flex-row items-center gap-3 pb-2 px-3">
           <SettingsButton
               onClick={disableSettings}
-              className="bg-violet-600 hover:bg-violet-700 border-0 flex"
+              className="bg-colors-custom-accent hover:bg-violet-700 border-0 flex"
               iconClassName="text-white"
           />
           <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
@@ -61,7 +61,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             sectionVisibility={sectionVisibility}
             toggleSection={toggleSection}
             isMobile={isMobile}
-            iconStyle="text-violet-600"
+            iconStyle="text-colors-custom-accent"
           />
           <SettingsSectionContent sectionKey="timezone" sectionVisibility={sectionVisibility}>
               <TimezoneSection restrictions={restrictions} onUpdate={onUpdate} />
@@ -73,7 +73,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             sectionVisibility={sectionVisibility}
             toggleSection={toggleSection}
             isMobile={isMobile}
-            iconStyle="text-violet-600"
+            iconStyle="text-colors-custom-accent"
           />
           <SettingsSectionContent sectionKey="periods" sectionVisibility={sectionVisibility}>
             <PeriodsFormatsSection
@@ -90,7 +90,7 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
             sectionVisibility={sectionVisibility}
             toggleSection={toggleSection}
             isMobile={isMobile}
-            iconStyle="text-violet-600"
+            iconStyle="text-colors-custom-accent"
             showAddButton={editingRestrictionId === null}
             onAddClick={() => {
               setSectionVisibility(

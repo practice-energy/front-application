@@ -22,7 +22,7 @@ export function Included({ title, items }: IncludedProps) {
       <ul className="space-y-2 ml-1">
         {items.map((item, index) => (
           <li key={index} className="flex items-start gap-3">
-            <div className="w-3 h-3 bg-violet-500 dark:bg-violet-600 rounded-sm mt-1.5 flex-shrink-0" />
+            <div className="w-3 h-3 bg-violet-500 dark:bg-colors-custom-accent rounded-sm mt-1.5 flex-shrink-0" />
             <span className="text-gray-700 dark:text-gray-300">{item}</span>
           </li>
         ))}

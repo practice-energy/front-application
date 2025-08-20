@@ -502,9 +502,9 @@ export const MessageItem = React.memo(
                 <div
                     className={cn(
                         "border-t border border-width-[1px] border-gray-200 w-full ",
-                        message.aiMessageType === "service" && "border-violet-600",
+                        message.aiMessageType === "service" && "border-colors-custom-accent",
                         message.aiMessageType === "warning" && "border-pink-500",
-                        message.aiMessageType === "accept-policy" && "border-violet-600",
+                        message.aiMessageType === "accept-policy" && "border-colors-custom-accent",
                         message.aiMessageType === "become-specialist-drops" && "border-neutral-500",
                         message.aiMessageType === "profile-test" && "border-0",
                         message.aiMessageType === "version-test" && "border-0",
@@ -522,7 +522,7 @@ export const MessageItem = React.memo(
                       onCheckedChange={handlePolicyChange}
                       disabled={becomeSpecialistState.step > 1}
                       className={cn(
-                          "w-[36px] h-[36px] rounded-sm border-violet-600 text-violet-600 active:text-white active:bg-violet-600 focus:ring-violet-600",
+                          "w-[36px] h-[36px] rounded-sm border-colors-custom-accent text-colors-custom-accent active:text-white active:bg-colors-custom-accent focus:ring-colors-custom-accent",
                           becomeSpecialistState.step > 1 && "opacity-50 cursor-not-allowed",
                       )}
                   />

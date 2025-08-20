@@ -141,7 +141,7 @@ export function InstagramSpecialistCard({
 
                     <div className="w-min-[76px] h-[92px] flex flex-col items-start ml-auto font-bold text-base gap-2 bg-colors-custom-specialistCardStatsBg/80 px-1 py-1.5 rounded-sm">
                       {/* Блок лайков */}
-                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBg flex-1 w-full rounded-sm text-violet-600 justify-between shadow-custom-xs">
+                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBg flex-1 w-full rounded-sm text-colors-custom-accent justify-between shadow-custom-xs">
                         <PentagramIcon size={24} />
                         <p>{specialist.likes}</p>
                       </div>
@@ -201,12 +201,12 @@ export function InstagramSpecialistCard({
               rounded-sm flex h-9 w-9 items-center justify-center transition-colors duration-300 shadow-custom aspect-square p-0 border-none 
               ${
                       liked
-                          ? "bg-violet-600  hover:shadow-active text-white"
+                          ? "bg-colors-custom-accent  hover:shadow-active text-white"
                           : "bg-white hover:shadow-active  text-neutral-700"
                   }
-              active:bg-violet-600 active:hover:shadow-active
+              active:bg-colors-custom-accent active:hover:shadow-active
               active:text-white 
-              active:border-violet-600 
+              active:border-colors-custom-accent 
               focus:outline-none
             `}
                   title="Сохранить в избранное"
@@ -231,7 +231,7 @@ export function InstagramSpecialistCard({
                   className={cn(
                       "rounded-sm h-9 w-9 flex items-center justify-center shadow-custom hover:shadow-active transition-colors aspect-square duration-200",
                       isFlipped
-                          ? "bg-violet-600  text-white"
+                          ? "bg-colors-custom-accent  text-white"
                           : "bg-white  text-neutral-700"
                   )}
                   title={isFlipped ? "Вернуться к карточке" : "Поделиться"}

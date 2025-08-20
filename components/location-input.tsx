@@ -231,7 +231,7 @@ export function LocationInput({
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 mr-1 bg-violet-500 dark:bg-violet-400 hover:bg-violet-600 dark:hover:bg-violet-300"
+              className="h-8 w-8 p-0 mr-1 bg-violet-500 dark:bg-violet-400 hover:bg-colors-custom-accent dark:hover:bg-violet-300"
               onClick={getLocationFromGeolocation}
               disabled={isGettingLocation || disabled}
             >

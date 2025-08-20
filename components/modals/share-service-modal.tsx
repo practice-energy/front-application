@@ -61,8 +61,8 @@ export function ShareServiceModal({ isOpen, onClose, service }: ShareServiceModa
   }
 
   const shareOptions = [
-    { id: "whatsapp", name: "WhatsApp", icon: MessageCircle, color: "hover:bg-violet-50 hover:text-violet-600" },
-    { id: "email", name: "Email", icon: Mail, color: "hover:bg-violet-50 hover:text-violet-600" },
+    { id: "whatsapp", name: "WhatsApp", icon: MessageCircle, color: "hover:bg-violet-50 hover:text-colors-custom-accent" },
+    { id: "email", name: "Email", icon: Mail, color: "hover:bg-violet-50 hover:text-colors-custom-accent" },
   ]
 
   if (!isOpen) return null

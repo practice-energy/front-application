@@ -102,7 +102,7 @@ export function Bullets({
                                 className="flex items-start gap-3"
                             >
                                 <motion.div
-                                    className="w-3 h-3 bg-violet-500 dark:bg-violet-600 rounded-sm mt-1.5 flex-shrink-0"
+                                    className="w-3 h-3 bg-violet-500 dark:bg-colors-custom-accent rounded-sm mt-1.5 flex-shrink-0"
                                     whileHover={{ scale: 1.2 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                 />

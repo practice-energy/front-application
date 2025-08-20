@@ -158,7 +158,7 @@ export function PeriodsFormatsSection({
                       className={cn(
                         "text-xs px-1.5 py-1 items-center rounded-sm w-7 h-7 aspect-square",
                         isMobile || editingRestrictionId !== null ? "" : "hover:bg-violet-50",
-                        isSelected && "border border-violet-600",
+                        isSelected && "border border-colors-custom-accent",
                       )}
                       onClick={() => handleDaySelect(day.key)}
                       disabled={editingRestrictionId !== null}

@@ -19,7 +19,7 @@ export const SpecialistStatsCard = ({
             "border border-gray-100 bg-white/80 rounded-sm shadow-md shadow-violet-100 aspect-square p-2 w-[100px]",
             className
         )}>
-            <div className="flex flex-row bg-white items-center gap-1 text-violet-600 w-full border border-gray-100 h-1/2 p-2 rounded-sm shadow-sm">
+            <div className="flex flex-row bg-white items-center gap-1 text-colors-custom-accent w-full border border-gray-100 h-1/2 p-2 rounded-sm shadow-sm">
                 <PentagramIcon size={20} />
                 <div className="ml-auto">{formatNumber(likes)}</div>
             </div>

@@ -2,9 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi"
-import { v4 as uuidv4 } from "uuid"
 import type { Chat, Message } from "@/types/chats"
-import {useAdeptChats, useBecomeSpecialist} from "@/stores/chat-store"
+import {useAdeptChats, useBecomeSpecialist, useMasterChats} from "@/stores/chat-store"
 import { IconPractice } from "@/components/icons/icon-practice";
 import { MainMobileHeader } from "@/components/header/components/main-mobile-header";
 import { useProfileStore } from "@/stores/profile-store";
@@ -14,10 +13,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { AuthButtons } from "@/components/auth-buttons";
 import { initiationMessageValid, initiationMessageInvalid } from "@/components/become-specialist/messages";
+import {v4 as uuidv4} from "uuid";
 
 export default function HomePage() {
   const router = useRouter()
-  const { addChat, clearChats } = useAdeptChats()
+  const { addChat, chats: adeptChats } = useAdeptChats()
   const { user } = useProfileStore()
   const { toggleSidebar, isCollapsed } = useSidebar()
   const { isAuthenticated, login } = useAuth()
@@ -109,34 +109,15 @@ export default function HomePage() {
   }
 
   if (isAuthenticated) {
-    return (<div className="bg-white">
-      {(isAuthenticated || transitioning) && (
-          <div className={`flex items-center h-screen justify-center flex-1`}>
-            <IconPractice
-                width={160}
-                height={160}
-                className={cn(
-                    "mx-auto flex",
-                  "rounded-sm object-cover text-neutral-900",
-                  "block", // Убедимся, что это блочный элемент
-                )}
-            />
-          </div>
-      )}
+    if (user?.hat === "master") {
+      router.push("/dashboard")
+    }
 
-      <div className={cn(
-          isMobile ? "fixed bottom-2 px-1 w-full" : "fixed bottom-0 items-center w-[800px] left-[calc(50%-400px)]",
-      )}>
-        <Mufi
-            onSearch={handleSearch}
-            showPractice={true}
-            isOnPage={!isAuthenticated}
-            disableFileApply={true}
-            onPushOnPage={handlePushOnPage}
-            isMobile={isMobile}
-        />
-      </div>
-    </div>)
+    if (adeptChats.length === 0) {
+      router.push(`/search/${uuidv4()}`)
+    }
+
+    router.push(`/search/${adeptChats[0]?.id}`)
   }
 
   return (

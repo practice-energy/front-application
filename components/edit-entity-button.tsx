@@ -16,7 +16,7 @@ export function EditEntityButton({
     return (
         <button
             onClick={onClick}
-            className={`flex rounded-sm w-6 h-6 items-center aspect-square justify-center bg-violet-600 hover:bg-violet-700 shadow-sm", ${className}`}
+            className={`flex rounded-sm w-6 h-6 items-center aspect-square justify-center bg-colors-custom-accent hover:bg-violet-700 shadow-sm", ${className}`}
         >
             <Edit3 className={`text-white ${iconClassName}`} size={iconSize}/>
         </button>

@@ -80,7 +80,7 @@ export function TimeSlotGrid({ selectedDate, bookingSlots, onTimeSlotSelect }: T
                     <Button
                       variant="default"
                       size="sm"
-                      className="w-full bg-violet-600 hover:bg-violet-700 text-white text-xs"
+                      className="w-full bg-colors-custom-accent hover:bg-violet-700 text-white text-xs"
                       style={{
                         height: `${bookingSlots * 20 + 20}px`,
                         minHeight: "40px",

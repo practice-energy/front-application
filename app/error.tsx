@@ -70,7 +70,7 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="space-y-4">
           <button
             onClick={handleReset}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-4 rounded-md flex items-center justify-center transition-colors"
+            className="w-full bg-colors-custom-accent hover:bg-violet-700 text-white py-2 px-4 rounded-md flex items-center justify-center transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="mt-8 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             Если проблема повторяется,{" "}
-            <Link href="/help" className="text-violet-600 hover:text-violet-700 font-medium">
+            <Link href="/help" className="text-colors-custom-accent hover:text-violet-700 font-medium">
               обратитесь в службу поддержки
             </Link>
           </p>

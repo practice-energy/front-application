@@ -74,7 +74,7 @@ export function MainDashboard() {
                 </div>
               </div>
               <button
-                  className="gap-1 bg-violet-600 text-white aspect-square w-9 h-9 p-1.5 rounded-sm items-center"
+                  className="gap-1 bg-colors-custom-accent text-white aspect-square w-9 h-9 p-1.5 rounded-sm items-center"
                   onClick={addPractice}
               >
                 <SquarePlus size={24} />

@@ -242,7 +242,7 @@ export function ServiceCard({
                   <button
                     key={index}
                     onClick={() => handleThumbnailClick(index)}
-                    className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-violet-600" : ""}`}
+                    className={`rounded-sm overflow-hidden ${selectedImageIndex === index ? "ring-1 ring-colors-custom-accent" : ""}`}
                   >
                     <Image
                       src={image || "/placeholder.svg"}
@@ -368,9 +368,9 @@ export function ServiceCard({
           {/* Tags row */}
           {!isEditMode && (
               <div className="flex items-center gap-6 flex-wrap rounded-sm px-6 py-2">
-                <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
+                <div className="flex flex-row border border-colors-custom-accent rounded-sm bg-white shadow-sm">
                   <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
-                      format === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
+                      format === "video" ? "bg-colors-custom-accent text-white" : "text-neutral-900",
                   )}
                           onClick={() => setFormat("video")}
                   >
@@ -378,7 +378,7 @@ export function ServiceCard({
                     <p>Онлайн</p>
                   </button>
                   <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
-                      format === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
+                      format === "in-person" ? "bg-colors-custom-accent text-white" : "text-neutral-900",
                   )}
                           onClick={() => setFormat("in-person")}
                   >

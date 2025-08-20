@@ -152,7 +152,7 @@ export function AboutSkillsSection({
             {!isEditMode && shouldShowToggle && (
                 <button
                     onClick={handleToggle}
-                    className="text-violet-600 hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
+                    className="text-colors-custom-accent hover:text-violet-700 h-auto ml-1 mt-1 transition-colors duration-300 flex items-center gap-1 group"
                 >
                     {isExpanded ? "Свернуть" : "Раскрыть больше"}
                     <ChevronDown width={24} height={24} className={cn(

@@ -141,7 +141,7 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                           {isDescriptionLong && (
                               <button
                                   onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                                  className="flex items-center gap-1 text-sm text-violet-600 hover:text-violet-700 mt-2"
+                                  className="flex items-center gap-1 text-sm text-colors-custom-accent hover:text-violet-700 mt-2"
                               >
                                 {isDescriptionExpanded ? (
                                     <>

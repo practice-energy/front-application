@@ -220,7 +220,7 @@ export function ServiceFormatItem({
                 )}>
                   {/* Заголовок формата */}
                   <div className="flex flex-col items-start gap-2 justify-start">
-                    <div className="flex items-center gap-1 h-[36px] bg-violet-600 text-white px-3 rounded-sm text-sm">
+                    <div className="flex items-center gap-1 h-[36px] bg-colors-custom-accent text-white px-3 rounded-sm text-sm">
                       {format === "video" ? (<TvMinimalPlay size={18} />) : (<Users size={18} />)}
                       {formatLabel}
                     </div>
@@ -262,7 +262,7 @@ export function ServiceFormatItem({
                                   <div className="text-sm">30 минут</div>
                                 </div>
 
-                                <div className="flex items-center gap-1 bg-violet-600 text-white py-1 rounded-sm text-xs px-2 mr-2 w-[60px]">
+                                <div className="flex items-center gap-1 bg-colors-custom-accent text-white py-1 rounded-sm text-xs px-2 mr-2 w-[60px]">
                                   <TimerReset size={16} className="text-white" />
                                   <div>{practice.slots * 30}</div>
                                 </div>
@@ -283,12 +283,12 @@ export function ServiceFormatItem({
                         {/* Общая сумма в режиме редактирования */}
                         {practices.length > 0 && (
                             <div className="flex justify-end ml-auto mt-1">
-                              <div className="flex items-center gap-1 bg-violet-600 text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
+                              <div className="flex items-center gap-1 bg-colors-custom-accent text-white px-1 py-1 rounded-sm text-sm min-w-16 text-end">
                                 <div className="text-end ml-auto">
                                   {formatNumberWithCommas(editedTotalPrice)}
                                 </div>
                               </div>
-                              <RubleIcon size={24} className="text-violet-600" bold={false}/>
+                              <RubleIcon size={24} className="text-colors-custom-accent" bold={false}/>
                             </div>
                         )}
                       </div>
@@ -297,7 +297,7 @@ export function ServiceFormatItem({
                         {practices.map((practice, index) => (
                             <div key={practice.id} className="flex items-center flex-row gap-2 text-sm text-neutral-700">
                               <p className="w-full whitespace-nowrap">{`${index+1} практис по`}</p>
-                              <div className="flex flex-row items-center gap-1 bg-violet-600 text-white px-2 py-1 rounded-sm text-xs">
+                              <div className="flex flex-row items-center gap-1 bg-colors-custom-accent text-white px-2 py-1 rounded-sm text-xs">
                                 <TimerReset size={16} className="text-white" />
                                 <span>{practice.slots * 30}</span>
                               </div>
@@ -360,7 +360,7 @@ export function ServiceFormatItem({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={onEditToggle}
-                  className="flex items-center justify-center w-8 h-8 bg-violet-600 hover:bg-violet-700 text-white rounded-sm"
+                  className="flex items-center justify-center w-8 h-8 bg-colors-custom-accent hover:bg-violet-700 text-white rounded-sm"
               >
                 <Edit size={16} />
               </motion.button>

@@ -160,7 +160,7 @@ export function RestrictionItem({
         appearance-none text-sm border rounded-sm
         hover:border-gray-100 active:border-gray-100 active:ring-0
         focus:outline-none focus:ring-0
-        focus:border-violet-600 px-2 w-[60px]
+        focus:border-colors-custom-accent px-2 w-[60px]
         [&::-webkit-calendar-picker-indicator]:hidden
         [&::-webkit-clear-button]:hidden
         [&::-webkit-inner-spin-button]:hidden
@@ -290,8 +290,8 @@ export function RestrictionItem({
                                                 whileTap={{ scale: 0.95 }}
                                                 className={cn(
                                                     "p-1 items-center justify-center rounded-sm",
-                                                    isEditMode && editedFormats[i]?.includes('video') && "bg-violet-600 hover:bg-violet-700 text-white",
-                                                    isEditMode && !editedFormats[i]?.includes('video') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
+                                                    isEditMode && editedFormats[i]?.includes('video') && "bg-colors-custom-accent hover:bg-violet-700 text-white",
+                                                    isEditMode && !editedFormats[i]?.includes('video') && "text-colors-custom-accent hover:text-violet-700 md:hover:bg-violet-50",
                                                 )}
                                                 onClick={isEditMode ? () => toggleFormat(i, 'video') : undefined}
                                                 disabled={!isEditMode}
@@ -306,8 +306,8 @@ export function RestrictionItem({
                                                 whileTap={{ scale: 0.95 }}
                                                 className={cn(
                                                     "p-1 items-center justify-center rounded-sm",
-                                                    isEditMode && editedFormats[i]?.includes('in-person') && "bg-violet-600 hover:bg-violet-700 text-white",
-                                                    isEditMode && !editedFormats[i]?.includes('in-person') && "text-violet-600 hover:text-violet-700 md:hover:bg-violet-50",
+                                                    isEditMode && editedFormats[i]?.includes('in-person') && "bg-colors-custom-accent hover:bg-violet-700 text-white",
+                                                    isEditMode && !editedFormats[i]?.includes('in-person') && "text-colors-custom-accent hover:text-violet-700 md:hover:bg-violet-50",
                                                 )}
                                                 onClick={isEditMode ? () => toggleFormat(i, 'in-person') : undefined}
                                                 disabled={!isEditMode}

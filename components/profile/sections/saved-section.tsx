@@ -54,7 +54,7 @@ export function SavedSection() {
                   </p>
                   <Button
                       onClick={handleBrowseSpecialists}
-                      className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600"
+                      className="bg-colors-custom-accent hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-colors-custom-accent"
                   >
                     Browse Specialists
                   </Button>

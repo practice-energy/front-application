@@ -74,7 +74,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                 <span className={cn("px-1 py-0.5")}>
                     {weekday.replace(/^./, (letter) => letter.toUpperCase())}
                 </span>
-                <div className={cn("px-1 py-0.5", isSelectedDay && "bg-violet-600 w-[24px] text-white rounded-sm aspect-square items-center")}>
+                <div className={cn("px-1 py-0.5", isSelectedDay && "bg-colors-custom-accent w-[24px] text-white rounded-sm aspect-square items-center")}>
                     {day}
                 </div>
             </div>
@@ -231,7 +231,7 @@ export function MobileBookingSection({ selectedDate, bookingSlots }: MobileBooki
                                                     >
                                                         <div className={
                                                             cn(
-                                                                "bg-violet-600 active:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex",
+                                                                "bg-colors-custom-accent active:bg-violet-700 text-white p-1 w-full h-full rounded-sm flex",
                                                                 group.length === 1 && "items-start justify-start",
                                                                 group.length === 2 && "items-start justify-center",
                                                                 group.length === 3 && "items-start justify-center"

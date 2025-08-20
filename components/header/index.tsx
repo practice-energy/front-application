@@ -190,7 +190,7 @@ export function Header() {
         <div className="flex items-center gap-[24px]">
           {/*{isAuthenticated && !user?.isSpecialist && (*/}
           {/*  <button*/}
-          {/*    className="bg-violet-600 border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"*/}
+          {/*    className="bg-colors-custom-accent border-0 shadow-md text-white gap-2 px-4 rounded-sm flex flex-row items-center justify-center py-1"*/}
           {/*    onClick={handleBecomeSpecialist}*/}
           {/*  >*/}
           {/*    <div className="font-medium"> Стать мастером</div>*/}
@@ -213,7 +213,7 @@ export function Header() {
                 )}
                 <div className="text-base font-semibold pr-3">Инициация Мастера</div>
                 <PentagramIcon
-                    size={36} className="text-white bg-violet-600 rounded-sm p-1"
+                    size={36} className="text-white bg-colors-custom-accent rounded-sm p-1"
                 />
               </div>
               </>
@@ -235,7 +235,7 @@ export function Header() {
                       "aspect-square rounded-sm shadow-sm h-10 p-1 border border-neutral-100",
                   )}>
                     <div
-                        className="w-full h-full flex items-center justify-center text-violet-600 gap-3"
+                        className="w-full h-full flex items-center justify-center text-colors-custom-accent gap-3"
                     >
                       <PentagramIcon size={30} className={cn(
                           "h-[30px] w-[30px] ",
@@ -264,7 +264,7 @@ export function Header() {
                   icon={UserSwitchIcon}
                   onClick={handleRoleToggle}
                   disabled={false}
-                  iconClassName={user?.hat === "adept" ? "text-violet-600" : ""}
+                  iconClassName={user?.hat === "adept" ? "text-colors-custom-accent" : ""}
               />
           )}
 

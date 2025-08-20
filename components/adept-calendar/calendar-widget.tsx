@@ -113,7 +113,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
               className="h-6 w-6 p-0 flex items-center justify-center transition-transform duration-200"
             >
               <ChevronDown
-                className={`h-6 w-6 transition-transform duration-200 text-violet-600 ${isCollapsed ? "rotate-180" : "rotate-0"}`}
+                className={`h-6 w-6 transition-transform duration-200 text-colors-custom-accent ${isCollapsed ? "rotate-180" : "rotate-0"}`}
               />
             </button>
           )}
@@ -121,7 +121,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
             {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
           </div>
         </div>
-        <div className="flex gap-6 text-violet-600">
+        <div className="flex gap-6 text-colors-custom-accent">
           <button onClick={() => navigateMonth("prev")} className="h-8 w-8 p-0">
             <ChevronLeft className="h-6 w-6" />
           </button>
@@ -155,8 +155,8 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
               className={`
                 aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
                 ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
-                ${isToday(day.fullDate) ? "text-violet-600 font-semibold" : ""}
-                ${isSelected(day.fullDate) ? "bg-violet-600 text-white hover:bg-violet-700" : ""}
+                ${isToday(day.fullDate) ? "text-colors-custom-accent font-semibold" : ""}
+                ${isSelected(day.fullDate) ? "bg-colors-custom-accent text-white hover:bg-violet-700" : ""}
               `}
             >
               {day.date}

@@ -525,9 +525,9 @@ export function MobileServiceCard({
 
                 {!isEditMode && booked?.length === 0 && (
                   <div className="flex flex-wrap gap-2">
-                    <div className="flex flex-row border border-violet-600 rounded-sm bg-white shadow-sm">
+                    <div className="flex flex-row border border-colors-custom-accent rounded-sm bg-white shadow-sm">
                       <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-r-sm",
-                        format === "video" ? "bg-violet-600 text-white" : "text-neutral-900",
+                        format === "video" ? "bg-colors-custom-accent text-white" : "text-neutral-900",
                       )}
                         onClick={() => setFormat("video")}
                       >
@@ -535,7 +535,7 @@ export function MobileServiceCard({
                         <p className="text-sm">Онлайн</p>
                       </button>
                       <button className={cn("flex flex-row gap-1 items-center p-1 px-2 rounded-l-sm",
-                        format === "in-person" ? "bg-violet-600 text-white" : "text-neutral-900",
+                        format === "in-person" ? "bg-colors-custom-accent text-white" : "text-neutral-900",
                       )}
                         onClick={() => setFormat("in-person")}
                       >

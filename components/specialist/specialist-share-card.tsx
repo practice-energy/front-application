@@ -52,7 +52,7 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare, i
         <div className={cn(
           "border border-gray-200 bg-white/80 rounded-sm shadow-md shadow-violet-100 p-1  w-[80px] gap-2",
         )}>
-          <div className="flex flex-row w-full bg-white items-center gap-1 text-violet-600 border border-gray-200 h-1/2 p-1.5 rounded-sm shadow-sm">
+          <div className="flex flex-row w-full bg-white items-center gap-1 text-colors-custom-accent border border-gray-200 h-1/2 p-1.5 rounded-sm shadow-sm">
             <PentagramIcon size={20} />
             <div className="ml-auto text-sm">{formatCompactNumber(specialist.likes)}</div>
           </div>
@@ -83,7 +83,7 @@ export function SpecialistShareCard({ specialist, copied, onCopyLink, onShare, i
           className=" w-12 h-12"
         >
           {copied ? (
-            <IconButton icon={CopyCheck} className="bg-violet-600 flex" iconClassName="text-white" />
+            <IconButton icon={CopyCheck} className="bg-colors-custom-accent flex" iconClassName="text-white" />
           ) : (
             <IconButton icon={Link} className="hover:border-gray-200 flex " />
           )}

@@ -44,7 +44,7 @@ export const ChatHeader = ({
             <div className="relative z-10 flex flex-row items-center py-4 gap-3">
                 <PentagramIcon
                     size={36}
-                    className="text-white bg-violet-600 rounded-sm p-1"
+                    className="text-white bg-colors-custom-accent rounded-sm p-1"
                 />
                 <div className="text-base font-semibold">
                     Инициация Мастера

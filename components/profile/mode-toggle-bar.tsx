@@ -89,7 +89,7 @@ export function ModeToggleBar({
                     <div
                         className={cn(
                             "w-9 h-9 flex items-center justify-center rounded-sm transition-colors",
-                                 "bg-violet-600",
+                                 "bg-colors-custom-accent",
                             isSaving && "opacity-50 cursor-not-allowed"
                         )}
                     >

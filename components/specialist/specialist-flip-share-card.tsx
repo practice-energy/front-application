@@ -40,7 +40,7 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
               <IconPractice width={27} height={24}/>
               <div className="text-[24px] flex flex-row">
                   <div className="text-neutral-700">{specialist.rate5 || 0}/</div>
-                  <div className="text-violet-600">5</div>
+                  <div className="text-colors-custom-accent">5</div>
               </div>
           </div>
           <div
@@ -139,7 +139,7 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
                                   onClick={onCopyLink}
                               >
                                   {copied ? (
-                                      <IconButton icon={CopyCheck} className="bg-violet-600" iconClassName="text-white flex"/>
+                                      <IconButton icon={CopyCheck} className="bg-colors-custom-accent" iconClassName="text-white flex"/>
                                   ) : (
                                       <IconButton icon={Link} className="hover:border-gray-200 flex" />
                                   )}
@@ -150,7 +150,7 @@ export function SpecialistFlipShareCard({ specialist, copied, onCopyLink, onShar
 
                   <div className="flex flex-col gap-2 px-2 font-bold">
                       {/* Блок лайков */}
-                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBgFlip flex-1 w-full rounded-sm text-violet-600 justify-between shadow-custom-xs">
+                      <div className="flex items-center gap-1 px-1 bg-colors-custom-specialistCardStatItemBgFlip flex-1 w-full rounded-sm text-colors-custom-accent justify-between shadow-custom-xs">
                           <PentagramIcon size={24} />
                           <p>{specialist.likes}</p>
                       </div>

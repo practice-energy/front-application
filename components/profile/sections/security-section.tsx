@@ -21,7 +21,7 @@ export function SecuritySection() {
       <Card className="shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg">
         <CardHeader className="p-6">
           <CardTitle className="flex items-center gap-2 dark:text-gray-100">
-            <Shield className="h-5 w-5 text-violet-600" />
+            <Shield className="h-5 w-5 text-colors-custom-accent" />
             Account Verification
           </CardTitle>
           <CardDescription className="dark:text-gray-400">
@@ -55,7 +55,7 @@ export function SecuritySection() {
       <Card className="shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg">
         <CardHeader className="p-6">
           <CardTitle className="flex items-center gap-2 dark:text-gray-100">
-            <Key className="h-5 w-5 text-violet-600" />
+            <Key className="h-5 w-5 text-colors-custom-accent" />
             Password & Authentication
           </CardTitle>
           <CardDescription className="dark:text-gray-400">

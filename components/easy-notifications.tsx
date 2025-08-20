@@ -26,7 +26,7 @@ export function EasyNotifications({ className, hat}: EasyNotificationsProps) {
                     {allChats.filter((chat: Chat)=> { return chat.hasNew}).length > 0 && (
                         <div
                             className={cn(
-                                "absolute -top-1 right-1 w-3 h-3 p-0 text-xs bg-violet-600 hover:bg-violet-600 flex items-center justify-center rounded-sm",
+                                "absolute -top-1 right-1 w-3 h-3 p-0 text-xs bg-colors-custom-accent hover:bg-colors-custom-accent flex items-center justify-center rounded-sm",
                             )}
                         />
                     )}

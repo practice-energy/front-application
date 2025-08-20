@@ -40,7 +40,7 @@ export const AuthButtons = ({ login, isMobile, className }: AuthButtonsProps) =>
                     onClick={() => {
                         login()
                     }}
-                    className="bg-violet-600 border-0 shadow-md text-white flex flex-row justify-center items-center h-[48px] w-full md:w-[400px] gap-3 rounded-sm"
+                    className="bg-colors-custom-accent border-0 shadow-md text-white flex flex-row justify-center items-center h-[48px] w-full md:w-[400px] gap-3 rounded-sm"
                 >
                     <div className="font-medium">Войти в личный аккаунт</div>
                     <UserSwitchIcon size={36} />
