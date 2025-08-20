@@ -59,7 +59,7 @@
 
 Замените следующие значения в `wrangler.toml`:
 
-```toml
+\`\`\`toml
 [env.production]
 route = "your-actual-domain.com/*"
 zone_id = "your-actual-zone-id"
@@ -67,27 +67,27 @@ zone_id = "your-actual-zone-id"
 [env.staging]
 route = "staging.your-actual-domain.com/*"
 zone_id = "your-actual-zone-id"
-```
+\`\`\`
 
 ### Переменные окружения
 
 Добавьте необходимые переменные окружения в Cloudflare Pages Dashboard:
 
 #### Production:
-```
+\`\`\`
 NODE_ENV=production
 NEXT_PUBLIC_GRAPHQL_HTTP_URL=https://your-api.com/graphql
 NEXT_PUBLIC_GRAPHQL_WS_URL=wss://your-api.com/graphql
 NEXT_PUBLIC_APP_URL=https://your-domain.com
-```
+\`\`\`
 
 #### Preview:
-```
+\`\`\`
 NODE_ENV=preview
 NEXT_PUBLIC_GRAPHQL_HTTP_URL=https://staging-api.com/graphql
 NEXT_PUBLIC_GRAPHQL_WS_URL=wss://staging-api.com/graphql
 NEXT_PUBLIC_APP_URL=https://preview.your-domain.com
-```
+\`\`\`
 
 ## 🚀 Процесс деплоя
 
@@ -99,7 +99,7 @@ NEXT_PUBLIC_APP_URL=https://preview.your-domain.com
 
 ### Ручной деплой
 
-```bash
+\`\`\`bash
 # Установка Wrangler CLI
 npm install -g wrangler
 
@@ -111,7 +111,7 @@ wrangler pages deploy .next --project-name=your-project-name
 
 # Деплой в preview
 wrangler pages deploy .next --project-name=your-project-name --branch=preview
-```
+\`\`\`
 
 ## 📊 Мониторинг
 
@@ -129,13 +129,13 @@ wrangler pages deploy .next --project-name=your-project-name --branch=preview
 ### Частые проблемы
 
 #### 1. Ошибка сборки
-```bash
+\`\`\`bash
 # Проверьте локальную сборку
 pnpm run build
 
 # Проверьте зависимости
 pnpm install --frozen-lockfile
-```
+\`\`\`
 
 #### 2. Ошибка API Token
 - Убедитесь, что токен имеет правильные права
@@ -151,7 +151,7 @@ pnpm install --frozen-lockfile
 
 ### Полезные команды
 
-```bash
+\`\`\`bash
 # Проверка конфигурации
 wrangler whoami
 
@@ -163,7 +163,7 @@ wrangler pages project view your-project-name
 
 # Логи деплоя
 wrangler pages deployment tail your-project-name
-```
+\`\`\`
 
 ## 📈 Оптимизация
 
