@@ -1,0 +1,19 @@
+# Redirects for Cloudflare Pages
+
+# Redirect www to non-www (optional)
+# https://www.yourdomain.com/* https://yourdomain.com/:splat 301!
+
+# Redirect old URLs to new ones (example)
+# /old-page /new-page 301
+
+# Handle client-side routing for SPA
+/* /index.html 200
+
+# API routes (if using Cloudflare Workers)
+# /api/* https://your-worker.your-subdomain.workers.dev/api/:splat 200
+
+# GraphQL endpoint (if using external API)
+# /graphql https://your-api-domain.com/graphql 200
+
+# Health check endpoint
+/health 200

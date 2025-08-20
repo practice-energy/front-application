@@ -1,0 +1,213 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import type { CalendarRestrictions, Restriction } from "@/types/calendar-event"
+import { RestrictionItem } from "../restriction-item"
+import { CalendarWidget } from "../calendar-widget"
+import { EditEntityButton } from "@/components/edit-entity-button"
+import { RepeatEntityButton } from "@/components/repeat-entity-button"
+import { BurnEntityButton } from "@/components/burn-entity-button"
+
+interface ExceptionalSlotsSectionProps {
+  restrictions: CalendarRestrictions
+  onUpdate: (restrictions: CalendarRestrictions) => void
+  editingRestrictionId: string | null
+  setEditingRestrictionId: (id: string | null) => void
+  isCollapsable?: boolean
+  title?: string
+  showDatePicker: boolean
+  setShowDatePicker: (show: boolean) => void
+}
+
+export function ExceptionalSlotsSection({
+  restrictions,
+  onUpdate,
+  editingRestrictionId,
+  setEditingRestrictionId,
+  title = "Исключительные слоты",
+  isCollapsable = false,
+  showDatePicker,
+  setShowDatePicker,
+}: ExceptionalSlotsSectionProps) {
+  const [showExceptionalSlots, setShowExceptionalSlots] = useState(false)
+  const [repeatDatePickerId, setRepeatDatePickerId] = useState<string | null>(null)
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (showDatePicker && calendarRef.current) {
+      console.log("Attempting to scroll to calendar")
+
+      const scrollToCalendar = () => {
+        if (calendarRef.current) {
+          console.log("Calendar ref found, scrolling...")
+
+          // Вариант 1: Простой скролл к верху элемента
+          calendarRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start", // Изменено с "end" на "start"
+          })
+
+          // Вариант 2: Более точный контроль позиции (если нужно смещение)
+          /*
+          const elementPosition = calendarRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - 20; // 20px отступ сверху
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+          */
+        }
+      }
+
+      // Добавляем небольшую задержку для гарантии рендеринга
+      const timer = setTimeout(scrollToCalendar, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [showDatePicker])
+
+  const handleDateSelect = (date: Date) => {
+    if (repeatDatePickerId) {
+      // Repeat existing restriction to new date
+      const sourceRestriction = restrictions.restrictions.find((r) => r.id === repeatDatePickerId)
+      if (sourceRestriction) {
+        const newRestriction: Restriction = {
+          id: Date.now().toString(),
+          date,
+          isActive: sourceRestriction.isActive,
+          intervals: [...sourceRestriction.intervals],
+        }
+        onUpdate({
+          ...restrictions,
+          restrictions: [...restrictions.restrictions, newRestriction],
+        })
+      }
+      setRepeatDatePickerId(null)
+    } else {
+      // Create new restriction
+      const newRestriction: Restriction = {
+        id: Date.now().toString(),
+        date,
+        isActive: true,
+        intervals: [],
+      }
+      onUpdate({
+        ...restrictions,
+        restrictions: [...restrictions.restrictions, newRestriction],
+      })
+      setShowDatePicker(false)
+    }
+  }
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+    })
+  }
+
+  const handleRestrictionUpdate = (updatedRestriction: Restriction) => {
+    if (updatedRestriction.id) {
+      // Update exceptional restriction
+      const updatedRestrictions = restrictions.restrictions.map((r) =>
+        r.id === updatedRestriction.id ? updatedRestriction : r,
+      )
+      onUpdate({
+        ...restrictions,
+        restrictions: updatedRestrictions,
+      })
+    }
+    setEditingRestrictionId(null)
+  }
+
+  const startEditing = (restriction: Restriction) => {
+    setEditingRestrictionId(restriction.id || null)
+  }
+
+  const cancelEditing = () => {
+    setEditingRestrictionId(null)
+  }
+
+  const deleteRestriction = (id: string) => {
+    onUpdate({
+      ...restrictions,
+      restrictions: restrictions.restrictions.filter((r) => r.id !== id),
+    })
+  }
+
+  const startRepeatForRestriction = (id: string) => {
+    setRepeatDatePickerId(id)
+    if (!showExceptionalSlots) {
+      setShowExceptionalSlots(true)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {(showExceptionalSlots || !isCollapsable) && (
+        <div className="space-y-4">
+          {showDatePicker && (
+            <div ref={calendarRef}>
+              <CalendarWidget selectedDate={new Date()} onDateSelect={handleDateSelect} isCollapsible={true} />
+            </div>
+          )}
+
+          {/* Exceptional restrictions */}
+          <div className="space-y-4">
+            {restrictions.restrictions.map((restriction) => (
+              <div key={restriction.id} className="space-y-2">
+                <RestrictionItem
+                  restriction={restriction}
+                  onUpdate={handleRestrictionUpdate}
+                  showDate={true}
+                  date={restriction.date ? formatDate(restriction.date) : undefined}
+                  isEditMode={editingRestrictionId === restriction.id}
+                  onEditToggle={() => {
+                    if (editingRestrictionId === restriction.id) {
+                      cancelEditing()
+                    } else {
+                      startEditing(restriction)
+                    }
+                  }}
+                  onDelete={() => deleteRestriction(restriction.id!)}
+                />
+                {editingRestrictionId !== restriction.id && (
+                  <div className="flex items-center gap-2 mr-2 justify-between">
+                    <span className="text-sm text-gray-600">Повторить для другой даты</span>
+                    <div className="flex gap-6 ml-auto">
+                      <RepeatEntityButton
+                        onClick={() => startRepeatForRestriction(restriction.id!)}
+                        className="w-8 h-8"
+                        iconClassName="w-6 h-6"
+                      />
+                      <EditEntityButton
+                        onClick={() => startEditing(restriction)}
+                        className="w-8 h-8"
+                        iconClassName="w-6 h-6"
+                      />
+                      <BurnEntityButton
+                        onClick={() => deleteRestriction(restriction.id!)}
+                        className="w-8 h-8"
+                        iconClassName="w-6 h-6"
+                      />
+                    </div>
+                  </div>
+                )}
+                {repeatDatePickerId === restriction.id && (
+                  <div className="mt-4">
+                    <CalendarWidget
+                      selectedDate={restriction.date!}
+                      onDateSelect={handleDateSelect}
+                      isCollapsible={true}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

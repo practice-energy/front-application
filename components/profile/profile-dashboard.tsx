@@ -5,10 +5,6 @@ import { useProfileStore } from "@/stores/profile-store"
 import { ProfileLayout } from "@/components/profile/profile-layout"
 import { OverviewSection } from "@/components/profile/sections/overview-section"
 
-// Lazy load sections for better performance
-const CalendarSection = lazy(() =>
-  import("@/components/profile/sections/calendar-section").then((m) => ({ default: m.CalendarSection })),
-)
 const SavedSection = lazy(() =>
   import("@/components/profile/sections/saved-section").then((m) => ({ default: m.SavedSection })),
 )
@@ -17,9 +13,6 @@ const SecuritySection = lazy(() =>
 )
 const BalanceSection = lazy(() =>
   import("@/components/profile/sections/balance-section").then((m) => ({ default: m.BalanceSection })),
-)
-const PreferencesSection = lazy(() =>
-  import("@/components/profile/sections/preferences-section").then((m) => ({ default: m.PreferencesSection })),
 )
 
 function LoadingSkeleton() {
@@ -42,13 +35,11 @@ export function ProfileDashboard() {
   const renderActiveSection = () => {
     switch (activeSection) {
       case "overview":
-        return <OverviewSection />
-      case "calendar":
-        return (
-          <Suspense fallback={<LoadingSkeleton />}>
-            <CalendarSection />
-          </Suspense>
-        )
+         return (
+             <Suspense fallback={<LoadingSkeleton />}>
+              <OverviewSection />
+             </Suspense>
+         )
       case "saved":
         return (
           <Suspense fallback={<LoadingSkeleton />}>
@@ -65,12 +56,6 @@ export function ProfileDashboard() {
         return (
           <Suspense fallback={<LoadingSkeleton />}>
             <BalanceSection />
-          </Suspense>
-        )
-      case "preferences":
-        return (
-          <Suspense fallback={<LoadingSkeleton />}>
-            <PreferencesSection />
           </Suspense>
         )
       default:

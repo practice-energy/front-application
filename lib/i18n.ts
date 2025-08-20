@@ -25,7 +25,6 @@ const initI18n = async () => {
         detection: {
           order: ["localStorage", "navigator"],
           caches: ["localStorage"],
-          lookupLocalStorage: "language",
         },
 
         defaultNS: "common",

@@ -168,7 +168,7 @@ export function BalanceSection() {
             />
             <Button
               onClick={handleAddFunds}
-              className="bg-violet-600 hover:bg-violet-700 text-white"
+              className="bg-colors-custom-accent hover:bg-violet-700 text-white"
               disabled={!addAmount || Number.parseFloat(addAmount) <= 0}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -188,14 +188,14 @@ export function BalanceSection() {
               className={cn(
                 "border relative",
                 currentTier === tier.id
-                  ? "border-violet-600 dark:border-violet-500"
+                  ? "border-colors-custom-accent dark:border-violet-500"
                   : "border-gray-200 dark:border-gray-800",
-                tier.popular && "border-violet-600 dark:border-violet-500",
+                tier.popular && "border-colors-custom-accent dark:border-violet-500",
               )}
             >
               {tier.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-violet-600 text-white">Most Popular</Badge>
+                  <Badge className="bg-colors-custom-accent text-white">Most Popular</Badge>
                 </div>
               )}
 
@@ -229,7 +229,7 @@ export function BalanceSection() {
                     "w-full",
                     currentTier === tier.id
                       ? "cursor-not-allowed opacity-60"
-                      : "bg-violet-600 hover:bg-violet-700 text-white",
+                      : "bg-colors-custom-accent hover:bg-violet-700 text-white",
                   )}
                   disabled={currentTier === tier.id}
                 >

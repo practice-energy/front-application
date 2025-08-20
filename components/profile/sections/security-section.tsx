@@ -7,12 +7,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Shield, Key, Mail, AlertTriangle, CheckCircle } from "lucide-react"
-import { DeleteAccountModal } from "@/components/profile/delete-account-modal"
+import { DeleteAccountModal } from "@/components/modals/delete-account-modal"
 import {useProfileStore} from "@/stores/profile-store";
 
 export function SecuritySection() {
   const { user, stats } = useProfileStore()
-  const [emailVerified] = useState(user.email.verified)
+  const [emailVerified] = useState(user?.email.verified)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   return (
@@ -21,7 +21,7 @@ export function SecuritySection() {
       <Card className="shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg">
         <CardHeader className="p-6">
           <CardTitle className="flex items-center gap-2 dark:text-gray-100">
-            <Shield className="h-5 w-5 text-violet-600" />
+            <Shield className="h-5 w-5 text-colors-custom-accent" />
             Account Verification
           </CardTitle>
           <CardDescription className="dark:text-gray-400">
@@ -29,7 +29,7 @@ export function SecuritySection() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 pt-0 space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <div className="flex items-center justify-between p-4 bg-violet-50 dark:bg-gray-700 rounded-lg">
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               <div>
@@ -38,7 +38,7 @@ export function SecuritySection() {
               </div>
             </div>
             {emailVerified ? (
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300">
+              <Badge className="bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 rounded-sm">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Verified
               </Badge>
@@ -55,7 +55,7 @@ export function SecuritySection() {
       <Card className="shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg">
         <CardHeader className="p-6">
           <CardTitle className="flex items-center gap-2 dark:text-gray-100">
-            <Key className="h-5 w-5 text-violet-600" />
+            <Key className="h-5 w-5 text-colors-custom-accent" />
             Password & Authentication
           </CardTitle>
           <CardDescription className="dark:text-gray-400">
@@ -97,7 +97,7 @@ export function SecuritySection() {
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
             </div>
-            <Button className="w-full bg-violet-600 hover:bg-violet-700">Update Password</Button>
+            <Button className="w-full">Update Password</Button>
           </div>
         </CardContent>
       </Card>
@@ -136,7 +136,6 @@ export function SecuritySection() {
               onClick={() => setIsDeleteModalOpen(true)}
               className="py-3 px-6 gap-2 "
             >
-              {/*<AlertTriangle className="h-4 w-4" />*/}
               Delete Account
             </Button>
           </div>

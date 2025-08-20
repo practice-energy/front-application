@@ -1,0 +1,615 @@
+scalar DateTime
+scalar Upload
+
+type Education {
+  title: String!
+  description: String!
+  certificate: String
+}
+
+type Experience {
+  description: String!
+}
+
+type FormatSettings {
+  practices: [Practice!]!
+  score: Int!
+  enabled: Boolean!
+}
+
+type Practice {
+  id: ID!
+  slots: Int!
+  duration: Int!
+  price: Float!
+}
+
+type Specialist {
+  id: ID!
+  name: String!
+  title: String!
+  avatar: String!
+  practices: Int!
+  location: String!
+  description: String!
+  specialties: [String!]!
+  education: [Education!]!
+  certificates: [Education!]!
+  experience: [Experience!]!
+  services: [Service!]!
+  skills: [String!]!
+  likes: Int!
+  isLiked: Boolean
+  rate5: Float
+}
+
+type ServiceSpecialist {
+  id: ID!
+  name: String!
+  title: String!
+  avatar: String!
+}
+
+type Service {
+  id: ID!
+  title: String!
+  location: String
+  description: String!
+  contents: String!
+  images: [String!]!
+  includes: [String!]!
+  specialist: ServiceSpecialist!
+  settings: ServiceSettings!
+  tags: [String!]!
+  reviews: [Feedback!]!
+  bookings: [Booking!]
+  calendarRestrictions: CalendarRestrictions
+}
+
+type ServiceSettings {
+  video: FormatSettings!
+  inPerson: FormatSettings!
+}
+
+type BookingService {
+  id: ID!
+  title: String!
+  description: String!
+  price: Float!
+  duration: Int!
+}
+
+type BookingSpecialist {
+  id: ID!
+  name: String!
+  avatar: String
+  practiceCount: Int!
+}
+
+type Booking {
+  id: ID!
+  service: BookingService!
+  specialist: BookingSpecialist!
+  date: DateTime!
+  duration: Int!
+  slots: Int!
+  format: Format!
+  status: BookingStatus
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isRepeat: Boolean
+  price: Float!
+}
+
+type BookingSlot {
+  date: DateTime!
+  slots: Int!
+}
+
+type Feedback {
+  id: ID!
+  rating: Int!
+  comment: String!
+  author: String!
+  createdAt: DateTime!
+}
+
+type CalendarRestrictions {
+  id: ID!
+  timezone: String!
+  workingHours: WorkingHours!
+  exceptions: [Exception!]!
+  formats: [Format!]!
+}
+
+type WorkingHours {
+  monday: DaySchedule
+  tuesday: DaySchedule
+  wednesday: DaySchedule
+  thursday: DaySchedule
+  friday: DaySchedule
+  saturday: DaySchedule
+  sunday: DaySchedule
+}
+
+type DaySchedule {
+  isWorking: Boolean!
+  startTime: String
+  endTime: String
+}
+
+type Exception {
+  id: ID!
+  date: DateTime!
+  isWorking: Boolean!
+  startTime: String
+  endTime: String
+}
+
+type User {
+  id: ID!
+  email: UserEmail!
+  bio: String!
+  name: String!
+  location: String!
+  avatar: String
+  timezone: String!
+  createdAt: DateTime!
+  preferences: UserPreferences
+  education: [Education!]!
+  certificates: [Education!]!
+  experience: [Experience!]!
+  specialistProfile: Specialist
+  isSpecialist: Boolean!
+  hat: UserHat!
+  tier: UserTier!
+  practice: Int!
+}
+
+type UserEmail {
+  address: String!
+}
+
+type UserPreferences {
+  language: Language!
+}
+
+type UserStats {
+  totalBookings: Int!
+  completedBookings: Int!
+  cancelledBookings: Int!
+  totalEarnings: Float!
+  averageRating: Float!
+  reviewsCount: Int!
+}
+
+type Tag {
+  name: String!
+  subtags: [Tag!]
+}
+
+type Message {
+  id: ID!
+  type: MessageType!
+  content: String!
+  timestamp: Int!
+  specialists: [Specialist!]
+  services: [Service!]
+  files: [File!]
+  replyTo: String
+  aiMessageType: AiMessageType
+  tags: [Tag!]
+  footerContent: String
+  bookingFrame: Boolean
+  bookingTextTitle: String
+  testQuestion: String
+  questionIndex: Int
+}
+
+type Chat {
+  id: ID!
+  title: String!
+  specialistId: String
+  serviceId: String
+  avatar: String
+  isAI: Boolean
+  isAIEnabled: Boolean
+  status: ChatStatus
+  timestamp: Int!
+  isMuted: Boolean
+  messages: [Message!]!
+  createdAt: Int!
+  hasNew: Boolean
+  description: String
+  isSpecialChat: SpecialChatType
+}
+
+type File {
+  id: ID!
+  name: String!
+  url: String!
+  size: Int!
+  type: String!
+}
+
+type DashboardStats {
+  totalBookings: Int!
+  completedBookings: Int!
+  cancelledBookings: Int!
+  totalEarnings: Float!
+  averageRating: Float!
+  reviewsCount: Int!
+  upcomingBookings: [Booking!]!
+  recentActivity: [Activity!]!
+}
+
+type Activity {
+  id: ID!
+  type: ActivityType!
+  title: String!
+  description: String!
+  timestamp: DateTime!
+  status: ActivityStatus!
+}
+
+# Enums
+enum Format {
+  VIDEO
+  IN_PERSON
+}
+
+enum BookingStatus {
+  WAITING
+  CONFIRMED
+  REQUEST
+}
+
+enum MessageType {
+  USER
+  ASSISTANT
+  SPECIALIST
+}
+
+enum AiMessageType {
+  INFO
+  WARNING
+  SERVICE
+  BECOME_SPECIALIST_DROPS
+  ACCEPT_POLICY
+  DROPS_OR_INPUT
+  PROFILE_TEST
+  VERSION_TEST
+}
+
+enum ChatStatus {
+  WAITING
+  CONFIRMED
+  REQUEST
+  DECLINED
+}
+
+enum SpecialChatType {
+  BECOME_SPECIALIST
+}
+
+enum UserHat {
+  MASTER
+  ADEPT
+  SUPERVISER
+}
+
+enum UserTier {
+  UNLIMITED
+  PREMIUM
+  BASIC
+}
+
+enum Language {
+  RU
+  EN
+}
+
+enum ActivityType {
+  BOOKING_CREATED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  PAYMENT_RECEIVED
+  REVIEW_RECEIVED
+}
+
+enum ActivityStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+# Input types
+input CreateUserInput {
+  email: String!
+  name: String!
+  bio: String!
+  location: String!
+  timezone: String!
+  avatar: Upload
+  preferences: UserPreferencesInput
+}
+
+input UserPreferencesInput {
+  language: Language!
+}
+
+input UpdateUserInput {
+  name: String
+  bio: String
+  location: String
+  timezone: String
+  avatar: Upload
+  preferences: UserPreferencesInput
+}
+
+input CreateServiceInput {
+  title: String!
+  description: String!
+  contents: String!
+  location: String
+  images: [Upload!]
+  includes: [String!]!
+  settings: ServiceSettingsInput!
+  tags: [String!]!
+}
+
+input ServiceSettingsInput {
+  video: FormatSettingsInput!
+  inPerson: FormatSettingsInput!
+}
+
+input FormatSettingsInput {
+  practices: [PracticeInput!]!
+  score: Int!
+  enabled: Boolean!
+}
+
+input PracticeInput {
+  slots: Int!
+  duration: Int!
+  price: Float!
+}
+
+input CreateBookingInput {
+  serviceId: ID!
+  specialistId: ID!
+  date: DateTime!
+  duration: Int!
+  slots: Int!
+  format: Format!
+  isRepeat: Boolean
+}
+
+input UpdateBookingInput {
+  date: DateTime
+  duration: Int
+  slots: Int
+  format: Format
+  status: BookingStatus
+}
+
+input CreateChatInput {
+  title: String!
+  specialistId: ID
+  serviceId: ID
+  isAI: Boolean
+}
+
+input SendMessageInput {
+  chatId: ID!
+  content: String!
+  type: MessageType!
+  files: [Upload!]
+  replyTo: String
+  aiMessageType: AiMessageType
+}
+
+input SearchInput {
+  query: String!
+  filters: SearchFiltersInput
+  pagination: PaginationInput
+}
+
+input SearchFiltersInput {
+  format: Format
+  priceRange: PriceRangeInput
+  location: String
+  tags: [String!]
+  rating: Float
+}
+
+input PriceRangeInput {
+  min: Float
+  max: Float
+}
+
+input PaginationInput {
+  page: Int!
+  limit: Int!
+}
+
+# Queries
+type Query {
+  # User queries
+  me: User
+  user(id: ID!): User
+  userStats(id: ID!): UserStats
+  
+  # Specialist queries
+  specialists(
+    search: String
+    location: String
+    specialties: [String!]
+    rating: Float
+    pagination: PaginationInput
+  ): [Specialist!]!
+  specialist(id: ID!): Specialist
+  
+  # Service queries
+  services(
+    search: String
+    specialistId: ID
+    format: Format
+    priceRange: PriceRangeInput
+    tags: [String!]
+    pagination: PaginationInput
+  ): [Service!]!
+  service(id: ID!): Service
+  
+  # Booking queries
+  bookings(
+    userId: ID
+    specialistId: ID
+    status: BookingStatus
+    dateFrom: DateTime
+    dateTo: DateTime
+    pagination: PaginationInput
+  ): [Booking!]!
+  booking(id: ID!): Booking
+  availableSlots(
+    serviceId: ID!
+    specialistId: ID!
+    dateFrom: DateTime!
+    dateTo: DateTime!
+  ): [BookingSlot!]!
+  
+  # Chat queries
+  chats(
+    userId: ID
+    isAI: Boolean
+    status: ChatStatus
+    pagination: PaginationInput
+  ): [Chat!]!
+  chat(id: ID!): Chat
+  messages(
+    chatId: ID!
+    pagination: PaginationInput
+  ): [Message!]!
+  
+  # Dashboard queries
+  dashboardStats(userId: ID!): DashboardStats!
+  
+  # Search
+  search(input: SearchInput!): SearchResult!
+}
+
+type SearchResult {
+  specialists: [Specialist!]!
+  services: [Service!]!
+  total: Int!
+  hasMore: Boolean!
+}
+
+# Mutations
+type Mutation {
+  # User mutations
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+  
+  # Specialist mutations
+  createSpecialist(input: CreateSpecialistInput!): Specialist!
+  updateSpecialist(id: ID!, input: UpdateSpecialistInput!): Specialist!
+  deleteSpecialist(id: ID!): Boolean!
+  likeSpecialist(id: ID!): Boolean!
+  unlikeSpecialist(id: ID!): Boolean!
+  
+  # Service mutations
+  createService(input: CreateServiceInput!): Service!
+  updateService(id: ID!, input: UpdateServiceInput!): Service!
+  deleteService(id: ID!): Boolean!
+  
+  # Booking mutations
+  createBooking(input: CreateBookingInput!): Booking!
+  updateBooking(id: ID!, input: UpdateBookingInput!): Booking!
+  cancelBooking(id: ID!): Booking!
+  confirmBooking(id: ID!): Booking!
+  
+  # Chat mutations
+  createChat(input: CreateChatInput!): Chat!
+  sendMessage(input: SendMessageInput!): Message!
+  updateChat(id: ID!, input: UpdateChatInput!): Chat!
+  deleteChat(id: ID!): Boolean!
+  
+  # Feedback mutations
+  createFeedback(input: CreateFeedbackInput!): Feedback!
+  updateFeedback(id: ID!, input: UpdateFeedbackInput!): Feedback!
+  deleteFeedback(id: ID!): Boolean!
+}
+
+input CreateSpecialistInput {
+  name: String!
+  title: String!
+  avatar: Upload!
+  location: String!
+  description: String!
+  specialties: [String!]!
+  education: [EducationInput!]!
+  certificates: [EducationInput!]!
+  experience: [ExperienceInput!]!
+  skills: [String!]!
+}
+
+input UpdateSpecialistInput {
+  name: String
+  title: String
+  avatar: Upload
+  location: String
+  description: String
+  specialties: [String!]
+  education: [EducationInput!]
+  certificates: [EducationInput!]
+  experience: [ExperienceInput!]
+  skills: [String!]
+}
+
+input EducationInput {
+  title: String!
+  description: String!
+  certificate: String
+}
+
+input ExperienceInput {
+  description: String!
+}
+
+input UpdateServiceInput {
+  title: String
+  description: String
+  contents: String
+  location: String
+  images: [Upload!]
+  includes: [String!]
+  settings: ServiceSettingsInput
+  tags: [String!]
+}
+
+input UpdateChatInput {
+  title: String
+  isMuted: Boolean
+  isAIEnabled: Boolean
+}
+
+input CreateFeedbackInput {
+  serviceId: ID!
+  specialistId: ID!
+  rating: Int!
+  comment: String!
+}
+
+input UpdateFeedbackInput {
+  rating: Int
+  comment: String
+}
+
+# Subscriptions
+type Subscription {
+  messageAdded(chatId: ID!): Message!
+  bookingUpdated(bookingId: ID!): Booking!
+  chatUpdated(chatId: ID!): Chat!
+}
