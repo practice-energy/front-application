@@ -9,8 +9,8 @@ watch_dir = "."
 [build.upload]
 format = "service-worker"
 
-[env.production]
-name = "front-application-production"
+[env.prod]
+name = "front-application-prod"
 route = "practice.energy/*"
 zone_id = "your-zone-id"
 
@@ -26,7 +26,7 @@ name = "front-application-preview"
 [vars]
 NODE_ENV = "production"
 
-[env.production.vars]
+[env.prod.vars]
 NODE_ENV = "production"
 
 [env.staging.vars]
