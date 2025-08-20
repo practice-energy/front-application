@@ -7,7 +7,8 @@ command = "pnpm run build"
 watch_dir = "."
 
 [build.upload]
-format = "service-worker"
+format = "directory"
+dir = "out"
 
 [env.prod]
 name = "front-application-prod"
