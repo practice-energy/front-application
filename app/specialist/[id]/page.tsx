@@ -14,7 +14,7 @@ import MobileSpecialistProfile from "@/components/specialist/mobile-specialist-p
 import {useIsMobile} from "@/components/ui/use-mobile";
 import {cn} from "@/lib/utils";
 
-export default function SpecialistPage({ params }: { params: { id: string } }) {
+export default function SpecialistPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const unwrappedParams = use(params)
   const { id } = unwrappedParams
