@@ -1,18 +1,2 @@
-# Перенаправляем запросы к статическим файлам в правильную папку
-/_next/static/* /.open-next/assets/_next/static/:splat 200
-/_next/image/* /.open-next/assets/_next/image/:splat 200
-
-# Обработка CSS файлов
-/*.css /.open-next/assets/_next/static/css/:splat 200
-
-# Hot Module Replacement (если нужно для разработки)
-/_next/webpack-hmr /.open-next/assets/_next/webpack-hmr 200
-
-# Обработка API маршрутов
-/api/* /.open-next/serverless/pages/api/:splat 200
-
-# Обработка динамических маршрутов
-/app/* /.open-next/assets/app/:splat 200
-
-# Все остальные маршруты - на index.html для SPA
-/* /.open-next/assets/index.html 200
+# OpenNext автоматически обрабатывает все маршруты
+# Этот файл может быть пустым или удален

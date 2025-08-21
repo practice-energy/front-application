@@ -11,14 +11,14 @@
     "start": "next start",
     "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit",
-    "deploy:preview": "wrangler deploy --env preview",
-    "deploy:staging": "wrangler deploy --env staging",
-    "deploy:production": "wrangler deploy --env production",
+    "deploy:preview": "npm run cloudflare:build && wrangler deploy --env preview",
+    "deploy:staging": "npm run cloudflare:build && wrangler deploy --env staging",
+    "deploy:production": "npm run cloudflare:build && wrangler deploy --env production",
     "tail": "wrangler tail",
     "tail:preview": "wrangler tail --env preview",
     "tail:staging": "wrangler tail --env staging",
     "tail:production": "wrangler tail --env production",
-    "cloudflare:build": "opennextjs-cloudflare build",
+    "cloudflare:build": "npm run build && opennextjs-cloudflare build",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 name = "webmord"
-compatibility_date = "2025-03-25"
+compatibility_date = "2025-03-01"
 compatibility_flags = ["nodejs_compat"]
 
 # Main entry point for the worker
@@ -9,14 +9,10 @@ main = ".open-next/worker.js"
 [build]
 command = "npm run build"
 
-# Rules for asset handling - упрощенные правила
-[[rules]]
-type = "Data"
-globs = [".open-next/assets/**/*"]
+# OpenNext автоматически обрабатывает все файлы, правила не нужны
 
 # Environment configurations
 [env.production]
-name = "webmord"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
@@ -24,7 +20,6 @@ routes = [
 zone_id = "your-zone-id"
 
 [env.staging]
-name = "webmord"
 routes = [
   "staging.practice.energy/*"
 ]
