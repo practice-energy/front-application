@@ -10,6 +10,10 @@
 # production
 /build
 
+# Cloudflare Pages
+/.open-next/
+/.wrangler/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

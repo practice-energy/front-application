@@ -8,5 +8,11 @@
 # Hot Module Replacement (если нужно для разработки)
 /_next/webpack-hmr /.open-next/assets/_next/webpack-hmr 200
 
-# Все остальные маршруты - на index.html
+# Обработка API маршрутов
+/api/* /.open-next/serverless/pages/api/:splat 200
+
+# Обработка динамических маршрутов
+/app/* /.open-next/assets/app/:splat 200
+
+# Все остальные маршруты - на index.html для SPA
 /* /.open-next/assets/index.html 200

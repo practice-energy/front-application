@@ -43,6 +43,10 @@ const nextConfig = {
       net: false,
       tls: false,
       crypto: false,
+      stream: false,
+      util: false,
+      buffer: false,
+      process: false,
     }
     
     return config
@@ -73,6 +77,10 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
         ],
       },
       {
@@ -82,6 +90,15 @@ const nextConfig = {
             key: 'Content-Type',
             value: 'text/css',
           },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
