@@ -1,5 +1,5 @@
 name = "front-application"
-compatibility_date = "2024-01-01"
+compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 main = "src/worker.js"
 
@@ -23,9 +23,13 @@ zone_id = "your-zone-id"
 [env.preview]
 name = "front-application-preview"
 
+[limits]
+cpu_ms = 50
+
 # Environment variables
 [vars]
 NODE_ENV = "production"
+NEXTJS_SERVER_URL = "https://app.practice.energy"
 CUSTOM_KEY = "your-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
