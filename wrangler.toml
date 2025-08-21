@@ -9,31 +9,13 @@ main = ".open-next/worker.js"
 [build]
 command = "npm run build"
 
-# Rules for asset handling - правила с fallback должны идти первыми
+# Rules for asset handling - упрощенные правила
 [[rules]]
 type = "Data"
-globs = [".open-next/assets/_next/static/**/*"]
-
-# Специфичные правила для разных типов файлов
-[[rules]]
-type = "Data"
-globs = [".open-next/assets/**/*.css", ".open-next/assets/**/*.scss"]
-
-[[rules]]
-type = "Data"
-globs = [".open-next/assets/**/*.svg", ".open-next/assets/**/*.png", ".open-next/assets/**/*.jpg", ".open-next/assets/**/*.jpeg", ".open-next/assets/**/*.gif", ".open-next/assets/**/*.ico", "**/*.woff", ".open-next/assets/**/*.woff2", ".open-next/assets/**/*.ttf", ".open-next/assets/**/*.eot"]
-
-[[rules]]
-type = "Data"
-globs = [".open-next/assets/**/*.bin"]
-
-[[rules]]
-type = "ESModule"
-globs = [".open-next/assets/**/*.js"]
+globs = [".open-next/assets/**/*"]
 
 # Environment configurations
 [env.production]
-name = "webmord-production"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
@@ -41,14 +23,12 @@ routes = [
 zone_id = "your-zone-id"
 
 [env.staging]
-name = "webmord-staging"
 routes = [
   "staging.practice.energy/*"
 ]
 zone_id = "your-zone-id"
 
 [env.preview]
-name = "webmord-preview"
 
 # Environment variables for production
 [env.production.vars]
