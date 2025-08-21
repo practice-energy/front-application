@@ -19,7 +19,6 @@
     "wrangler:tail": "wrangler tail"
   },
   "dependencies": {
-    "__STATIC_CONTENT_MANIFEST": "latest",
     "@apollo/client": "latest",
     "@cloudflare/kv-asset-handler": "latest",
     "@emotion/is-prop-valid": "latest",
