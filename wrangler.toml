@@ -3,9 +3,6 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 main = "src/worker.js"
 
-[assets]
-directory = "./dist"
-
 [[kv_namespaces]]
 binding = "CACHE"
 id = "your-cache-kv-namespace-id"
