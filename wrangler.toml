@@ -9,12 +9,11 @@ main = ".open-next/worker.js"
 [build]
 command = "npm run build"
 
-# Rules for asset handling
+# Rules for asset handling - порядок важен!
 [[rules]]
-type = "ESModule"
-globs = ["**/*.js"]
+type = "Data"
+globs = ["_next/static/**/*"]
 
-# Add rules for CSS and static assets
 [[rules]]
 type = "Data"
 globs = ["**/*.css", "**/*.scss"]
@@ -22,6 +21,10 @@ globs = ["**/*.css", "**/*.scss"]
 [[rules]]
 type = "Data"
 globs = ["**/*.svg", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.woff", "**/*.woff2", "**/*.ttf", "**/*.eot"]
+
+[[rules]]
+type = "ESModule"
+globs = ["**/*.js"]
 
 # Environment configurations
 [env.production]
