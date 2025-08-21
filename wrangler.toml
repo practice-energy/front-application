@@ -12,7 +12,7 @@ command = "npm run build"
 # Rules for asset handling - более специфичные правила сначала
 [[rules]]
 type = "Data"
-globs = ["**/*.css", "**/*.scss"]
+globs = [".open-next/assets/**/*.css", ".open-next/assets/**/*.scss"]
 
 [[rules]]
 type = "Data"
