@@ -14,7 +14,7 @@ import {useSearchParams} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {Mufi} from "@/components/mufi";
 
-export default function ServicePage({ params }: { params: { id: string } }) {
+export default function ServicePage({ params }: { params: Promise<{ id: string }> }) {
   const unwrappedParams = use(params)
   const { id } = unwrappedParams
   const isMobile = useIsMobile()
