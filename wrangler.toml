@@ -13,6 +13,7 @@ command = "npm run build"
 
 # Environment configurations
 [env.production]
+name = "webmord"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
