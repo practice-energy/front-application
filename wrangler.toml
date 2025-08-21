@@ -16,6 +16,7 @@ globs = [".open-next/assets/**/*"]
 
 # Environment configurations
 [env.production]
+name = "webmord"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
@@ -23,6 +24,7 @@ routes = [
 zone_id = "your-zone-id"
 
 [env.staging]
+name = "webmord"
 routes = [
   "staging.practice.energy/*"
 ]
