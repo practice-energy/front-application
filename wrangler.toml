@@ -1,50 +1,53 @@
-name = "front-application"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
-main = "src/worker.js"
+main = "./.next/static/worker.js"
 
 [build]
 command = "pnpm run build"
-watch_dir = "."
 
 [build.upload]
-format = "service-worker"
+format = "modules"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]
 
 [env.production]
-name = "front-application-production"
-route = "app.practice.energy/*"
+name = "prod"
+routes = [
+  "app.practice.energy/*",
+  "practice.energy/*"
+]
 zone_id = "your-zone-id"
 
 [env.staging]
-name = "front-application-staging"
-route = "staging.practice.energy/*"
+name = "staging"
+routes = [
+  "staging.practice.energy/*"
+]
 zone_id = "your-zone-id"
 
 [env.preview]
 name = "front-application-preview"
 
-# Environment variables
-[vars]
-NODE_ENV = "production"
-NEXTJS_SERVER_URL = "https://app.practice.energy"
-CUSTOM_KEY = "your-custom-key"
-NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://api.practice.energy/graphql"
-NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
-
+# Environment variables для production
 [env.production.vars]
 NODE_ENV = "production"
+NEXTJS_SERVER_URL = "https://app.practice.energy"
 CUSTOM_KEY = "your-production-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
 
 [env.staging.vars]
 NODE_ENV = "staging"
+NEXTJS_SERVER_URL = "https://staging.practice.energy"
 CUSTOM_KEY = "your-staging-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://staging-api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://staging-api.practice.energy/graphql"
 
 [env.preview.vars]
 NODE_ENV = "preview"
+NEXTJS_SERVER_URL = "https://preview.practice.energy"
 CUSTOM_KEY = "your-preview-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://preview-api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://preview-api.practice.energy/graphql"
