@@ -23,9 +23,6 @@ zone_id = "your-zone-id"
 [env.preview]
 name = "front-application-preview"
 
-[limits]
-cpu_ms = 50
-
 # Environment variables
 [vars]
 NODE_ENV = "production"
