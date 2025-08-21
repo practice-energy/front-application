@@ -17,3 +17,10 @@
 
 # Health check endpoint
 /health 200
+
+# Ensure index.html is served for root path
+/ /index.html 200
+
+# Handle static assets
+/_next/* /_next/* 200
+/public/* /public/* 200

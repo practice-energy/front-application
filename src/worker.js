@@ -3,6 +3,42 @@ export default {
     const url = new URL(request.url);
     const nextjsServerUrl = env.NEXTJS_SERVER_URL;
     
+    // Обработка корневого запроса
+    if (url.pathname === '/' || url.pathname === '/index.html') {
+      return new Response(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Application</title>
+    <meta name="description" content="Front Application">
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+    <div id="root">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+            <div style="text-align: center;">
+                <h1>Loading...</h1>
+                <p>Please wait while the application loads.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Redirect to the main application
+        window.location.href = '/app';
+    </script>
+</body>
+</html>`, {
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
+    }
+    
     // Кэшируем статические ассеты
     if (isStaticAsset(url.pathname)) {
       const cache = caches.default;
