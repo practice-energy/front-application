@@ -9,7 +9,12 @@ main = ".open-next/worker.js"
 [build]
 command = "npm run build"
 
-# Rules for asset handling - более специфичные правила сначала
+# Rules for asset handling - правила с fallback должны идти первыми
+[[rules]]
+type = "Data"
+globs = [".open-next/assets/_next/static/**/*"]
+
+# Специфичные правила для разных типов файлов
 [[rules]]
 type = "Data"
 globs = [".open-next/assets/**/*.css", ".open-next/assets/**/*.scss"]
@@ -26,13 +31,9 @@ globs = [".open-next/assets/**/*.bin"]
 type = "ESModule"
 globs = [".open-next/assets/**/*.js"]
 
-# Более общее правило для остальных файлов Next.js
-[[rules]]
-type = "Data"
-globs = [".open-next/assets/_next/static/**/*"]
-
 # Environment configurations
 [env.production]
+name = "webmord-production"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
@@ -40,10 +41,14 @@ routes = [
 zone_id = "your-zone-id"
 
 [env.staging]
+name = "webmord-staging"
 routes = [
   "staging.practice.energy/*"
 ]
 zone_id = "your-zone-id"
+
+[env.preview]
+name = "webmord-preview"
 
 # Environment variables for production
 [env.production.vars]

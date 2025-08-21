@@ -5,7 +5,7 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build --no-lint",
-    "clean": "rm -rf .next out",
+    "clean": "rm -rf .next out .open-next",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
