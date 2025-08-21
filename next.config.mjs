@@ -45,6 +45,27 @@ const nextConfig = {
       crypto: false,
     }
     
+    // Ensure CSS is properly processed
+    config.module.rules.forEach((rule) => {
+      if (rule.oneOf) {
+        rule.oneOf.forEach((oneOfRule) => {
+          if (oneOfRule.test && oneOfRule.test.toString().includes('css')) {
+            oneOfRule.use.forEach((useItem) => {
+              if (useItem.loader && useItem.loader.includes('css-loader')) {
+                useItem.options = {
+                  ...useItem.options,
+                  modules: {
+                    ...useItem.options?.modules,
+                    exportLocalsConvention: 'camelCase',
+                  },
+                }
+              }
+            })
+          }
+        })
+      }
+    })
+    
     return config
   },
   
@@ -72,6 +93,19 @@ const nextConfig = {
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
+          },
+        ],
+      },
+      {
+        source: '/(.*).css',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/css',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

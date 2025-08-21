@@ -14,6 +14,15 @@ command = "npm run build"
 type = "ESModule"
 globs = ["**/*.js"]
 
+# Add rules for CSS and static assets
+[[rules]]
+type = "Data"
+globs = ["**/*.css", "**/*.scss"]
+
+[[rules]]
+type = "Data"
+globs = ["**/*.svg", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.woff", "**/*.woff2", "**/*.ttf", "**/*.eot"]
+
 # Environment configurations
 [env.production]
 name = "webmord-production"
