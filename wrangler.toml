@@ -1,6 +1,6 @@
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
-main = "./.next/static/worker.js"
+main = "src/worker.js"
 
 [build]
 command = "pnpm run build"
