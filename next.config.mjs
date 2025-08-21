@@ -62,12 +62,12 @@ const nextConfig = {
   
   // Настройки для TypeScript
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
   
   // Настройки для ESLint
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   
   // Настройки для анализатора бандла

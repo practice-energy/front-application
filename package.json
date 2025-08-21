@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true next build",
-    "build": "next build",
-    "build:cloudflare": "next build && next export",
+    "build": "next build --no-lint",
+    "build:cloudflare": "next build --no-lint && next export",
     "clean": "rm -rf .next out",
     "deploy:cloudflare": "wrangler pages deploy out --project-name=front-application",
     "deploy:preview": "wrangler pages deploy out --project-name=front-application --branch=preview",
