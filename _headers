@@ -5,6 +5,16 @@
   Referrer-Policy: origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
+# Next.js static assets - эти правила должны быть первыми
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/_next/image/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/_next/webpack-hmr
+  Cache-Control: no-cache, no-store, must-revalidate
+
 # Root path and index.html specific headers
 /
   Cache-Control: no-cache, no-store, must-revalidate
