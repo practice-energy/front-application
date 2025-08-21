@@ -1,10 +1,12 @@
-# Handle Next.js static assets properly
-/_next/static/* /_next/static/:splat 200
-/_next/image/* /_next/image/:splat 200
-/_next/webpack-hmr /_next/webpack-hmr 200
+# Перенаправляем запросы к статическим файлам в правильную папку
+/_next/static/* /.open-next/assets/_next/static/:splat 200
+/_next/image/* /.open-next/assets/_next/image/:splat 200
 
-# Handle CSS files specifically
-/*.css /_next/static/css/:splat 200
+# Обработка CSS файлов
+/*.css /.open-next/assets/_next/static/css/:splat 200
 
-# Handle all other routes
-/* /index.html 200
+# Hot Module Replacement (если нужно для разработки)
+/_next/webpack-hmr /.open-next/assets/_next/webpack-hmr 200
+
+# Все остальные маршруты - на index.html
+/* /.open-next/assets/index.html 200
