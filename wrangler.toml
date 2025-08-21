@@ -16,20 +16,20 @@ globs = ["**/*.css", "**/*.scss"]
 
 [[rules]]
 type = "Data"
-globs = ["**/*.svg", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.ico", "**/*.woff", "**/*.woff2", "**/*.ttf", "**/*.eot"]
+globs = [".open-next/assets/**/*.svg", ".open-next/assets/**/*.png", ".open-next/assets/**/*.jpg", ".open-next/assets/**/*.jpeg", ".open-next/assets/**/*.gif", ".open-next/assets/**/*.ico", "**/*.woff", ".open-next/assets/**/*.woff2", ".open-next/assets/**/*.ttf", ".open-next/assets/**/*.eot"]
 
 [[rules]]
 type = "Data"
-globs = ["**/*.bin"]
+globs = [".open-next/assets/**/*.bin"]
 
 [[rules]]
 type = "ESModule"
-globs = ["**/*.js"]
+globs = [".open-next/assets/**/*.js"]
 
 # Более общее правило для остальных файлов Next.js
 [[rules]]
 type = "Data"
-globs = ["_next/static/**/*"]
+globs = [".open-next/assets/_next/static/**/*"]
 
 # Environment configurations
 [env.production]
