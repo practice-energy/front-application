@@ -1,48 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Оптимизация для Cloudflare Pages
-  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true,
-  },
-  
-  // Отключаем серверные функции для статического экспорта
-  experimental: {
-    appDir: true,
-  },
-  
-  // Настройки для Cloudflare Pages
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
-      },
-    ]
-  },
-  
-  // Настройки для статических файлов
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/api/:path*',
-      },
-    ]
   },
   
   // Настройки для PWA (если нужно)
@@ -57,7 +18,6 @@ const nextConfig = {
   // },
   
   // Оптимизация сборки
-  swcMinify: true,
   compress: true,
   
   // Настройки для TypeScript
