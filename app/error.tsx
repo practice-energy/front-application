@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
+import { getWindowLocation } from "@/utils/client"
 
 interface ErrorProps {
   error: Error & { digest?: string }
@@ -20,7 +21,10 @@ export default function Error({ error, reset }: ErrorProps) {
     } catch (resetError) {
       console.error("Reset failed:", resetError)
       // Fallback to page reload
-      window.location.reload()
+      const location = getWindowLocation()
+      if (location) {
+        location.reload()
+      }
     }
   }
 

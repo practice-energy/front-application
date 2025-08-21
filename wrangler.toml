@@ -1,19 +1,22 @@
 name = "webmord"
-compatibility_date = "2025-01-01"
+compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
-main = "src/worker.js"
 
+# Main entry point for the worker
+main = ".open-next/worker.js"
+
+# Build configuration
 [build]
-command = "pnpm run build"
+command = "npm run build"
 
-[build.upload]
-format = "modules"
-
-[[build.upload.rules]]
+# Rules for asset handling
+[[rules]]
 type = "ESModule"
 globs = ["**/*.js"]
 
+# Environment configurations
 [env.production]
+name = "webmord-production"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
@@ -21,15 +24,16 @@ routes = [
 zone_id = "your-zone-id"
 
 [env.staging]
+name = "webmord-staging"
 routes = [
   "staging.practice.energy/*"
 ]
 zone_id = "your-zone-id"
 
 [env.preview]
-name = "front-application-preview"
+name = "webmord-preview"
 
-# Environment variables для production
+# Environment variables for production
 [env.production.vars]
 NODE_ENV = "production"
 NEXTJS_SERVER_URL = "https://app.practice.energy"
@@ -37,6 +41,7 @@ CUSTOM_KEY = "your-production-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
 
+# Environment variables for staging
 [env.staging.vars]
 NODE_ENV = "staging"
 NEXTJS_SERVER_URL = "https://staging.practice.energy"
@@ -44,6 +49,7 @@ CUSTOM_KEY = "your-staging-custom-key"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://staging-api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://staging-api.practice.energy/graphql"
 
+# Environment variables for preview
 [env.preview.vars]
 NODE_ENV = "preview"
 NEXTJS_SERVER_URL = "https://preview.practice.energy"

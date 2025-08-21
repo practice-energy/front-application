@@ -1,38 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Оптимизация для Cloudflare Pages
-  trailingSlash: true,
+  // Optimizations for Cloudflare Workers
+  trailingSlash: false,
   images: {
     unoptimized: true,
+    domains: ['localhost', 'app.practice.energy', 'staging.practice.energy', 'preview.practice.energy'],
   },
   
-  // Настройки для PWA (если нужно)
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/manifest.json',
-  //       destination: '/api/manifest',
-  //       permanent: true,
-  //     },
-  //   ]
-  // },
-  
-  // Оптимизация сборки
+  // Build optimizations
   compress: true,
+  poweredByHeader: false,
   
-  // Настройки для TypeScript
+  // TypeScript and ESLint settings
   typescript: {
     ignoreBuildErrors: true,
   },
   
-  // Настройки для ESLint
   eslint: {
     ignoreDuringBuilds: true,
   },
   
-  // Настройки для анализатора бандла
+  // Webpack configuration for Cloudflare Workers
   webpack: (config, { dev, isServer }) => {
-    // Оптимизация для production
+    // Optimize for production
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
@@ -46,19 +36,61 @@ const nextConfig = {
       }
     }
     
+    // Handle Node.js modules that might not work in Workers
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+      crypto: false,
+    }
+    
     return config
   },
   
-  // Настройки для Cloudflare Pages
+  // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
+    NEXT_PUBLIC_GRAPHQL_HTTP_URL: process.env.NEXT_PUBLIC_GRAPHQL_HTTP_URL,
+    NEXT_PUBLIC_GRAPHQL_WS_URL: process.env.NEXT_PUBLIC_GRAPHQL_WS_URL,
   },
   
-  // Настройки для i18n (если используется)
-  // i18n: {
-  //   locales: ['en', 'ru'],
-  //   defaultLocale: 'en',
-  // },
+  // Headers for security (only for server-side rendering)
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+    ]
+  },
+  
+  // Redirects (if needed)
+  async redirects() {
+    return [
+      // Add any redirects here
+    ]
+  },
+  
+  // Rewrites (if needed)
+  async rewrites() {
+    return [
+      // Add any rewrites here
+    ]
+  },
 }
 
 export default nextConfig

@@ -5,18 +5,24 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build --no-lint",
-    "build:cloudflare": "next build --no-lint && next export",
+    "build:cloudflare": "next build --no-lint",
     "clean": "rm -rf .next out",
-    "deploy:cloudflare": "wrangler pages deploy out --project-name=front-application",
-    "deploy:preview": "wrangler pages deploy out --project-name=front-application --branch=preview",
     "dev": "next dev",
+    "dev:cloudflare": "wrangler dev",
     "lint": "next lint",
     "start": "next start",
     "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit",
-    "wrangler:deploy": "wrangler deploy",
-    "wrangler:dev": "wrangler dev",
-    "wrangler:tail": "wrangler tail"
+    "deploy:preview": "wrangler deploy --env preview",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "tail:preview": "wrangler tail --env preview",
+    "tail:staging": "wrangler tail --env staging",
+    "tail:production": "wrangler tail --env production",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@apollo/client": "latest",
@@ -24,7 +30,8 @@
     "@emotion/is-prop-valid": "latest",
     "@heroicons/react": "latest",
     "@hookform/resolvers": "latest",
-    "@next/third-parties": "^14.2.30",
+    "@next/third-parties": "^15.2.4",
+    "@opennextjs/cloudflare": "^1.6.5",
     "@phosphor-icons/react": "latest",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -98,11 +105,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.2.4",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5",
-    "wrangler": "^3.78.12"
+    "wrangler": "^4.32.0"
   },
   "packageManager": "pnpm@10.11.0"
 }

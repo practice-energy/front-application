@@ -18,7 +18,8 @@ import { IconPractice } from "@/components/icons/icon-practice"
 import { SpecialistFlipShareCard } from "@/components/specialist/specialist-flip-share-card"
 import { Specialist } from "@/types/specialist"
 import { cn } from "@/lib/utils"
-import {PracticePlaceholder} from "@/components/practice-placeholder";
+import {PracticePlaceholder} from "@/components/practice-placeholder"
+import { getWindowOrigin } from "@/utils/client"
 
 interface InstagramSpecialistCardProps {
   specialist: Specialist
@@ -64,14 +65,14 @@ export function InstagramSpecialistCard({
   }
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/specialist/${specialist.id}`
+    const url = `${getWindowOrigin()}/specialist/${specialist.id}`
     navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   const handleSharePlatform = (platform: string) => {
-    const url = `${window.location.origin}/specialist/${specialist.id}`
+    const url = `${getWindowOrigin()}/specialist/${specialist.id}`
     const text = `Посмотрите на специалиста ${specialist.name}: ${specialist.title}`
 
     switch (platform) {

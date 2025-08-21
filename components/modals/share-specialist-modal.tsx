@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { Specialist } from "@/types/specialist"
 import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
+import { getWindowOrigin } from "@/utils/client"
 
 interface ShareSpecialistModalProps {
   isOpen: boolean
@@ -24,7 +25,7 @@ export function ShareSpecialistModal({ isOpen, onClose, specialist }: ShareSpeci
     }
   }, [isOpen])
 
-  const shareUrl = `${window.location.origin}/specialist/${specialist.id}`
+  const shareUrl = `${getWindowOrigin()}/specialist/${specialist.id}`
   const shareText = `Check out ${specialist.name}, ${specialist.title}`
 
   const handleCopyLink = async () => {
