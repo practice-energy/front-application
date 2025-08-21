@@ -41,7 +41,6 @@ import type { CalendarRestrictions } from "@/types/calendar-event"
 import type { Service, FormatSettings } from "@/types/service"
 import { cn } from "@/lib/utils"
 import { ServiceFormatItem } from "@/components/service/service-format-item"
-import { getWindowHref } from "@/utils/client"
 
 interface MobileServiceCardProps {
   service: Service
@@ -291,7 +290,7 @@ export function MobileServiceCard({
           .share({
             title: service.title,
             text: service.description,
-            url: getWindowHref(),
+            url: window.location.href,
           })
           .catch(console.error)
       }

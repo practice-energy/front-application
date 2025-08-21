@@ -27,8 +27,7 @@ import {Chat, type Message} from "@/types/chats";
 import {IconPractice} from "@/components/icons/icon-practice";
 import { SpecialistShareCard } from "@/components/specialist/specialist-share-card"
 import { mockSpecialists } from "@/services/mock-specialists"
-import {Mufi} from "@/components/mufi"
-import { getWindowOrigin } from "@/utils/client"
+import {Mufi} from "@/components/mufi";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(false)
@@ -163,7 +162,7 @@ export function MainSidebar() {
 
   const handleCopyLink = async () => {
     try {
-      const shareUrl = `${getWindowOrigin()}/specialist/${mockSpecialist.id}`
+      const shareUrl = `${window.location.origin}/specialist/${mockSpecialist.id}`
       await navigator.clipboard.writeText(shareUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -173,7 +172,7 @@ export function MainSidebar() {
   }
 
   const handleShare = (platform: string) => {
-    const shareUrl = `${getWindowOrigin()}/specialist/${mockSpecialist.id}`
+    const shareUrl = `${window.location.origin}/specialist/${mockSpecialist.id}`
     const shareText = `Check out ${mockSpecialist.name}, ${mockSpecialist.title}`
     const encodedText = encodeURIComponent(shareText)
     const encodedUrl = encodeURIComponent(shareUrl)

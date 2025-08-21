@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Copy, Check, MessageCircle, Mail, Link, X } from "lucide-react"
 import { motion } from "framer-motion"
 import type { Message } from "@/types/chats"
-import { getWindowOrigin } from "@/utils/client"
 
 interface ShareModalProps {
   isOpen: boolean
@@ -34,7 +33,7 @@ export function ShareModal({ isOpen, onClose, message }: ShareModalProps) {
   if (!isOpen || !message) return null
 
   const messageText = message.content || "Check out this message"
-  const shareUrl = `${getWindowOrigin()}/message/${message.id}`
+  const shareUrl = `${window.location.origin}/message/${message.id}`
   const shareText = customText || messageText
 
   const handleCopyLink = async () => {
