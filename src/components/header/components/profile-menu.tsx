@@ -1,0 +1,96 @@
+"use client"
+
+import { Button } from "@/src/components/ui/button"
+import {User, CalendarDays, Shield, CreditCard, HelpCircle, LogOut, Settings, LucideSettings2} from "lucide-react"
+import { UserSwitch } from "@/src/components/icons/icon-user-switch"
+import Link from "next/link"
+import { cn } from "@/src/lib/utils"
+import type { ProfileMenuProps } from "../types/header.types"
+import { Pentagram } from "@/src/components/icons/icon-pentagram"
+import {PracticePlaceholder} from "@/src/components/practice-placeholder";
+import Image from "next/image";
+
+export function ProfileMenu({
+  isAuthenticated,
+  user,
+  showProfileMenu,
+  toggleProfileMenu,
+  setShowProfileMenu,
+  handleLogout,
+  isMobile = false,
+}: ProfileMenuProps) {
+  if (!isAuthenticated) return null
+
+  const buttonComponent = (
+    <button
+      onClick={toggleProfileMenu}
+      className={cn(
+        "w-[50px] h-[50px] rounded-sm transition-all shadow-sm duration-200 z-10 mt-2",
+      )}
+      aria-label="Profile menu"
+    >
+      {user?.avatar ? (<Image
+          width={50}
+          height={50}
+          src={user?.avatar}
+          alt={user?.name}
+          className="overflow-hidden rounded-sm transition-opacity"
+      />) : (
+          <PracticePlaceholder
+          width={50}
+          height={50}
+          className="bg-colors-neutral-150"
+          iconClassName="text-gray-400"
+      />
+      )}
+    </button>
+  )
+
+  if (isMobile) {
+    return buttonComponent
+  }
+
+  return (
+    <div>
+      {buttonComponent}
+
+      {showProfileMenu && (
+        <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-sm shadow-md border border-gray-200  py-0 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 ">
+            <p className="text-sm font-semibold text-gray-900  truncate">{user?.name || "User"}</p>
+          </div>
+
+          <div>
+            <Link
+              href="/profile?section=overview"
+              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-colors-custom-accent dark:hover:text-violet-400 transition-colors"
+              onClick={() => setShowProfileMenu(false)}
+            >
+              <User className="mr-3 h-4 w-4" />
+              Профиль
+            </Link>
+
+            <Link
+              href="/profile?section=balance"
+              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-colors-custom-accent dark:hover:text-violet-400 transition-colors"
+              onClick={() => setShowProfileMenu(false)}
+            >
+              <CreditCard className="mr-3 h-4 w-4" />
+              Баланс
+            </Link>
+          </div>
+
+          <div className="border-t border-gray-100 dark:border-gray-700 py-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            >
+              <LogOut className="mr-3 h-4 w-4" />
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

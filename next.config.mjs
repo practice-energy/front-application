@@ -11,8 +11,6 @@ const nextConfig = {
       },
     ],
   },
-
-  basePath: "/.open-next/assets",
   
   // Настройки для Cloudflare Workers
   experimental: {
@@ -25,12 +23,9 @@ const nextConfig = {
   // Настройки для Cloudflare
   trailingSlash: true,
   
-  // Настройки для кэширования
-  generateEtags: false,
-  
-  // Настройки для статических ресурсов
+  // Настройки для статических ресурсов  
   assetPrefix: '',
-  
+
   // Игнорируем ошибки TypeScript
   typescript: {
     ignoreBuildErrors: true,

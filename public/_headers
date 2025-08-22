@@ -1,0 +1,4 @@
+# https://developers.cloudflare.com/workers/static-assets/headers
+# Принудительное обновление для HTML файлов
+/*
+  Cache-Control: public,max-age=0,must-revalidate

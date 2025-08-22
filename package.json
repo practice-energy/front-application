@@ -14,10 +14,11 @@
     "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit",
     "prepare:cloudflare": "echo 'OpenNext build already prepared for Cloudflare'",
-    "deploy:cloudflare": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env production",
+    "deploy:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "deploy:cloudflare-preview": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env preview"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.6.5",
     "@apollo/client": "latest",
     "@cloudflare/kv-asset-handler": "latest",
     "@emotion/is-prop-valid": "latest",
