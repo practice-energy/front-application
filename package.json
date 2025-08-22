@@ -4,20 +4,18 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true next build",
-    "build": "vercel build",
+    "build": "next build",
     "build:next": "next build",
-    "build:vercel": "vercel build",
-    "clean": "rm -rf .next out .open-next .vercel",
+    "build:cloudflare": "npx @opennextjs/cloudflare build",
+    "clean": "rm -rf .next out .open-next .vercel .next-cloudfalre",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
     "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit",
-    "vercel-dev": "vercel dev",
-    "vercel-deploy": "vercel --prod",
-    "vercel-deploy-preview": "vercel",
-    "deploy:cloudflare": "node deploy-cloudflare.js",
-    "deploy:cloudflare-preview": "pnpm build && wrangler deploy --env preview"
+    "prepare:cloudflare": "echo 'OpenNext build already prepared for Cloudflare'",
+    "deploy:cloudflare": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env production",
+    "deploy:cloudflare-preview": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env preview"
   },
   "dependencies": {
     "@apollo/client": "latest",
@@ -26,7 +24,6 @@
     "@heroicons/react": "latest",
     "@hookform/resolvers": "latest",
     "@next/third-parties": "^15.2.4",
-    "@opennextjs/cloudflare": "^1.6.5",
     "@phosphor-icons/react": "latest",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -96,6 +93,7 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.6.5",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

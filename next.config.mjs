@@ -11,8 +11,10 @@ const nextConfig = {
       },
     ],
   },
+
+  basePath: "/.open-next/assets",
   
-  // Настройки для Cloudflare через Vercel
+  // Настройки для Cloudflare Workers
   experimental: {
     // Включаем поддержку серверных компонентов
   },
@@ -33,6 +35,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  
+  // Настройки для Cloudflare Workers (без статического экспорта)
+  // output: 'export', // Убираем статический экспорт
+  
+  // Директория для сборки
+  distDir: '.next',
   
   // Настройки для PWA (если нужно)
   // pwa: {
