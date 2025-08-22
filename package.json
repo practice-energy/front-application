@@ -4,22 +4,20 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true next build",
-    "build": "next build --no-lint",
-    "clean": "rm -rf .next out .open-next",
+    "build": "vercel build",
+    "build:next": "next build",
+    "build:vercel": "vercel build",
+    "clean": "rm -rf .next out .open-next .vercel",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
     "test": "echo \"No tests specified\" && exit 0",
     "type-check": "tsc --noEmit",
-    "deploy:preview": "npm run cloudflare:build && wrangler deploy --env preview",
-    "deploy:staging": "npm run cloudflare:build && wrangler deploy --env staging",
-    "deploy:production": "npm run cloudflare:build && wrangler deploy --env production",
-    "tail": "wrangler tail",
-    "tail:preview": "wrangler tail --env preview",
-    "tail:staging": "wrangler tail --env staging",
-    "tail:production": "wrangler tail --env production",
-    "cloudflare:build": "npm run build && opennextjs-cloudflare build",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "vercel-dev": "vercel dev",
+    "vercel-deploy": "vercel --prod",
+    "vercel-deploy-preview": "vercel",
+    "deploy:cloudflare": "node deploy-cloudflare.js",
+    "deploy:cloudflare-preview": "pnpm build && wrangler deploy --env preview"
   },
   "dependencies": {
     "@apollo/client": "latest",
@@ -106,6 +104,7 @@
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5",
+    "vercel": "^46.0.2",
     "wrangler": "^4.32.0"
   },
   "packageManager": "pnpm@10.11.0"

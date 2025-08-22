@@ -1,38 +1,44 @@
-name = "webmord"
-compatibility_date = "2025-03-01"
+name = "practice-energy-app"
+compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Main entry point for the worker - используем @cloudflare/next-on-pages
-main = ".vercel/output/static/_worker.js/index.js"
+# Main entry point for the worker - используем собранное Vercel приложение
+main = "_worker.js"
 
 # Build configuration
 [build]
-command = "npm run cloudflare:build"
+command = "echo 'Build already completed by Vercel'"
+
+# Static assets configuration
+[site]
+bucket = "public"
 
 # Environment configurations
 [env.production]
-name = "webmord-production"
+name = "practice-energy-production"
 routes = [
   "app.practice.energy/*",
   "practice.energy/*"
 ]
-zone_id = "your-zone-id"
+# zone_id = "your-zone-id"
 
 [env.staging]
-name = "webmord-staging"
+name = "practice-energy-staging"
 # routes = [
 #   "staging.practice.energy/*"
 # ]
 # zone_id = "your-zone-id"
 
 [env.preview]
-name = "webmord-preview"
+name = "practice-energy-preview"
 
 # Environment variables for production
 [env.production.vars]
 NODE_ENV = "production"
 NEXTJS_SERVER_URL = "https://app.practice.energy"
 CUSTOM_KEY = "your-production-custom-key"
+BACKEND_URL = "https://api.practice.energy"
+NEXT_PUBLIC_API_URL = "https://api.practice.energy"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
 
@@ -41,6 +47,8 @@ NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://api.practice.energy/graphql"
 NODE_ENV = "staging"
 NEXTJS_SERVER_URL = "https://staging.practice.energy"
 CUSTOM_KEY = "your-staging-custom-key"
+BACKEND_URL = "https://staging-api.practice.energy"
+NEXT_PUBLIC_API_URL = "https://staging-api.practice.energy"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://staging-api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://staging-api.practice.energy/graphql"
 
@@ -49,5 +57,7 @@ NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://staging-api.practice.energy/graphql"
 NODE_ENV = "preview"
 NEXTJS_SERVER_URL = "https://preview.practice.energy"
 CUSTOM_KEY = "your-preview-custom-key"
+BACKEND_URL = "https://preview-api.practice.energy"
+NEXT_PUBLIC_API_URL = "https://preview-api.practice.energy"
 NEXT_PUBLIC_GRAPHQL_HTTP_URL = "https://preview-api.practice.energy/graphql"
 NEXT_PUBLIC_GRAPHQL_WS_URL = "wss://preview-api.practice.energy/graphql"

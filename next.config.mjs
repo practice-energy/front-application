@@ -2,16 +2,25 @@
 const nextConfig = {
   // Настройки для изображений
   images: {
-    unoptimized: true, // Отключаем оптимизацию изображений для статического экспорта
-    domains: ['localhost', 'app.practice.energy', 'staging.practice.energy', 'preview.practice.energy']
+    unoptimized: true, // Отключаем оптимизацию для Cloudflare
+    domains: ['localhost', 'app.practice.energy', 'staging.practice.energy', 'preview.practice.energy'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   
-  // Настройки для статических ресурсов
+  // Настройки для Cloudflare через Vercel
   experimental: {
-    // Включаем поддержку статического контента
+    // Включаем поддержку серверных компонентов
   },
   
-  // Настройки для Cloudflare Pages
+  // Внешние пакеты для серверных компонентов
+  serverExternalPackages: [],
+  
+  // Настройки для Cloudflare
   trailingSlash: true,
   
   // Настройки для кэширования

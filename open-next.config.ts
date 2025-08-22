@@ -1,30 +1,21 @@
-import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import type { OpenNextConfig } from '@opennextjs/cloudflare';
 
-export default defineCloudflareConfig({
-  experimental: {
-    staticGeneration: {
-      prerenderRoutes: ["/", "/dashboard", "/profile", "/calendar", "/saved", "/search"]
-    }
+const config: OpenNextConfig = {
+  default: {
+    override: {
+      wrapper: 'cloudflare-edge',
+      converter: 'edge',
+      incrementalCache: 'cloudflare-kv',
+      tagCache: 'cloudflare-kv',
+      queue: 'sqs',
+    },
   },
-  override: {
-    wrapper: "cloudflare-pages",
-    converter: "edge",
-    tagCache: "dummy",
-    queue: "dummy",
-    incrementalCache: "dummy",
-    imageOptimization: "dummy"
+  middleware: {
+    override: {
+      wrapper: 'cloudflare-edge',
+      converter: 'edge',
+    },
   },
-  // Cloudflare Pages specific settings
-  cloudflare: {
-    pages: {
-      // Enable automatic static optimization
-      static: true,
-      // Enable edge functions
-      functions: true,
-      // Enable image optimization
-      images: {
-        domains: ['localhost', 'app.practice.energy', 'staging.practice.energy', 'preview.practice.energy']
-      }
-    }
-  }
-});
+};
+
+export default config;
