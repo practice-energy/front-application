@@ -2,7 +2,7 @@ import {MessagesSquareIcon, TvMinimalPlay, Users} from "lucide-react"
 import {cn} from "@/lib/utils";
 
 interface ChatButtonProps {
-    onClick: () => {} // или другие возможные форматы
+    onClick: () => void
     className?: string
     size?: number
     hasUpdates: boolean

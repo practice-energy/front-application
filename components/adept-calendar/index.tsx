@@ -44,13 +44,13 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt:  timezone || getSystemTimezone(),
         commons: {
-            Mon: { isActive: true, intervals: [] },
-            Tue: { isActive: true, intervals: [] },
-            Wed: { isActive: true, intervals: [] },
-            Thu: { isActive: true, intervals: [] },
-            Fri: { isActive: true, intervals: [] },
-            Sat: { isActive: false, intervals: [] },
-            Sun: { isActive: false, intervals: [] },
+            Mon: { id: "mon", name: "Monday", isActive: true, intervals: [], isPractice: false },
+            Tue: { id: "tue", name: "Tuesday", isActive: true, intervals: [], isPractice: false },
+            Wed: { id: "wed", name: "Wednesday", isActive: true, intervals: [], isPractice: false },
+            Thu: { id: "thu", name: "Thursday", isActive: true, intervals: [], isPractice: false },
+            Fri: { id: "fri", name: "Friday", isActive: true, intervals: [], isPractice: false },
+            Sat: { id: "sat", name: "Saturday", isActive: false, intervals: [], isPractice: false },
+            Sun: { id: "sun", name: "Sunday", isActive: false, intervals: [], isPractice: false },
         },
         restrictions: [],
     })
@@ -109,7 +109,6 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                         >
                             <CalendarSettings
                                 restrictions={calendarRestrictions}
-                                onRestrictionsChange={setCalendarRestrictions}
                                 disableSettings={() => setShowSettings(false)}
                                 onUpdate={(r) => setCalendarRestrictions(r)}
                             />
@@ -126,9 +125,6 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                 <CalendarSidebar
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
-                    timezone={timezone}
-                    onSettings={() => setShowSettings(!showSettings)}
-                    showSettings={showSettings}
                 />
                 <ScheduleView selectedDate={selectedDate} bookings={bookings} />
             </div>

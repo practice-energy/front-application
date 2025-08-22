@@ -1,4 +1,6 @@
 "use client"
+export const runtime = 'edge';
+
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Mufi } from "@/components/mufi/index"
@@ -287,7 +289,7 @@ export default function SearchPage() {
     ],
   )
 
-  const getMufiMode = useCallback(() => {
+  const getMufiMode = useCallback((): { mode: "accept" | "continue" | "input"; canAccept: boolean } => {
     if (!currentChat || currentChat.messages.length === 0) {
       return { mode: "input", canAccept: false }
     }
@@ -455,15 +457,13 @@ export default function SearchPage() {
           <div className="absolute bottom-0 px-1 mb-2 z-[1000] w-full">
             <Mufi
                 onSearch={handleSearch}
-                showHeading={false}
-                dynamicWidth={false}
+                showPractice={false}
                 disableFileApply={true}
                 placeholder={currentChat?.title || "Alura"}
                 onCancelReply={() => {}}
                 chatTitle="Alura"
                 mode={mode}
                 canAccept={canAccept}
-                selectedTags={becomeSpecialistState.selectedTags}
                 onContinue={handleContinue}
                 isMobile={isMobile}
             />
@@ -511,8 +511,6 @@ export default function SearchPage() {
           {!isMobile && (
               <Mufi
                   onSearch={handleSearch}
-                  showHeading={false}
-                  dynamicWidth={false}
                   showPractice={currentChat?.isAI === true}
                   disableFileApply={true}
                   placeholder={currentChat?.title || "Alura"}
@@ -520,7 +518,6 @@ export default function SearchPage() {
                   chatTitle="Alura"
                   mode={mode}
                   canAccept={canAccept}
-                  selectedTags={becomeSpecialistState.selectedTags}
                   onContinue={handleContinue}
                   isMobile={isMobile}
               />

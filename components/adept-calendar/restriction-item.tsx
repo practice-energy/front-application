@@ -73,7 +73,13 @@ export function RestrictionItem({
 
   useEffect(() => {
     if (!restriction.intervals || restriction.intervals.length === 0) {
-      const defaultInterval = { start: '09:00', end: '17:00', formats: ["in-person", "video"] }
+      const today = new Date()
+      const startTime = new Date(today)
+      startTime.setHours(9, 0, 0, 0)
+      const endTime = new Date(today)
+      endTime.setHours(17, 0, 0, 0)
+      
+      const defaultInterval = { start: startTime, end: endTime, formats: ["in-person" as Format, "video" as Format] }
       setEditedIntervals([defaultInterval])
       setEditedFormats([[]])
       setIntervalCount(1)
@@ -135,7 +141,13 @@ export function RestrictionItem({
     if (intervalCount < 3) {
       setIntervalCount(prev => prev + 1)
       if (editedIntervals.length < intervalCount + 1) {
-        setEditedIntervals([...editedIntervals, { start: '09:00', end: '17:00', formats: ["in-person", "video"] }])
+        const today = new Date()
+        const startTime = new Date(today)
+        startTime.setHours(9, 0, 0, 0)
+        const endTime = new Date(today)
+        endTime.setHours(17, 0, 0, 0)
+        
+        setEditedIntervals([...editedIntervals, { start: startTime, end: endTime, formats: ["in-person" as Format, "video" as Format] }])
         setEditedFormats([...editedFormats, []])
       }
     }

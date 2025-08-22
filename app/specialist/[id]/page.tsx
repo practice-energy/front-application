@@ -1,4 +1,5 @@
 "use client"
+export const runtime = 'edge';
 
 import {useState, useRef, use} from "react"
 import { useRouter } from "next/navigation"
@@ -103,6 +104,7 @@ export default function SpecialistPage({ params }: { params: Promise<{ id: strin
       )}>
         <Mufi
             onSearch={handleSearch}
+            showPractice={false}
             chatTitle="Alura"
             disableFileApply={true}
         />
@@ -111,11 +113,7 @@ export default function SpecialistPage({ params }: { params: Promise<{ id: strin
       <ShareSpecialistModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        specialist={{
-          id,
-          name: specialist.name,
-          title: specialist.title,
-        }}
+        specialist={specialist}
       />
     </>
   )

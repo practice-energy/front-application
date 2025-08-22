@@ -4,7 +4,7 @@ import {Specialist} from "@/types/specialist";
 export interface Message {
   id: string
   type: "user" | "assistant" | "specialist"
-  content: string
+  content?: string
   timestamp: number
   specialists?: Specialist[]
   services?: Service[]

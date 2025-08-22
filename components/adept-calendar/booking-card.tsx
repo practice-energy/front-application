@@ -256,7 +256,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
                         <RubleIcon size={22} bold={false} className="inline-block mb-0.5" />
                       </div>
                       <ChatButton
-                          onClick={()=> {}}
+                          onClick={() => {}}
                           hasUpdates={false}
                           className="mb-0.5"
                       />
@@ -341,7 +341,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
               <div className="flex items-center gap-1 flex-1">
                 <RubleIcon size={22} bold={false} className="mb-1.5"/>
                 <ChatButton
-                    onClick={()=> {}}
+                    onClick={() => {}}
                     hasUpdates={false}
                     className="mb-0.5"
                 />
