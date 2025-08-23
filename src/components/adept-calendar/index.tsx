@@ -28,8 +28,6 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     const [showSettings, setShowSettings] = useState(false)
     const { toggleSidebar, isCollapsed } = useSidebar()
 
-
-
     // Функция для получения системного часового пояса
     const getSystemTimezone = () => {
         try {

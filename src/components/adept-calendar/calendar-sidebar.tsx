@@ -31,9 +31,9 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
 
     return (
         <div className="w-[370px] bg-white border-t border-gray-100">
-            <div className="mt-[66px] w-[370px] top-0 z-30 border-gray-100">
+            <div className="top-0 z-30 border-gray-100 py-4 px-2">
                 {!showSettings ? (
-                    <div className="px-4 ">
+                    <>
                         <CalendarWidget selectedDate={selectedDate} onDateSelect={onDateSelect} timezone={calendarRestrictions.gmt}/>
                         <div className="h-8 bottom-0 ml-auto"/>
                         <div className="flex flex-row items-center gap-3 font-semibold">
@@ -45,7 +45,7 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
                                 Установки календаря
                             </div>
                         </div>
-                    </div>
+                    </>
                 ) : (
                     <CalendarSettings
                         restrictions={calendarRestrictions}

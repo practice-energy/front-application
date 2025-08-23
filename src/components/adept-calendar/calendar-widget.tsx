@@ -101,7 +101,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
 
   return (
     <div className={cn(
-        "bg-none rounded-sm mt-5",
+        "bg-none rounded-sm",
         isCollapsed ? "" : "sm:h-full"
     )}>
       {/* Header */}

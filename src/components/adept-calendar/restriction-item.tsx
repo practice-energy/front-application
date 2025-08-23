@@ -11,7 +11,7 @@ import {SaveEntityButton} from "@/src/components/save-entity-button";
 import {ActivityStatus} from "@/src/components/ui/activity-status";
 import {IconAlura} from "@/src/components/icons/icon-alura";
 import {cn} from "@/src/lib/utils";
-import { motion, AnimatePresence } from "framer-motion"; // Импортируем анимации
+import { motion, AnimatePresence, Variants } from "framer-motion"; // Импортируем анимации
 
 interface RestrictionItemProps {
   restriction: Restriction
@@ -24,24 +24,32 @@ interface RestrictionItemProps {
 }
 
 // Анимации
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" as const }
   },
   exit: { opacity: 0, y: -10 }
 };
 
-const fadeIn = {
+const fadeIn: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.2 } }
 };
 
-const scaleUp = {
+const scaleUp: Variants = {
   hidden: { scale: 0.9, opacity: 0 },
   visible: { scale: 1, opacity: 1, transition: { duration: 0.2 } }
+};
+
+// Helper function to convert Date to time string
+const formatTimeToString = (time: Date | string): string => {
+  if (time instanceof Date) {
+    return time.toTimeString().slice(0, 5); // Returns HH:MM format
+  }
+  return time;
 };
 
 export function RestrictionItem({
@@ -204,7 +212,7 @@ export function RestrictionItem({
           >
             <Card className="p-2 w-full">
               <CardContent className="p-0">
-                <div className="flex flex-row">
+                <div className="flex flex-row gap-2">
                   <div className="space-y-4">
                     <div className={cn(
                         "flex items-start w-full",
@@ -212,7 +220,7 @@ export function RestrictionItem({
                     )}>
                       <AnimatePresence>
                         {Array.from({ length: intervalCount }).map((_, i) => {
-                          const interval = editedIntervals[i] || { start: '09:00', end: '17:00', formats: [] }
+                          const interval = editedIntervals[i] || { start: '09:00', end: '17:00', formats: ["video" as Format, "in-person" as Format] }
                           return (
                               <motion.div
                                   key={`interval-${i}`}
@@ -251,88 +259,44 @@ export function RestrictionItem({
                                   >
                                     {isEditMode ? (
                                         <>
-                                          {renderTimeInput(interval.start, (val) => handleTimeChange(i, 'start', val))}
+                                          {renderTimeInput(formatTimeToString(interval.start), (val) => handleTimeChange(i, 'start', val))}
                                           <motion.div
                                               className="h-4 w-px bg-gray-300 my-1"
                                               initial={{ scaleY: 0 }}
                                               animate={{ scaleY: 1 }}
                                               transition={{ duration: 0.2 }}
                                           />
-                                          {renderTimeInput(interval.end, (val) => handleTimeChange(i, 'end', val))}
+                                          {renderTimeInput(formatTimeToString(interval.end), (val) => handleTimeChange(i, 'end', val))}
                                         </>
                                     ) : (
                                         <>
-                                          {renderTimeDisplay(interval.start)}
+                                          {renderTimeDisplay(formatTimeToString(interval.start))}
                                           <motion.div
                                               className="h-4 w-px bg-gray-300 my-1"
                                               initial={{ scaleY: 0 }}
                                               animate={{ scaleY: 1 }}
                                               transition={{ duration: 0.2 }}
                                           />
-                                          {renderTimeDisplay(interval.end)}
+                                          {renderTimeDisplay(formatTimeToString(interval.end))}
                                         </>
                                     )}
                                   </motion.div>
 
-
-                                  {
-                                    !isEditMode ? (
-                                        <div className="flex flex-row">
-                                          <div className="p-1 items-center justify-center rounded-sm">
-                                            <TvMinimalPlayIcon className={cn(
-                                                "w-[18px] h-[18px]",
-                                                !(isEditMode || editedFormats[i]?.includes('video')) && "opacity-0",
-                                            )}/>
-                                          </div>
-                                          <div className="p-1 items-center justify-center rounded-sm">
-                                            <Users className={cn(
-                                                "w-[18px] h-[18px]",
-                                                !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
-                                            )}/>
-                                          </div>
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-row">
-                                          <motion.div
-                                              className="flex gap-2 justify-between mx-auto"
-                                              variants={scaleUp}
-                                          >
-                                            <motion.button
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.95 }}
-                                                className={cn(
-                                                    "p-1 items-center justify-center rounded-sm",
-                                                    isEditMode && editedFormats[i]?.includes('video') && "bg-colors-custom-accent hover:bg-violet-700 text-white",
-                                                    isEditMode && !editedFormats[i]?.includes('video') && "text-colors-custom-accent hover:text-violet-700 md:hover:bg-violet-50",
-                                                )}
-                                                onClick={isEditMode ? () => toggleFormat(i, 'video') : undefined}
-                                                disabled={!isEditMode}
-                                            >
-                                              <TvMinimalPlayIcon className={cn(
-                                                  "w-[18px] h-[18px]",
-                                                  !(isEditMode || editedFormats[i]?.includes('video')) && "opacity-0",
-                                              )}/>
-                                            </motion.button>
-                                            <motion.button
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.95 }}
-                                                className={cn(
-                                                    "p-1 items-center justify-center rounded-sm",
-                                                    isEditMode && editedFormats[i]?.includes('in-person') && "bg-colors-custom-accent hover:bg-violet-700 text-white",
-                                                    isEditMode && !editedFormats[i]?.includes('in-person') && "text-colors-custom-accent hover:text-violet-700 md:hover:bg-violet-50",
-                                                )}
-                                                onClick={isEditMode ? () => toggleFormat(i, 'in-person') : undefined}
-                                                disabled={!isEditMode}
-                                            >
-                                              <Users className={cn(
-                                                  "w-[18px] h-[18px]",
-                                                  !(isEditMode || editedFormats[i]?.includes('in-person')) && "opacity-0",
-                                              )}/>
-                                            </motion.button>
-                                          </motion.div>
-                                        </div>
-                                    )
-                                  }
+                                  {/* Индикаторы форматов (всегда показываются) */}
+                                  <div className="flex flex-row">
+                                    <div className="p-1 items-center justify-center rounded-sm">
+                                      <TvMinimalPlayIcon className={cn(
+                                          "w-[18px] h-[18px]",
+                                          !editedFormats[i]?.includes('video') && "opacity-0",
+                                      )}/>
+                                    </div>
+                                    <div className="p-1 items-center justify-center rounded-sm">
+                                      <Users className={cn(
+                                          "w-[18px] h-[18px]",
+                                          !editedFormats[i]?.includes('in-person') && "opacity-0",
+                                      )}/>
+                                    </div>
+                                  </div>
                                 </div>
                               </motion.div>
                           )
@@ -372,6 +336,51 @@ export function RestrictionItem({
               </motion.div>
           )}
         </div>
+
+        {/* Кнопки переключения форматов под карточкой */}
+        {isEditMode && (
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeIn}
+                className={cn("flex mt-2 px-2", intervalCount === 3 ? "justify-between mr-10" : "gap-8")}
+            >
+              {Array.from({ length: intervalCount }).map((_, i) => {
+                return (
+                    <motion.div
+                        key={`format-controls-${i}`}
+                        className="flex gap-2"
+                        variants={scaleUp}
+                    >
+                      <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={cn(
+                              "p-1 items-center justify-center rounded-md border",
+                              editedFormats[i]?.includes('video') && "bg-colors-custom-accent hover:bg-violet-700 text-white ",
+                              !editedFormats[i]?.includes('video') && "text-colors-custom-accent hover:text-violet-700 hover:bg-violet-50 border-gray-200",
+                          )}
+                          onClick={() => toggleFormat(i, 'video')}
+                      >
+                        <TvMinimalPlayIcon className="w-[18px] h-[18px]"/>
+                      </motion.button>
+                      <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={cn(
+                              "p-1 items-center justify-center rounded-md border",
+                              editedFormats[i]?.includes('in-person') && "bg-colors-custom-accent hover:bg-violet-700 text-white ",
+                              !editedFormats[i]?.includes('in-person') && "text-colors-custom-accent hover:text-violet-700 hover:bg-violet-50 border-gray-200",
+                          )}
+                          onClick={() => toggleFormat(i, 'in-person')}
+                      >
+                        <Users className="w-[18px] h-[18px]"/>
+                      </motion.button>
+                    </motion.div>
+                )
+              })}
+            </motion.div>
+        )}
       </>
   )
 }

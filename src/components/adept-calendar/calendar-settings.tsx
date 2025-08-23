@@ -47,13 +47,6 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
           <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
         </div>
 
-        {/*<div*/}
-        {/*  className={cn(*/}
-        {/*    "sticky top-[-1px] left-0 right-0 h-2 bg-gradient-to-b to-transparent pointer-events-none z-50",*/}
-        {/*    "from-white via-white/80 to-transparent",*/}
-        {/*  )}*/}
-        {/*/>*/}
-
         <div className="space-y-2 px-4">
           <SettingsSectionHeader
             title="Часовой пояс"
