@@ -34,23 +34,41 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
       >
         {/* Header */}
         <div className="p-1.5">
-          <div className="flex items-start gap-6 pl-6 pr-1.5 py-6">
-            <IconPractice width={90} height={80}/>
-            <div className="flex flex-col">
-              <div className="text-4xl text-neutral-900 font-semibold">Practice</div>
-              {selectedPeriod === 'year' && (<div className="flex flex-col">
-                <div className="text-base text-colors-custom-accent font-semibold ml-auto">- 30%</div>
-                <div className="items-end flex flex-row gap-2">
-                  <div className="flex flex-row gap-1 items-center">
-                    <RubleIcon size={26} bold={false}/>
-                    <div className="text-2xl">1,750</div>
+          {selectedPeriod === 'year' && (
+              <div className="flex items-start gap-6 pl-6 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm h-[142px]">
+                <IconPractice width={90} height={80}/>
+                <div className="flex flex-col">
+                  <div className="text-4xl text-neutral-900 font-semibold">Practice</div>
+                  <div className="flex flex-col">
+                    <div className="text-colors-custom-accent font-semibold ml-auto leading-4">- 30%</div>
+                    <div className="items-end flex flex-row gap-2 mr-2">
+                      <div className="flex flex-row gap-1 items-center justify-start leading-7">
+                        <p className="text-[26px]">₽</p>
+                        <div className="text-2xl whitespace-nowrap"> 1,750</div>
+                      </div>
+                      <span className="text-neutral-900 text-xs whitespace-nowrap mb-1.5">/ месяц</span>
+                    </div>
+                    <div className="flex text-xs text-neutral-900">
+                      Всего: 21,000 ₽ / год.
+                    </div>
                   </div>
-                  <span className="text-neutral-900 text-xs">/ месяц</span>
                 </div>
-                <div className="flex"></div>
-              </div>)}
-            </div>
-          </div>
+              </div>
+          )}
+          {selectedPeriod === 'month' && (
+              <div className="flex items-start gap-6 pl-6 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm h-[142px]">
+                <IconPractice width={90} height={80}/>
+                <div className="flex flex-col gap-[20px]">
+                  <div className="text-4xl text-neutral-900 font-semibold">Practice</div>
+                  <div className="items-end flex flex-row gap-2 mr-2">
+                    <div className="flex flex-row gap-1 items-center justify-start leading-7">
+                      <p className="text-[26px]">₽</p>
+                      <div className="text-2xl whitespace-nowrap"> 2,500</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          )}
         </div>
 
         {/* Current Plan Indicator */}

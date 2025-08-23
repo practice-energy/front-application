@@ -29,7 +29,7 @@ export function PlanCardsContainer({
   }
 
   return (
-    <div className="flex gap-6 justify-center items-start p-6">
+    <div className="flex gap-6 justify-center items-start p-6 transition-all duration-300 ease-in-out">
       <PurePlanCard 
         isCurrentPlan={currentPlan === 'pure'}
         onClick={handlePurePlanClick}

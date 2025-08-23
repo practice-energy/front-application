@@ -21,8 +21,8 @@ export function PurePlanCard({ isCurrentPlan = false, onClick }: PurePlanCardPro
       onClick={onClick}
     >
       {/* Header */}
-      <div className="p-1.5">
-        <div className="flex items-center gap-12 p-6">
+      <div className="p-1.5  ">
+        <div className="flex items-center gap-12 p-6 border border-neutral-900 rounded-sm">
           <IconPractice2 width={68} height={80}/>
           <div className="flex flex-col gap-[20px]">
             <div className="text-4xl text-neutral-900 font-semibold">Pure</div>
