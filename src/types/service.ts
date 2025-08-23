@@ -1,4 +1,4 @@
-import {Format} from "@/src/types/common";
+import {ActivityStatus, Format} from "@/src/types/common";
 import {CalendarRestrictions} from "@/src/types/calendar-event";
 import {Feedback} from "@/src/types/feedback";
 
@@ -43,7 +43,7 @@ export interface Service {
         id: string
         startTime: Date
         endTime: Date
-        status?: "waiting" | "confirmed" | "request"
+        status?: ActivityStatus
         createdAt: Date
         updatedAt: Date
         isRepeat?: boolean

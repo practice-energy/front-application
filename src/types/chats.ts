@@ -1,9 +1,14 @@
 import {Service} from "@/src/types/service";
 import {Specialist} from "@/src/types/specialist";
+import {ActivityStatus} from "@/types/common";
+
+export type Sender = "user" | "assistant" | "specialist"
+
+export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test" | "version-test"
 
 export interface Message {
   id: string
-  type: "user" | "assistant" | "specialist"
+  type: Sender
   content?: string
   timestamp: number
   specialists?: Specialist[]
@@ -24,8 +29,6 @@ export type Tag = {
   subtags?:  Tag[]
 }
 
-export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test" | "version-test"
-
 export type Chat = {
   id: string
   title: string
@@ -34,7 +37,7 @@ export type Chat = {
   avatar?: string
   isAI?: boolean
   isAIEnabled?: boolean
-  status?: "waiting" | "confirmed" | "request" | "declined" | null
+  status?: ActivityStatus
   timestamp: number
   isMuted?: boolean
   messages: Message[]

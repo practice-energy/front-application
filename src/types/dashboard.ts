@@ -1,16 +1,10 @@
+import {ActivityStatus, Format} from "@/types/common";
+
 export interface PracticeOverview {
   confirmedSlots: number
   newInitiants: number
   personalMeetings: number
   repeatingMeetings: number
-}
-
-export interface TopStats {
-  activePracticesCount: number
-  unreadCount: number
-  issuesCount: number
-  slotsApprovedCount: number
-  unreadsForTodayactivities: number
 }
 
 export interface ActivityOverview {
@@ -23,8 +17,8 @@ export interface UpcomingActivity {
   start: Date
   end: Date
   duration: number
-  format: "video" | "in-person"
-  status?: "waiting" | "confirmed" | "request"
+  format: Format
+  status?: ActivityStatus
   client: {
     id: string
     name: string
@@ -41,7 +35,6 @@ export interface UpcomingActivity {
 }
 
 export interface DashboardStats {
-  topStats: TopStats
   practiceOverview: PracticeOverview
   activityOverview: ActivityOverview
   upcomingActivities: {

@@ -9,3 +9,5 @@ export interface Experience {
 }
 
 export type Format = "video" | "in-person"
+
+export type ActivityStatus = "request" | "confirmed" | "waiting" | "finalized" | "declined"

@@ -11,15 +11,11 @@ const SavedSection = lazy(() =>
 const SecuritySection = lazy(() =>
   import("@/src/components/profile/sections/security-section").then((m) => ({ default: m.SecuritySection })),
 )
-const BalanceSection = lazy(() =>
-  import("@/src/components/profile/sections/balance-section").then((m) => ({ default: m.BalanceSection })),
-)
 
 function LoadingSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="h-8 bg-gray-200 rounded animate-pulse" />
-      <div className="h-32 bg-gray-200 rounded animate-pulse" />
+      <div className="h-[406px] w-[845px] bg-gray-200 rounded animate-pulse" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[1, 2, 3].map((i) => (
           <div key={i} className="h-24 bg-gray-200 rounded animate-pulse" />
@@ -50,12 +46,6 @@ export function ProfileDashboard() {
         return (
           <Suspense fallback={<LoadingSkeleton />}>
             <SecuritySection />
-          </Suspense>
-        )
-      case "balance":
-        return (
-          <Suspense fallback={<LoadingSkeleton />}>
-            <BalanceSection />
           </Suspense>
         )
       default:

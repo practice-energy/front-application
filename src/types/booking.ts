@@ -1,3 +1,5 @@
+import {ActivityStatus, Format} from "@/types/common";
+
 export interface Booking {
   id: string
   service: {
@@ -16,8 +18,8 @@ export interface Booking {
   date: Date
   duration: number
   slots: number // количество часовых слотов (1 слот = 1 час)
-  format: "video" | "in-person"
-  status?: "waiting" | "confirmed" | "request"
+  format: Format
+  status?: ActivityStatus
   createdAt: Date
   updatedAt: Date
   isRepeat?: boolean

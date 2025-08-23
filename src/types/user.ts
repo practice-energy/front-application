@@ -13,23 +13,20 @@ export interface User {
   timezone: string
   createdAt: Date
   preferences?: {
-    language: "ru" | "en"
+    language: Language
   }
   education: Education[]
   certifcates: Education[]
   experience: Experience[]
   specialistProfile?: Specialist
   isSpecialist: boolean
-  hat: "master" | "adept" | "superviser"
-  tier: "unlimited" | "premium" | "basic"
+  hat: Hat
+  tier: Tier
   practice: number
 }
 
-export interface UserStats {
-  totalBookings: number
-  completedBookings: number
-  cancelledBookings: number
-  totalEarnings: number
-  averageRating: number
-  reviewsCount: number
-}
+export type Language = "ru" | "en"
+
+export type Hat = "master" | "adept" | "superviser"
+
+export type Tier = "pure" | "practice" | "pro" | "infinite"

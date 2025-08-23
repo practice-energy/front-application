@@ -18,13 +18,13 @@
     "deploy:cloudflare-preview": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env preview"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.6.5",
     "@apollo/client": "latest",
     "@cloudflare/kv-asset-handler": "latest",
     "@emotion/is-prop-valid": "latest",
     "@heroicons/react": "latest",
     "@hookform/resolvers": "latest",
     "@next/third-parties": "^15.2.4",
+    "@opennextjs/cloudflare": "^1.6.5",
     "@phosphor-icons/react": "latest",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -71,7 +71,7 @@
     "i18next-http-backend": "latest",
     "immer": "latest",
     "input-otp": "latest",
-    "lucide-react": "^0.454.0",
+    "lucide-react": "^0.541.0",
     "next": "15.2.4",
     "next-themes": "latest",
     "pnpm": "^10.13.1",

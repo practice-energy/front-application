@@ -2,7 +2,6 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { ProfileSection } from "@/src/types/profile"
 import { User } from "@/src/types/user"
-import { ProfileStats } from "@/src/types/profile-stats"
 
 import {Specialist} from "@/src/types/specialist";
 
@@ -14,7 +13,6 @@ interface ProfileState {
 
   // User Data
   user: User | null
-  stats: ProfileStats | null
   savedSpecialists: Specialist[]
 
   // UI Controls
@@ -25,7 +23,6 @@ interface ProfileState {
   setSidebarCollapsed: (collapsed: boolean) => void
   setIsMobile: (mobile: boolean) => void
   setUser: (user: User) => void
-  setStats: (stats: ProfileStats) => void
   setSavedSpecialists: (specialists: Specialist[]) => void
   setLoading: (loading: boolean) => void
 
@@ -51,7 +48,6 @@ export const useProfileStore = create<ProfileState>()(
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
       setIsMobile: (mobile) => set({ isMobile: mobile }),
       setUser: (user) => set({ user }),
-      setStats: (stats) => set({ stats }),
       setSavedSpecialists: (specialists) => set({ savedSpecialists: specialists }),
       setLoading: (loading) => set({ isLoading: loading }),
 
