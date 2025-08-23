@@ -1,76 +1,108 @@
 "use client"
 
 import { Card, CardContent } from "@/src/components/ui/card"
-import { RotateCcw } from "lucide-react"
+import {Subscription} from "@/types/balance";
+import {cn} from "@/lib/utils";
+import {IconPractice2} from "@/components/icons/prractice-2-logo";
+import {Hat, Tier} from "@/types/user";
+import {IconPractice} from "@/components/icons/icon-practice";
+import {RubleIcon} from "@/components/ui/ruble-sign";
+import {formatNumber} from "@/utils/format";
+import {UserSwitchIcon} from "@phosphor-icons/react";
+import {ActivityStatus} from "@/components/ui/activity-status";
 
 interface PlanIconProps {
-  type: string
+  tier: Tier
 }
 
-function PlanIcon({ type }: PlanIconProps) {
-  if (type === "barcode") {
-    return (
-      <div className="w-8 h-10 bg-white border border-gray-300 rounded flex items-center justify-center">
-        <div className="flex gap-0.5">
-          <div className="w-0.5 h-6 bg-black"></div>
-          <div className="w-0.5 h-6 bg-black"></div>
-          <div className="w-0.5 h-6 bg-black"></div>
+function tierName(tier: Tier) {
+  switch (tier) {
+    case "pure":
+      return "Pure"
+    case "practice":
+      return "Practice"
+    case "pro":
+      return "Practice Pro"
+  }
+}
+
+function renderPlanIcon(tier ) {
+  switch (tier) {
+    case "pure":
+      return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[17px] px-0.5">
+        <IconPractice2 width={36} height={42}/>
+      </div>
+    case "practice":
+      return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[22px] px-0.5">
+        <IconPractice width={36} height={32}/>
+      </div>
+    case "pro":
+      return <div className="border  border-neutral-900 bg-neutral-900 rounded-sm items-center justify-center py-[22px] px-0.5">
+        <IconPractice width={36} height={32} className="text-white"/>
+      </div>
+  }
+
+  return null
+}
+
+function renderHat(hat: Hat ) {
+  switch (hat) {
+    case "adept":
+      return <div className="flex flex-row gap-1.5  text-neutral-900 items-center">
+        <div className="text-sm">
+          Инициант
         </div>
+        <UserSwitchIcon size={18}/>
       </div>
-    )
-  }
-  
-  if (type === "cross") {
-    return (
-      <div className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center">
-        <div className="text-white font-bold text-sm">×</div>
+    case "master":
+      return <div className="flex flex-row gap-1.5 text-colors-custom-accent items-center">
+        <div className="text-sm">
+          Мастер
+        </div>
+        <UserSwitchIcon size={18}/>
       </div>
-    )
   }
-  
+
   return null
 }
 
 interface SubscriptionPlanCardProps {
-  plan: {
-    id: string
-    name: string
-    icon: string
-    currentPlan: string
-    expiryDate: string
-    price: string
-    tier: string
-    isCurrent: boolean
-  }
+  isMobile: boolean
+  plan: Subscription
 }
 
-export function SubscriptionPlanCard({ plan }: SubscriptionPlanCardProps) {
+export function SubscriptionPlanCard({ plan, isMobile }: SubscriptionPlanCardProps) {
   return (
-    <Card className="border border-gray-200 dark:border-gray-800">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <PlanIcon type={plan.icon} />
-          
-          <div className="flex-1">
-            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              Текущий план подписки: {plan.currentPlan}
+    <div className={cn(
+        "bg-white shadow-custom rounded-sm",
+        isMobile ? "w-full" : "w-[392px]"
+    )}>
+      <div className="p-1 flex flex-row gap-4">
+        {renderPlanIcon(plan.tier)}
+        <div className="flex items-center justify-between gap-3 p-0.5 flex-1">
+          <div className="flex flex-col">
+            <div className="text-sm font-medium text-neutral-900 whitespace-nowrap">
+              Текущий план подписки:
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                до {plan.expiryDate}
-              </span>
-              <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                {plan.price}
-              </span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {plan.tier}
-              </span>
-              <RotateCcw className="h-3 w-3 text-gray-400" />
+            <div className="text-sm font-medium text-neutral-900">
+              {tierName(plan.tier)}
             </div>
           </div>
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="flex flex-row gap-1.5 text-sm">
+              <div>
+                до {plan.endDate ? new Date(plan.endDate).toLocaleDateString('ru-RU') : ''}
+              </div>
+              <ActivityStatus status={plan.isActive ? 'activePractice' : 'outOfPractice'} showTitle={false} />
+            </div>
+            <div className="flex flex-row text-sm font-medium items-center">
+              {formatNumber(plan.price)}
+              <RubleIcon size={18} bold={false} />
+            </div>
+            {renderHat(plan.hat)}
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

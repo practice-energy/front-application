@@ -1,4 +1,4 @@
-import {Hat} from "@/types/user";
+import {Hat, Tier} from "@/types/user";
 
 export interface Balance {
     amount: number
@@ -7,8 +7,9 @@ export interface Balance {
 
 export interface Subscription {
     id: string
-    tier: string
+    tier: Tier
     hat: Hat
     price: number
-    endDate: number
+    endDate: Date
+    isActive: boolean
 }
