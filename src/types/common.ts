@@ -1,10 +1,12 @@
 export interface Education {
+    id?: string;
     title: string;
     description: string;
     certificate?: string;
 }
 
 export interface Experience {
+    id?: string;
     description: string;
 }
 

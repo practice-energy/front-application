@@ -6,14 +6,17 @@ export interface Booking {
     id: string
     title: string
     description: string
-    price: number
     duration: number
   }
   specialist: {
     id: string
     name: string
     avatar?: string
-    practiceCount: number
+  }
+  client: {
+    id: string
+    name: string
+    avatar?: string
   }
   date: Date
   duration: number

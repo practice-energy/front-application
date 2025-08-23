@@ -50,6 +50,16 @@ export interface Service {
         duration: number
         format: Format
         price: number
+        specialist: {
+            id: string
+            name: string
+            avatar?: string
+        }
+        client: {
+            id: string
+            name: string
+            avatar?: string
+        }
     }[]
     calendarRestrictions?: CalendarRestrictions
 }

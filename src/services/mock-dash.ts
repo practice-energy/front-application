@@ -2,23 +2,6 @@ import { v4 as uuidv4 } from "uuid"
 import type { DashboardStats } from "@/src/types/dashboard"
 
 const mockDashboardStats: DashboardStats = {
-  topStats: {
-    activePracticesCount: 10,
-    unreadCount: 10,
-    issuesCount: 10,
-    slotsApprovedCount: 10,
-    unreadsForTodayactivities: 10,
-  },
-  practiceOverview: {
-    confirmedSlots: 24,
-    newInitiants: 5,
-    personalMeetings: 18,
-    repeatingMeetings: 6
-  },
-  activityOverview: {
-    fillRate: 78,
-    totalEarningsPredict: 12500
-  },
   upcomingActivities: {
     activities: [
       {

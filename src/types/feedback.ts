@@ -1,7 +1,7 @@
 export interface Feedback {
     id: string
     author: string
-    avatar: string
+    avatar?: string
     comment: string
-    date: number
+    date: Date
 }

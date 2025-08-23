@@ -17,7 +17,6 @@ export interface CalendarRestrictions {
 
 export interface Restriction {
     id: string
-    name: string
     date?: Date
     isActive: boolean
     intervals: Interval[]

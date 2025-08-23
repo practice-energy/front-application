@@ -21,6 +21,8 @@ src/services/
 │   └── chat.ts       # Мутации чатов
 ├── generated/        # Сгенерированные типы и хуки
 ├── examples.tsx      # Примеры использования
+├── converters.ts     # Конвертеры между типами
+├── converters-examples.ts # Примеры использования конвертеров
 ├── index.ts          # Экспорт всех запросов и мутаций
 └── schema.graphqls   # GraphQL схема
 ```
@@ -192,3 +194,64 @@ import type {
 ## Примеры
 
 Полные примеры использования находятся в файле `src/services/examples.tsx`.
+
+## Конвертеры
+
+Для удобства работы с разными типами данных созданы конвертеры между GraphQL типами и типами из папки `types`:
+
+### Доступные конвертеры
+
+#### Service
+- `convertServiceToGql(service)` - Service → GqlService
+- `convertGqlServiceToService(gqlService)` - GqlService → Service
+- `convertServiceToCreateServiceInput(service)` - Service → CreateServiceInput
+- `convertServiceToUpdateServiceInput(service)` - Service → UpdateServiceInput
+
+#### User
+- `convertUserToGql(user)` - User → GqlUser
+- `convertGqlUserToUser(gqlUser)` - GqlUser → User
+- `convertUserToUpdateUserInput(user)` - User → UpdateUserInput
+
+#### Specialist
+- `convertSpecialistToGql(specialist)` - Specialist → SpecialistProfile
+- `convertGqlSpecialistToSpecialist(gqlSpecialist)` - SpecialistProfile → Specialist
+- `convertSpecialistToUpdateSpecialistInput(specialist)` - Specialist → UpdateSpecialistInput
+- `convertGqlSpecialistsToSpecialists(gqlSpecialists)` - SpecialistProfile[] → Specialist[]
+
+#### CalendarRestrictions
+- `convertCalendarRestrictionsToGql(restrictions)` - CalendarRestrictions → GqlCalendarRestrictions
+- `convertGqlCalendarRestrictionsToCalendarRestrictions(gqlRestrictions)` - GqlCalendarRestrictions → CalendarRestrictions
+
+#### Booking
+- `convertGqlBookingsToBookings(gqlBookings)` - GqlBooking[] → Booking[]
+- `convertGqlActivitiesToBookings(gqlActivities)` - GqlActivity[] → Booking[]
+
+#### Chat
+- `convertChatToGql(chat)` - Chat → GqlChat
+- `convertGqlChatToChat(gqlChat)` - GqlChat → Chat
+
+### Примеры использования конвертеров
+
+```typescript
+import { 
+  convertServiceToUpdateServiceInput,
+  convertGqlServiceToService,
+  convertUserToUpdateUserInput 
+} from '@/services'
+
+// Конвертация Service для обновления
+const service: Service = { /* ... */ }
+const updateInput = convertServiceToUpdateServiceInput(service)
+updateService({ variables: { input: updateInput } })
+
+// Конвертация GraphQL данных в типы приложения
+const { data } = useGetService({ id: 'service-1' })
+const service = convertGqlServiceToService(data.service)
+
+// Конвертация User для обновления
+const user: User = { /* ... */ }
+const updateInput = convertUserToUpdateUserInput(user)
+updateUser({ variables: { input: updateInput } })
+```
+
+Подробные примеры использования конвертеров находятся в файле `src/services/converters-examples.ts`.

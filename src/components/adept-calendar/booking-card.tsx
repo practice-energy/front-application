@@ -119,7 +119,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
 
               <div className="flex items-center justify-end gap-1">
                 <div className="font-semibold text-xs text-neutral-700 whitespace-nowrap">
-                  {formatNumber(booking.service.price)}
+                  {formatNumber(booking.price)}
                 </div>
                 <RubleIcon size={24} bold={false} className=""/>
               </div>
@@ -173,7 +173,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
 
               <div className="flex items-center justify-end gap-1">
                 <div className="font-semibold text-xs text-neutral-700 whitespace-nowrap">
-                  {formatNumber(booking.service.price)}
+                  {formatNumber(booking.price)}
                 </div>
                 <RubleIcon size={24} bold={false} className=""/>
               </div>
@@ -252,7 +252,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
                     {/* Правая часть - цена и иконка повторения */}
                     <div className="flex-shrink-0 flex items-center gap-1 ml-2 mt-0.5">
                       <div className="font-semibold text-neutral-700 whitespace-nowrap">
-                        {formatNumber(booking.service.price)}
+                        {formatNumber(booking.price)}
                         <RubleIcon size={22} bold={false} className="inline-block mb-0.5" />
                       </div>
                       <ChatButton
@@ -316,7 +316,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
                     {booking.specialist.name}
                   </div>
                   <div className="font-semibold text-sm text-neutral-700 whitespace-nowrap flex">
-                    {formatNumber(booking.service.price)}
+                    {formatNumber(booking.price)}
                   </div>
                 </div>
               </div>
@@ -426,7 +426,7 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
             {/* Цена и иконки */}
             <div className="flex items-center">
               <div className="font-semibold text-sm text-neutral-700 whitespace-nowrap mr-1">
-                {formatNumber(booking.service.price)}
+                {formatNumber(booking.price)}
               </div>
               <RubleIcon size={22} bold={false} className="mr-1"/>
               <ChatButton

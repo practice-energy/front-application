@@ -382,7 +382,7 @@ export function OverviewSection() {
               </div>
 
               {/* Experience and Certificates */}
-              <div className="bg-colors-neutral-150 rounded-sm shadow-md p-4">
+              <div className="rounded-b-sm shadow-md p-4">
                 <div className="relative">
                   <div className="mt-4">
                     <Bullets
@@ -398,13 +398,7 @@ export function OverviewSection() {
 
                 {/* Education and Certificates */}
                 <div className="mt-4 space-y-4">
-                  {currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode ? (
-                    // <div className="mx-6 mb-2 items-center justify-center flex flex-col">
-                    //   <PracticePlaceholder width={120} height={120} iconClassName="text-gray-400" />
-                    //   <div className="text-gray-400 text-center">Образование и сертификаты не добавлены</div>
-                    // </div>
-                      <></>
-                  ) : (
+                  {currentData.education.length === 0 && currentData.certificates.length === 0 && !isEditMode && (
                     <>
                       {(currentData.education.length > 0 || isEditMode) && (
                         <Certificates

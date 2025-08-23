@@ -1,17 +1,5 @@
 import {ActivityStatus, Format} from "@/types/common";
 
-export interface PracticeOverview {
-  confirmedSlots: number
-  newInitiants: number
-  personalMeetings: number
-  repeatingMeetings: number
-}
-
-export interface ActivityOverview {
-  fillRate: number
-  totalEarningsPredict: number
-}
-
 export interface UpcomingActivity {
   id: string
   start: Date
@@ -24,19 +12,22 @@ export interface UpcomingActivity {
     name: string
     avatar?: string
   }
+  specialist: {
+    id: string
+    name: string
+    avatar?: string
+  }
   isRepeat: boolean
   service: {
     id: string
     name: string
-    price: number
     description: string
   }
+  price: number
   practiceCount?: number
 }
 
 export interface DashboardStats {
-  practiceOverview: PracticeOverview
-  activityOverview: ActivityOverview
   upcomingActivities: {
     activities: UpcomingActivity[]
   }

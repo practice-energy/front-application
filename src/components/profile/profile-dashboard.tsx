@@ -5,9 +5,6 @@ import { useProfileStore } from "@/src/stores/profile-store"
 import { ProfileLayout } from "@/src/components/profile/profile-layout"
 import { OverviewSection } from "@/src/components/profile/sections/overview-section"
 
-const SavedSection = lazy(() =>
-  import("@/src/components/profile/sections/saved-section").then((m) => ({ default: m.SavedSection })),
-)
 const SecuritySection = lazy(() =>
   import("@/src/components/profile/sections/security-section").then((m) => ({ default: m.SecuritySection })),
 )
@@ -36,12 +33,6 @@ export function ProfileDashboard() {
               <OverviewSection />
              </Suspense>
          )
-      case "saved":
-        return (
-          <Suspense fallback={<LoadingSkeleton />}>
-            <SavedSection />
-          </Suspense>
-        )
       case "security":
         return (
           <Suspense fallback={<LoadingSkeleton />}>

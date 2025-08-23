@@ -4,7 +4,7 @@ import {ActivityStatus} from "@/types/common";
 
 export type Sender = "user" | "assistant" | "specialist"
 
-export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test" | "version-test"
+export type AiMessageType = "info" | "warning" | "service" | "become-specialist-drops" | "accept-policy" | "drops-or-input" | "profile-test" | "version-test" | "booking"
 
 export interface Message {
   id: string
@@ -39,7 +39,6 @@ export type Chat = {
   isAIEnabled?: boolean
   status?: ActivityStatus
   timestamp: number
-  isMuted?: boolean
   messages: Message[]
   createdAt: number,
   hasNew?: boolean
