@@ -121,7 +121,8 @@ const config: Config = {
             specialistCardStatsBg: "#f3f4f6",
             specialistCardStatItemBg: "#fdfdfd",
             specialistCardStatItemBgFlip: "#fafafb",
-            accent: "#7F55E0FF"
+            accent: "#7F55E0FF",
+            currentPlanBg: "#DEE1E6FF",
           }
         },
         sidebar: {

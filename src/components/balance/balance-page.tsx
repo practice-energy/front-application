@@ -122,6 +122,8 @@ export function BalancePage() {
                       setCardFilter('adept')
                   }
               }}
+              selectedPeriod={selectedPeriod}
+              isMobile={isMobile}
           />
       </div>
    </div>

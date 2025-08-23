@@ -9,12 +9,16 @@ interface PlanCardsContainerProps {
   currentPlan?: 'pure' | 'practice'
   onPlanSelect?: (plan: 'pure' | 'practice') => void
   userRole?: Hat
+  selectedPeriod: 'month' | 'year'
+  isMobile: boolean
 }
 
 export function PlanCardsContainer({ 
   currentPlan = 'pure', 
   onPlanSelect,
-  userRole = 'adept'
+  userRole = 'adept',
+  isMobile,
+  selectedPeriod,
 }: PlanCardsContainerProps) {
   const handlePurePlanClick = () => {
     onPlanSelect?.('pure')
@@ -34,6 +38,7 @@ export function PlanCardsContainer({
         <PracticePlanCard 
           isCurrentPlan={currentPlan === 'practice'}
           onClick={handlePracticePlanClick}
+          selectedPeriod={selectedPeriod}
         />
       )}
     </div>
