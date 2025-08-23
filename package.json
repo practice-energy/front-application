@@ -15,7 +15,9 @@
     "type-check": "tsc --noEmit",
     "prepare:cloudflare": "echo 'OpenNext build already prepared for Cloudflare'",
     "deploy:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "deploy:cloudflare-preview": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env preview"
+    "deploy:cloudflare-preview": "pnpm build:cloudflare && pnpm prepare:cloudflare && wrangler deploy --env preview",
+    "codegen": "graphql-codegen",
+    "codegen:watch": "graphql-codegen --watch"
   },
   "dependencies": {
     "@apollo/client": "latest",
@@ -94,6 +96,9 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/client-preset": "^4.8.3",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@opennextjs/cloudflare": "^1.6.5",
     "@types/node": "^22",
     "@types/react": "^19",

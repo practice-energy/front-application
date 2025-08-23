@@ -1,5 +1,5 @@
 // Animation constants for sidebar transitions
-export const ANIMATION_DURATION = 250
+export const ANIMATION_DURATION = 400
 export const ANIMATION_TIMING = "cubic-bezier(0.4, 0, 0.2, 1)"
 
 // Utility functions for sidebar animations
