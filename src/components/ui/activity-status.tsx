@@ -1,7 +1,7 @@
 import { cn } from "@/src/lib/utils";
 import React from "react";
 
-export type ActivityStatusType = "waiting" | "confirmed" | "request" | "declined" | "new" | "activePractice" | "outOfPractice" | undefined;
+export type ActivityStatusType = "waiting" | "confirmed" | "request" | "declined" | "new" | "activePractice" | "outOfPractice" | 'payed' | 'unpayed' | undefined;
 
 interface ActivityStatusProps {
     status?: ActivityStatusType;
@@ -50,6 +50,14 @@ export const ActivityStatus = React.memo(({
         activePractice: {
             text: "В доступе",
             dotClass: "bg-teal-400"
+        },
+        payed: {
+            text: "Оплачено",
+            dotClass: "bg-teal-400"
+        },
+        unpayed: {
+            text: "Ожидает оплаты",
+            dotClass: "bg-white border border-neutral-900"
         }
     };
 

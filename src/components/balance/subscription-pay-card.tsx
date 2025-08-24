@@ -1,6 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/src/components/ui/card"
 import {Subscription} from "@/types/balance";
 import {cn} from "@/lib/utils";
 import {IconPractice2} from "@/components/icons/prractice-2-logo";
@@ -10,10 +9,7 @@ import {RubleIcon} from "@/components/ui/ruble-sign";
 import {formatNumber} from "@/utils/format";
 import {UserSwitchIcon} from "@phosphor-icons/react";
 import {ActivityStatus} from "@/components/ui/activity-status";
-
-interface PlanIconProps {
-  tier: Tier
-}
+import React from "react";
 
 function tierName(tier: Tier) {
   switch (tier) {
@@ -33,7 +29,7 @@ function renderPlanIcon(tier ) {
         <IconPractice2 width={36} height={42}/>
       </div>
     case "practice":
-      return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[22px] px-0.5">
+      return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[20px] px-0.5">
         <IconPractice width={36} height={32}/>
       </div>
     case "pro":
@@ -66,38 +62,35 @@ function renderHat(hat: Hat ) {
   return null
 }
 
-interface SubscriptionPlanCardProps {
-  isMobile: boolean
+interface SubscriptionPayCardProps {
   plan: Subscription
+  period: 'month' | 'year'
+  payed: boolean
 }
 
-export function SubscriptionPlanCard({ plan, isMobile }: SubscriptionPlanCardProps) {
+export function SubscriptionPayCard({ plan, period, payed }: SubscriptionPayCardProps) {
   return (
     <div className={cn(
-        "bg-white shadow-custom rounded-sm",
-        isMobile ? "w-full" : "w-[392px]"
+        "bg-white shadow-custom rounded-sm w-full border border-neutral-900",
     )}>
       <div className="p-1 flex flex-row gap-4">
         {renderPlanIcon(plan.tier)}
-        <div className="flex items-center justify-between gap-3 py-0.5 pr-0.5 flex-1">
+        <div className="flex items-center justify-between flex-1">
           <div className="flex flex-col">
             <div className="text-sm font-medium text-neutral-900 whitespace-nowrap">
-              Текущий план подписки:
+              План подписки:
             </div>
-            <div className="text-sm font-medium text-neutral-900">
-              {tierName(plan.tier)}
+            <div className="text-sm font-medium text-neutral-900 whitespace-nowrap">
+              {tierName(plan.tier)} / {period === 'month' ? '30 дней' : '1 год'}
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="flex flex-col items-end gap-1.5 pr-0.5 ">
             <div className="flex flex-row gap-1.5 text-sm">
-              <div>
-                до {plan.endDate ? new Date(plan.endDate).toLocaleDateString('ru-RU') : ''}
-              </div>
-              <ActivityStatus status={plan.isActive ? 'activePractice' : 'outOfPractice'} showTitle={false} />
+              <ActivityStatus status={plan.isActive ? 'payed' : 'unpayed'} showTitle={false} />
             </div>
-            <div className="flex flex-row text-sm font-medium items-center">
+            <div className="flex flex-row text-sm font-medium items-center ">
               {formatNumber(plan.price)}
-              <RubleIcon size={18} bold={false} />
+              <RubleIcon size={24} bold={false} className="ml-1" />
             </div>
             {renderHat(plan.hat)}
           </div>

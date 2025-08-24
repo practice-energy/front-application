@@ -52,6 +52,7 @@ export function PlanCardsContainer({
           isCurrentPlan={currentPlan === 'practice'}
           onClick={handlePracticePlanClick}
           selectedPeriod={selectedPeriod}
+          isMobile={isMobile}
         />
       </div>
     </div>
