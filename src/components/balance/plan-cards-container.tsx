@@ -3,15 +3,17 @@
 import React from "react"
 import { PurePlanCard } from "./pure-plan-card"
 import { PracticePlanCard } from "./practice-plan-card"
-import { Hat } from "@/types/user"
+import { PracticeProPlanCard } from "./practice-pro-plan-card"
+import { Hat, User } from "@/types/user"
 import { cn } from "@/src/lib/utils"
 
 interface PlanCardsContainerProps {
-  currentPlan?: 'pure' | 'practice'
-  onPlanSelect?: (plan: 'pure' | 'practice') => void
+  currentPlan?: 'pure' | 'practice' | 'pro'
+  onPlanSelect?: (plan: 'pure' | 'practice' | 'pro') => void
   userRole?: Hat
   selectedPeriod: 'month' | 'year'
   isMobile: boolean
+  user?: User
 }
 
 export function PlanCardsContainer({ 
@@ -20,6 +22,7 @@ export function PlanCardsContainer({
   userRole = 'adept',
   isMobile,
   selectedPeriod,
+  user,
 }: PlanCardsContainerProps) {
   const handlePurePlanClick = () => {
     onPlanSelect?.('pure')
@@ -27,6 +30,10 @@ export function PlanCardsContainer({
 
   const handlePracticePlanClick = () => {
     onPlanSelect?.('practice')
+  }
+
+  const handlePracticeProPlanClick = () => {
+    onPlanSelect?.('pro')
   }
 
   return (
@@ -41,7 +48,8 @@ export function PlanCardsContainer({
         />
       </div>
       
-      <div className={cn(
+      {userRole === 'adept' && (
+        <div className={cn(
         "transition-all duration-500 ease-in-out",
         "transform-gpu",
         userRole === 'adept' 
@@ -53,8 +61,27 @@ export function PlanCardsContainer({
           onClick={handlePracticePlanClick}
           selectedPeriod={selectedPeriod}
           isMobile={isMobile}
+          user={user}
         />
       </div>
+      )}
+
+      {userRole === 'master' && (
+        <div className={cn(
+        "transition-all duration-500 ease-in-out",
+        "transform-gpu",
+        userRole === 'master' 
+          ? "opacity-100 translate-x-0" 
+          : "opacity-0 translate-x-4 pointer-events-none"
+      )}>
+        <PracticeProPlanCard 
+          isCurrentPlan={currentPlan === 'pro'}
+          onClick={handlePracticeProPlanClick}
+          selectedPeriod={selectedPeriod}
+          isMobile={isMobile}
+          user={user}
+        />
+      </div>)}
     </div>
   )
 }

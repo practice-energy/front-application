@@ -115,15 +115,19 @@ export function BalancePage() {
       
       {/* Карточки планов */}
       <div className="w-full max-w-[845px] mx-auto mt-6">
-          <PlanCardsContainer
-              userRole={cardFilter}
-              onPlanSelect={(plan) => {
-                  if (plan === 'practice' && cardFilter !== 'adept') {
-                      setCardFilter('adept')
-                  }
-              }}
-              selectedPeriod={selectedPeriod}
-              isMobile={isMobile}
+                    <PlanCardsContainer
+            userRole={cardFilter}
+            onPlanSelect={(plan) => {
+                if (plan === 'practice' && cardFilter !== 'adept') {
+                    setCardFilter('adept')
+                }
+                if (plan === 'pro' && cardFilter !== 'master') {
+                    setCardFilter('master')
+                }
+            }}
+            selectedPeriod={selectedPeriod}
+            isMobile={isMobile}
+            user={user}
           />
       </div>
    </div>

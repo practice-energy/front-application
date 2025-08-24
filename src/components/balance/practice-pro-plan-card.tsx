@@ -10,7 +10,7 @@ import {Subscription} from "@/types/balance";
 import {SubscriptionPayCard} from "@/components/balance/subscription-pay-card";
 import {User} from "@/types/user";
 
-interface PracticePlanCardProps {
+interface PracticeProPlanCardProps {
   isMobile: boolean
   isCurrentPlan?: boolean
   onClick?: () => void
@@ -18,7 +18,7 @@ interface PracticePlanCardProps {
   user?: User
 }
 
-export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPeriod, isMobile, user }: PracticePlanCardProps) {
+export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPeriod, isMobile, user }: PracticeProPlanCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
   const [payed, setPayed] = useState(false)
 
@@ -28,16 +28,16 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
 
   const subscriptionPlan: Subscription = selectedPeriod === 'month' ? {
     id: uuidv4(),
-    tier: 'practice',
-    hat: 'adept',
-    price: 2500,
+    tier: 'pro',
+    hat: 'master',
+    price: 5000,
     endDate: new Date(),
     isActive: false,
   } : {
     id: uuidv4(),
-    tier: 'practice',
-    hat: 'adept',
-    price: 21000,
+    tier: 'pro',
+    hat: 'master',
+    price: 42000,
     endDate: new Date(),
     isActive: false,
   }
@@ -64,7 +64,7 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
           {/* Передняя сторона карточки */}
           <div
             className={cn(
-              "w-full h-full bg-white border border-gray-200 rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
+              "w-full h-full bg-white border border-colors-custom-accent rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
               "flex flex-col backface-hidden"
             )}
             style={{ backfaceVisibility: 'hidden' }}
@@ -72,78 +72,95 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
           >
         {/* Header */}
         <div className="p-1.5">
-          <div className="relative h-[142px]">
-            <div className={cn(
-              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out",
-              selectedPeriod === 'year' 
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
-            )}>
-              <IconPractice width={90} height={80} className="pt-2"/>
-              <div className="flex flex-col">
-                <div className="text-4xl text-neutral-900 font-semibold">Practice</div>
-                <div className="flex flex-col">
-                  <div className="text-colors-custom-accent font-semibold ml-auto leading-4">- 30%</div>
-                  <div className="items-end flex flex-row gap-2 mr-2">
-                    <div className="flex flex-row gap-1 items-center justify-start leading-7">
-                      <p className="text-[26px]">₽</p>
-                      <div className="text-2xl whitespace-nowrap"> 1,750</div>
+          <div className="bg-neutral-900 rounded-sm pb-3">
+            <div >
+              <div className="relative h-[142px]">
+                <div className={cn(
+                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 bg-neutral-900 rounded-sm transition-all duration-300 ease-in-out",
+                    selectedPeriod === 'year'
+                        ? "opacity-100"
+                        : "opacity-0 pointer-events-none"
+                )}>
+                  <IconPractice width={90} height={80} className="pt-2 text-white"/>
+                  <div className="flex flex-col">
+                    <div className="text-4xl text-white font-semibold whitespace-nowrap">Senti Pro</div>
+                    <div className="flex flex-col">
+                      <div className="text-colors-custom-accent font-semibold ml-auto leading-4">- 30%</div>
+                      <div className="items-end flex flex-row gap-2 mr-2">
+                        <div className="flex flex-row gap-1 items-center text-white justify-start leading-7">
+                          <p className="text-[26px]">₽</p>
+                          <div className="text-2xl whitespace-nowrap"> 3,500</div>
+                        </div>
+                        <span className="text-white text-xs whitespace-nowrap mb-1.5">/ месяц</span>
+                      </div>
+                      <div className="flex text-xs text-white">
+                        Всего: 42,000 ₽ / год.
+                      </div>
                     </div>
-                    <span className="text-neutral-900 text-xs whitespace-nowrap mb-1.5">/ месяц</span>
                   </div>
-                  <div className="flex text-xs text-neutral-900">
-                    Всего: 21,000 ₽ / год.
+                </div>
+
+                <div className={cn(
+                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out transform-gpu",
+                    selectedPeriod === 'month'
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-2 pointer-events-none"
+                )}>
+                  <IconPractice width={90} height={80} className="pt-2 text-white"/>
+                  <div className="flex flex-col gap-[20px]">
+                    <div className="text-4xl text-white font-semibold whitespace-nowrap">Senti Pro</div>
+                    <div className="items-end flex flex-row gap-2 mr-2">
+                      <div className="flex text-white flex-row gap-1 items-center justify-start leading-7">
+                        <p className="text-[26px]">₽</p>
+                        <div className="text-2xl whitespace-nowrap"> 5,000</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className={cn(
-              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out transform-gpu",
-              selectedPeriod === 'month' 
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2 pointer-events-none"
-            )}>
-              <IconPractice width={90} height={80} className="pt-2"/>
-              <div className="flex flex-col gap-[20px]">
-                <div className="text-4xl text-neutral-900 font-semibold">Practice</div>
-                <div className="items-end flex flex-row gap-2 mr-2">
-                  <div className="flex flex-row gap-1 items-center justify-start leading-7">
-                    <p className="text-[26px]">₽</p>
-                    <div className="text-2xl whitespace-nowrap"> 2,500</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+             {/* Current Plan Indicator */}
+             {isCurrentPlan ? (
+                 <div className="p-1.5 bg-colors-custom-currentPlanBg rounded-sm text-center mt-3 mx-6">
+                   <span className="text-sm text-neutral-900 font-semibold">Ваш текущий план</span>
+                 </div>
+             ) : (
+                 <div className="flex flex-col gap-2 mx-6">
+                   <div className="text-white text-base text-start">
+                     Давай мне деньги неси, давай мне деньги неси
+                   </div>
+                   <div
+                       className="p-1.5 bg-colors-custom-accent text-white rounded-sm text-center cursor-pointer hover:bg-violet-700 transition-colors"
+                   >
+                     <span className="text-sm font-semibold">Получить Practice Pro</span>
+                   </div>
+                 </div>
+             )}
           </div>
         </div>
 
-        {/* Current Plan Indicator */}
-        {isCurrentPlan ? (
-            <div className="p-1.5 bg-colors-custom-currentPlanBg rounded-sm text-center mt-1.5 mx-1.5">
-              <span className="text-sm text-neutral-900 font-semibold">Ваш текущий план</span>
-            </div>
-        ) : (
-            <div 
-              className="p-1.5 bg-colors-custom-accent text-white rounded-sm text-center mt-1.5 mx-1.5 cursor-pointer hover:bg-violet-700 transition-colors"
-            >
-              <span className="text-sm font-semibold">Получить Practice</span>
-            </div>
-        )}
-
         {/* Features List */}
-        <div className="flex-1 flex flex-col pl-6 pr-1.5 gap-1.5 mt-[22px]">
+        <div className="flex-1 flex flex-col pl-6 pr-1.5 gap-1.5 mt-[12px]">
           <div className="flex gap-1.5 flex-row items-center">
             <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
             <p className="text-sm text-neutral-900">3,000,000 символов с Alura / месяц</p>
           </div>
+          <div className="flex gap-1.5 flex-row items-center">
+            <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
+            <p className="text-sm text-neutral-900">Приоритетная поддержка</p>
+          </div>
+          <div className="flex gap-1.5 flex-row items-center">
+            <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
+            <p className="text-sm text-neutral-900">Расширенная аналитика</p>
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 flex justify-between items-center">
-          <span className="text-base text-neutral-900">Для глубокого погружения</span>
-          <Sparkles size={24}/>
-        </div>
+        {/*<div className="p-4 flex justify-between items-center">*/}
+        {/*  <span className="text-base text-neutral-900">Для профессионалов</span>*/}
+        {/*  <Sparkles size={24}/>*/}
+        {/*</div>*/}
           </div>
 
           {/* Задняя сторона карточки - Payment Interface */}
