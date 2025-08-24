@@ -17,8 +17,8 @@ export function BalanceContent({
     user,
 }: BalanceContentProps) {
     if (isMobile) return (
-        <div className="flex flex-col gap-6 p-6">
-            <AccountBalance />
+        <div className="flex flex-col gap-6 p-3">
+            <AccountBalance isMobile={isMobile} balanceAmount={balanceStats.amount}/>
             <SubscriptionPlans
                 isMobile={isMobile}
                 subscriptions={balanceStats.subscriptions}
@@ -33,7 +33,7 @@ export function BalanceContent({
             subscriptions={balanceStats.subscriptions}
             user={user}
         />
-        <AccountBalance />
+        <AccountBalance isMobile={isMobile} balanceAmount={balanceStats.amount}/>
     </div>
   )
 }

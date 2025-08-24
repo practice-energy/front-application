@@ -70,18 +70,23 @@ export function BalancePage() {
 
 
   return (
-      <div className="pt-24">
+      <div className={cn(!isMobile && "pt-24")}>
           <div className="w-full max-w-[845px] mx-auto bg-white shadow-custom-card rounded-sm">
-              <BalanceHeader
-                  isMobile={isMobile}
-              />
+              {!isMobile && (
+                  <BalanceHeader
+                      isMobile={isMobile}
+                  />
+              )}
               <BalanceContent
                   isMobile={isMobile}
                   user={user}
                   balanceStats={mockBalance}
               />
 
-          <div className="w-full items-center flex flex-row justify-between p-4">
+          <div className={cn(
+              "w-full items-center flex flex-row justify-between",
+              isMobile ? "p-3" : "p-4"
+          )}>
               <div/>
               <div/>
               <div className="gap-6 flex flex-row">
@@ -90,7 +95,7 @@ export function BalancePage() {
                       onClick={() =>{setCardFilter('adept')}}
                       disabled={false}
                       className={cn(
-                          "text-neutral-900",
+                          "text-neutral-900 flex",
                           cardFilter === 'adept' ? "border border-neutral-900" : ""
                       )}
                   />
@@ -100,7 +105,7 @@ export function BalancePage() {
                       disabled={false}
                       iconClassName="text-colors-custom-accent"
                       className={cn(
-                          "text-neutral-900",
+                          "text-neutral-900 flex",
                           cardFilter === 'master' ? "border border-neutral-900" : ""
                       )}
                   />
@@ -133,7 +138,7 @@ export function BalancePage() {
       </div>
       
       {/* Карточки планов */}
-      <div className="w-full max-w-[845px] mx-auto mt-6">
+      <div className="w-full max-w-[845px] mx-auto">
                     <PlanCardsContainer
             userRole={cardFilter}
             onPlanSelect={(plan) => {
@@ -151,7 +156,7 @@ export function BalancePage() {
       </div>
 
       {/* История транзакций */}
-      <div className="w-full max-w-[845px] mx-auto mt-6 justify-center">
+      <div className="w-full max-w-[845px] mx-auto justify-center">
         <TransactionHistory isMobile={isMobile} transactions={mockBalance.transactionHistory} />
       </div>
    </div>

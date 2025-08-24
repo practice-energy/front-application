@@ -65,6 +65,7 @@ const config: Config = {
         'custom': '0px 2px 5px rgba(23, 26, 31, 0.09), 0px 0px 2px rgba(23, 26, 31, 0.12)',
         'active': '0px 2px 5px rgba(127, 85, 224, 0.3), 0px 0px 2px rgba(127, 85, 224, 0.12)',
         'custom-xs': '0px 0px 1px rgba(23, 26, 31, 0.07), 0px 0px 2px rgba(23, 26, 31, 0.12)',
+        'mid': '0px 4px 9px #171a1f4D, 0px 0px 2px #171a1f1F',
       },
       colors: {
         background: "hsl(var(--background))",

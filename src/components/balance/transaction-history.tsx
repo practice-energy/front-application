@@ -52,14 +52,20 @@ export function TransactionHistory({ isMobile, transactions }: TransactionHistor
       isMobile ? "w-full" : "w-[714px]"
     )}>
       {/* Header */}
-      <div className="pl-[42px] pr-9 py-3">
+      <div className={cn(
+          " pr-9 py-3",
+          isMobile ? "px-[20px]" : "pl-[42px]"
+      )}>
         <div className="text-base font-semibold text-neutral-900 ">
           История транзакций
         </div>
       </div>
 
       {/* Month Navigation */}
-      <div className="flex items-center gap-1 mb-3 pl-[34px]">
+      <div className={cn(
+          "flex items-center gap-1 mb-3 ",
+          isMobile ? "px-3" : "pl-[34px]"
+      )}>
         <button
             onClick={() => navigateMonth("prev")}
             className="p-0 flex items-center justify-center text-colors-custom-accent hover:text-violet-700 transition-colors"
@@ -80,8 +86,11 @@ export function TransactionHistory({ isMobile, transactions }: TransactionHistor
       </div>
 
       {/* Transaction List */}
-      <div className="pl-[42px] pr-[36px] gap-2 pb-2 mb-4">
-        <TransactionList transactions={filteredTransactions} />
+      <div className={cn(
+          "gap-2 pb-2",
+        !isMobile ? "mb-4 pl-[42px] pr-[36px]" : "px-1"
+      )}>
+        <TransactionList transactions={filteredTransactions} isMobile={isMobile}/>
       </div>
     </div>
   )

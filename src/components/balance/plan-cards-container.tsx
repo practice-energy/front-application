@@ -37,10 +37,14 @@ export function PlanCardsContainer({
   }
 
   return (
-    <div className="flex gap-[114px] justify-center items-start p-6">
+    <div className={cn(
+        "flex justify-center items-start",
+        isMobile ? " flex-col gap-6 mx-auto w-[300px] py-[18px]" : "flex-row gap-[114px] p-[18px]"
+        )}>
       <div className={cn(
-        "transition-all duration-500 ease-in-out",
-        "transform-gpu"
+        "transition-all duration-500 ease-in-out flex",
+        "transform-gpu",
+          isMobile && "w-max-[300px]"
       )}>
         <PurePlanCard 
           isCurrentPlan={currentPlan === 'pure'}

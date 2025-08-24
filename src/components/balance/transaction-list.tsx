@@ -9,9 +9,10 @@ import {RubleIcon} from "@/components/ui/ruble-sign";
 
 interface TransactionListProps {
   transactions: Transaction[]
+  isMobile: boolean
 }
 
-export function TransactionList({ transactions }: TransactionListProps) {
+export function TransactionList({ transactions, isMobile }: TransactionListProps) {
   const formatDateTime = (date: Date) => {
     const day = date.getDate().toString().padStart(2, '0')
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -43,15 +44,24 @@ export function TransactionList({ transactions }: TransactionListProps) {
               </div>
             </div>
 
-            <div className="flex gap-1 flex-col w-[108px]">
-              <div className="h-[18px]"/>
-              <div className="items-end ml-auto text-sm text-neutral-900 flex whitespace-nowrap">
-                {formatDateTime(transaction.time)}
-              </div>
-            </div>
+            {!isMobile && (
+                <div className="flex gap-1 flex-col w-[108px] items-center justify-center">
+                  <div className="items-end ml-auto text-sm text-neutral-900 flex whitespace-nowrap">
+                    {formatDateTime(transaction.time)}
+                  </div>
+                </div>
+            )}
 
-            <div className="flex flex-col gap-1 w-[90px]">
-              <ActivityStatus showTitle={false} status={transaction.status} className="ml-auto"/>
+            <div className={cn(
+                "flex flex-col gap-1",
+                !isMobile && "w-[90px]"
+            )}>
+              <div className="flex flex-row gap-1.5">
+                {isMobile && (<div className="text-sm text-neutral-900 flex whitespace-nowrap">
+                  {formatDateTime(transaction.time)}
+                </div>)}
+                <ActivityStatus showTitle={false} status={transaction.status} className="ml-auto"/>
+              </div>
               <div className="flex flex-row justify-between items-center text-sm text-neutral-900 gap-[32px]" >
                 <div className="flex flex-row items-center ml-auto">
                   <div className="text-sm text-neutral-900 ml-auto">

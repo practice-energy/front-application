@@ -74,7 +74,7 @@ interface SubscriptionPlanCardProps {
 export function SubscriptionPlanCard({ plan, isMobile }: SubscriptionPlanCardProps) {
   return (
     <div className={cn(
-        "bg-white shadow-custom rounded-sm",
+        "bg-white shadow-mid rounded-sm",
         isMobile ? "w-full" : "w-[392px]"
     )}>
       <div className="p-1 flex flex-row gap-4">
