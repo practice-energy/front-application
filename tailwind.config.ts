@@ -123,6 +123,7 @@ const config: Config = {
             specialistCardStatItemBgFlip: "#fafafb",
             accent: "#7F55E0FF",
             currentPlanBg: "#DEE1E6FF",
+            transactionsBg: "#fafafb",
           }
         },
         sidebar: {

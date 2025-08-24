@@ -75,8 +75,9 @@ export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPe
           <div className="bg-neutral-900 rounded-sm pb-3">
             <div >
               <div className="relative h-[142px]">
+                {/* Yearly Plan View */}
                 <div className={cn(
-                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 bg-neutral-900 rounded-sm transition-all duration-300 ease-in-out",
+                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 bg-neutral-900 rounded-sm transition-opacity duration-500 ease-in-out",
                     selectedPeriod === 'year'
                         ? "opacity-100"
                         : "opacity-0 pointer-events-none"
@@ -100,11 +101,12 @@ export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPe
                   </div>
                 </div>
 
+                {/* Monthly Plan View */}
                 <div className={cn(
-                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out transform-gpu",
+                    "absolute inset-0 flex items-start gap-3 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-opacity duration-500 ease-in-out",
                     selectedPeriod === 'month'
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2 pointer-events-none"
+                        ? "opacity-100"
+                        : "opacity-0 pointer-events-none"
                 )}>
                   <IconPractice width={90} height={80} className="pt-2 text-white"/>
                   <div className="flex flex-col gap-[20px]">

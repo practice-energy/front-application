@@ -37,7 +37,7 @@ export function PlanCardsContainer({
   }
 
   return (
-    <div className="flex gap-6 justify-center items-start p-6">
+    <div className="flex gap-[114px] justify-center items-start p-6">
       <div className={cn(
         "transition-all duration-500 ease-in-out",
         "transform-gpu"

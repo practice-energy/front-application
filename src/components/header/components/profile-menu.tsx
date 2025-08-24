@@ -69,15 +69,6 @@ export function ProfileMenu({
               <User className="mr-3 h-4 w-4" />
               Профиль
             </Link>
-
-            <Link
-              href="/profile?section=balance"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-700 hover:text-colors-custom-accent dark:hover:text-violet-400 transition-colors"
-              onClick={() => setShowProfileMenu(false)}
-            >
-              <CreditCard className="mr-3 h-4 w-4" />
-              Баланс
-            </Link>
           </div>
 
           <div className="border-t border-gray-100 dark:border-gray-700 py-2">

@@ -22,7 +22,7 @@ function tierName(tier: Tier) {
     case "practice":
       return "Practice"
     case "pro":
-      return "Practice Pro"
+      return "Senti Pro"
   }
 }
 

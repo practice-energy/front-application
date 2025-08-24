@@ -64,7 +64,7 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
           {/* Передняя сторона карточки */}
           <div
             className={cn(
-              "w-full h-full bg-white border border-gray-200 rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
+              "w-full h-full bg-white border border-colors-custom-accent  rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
               "flex flex-col backface-hidden"
             )}
             style={{ backfaceVisibility: 'hidden' }}
@@ -73,8 +73,9 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
         {/* Header */}
         <div className="p-1.5">
           <div className="relative h-[142px]">
+            {/* Yearly Plan View */}
             <div className={cn(
-              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out",
+              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-opacity duration-500 ease-in-out",
               selectedPeriod === 'year' 
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
@@ -98,11 +99,12 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
               </div>
             </div>
             
+            {/* Monthly Plan View */}
             <div className={cn(
-              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-all duration-300 ease-in-out transform-gpu",
+              "absolute inset-0 flex items-start gap-6 pl-4 pr-1.5 pt-6 pb-2 border border-neutral-900 rounded-sm transition-opacity duration-500 ease-in-out",
               selectedPeriod === 'month' 
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2 pointer-events-none"
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
             )}>
               <IconPractice width={90} height={80} className="pt-2"/>
               <div className="flex flex-col gap-[20px]">

@@ -12,6 +12,7 @@ import {useState} from "react";
 import {Hat} from "@/types/user";
 import { cn } from "@/lib/utils";
 import { PlanCardsContainer } from "./plan-cards-container";
+import { TransactionHistory } from "./transaction-history";
 
 export function BalancePage() {
   const isMobile = useIsMobile()
@@ -47,6 +48,24 @@ export function BalancePage() {
                isActive: true
            },
        ],
+       transactionHistory: [
+           {
+               id: uuidv4(),
+               amount: 999000,
+               name: "Демонстрация возможностей для Мастера с Практис",
+               type: "debit",
+               time: new Date("2025-09-21T16:34:00"),
+               status: "payed"
+           },
+           {
+               id: uuidv4(),
+               amount: 2500,
+               name: "План подписки Practice / 30 дней",
+               type: "debit",
+               time: new Date("2025-09-23T17:34:00"),
+               status: "payed"
+           }
+       ]
    }
 
 
@@ -129,6 +148,11 @@ export function BalancePage() {
             isMobile={isMobile}
             user={user}
           />
+      </div>
+
+      {/* История транзакций */}
+      <div className="w-full max-w-[845px] mx-auto mt-6 justify-center">
+        <TransactionHistory isMobile={isMobile} transactions={mockBalance.transactionHistory} />
       </div>
    </div>
   )

@@ -268,7 +268,9 @@ export function Header() {
               />
           )}
 
-          {!isBecomeSpecialist && (<IconButton icon={SlidersVerticalIcon} onClick={() => {}} disabled={false} />)}
+          {!isBecomeSpecialist && (<IconButton icon={SlidersVerticalIcon} onClick={() => {
+              router.push("/balance")
+          }} disabled={false} />)}
         </div>
       </div>
     </header>
