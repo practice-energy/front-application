@@ -100,7 +100,7 @@ export function DayColumnContent({ date, bookings, slotHeight }: Omit<DayColumnP
           </div>
         )
       })}
-      <div className="h-24" />
+      <div className="h-[56px]" />
     </div>
   )
 }

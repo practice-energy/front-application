@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import type { CalendarRestrictions } from "@/src/types/calendar-event"
-import { SettingsButton } from "@/src/components/calendar-settings-button"
 import { cn } from "@/src/lib/utils"
 import { useIsMobile } from "@/src/hooks/use-mobile"
 import { ScrollArea } from "@/src/components/ui/scroll-area"
@@ -11,6 +10,7 @@ import { PeriodsFormatsSection } from "./settings-sections/periods-formats-secti
 import { ExceptionalSlotsSection } from "./settings-sections/exceptional-slots-section"
 import { SettingsSectionHeader } from "./settings-sections/settings-section-header"
 import { SettingsSectionContent } from "./settings-sections/settings-section-content"
+import { Settings, Check } from "lucide-react"
 
 interface CalendarSettingsProps {
   restrictions: CalendarRestrictions
@@ -38,13 +38,20 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   return (
     <div className="flex flex-col h-screen bg-white rounded-sm">
       <ScrollArea className="flex-1 flex h-screen">
-        <div className="flex flex-row items-center gap-3 pb-2 px-3">
-          <SettingsButton
-              onClick={disableSettings}
-              className="bg-colors-custom-accent hover:bg-violet-700 border-0 flex"
-              iconClassName="text-white"
-          />
-          <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
+        <div className="flex flex-row items-center justify-between gap-3 pb-2 px-3">
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center justify-center aspect-square rounded-sm shadow-custom h-10 w-10 p-1 border-0 bg-colors-custom-accent">
+              <Settings className="h-[30px] w-[30px] text-white" />
+            </div>
+            <div className={cn("font-bold", isMobile ? "text-mobilebase" : "text-base")}>Установки календаря</div>
+          </div>
+          
+          <button 
+            onClick={disableSettings}
+            className="hidden md:flex items-center justify-center aspect-square rounded-sm shadow-custom h-10 w-10 p-1 border-0 bg-teal-400 hover:bg-teal-500 transition-colors"
+          >
+            <Check className="h-[30px] w-[30px] text-white" />
+          </button>
         </div>
 
         <div className="space-y-2 px-4">

@@ -147,13 +147,13 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
         </div>
 
         {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-1 aspect-ratio-video">
+        <div className="grid grid-cols-7 gap-2.5 aspect-ratio-video pl-2 ">
           {days.map((day, index) => (
             <button
               key={index}
               onClick={() => onDateSelect(day.fullDate)}
               className={`
-                aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50
+                aspect-square text-sm rounded-sm transition-colors hover:bg-violet-50 w-[28px] h-[28px]
                 ${day.isCurrentMonth ? "text-gray-900" : "text-gray-400"}
                 ${isToday(day.fullDate) ? "text-colors-custom-accent font-semibold" : ""}
                 ${isSelected(day.fullDate) ? "bg-colors-custom-accent text-white hover:bg-violet-700" : ""}

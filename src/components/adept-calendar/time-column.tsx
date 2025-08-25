@@ -29,7 +29,7 @@ export function TimeColumnContent({ slotHeight }: TimeColumnProps) {
         <div
           key={hour}
           className={cn(
-              "flex items-center justify-center bg-white text-xs text-gray-500 border-gray-100 border z-30",
+              "flex items-start pt-1 justify-center bg-white text-xs text-gray-500 border-gray-100 border border-x z-30",
               hour !== 0 && "border-t"
           )}
           style={{ height: `${slotHeight * 2}px` }}

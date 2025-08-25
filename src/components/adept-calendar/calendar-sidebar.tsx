@@ -17,20 +17,20 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt: "GMT+3",
         commons: {
-            Mon: { id: "mon", name: "Monday", isActive: true, intervals: [], isPractice: false },
-            Tue: { id: "tue", name: "Tuesday", isActive: true, intervals: [], isPractice: false },
-            Wed: { id: "wed", name: "Wednesday", isActive: true, intervals: [], isPractice: false },
-            Thu: { id: "thu", name: "Thursday", isActive: true, intervals: [], isPractice: false },
-            Fri: { id: "fri", name: "Friday", isActive: true, intervals: [], isPractice: false },
-            Sat: { id: "sat", name: "Saturday", isActive: false, intervals: [], isPractice: false },
-            Sun: { id: "sun", name: "Sunday", isActive: false, intervals: [], isPractice: false },
+            Mon: { id: "mon", isActive: true, intervals: [], isPractice: false },
+            Tue: { id: "tue", isActive: true, intervals: [], isPractice: false },
+            Wed: { id: "wed", isActive: true, intervals: [], isPractice: false },
+            Thu: { id: "thu", isActive: true, intervals: [], isPractice: false },
+            Fri: { id: "fri", isActive: true, intervals: [], isPractice: false },
+            Sat: { id: "sat", isActive: false, intervals: [], isPractice: false },
+            Sun: { id: "sun", isActive: false, intervals: [], isPractice: false },
         },
         restrictions: [],
     })
     // const useSide
 
     return (
-        <div className="bg-white border-t border-gray-100">
+        <div className="bg-white border-t border-gray-100 w-[370px] flex-shrink-0">
             <div className="top-0 z-30 border-gray-100 py-4 px-2">
                 {!showSettings ? (
                     <>

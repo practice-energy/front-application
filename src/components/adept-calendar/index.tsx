@@ -14,6 +14,7 @@ import {CalendarRestrictions} from "@/src/types/calendar-event";
 import {CalendarSettings} from "@/src/components/adept-calendar/calendar-settings";
 import { useSidebar } from "@/contexts/sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface AdeptCalendarProps {
     bookings: Booking[]
@@ -42,13 +43,13 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt:  timezone || getSystemTimezone(),
         commons: {
-            Mon: { id: "mon", name: "Monday", isActive: true, intervals: [], isPractice: false },
-            Tue: { id: "tue", name: "Tuesday", isActive: true, intervals: [], isPractice: false },
-            Wed: { id: "wed", name: "Wednesday", isActive: true, intervals: [], isPractice: false },
-            Thu: { id: "thu", name: "Thursday", isActive: true, intervals: [], isPractice: false },
-            Fri: { id: "fri", name: "Friday", isActive: true, intervals: [], isPractice: false },
-            Sat: { id: "sat", name: "Saturday", isActive: false, intervals: [], isPractice: false },
-            Sun: { id: "sun", name: "Sunday", isActive: false, intervals: [], isPractice: false },
+            Mon: { id: "mon", isActive: true, intervals: [], isPractice: false },
+            Tue: { id: "tue", isActive: true, intervals: [], isPractice: false },
+            Wed: { id: "wed", isActive: true, intervals: [], isPractice: false },
+            Thu: { id: "thu", isActive: true, intervals: [], isPractice: false },
+            Fri: { id: "fri", isActive: true, intervals: [], isPractice: false },
+            Sat: { id: "sat", isActive: false, intervals: [], isPractice: false },
+            Sun: { id: "sun", isActive: false, intervals: [], isPractice: false },
         },
         restrictions: [],
     })
@@ -119,12 +120,17 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
 
     return (
         <div className="h-full flex flex-col">
-            <div className="flex h-full mt-[66px]">
+            <div className={cn(
+                "flex h-full mt-[66px] transition-all duration-300 ease-in-out",
+                isCollapsed ? "ml-0" : "ml-[400px]"
+            )}>
                 <CalendarSidebar
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
                 />
-                <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                <div className="flex-1">
+                    <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                </div>
             </div>
         </div>
     )
