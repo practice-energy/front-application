@@ -58,415 +58,200 @@ export function BookingCard({ booking, slotHeight }: BookingCardProps) {
     }
   }
 
-  if (isMobile) {
-    if (booking.slots === 1) {
-      return (<>
-        <div
-            className={cn(
-                "relative rounded-sm transition-colors cursor-pointer bg-opacity-100 shadow-sm border-0 w-full p-1 pb-0.5",
-                "pl-0 py-1 px-1 bg-white",
-                "hover:shadow-sm",
-                getBackgroundColor(booking.status)
-            )}
-            style={{ height: `${booking.slots * slotHeight}px` }}
-            onClick={() => setIsModalOpen(true)}
-        >
-          <div className={cn("flex items-start w-full, hover:bg-opacity-100 gap-0.5")}>
-            {/* Profile Image - spans all three rows */}
-            <div className={cn("flex-shrink-0 flex items-center ")}>
-              {!booking.specialist.avatar ? (
-                  <IconPractice
-                      width={42}
-                      height={42}
-                      className={cn("rounded-sm object-cover bg-none items-center")}
-                  />
-              ) : (
-                  <PracticePlaceholder
-                      width={42}
-                      height={42}
-                      className={cn("bg-colors-neutral-150 rounded-sm items-center")}
-                      iconClassName="text-gray-400"
-                  />
-              )}
-            </div>
-
-            {/* Two columns layout */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              {/* Row 1: Title  */}
-              <div className="flex items-center justify-between gap-1">
-                <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={14}/>
-                <BookingFormatIcon format={booking.format} size={14}/>
-                <ActivityStatus status={booking.status as any} dotClassName="h-4 w-4" showTitle={false} />
-              </div>
-
-              {/* Row 2: Description (multi-line) and New Message Indicator */}
-              <div className="text-[9px] font-medium truncate flex-1 pr-1 mt-1">{booking.specialist.name}</div>
-            </div>
-          </div>
-        </div>
-      </>)
-    }
-
-    if (booking.slots === 2) {
-      return (<>
-        <div
-            className={cn(
-                "relative rounded-sm transition-colors cursor-pointer bg-opacity-100 shadow-sm border-0 w-full p-1 pb-0.5",
-                "pl-0 py-1 px-1 bg-white",
-                "hover:shadow-sm",
-                getBackgroundColor(booking.status)
-            )}
-            style={{ height: `${booking.slots * slotHeight}px` }}
-            onClick={() => setIsModalOpen(true)}
-        >
-          <div className={cn("flex items-start w-full, hover:bg-opacity-100 gap-0.5")}>
-            {/* Profile Image - spans all three rows */}
-            <div className={cn("flex-shrink-0 flex items-center ")}>
-              {!booking.specialist.avatar ? (
-                  <IconPractice
-                      width={42}
-                      height={42}
-                      className={cn("rounded-sm object-cover bg-none items-center")}
-                  />
-              ) : (
-                  <PracticePlaceholder
-                      width={42}
-                      height={42}
-                      className={cn("bg-colors-neutral-150 rounded-sm items-center")}
-                      iconClassName="text-gray-400"
-                  />
-              )}
-            </div>
-
-            {/* Two columns layout */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              {/* Row 1: Title  */}
-              <div className="flex items-center justify-between gap-1">
-                <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={14}/>
-                <BookingFormatIcon format={booking.format} size={14}/>
-                <ActivityStatus status={booking.status as any} dotClassName="h-4 w-4" showTitle={false} />
-              </div>
-
-              <div className="flex items-center justify-end gap-1">
-                <div className="font-semibold text-xs text-neutral-700 whitespace-nowrap">
-                  {formatNumber(booking.price)}
-                </div>
-                <RubleIcon size={24} bold={false} className=""/>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-xs font-medium truncate flex-1 pr-1 mt-1">{booking.service.title}</div>
-          <div className="text-xs font-normal truncate flex-1 pr-1 mt-1">{booking.specialist.name}</div>
-        </div>
-      </>)
-    }
-
-    if (booking.slots > 2) {
-      return (<>
-        <div
-            className={cn(
-                "relative rounded-sm transition-colors cursor-pointer bg-opacity-100 shadow-sm border-0 w-full p-1 pb-0.5",
-                "pl-0 py-1 px-1 bg-white",
-                "hover:shadow-sm",
-                getBackgroundColor(booking.status)
-            )}
-            style={{ height: `${booking.slots * slotHeight}px` }}
-            onClick={() => setIsModalOpen(true)}
-        >
-          <div className={cn("flex items-start w-full, hover:bg-opacity-100 gap-0.5")}>
-            {/* Profile Image - spans all three rows */}
-            <div className={cn("flex-shrink-0 flex items-center ")}>
-              {!booking.specialist.avatar ? (
-                  <IconPractice
-                      width={42}
-                      height={42}
-                      className={cn("rounded-sm object-cover bg-none items-center")}
-                  />
-              ) : (
-                  <PracticePlaceholder
-                      width={42}
-                      height={42}
-                      className={cn("bg-colors-neutral-150 rounded-sm items-center")}
-                      iconClassName="text-gray-400"
-                  />
-              )}
-            </div>
-
-            {/* Two columns layout */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              {/* Row 1: Title  */}
-              <div className="flex items-center justify-between gap-1">
-                <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={14}/>
-                <BookingFormatIcon format={booking.format} size={14}/>
-                <ActivityStatus status={booking.status as any} dotClassName="h-4 w-4" showTitle={false} />
-              </div>
-
-              <div className="flex items-center justify-end gap-1">
-                <div className="font-semibold text-xs text-neutral-700 whitespace-nowrap">
-                  {formatNumber(booking.price)}
-                </div>
-                <RubleIcon size={24} bold={false} className=""/>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-xs font-medium truncate flex-1 pr-1 mt-1">{booking.service.title}</div>
-          <div className="text-xs font-normal truncate flex-1 pr-1 mt-1">{booking.specialist.name}</div>
-
-          <div
-              className="text-xs text-gray-500 flex-1 pr-2 pt-1"
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: (booking.slots*2 - 3 > 5) ? 5 : booking.slots*2 - 3,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
-              }}
-          >
-            {booking.service.description}
-          </div>
-        </div>
-      </>)
-    }
-  }
-
+  // Карточка для 1 слота (как на фото - верхняя карточка)
   if (booking.slots === 1) {
     return (
-        <>
-          <div
-              className={cn(
-                  "relative rounded-sm transition-colors cursor-pointer bg-opacity-100 shadow-sm border-0 w-full p-1 pb-0.5",
-                  "pl-0 py-1 px-1 bg-white",
-                  "hover:shadow-sm",
-                  getBackgroundColor(booking.status)
+      <div
+        className={cn(
+          "relative rounded-sm transition-colors cursor-pointer bg-white shadow-sm w-full p-1",
+          "hover:shadow-sm",
+          getBackgroundColor(booking.status)
+        )}
+        style={{ height: `${booking.slots * slotHeight}px` }}
+        onClick={() => setIsModalOpen(true)}
+      >
+        {/* Основное содержимое: Аватар, текст и иконки */}
+        <div className="flex items-center justify-between h-full">
+          {/* Левая часть: Аватар и текст */}
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0">
+              {!booking.specialist.avatar ? (
+                <IconPractice
+                  width={isMobile ? 32 : 36}
+                  height={isMobile ? 32 : 36}
+                  className="rounded-sm"
+                />
+              ) : (
+                <PracticePlaceholder
+                  width={isMobile ? 32 : 36}
+                  height={isMobile ? 32 : 36}
+                  className="rounded-sm bg-colors-neutral-150"
+                  iconClassName="text-gray-400"
+                />
               )}
-              style={{ height: `${booking.slots * slotHeight}px` }}
-              onClick={() => setIsModalOpen(true)}
-          >
-            <div className={cn("flex items-start w-full, hover:bg-opacity-100 gap-3")}>
-              {/* Profile Image - spans all three rows */}
-              <div className={cn("flex-shrink-0 flex items-center ")}>
-                {!booking.specialist.avatar ? (
-                    <IconPractice
-                        width={isMobile ? 42 : 48}
-                        height={isMobile ? 42 : 48}
-                        className={cn("rounded-sm object-cover bg-none items-center")}
-                    />
-                ) : (
-                    <PracticePlaceholder
-                        width={isMobile ? 42 : 48}
-                        height={isMobile ? 42 : 48}
-                        className={cn("bg-colors-neutral-150 rounded-sm items-center")}
-                        iconClassName="text-gray-400"
-                    />
-                )}
-              </div>
-
-              {/* Two columns layout */}
-              <div className="flex-1 min-w-0 flex flex-col">
-                {/* Row 1: Title  */}
-                <div className="flex items-center justify-between gap-1.5">
-                  <div className={cn("font-medium truncate flex-1 pr-1", isMobile ? "text-sm" : "text-base")}>{booking.service.title}</div>
-                  <ActivityStatus status={booking.status as any} dotClassName={isMobile ? "h-5 w-5" : "h-6 w-6"} showTitle={false} />
-                </div>
-
-                {/* Row 2: Description (multi-line) and New Message Indicator */}
-                <div className="flex items-start mb-1">
-                  <div className="flex items-center justify-between gap-1.5 w-full">
-                    {/* Имя специалиста - занимает всё доступное пространство */}
-                    <div className="flex-1 min-w-0 overflow-hidden">
-                      <div className={cn("text-neutral-700 leading-relaxed line-clamp-1 truncate", isMobile ? "text-sm" : "text-base")}>
-                        {booking.specialist.name}
-                      </div>
-                    </div>
-
-                    {/* Правая часть - цена и иконка повторения */}
-                    <div className="flex-shrink-0 flex items-center gap-1 ml-2 mt-0.5">
-                      <ChatButton
-                          onClick={() => {}}
-                          hasUpdates={false}
-                          className="mb-0.5"
-                      />
-                      <BookingFormatIcon format={booking.format} size={18}/>
-                      <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={18}/>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </>
-    )
-  }
-
-  if (booking.slots === 2) {
-    return (
-        <div
-            className={cn(
-                "relative rounded-sm transition-colors cursor-pointer w-full bg-white",
-                "px-1 py-1 hover:shadow-sm",
-                getBackgroundColor(booking.status)
-            )}
-            style={{height: `${booking.slots * slotHeight}px`}}
-            onClick={() => setIsModalOpen(true)}
-        >
-          <div className="flex h-full">
-            {/* Левая колонка */}
-            <div className="flex flex-col flex-1 min-w-0">
-              {/* Заголовок услуги */}
-              <div
-                  className={cn("leading-relaxed line-clamp-2 font-medium", isMobile ? "text-sm" : "text-base")}
-                  style={{height: `${slotHeight}px`}}
-              >
+            <div className="flex-1 min-w-0 flex flex-col">
+              <div className={cn("font-medium  line-clamp-1", isMobile ? "text-sm" : "text-base")}>
                 {booking.service.title}
               </div>
-
-              {/* Аватар, имя и цена (выровнены по центру аватарки) */}
-              <div
-                  className="flex items-center flex-1"
-                  style={{height: `${ slotHeight}px`}}
-              >
-                {/* Аватар */}
-                <div className="flex-shrink-0 relative flex items-center">
-                  {!booking.specialist.avatar ? (
-                      <IconPractice width={isMobile ? 42 : 48} height={isMobile ? 42 : 48} className="rounded-sm"/>
-                  ) : (
-                      <PracticePlaceholder
-                          width={isMobile ? 42 : 48}
-                          height={isMobile ? 42 : 48}
-                          className="rounded-sm bg-colors-neutral-150"
-                          iconClassName="text-gray-400"
-                      />
-                  )}
-                </div>
-
-                {/* Имя и цена (центрированы относительно аватарки) */}
-                <div className="flex items-center justify-between flex-1 min-w-0 ml-2 h-[45px]">
-                  <div className={cn("text-neutral-700 truncate flex items-center", isMobile ? "text-sm" : "text-base")}>
-                    {booking.specialist.name}
-                  </div>
-                  <div className={cn("font-semibold text-neutral-700 whitespace-nowrap flex", isMobile ? "text-sm" : "text-base")}>
-                    {formatNumber(booking.price)}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Правая колонка */}
-            <div className="flex flex-col items-end">
-              {/* Статус */}
-              <ActivityStatus
-                  status={booking.status as any}
-                  dotClassName={isMobile ? "h-5 w-5" : "h-6 w-6"}
-                  showTitle={false}
-              />
-
-              {/* Формат и повторение */}
-              <div className="flex items-center gap-1 mt-3">
-                <BookingFormatIcon format={booking.format} size={isMobile ? 18 : 20}/>
-                <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={isMobile ? 18 : 20}/>
-              </div>
-
-              {/* Рубль и повторение */}
-              <div className="flex items-center gap-1 flex-1">
-                <RubleIcon size={isMobile ? 22 : 24} bold={false} className="mb-1.5"/>
-                <ChatButton
-                    onClick={() => {}}
-                    hasUpdates={false}
-                    className="mb-0.5"
-                />
-                {/*<BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={18} className="mb-1.5"/>*/}
-              </div>
-            </div>
-          </div>
-        </div>
-    )
-  }
-
-  return (
-      <div
-          className={cn(
-              "relative rounded-sm transition-colors cursor-pointer w-full bg-white",
-              "px-1 py-1 hover:shadow-sm",
-              getBackgroundColor(booking.status)
-          )}
-          style={{ height: `${booking.slots * slotHeight}px` }}
-          onClick={() => setIsModalOpen(true)}
-      >
-        <div className="flex flex-col h-full">
-          {/* Строка 1: Заголовок и статус (высота слота) */}
-          <div
-              className="flex justify-between items-start"
-              style={{ height: `${slotHeight}px`, minHeight: `${slotHeight}px` }}
-          >
-            <div className={cn("line-clamp-2 font-medium flex-1 pr-2", isMobile ? "text-sm" : "text-base")}>
-              {booking.service.title}
-            </div>
-            <ActivityStatus
-                status={booking.status as any}
-                dotClassName={isMobile ? "h-5 w-5" : "h-6 w-6"}
-                showTitle={false}
-                className="ml-auto"
-            />
-          </div>
-
-          {/* Строка 2 */}
-          <div
-              className="flex justify-between"
-              style={{ height: `${slotHeight * (booking.slots-8)}px`, minHeight: `${slotHeight * (booking.slots-2)}px` }}
-          >
-            <div
-                className={cn("text-gray-500 flex-1 pr-2", isMobile ? "text-sm" : "text-base")}
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: (booking.slots*2 - 3 > 5) ? 5 : booking.slots*2 - 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
-                }}
-            >
-              {booking.service.description}
-            </div>
-            <div className="flex gap-1">
-              <BookingFormatIcon format={booking.format} size={isMobile ? 18 : 20}/>
-              <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={isMobile ? 18 : 20}/>
-            </div>
-          </div>
-
-          {/* Строка 3: Аватар, имя и цена (оставшееся пространство) */}
-          <div className="flex items-center justify-between flex-1 mb-2">
-            <div className="flex items-center">
-              {/* Аватар */}
-              <div className="flex-shrink-0 mr-2">
-                {!booking.specialist.avatar ? (
-                    <IconPractice width={isMobile ? 42 : 48} height={isMobile ? 42 : 48} className="rounded-sm" />
-                ) : (
-                    <PracticePlaceholder
-                        width={isMobile ? 42 : 48}
-                        height={isMobile ? 42 : 48}
-                        className="bg-colors-neutral-150  rounded-sm"
-                        iconClassName="text-gray-400"
-                    />
-                )}
-              </div>
-              {/* Имя специалиста */}
-              <div className={cn("text-neutral-700 truncate", isMobile ? "text-sm" : "text-base")}>
+              <div className="text-sm text-neutral-900 line-clamp-1">
                 {booking.specialist.name}
               </div>
             </div>
+          </div>
 
-            {/* Цена и иконки */}
-            <div className="flex items-center">
-              <div className={cn("font-semibold text-neutral-700 whitespace-nowrap mr-1", isMobile ? "text-sm" : "text-base")}>
-                {formatNumber(booking.price)}
-              </div>
-              <RubleIcon size={isMobile ? 22 : 24} bold={false} className="mr-1"/>
+          <div className="flex items-center gap-1 flex-col ml-auto">
+            {/* Статус в правом верхнем углу */}
+            <ActivityStatus status={booking.status as any} className="ml-auto" dotClassName={isMobile ? "h-4 w-4" : "h-5 w-5"} showTitle={false} />
+            {/* Правая часть: Иконки */}
+            <div className="flex items-end gap-1">
               <ChatButton
-                  onClick={()=> {}}
+                  onClick={() => {}}
                   hasUpdates={false}
               />
+              <BookingFormatIcon format={booking.format} size={isMobile ? 14 : 16}/>
+              <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={isMobile ? 14 : 16}/>
             </div>
           </div>
         </div>
       </div>
+    )
+  }
+
+  // Карточка для 2 слотов (как на фото - средняя карточка)
+  if (booking.slots === 2) {
+    return (
+      <div
+        className={cn(
+          "relative rounded-sm transition-colors cursor-pointer bg-white shadow-sm w-full p-1",
+          "hover:shadow-sm",
+          getBackgroundColor(booking.status)
+        )}
+        style={{ height: `${booking.slots * slotHeight}px` }}
+        onClick={() => setIsModalOpen(true)}
+      >
+        {/* Верхняя строка: Title и статус */}
+        <div className="flex items-center justify-between gap-1.5 mb-2">
+          <div className={cn("font-medium truncate flex-1 pr-1", isMobile ? "text-sm" : "text-base")}>
+            {booking.service.title}
+          </div>
+          <ActivityStatus status={booking.status as any} dotClassName={isMobile ? "h-4 w-4" : "h-5 w-5"} showTitle={false} />
+        </div>
+
+        {/* Средняя строка: Цена */}
+        <div className="flex justify-end mb-2">
+          <div className={cn("font-semibold text-neutral-700", isMobile ? "text-sm" : "text-base")}>
+            {formatNumber(booking.price)} ₽
+          </div>
+        </div>
+
+        {/* Нижняя строка: Аватар, имя и иконки */}
+        <div className="flex items-end  justify-between">
+          {/* Левая часть: Аватар и имя */}
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0">
+              {!booking.specialist.avatar ? (
+                <IconPractice
+                  width={isMobile ? 32 : 36}
+                  height={isMobile ? 32 : 36}
+                  className="rounded-sm"
+                />
+              ) : (
+                <PracticePlaceholder
+                  width={isMobile ? 32 : 36}
+                  height={isMobile ? 32 : 36}
+                  className="rounded-sm bg-colors-neutral-150"
+                  iconClassName="text-gray-400"
+                />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className={cn("text-neutral-700 truncate", isMobile ? "text-xs" : "text-sm")}>
+                {booking.specialist.name}
+              </div>
+            </div>
+          </div>
+
+          {/* Правая часть: Иконки */}
+          <div className="flex items-end gap-1">
+            <ChatButton
+              onClick={() => {}}
+              hasUpdates={false}
+            />
+            <BookingFormatIcon format={booking.format} size={isMobile ? 14 : 16}/>
+            <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={isMobile ? 14 : 16}/>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Карточка для 3+ слотов (как на фото - нижняя карточка)
+  return (
+    <div
+      className={cn(
+        "relative rounded-sm transition-colors cursor-pointer bg-white shadow-sm w-full p-1",
+        "hover:shadow-sm",
+        getBackgroundColor(booking.status)
+      )}
+      style={{ height: `${booking.slots * slotHeight}px` }}
+      onClick={() => setIsModalOpen(true)}
+    >
+      {/* Верхняя строка: Title и статус */}
+      <div className="flex items-center justify-between gap-1.5 mb-2">
+        <div className={cn("font-medium truncate flex-1 pr-1", isMobile ? "text-sm" : "text-base")}>
+          {booking.service.title}
+        </div>
+        <ActivityStatus status={booking.status as any} dotClassName={isMobile ? "h-4 w-4" : "h-5 w-5"} showTitle={false} />
+      </div>
+
+      {/* Средняя строка: Описание */}
+      <div className="mb-2 flex flex-row">
+        <div className={cn("text-gray-500 line-clamp-2", isMobile ? "text-xs" : "text-sm")}>
+          {booking.service.description}
+        </div>
+        <div className={cn("font-semibold text-neutral-700 whitespace-nowrap ", isMobile ? "text-sm" : "text-base")}>
+          {formatNumber(booking.price)} ₽
+        </div>
+      </div>
+
+      {/* Нижняя строка: Аватар, имя и иконки */}
+      <div className="flex items-end justify-between">
+        {/* Левая часть: Аватар и имя */}
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">
+            {!booking.specialist.avatar ? (
+              <IconPractice
+                width={isMobile ? 32 : 36}
+                height={isMobile ? 32 : 36}
+                className="rounded-sm"
+              />
+            ) : (
+              <PracticePlaceholder
+                width={isMobile ? 32 : 36}
+                height={isMobile ? 32 : 36}
+                className="rounded-sm bg-colors-neutral-150"
+                iconClassName="text-gray-400"
+              />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className={cn("text-neutral-700 truncate", isMobile ? "text-xs" : "text-sm")}>
+              {booking.specialist.name}
+            </div>
+          </div>
+        </div>
+
+        {/* Правая часть: Иконки */}
+        <div className="flex items-end gap-1">
+          <ChatButton
+            onClick={() => {}}
+            hasUpdates={false}
+          />
+          <BookingFormatIcon format={booking.format} size={isMobile ? 14 : 16}/>
+          <BookingRepeatedIcon isRepeated={booking.isRepeat === true} size={isMobile ? 14 : 16}/>
+        </div>
+      </div>
+    </div>
   )
 }
