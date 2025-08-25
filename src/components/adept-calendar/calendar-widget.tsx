@@ -147,7 +147,7 @@ export function CalendarWidget({ selectedDate, onDateSelect, timezone, isCollaps
         </div>
 
         {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-1 aspect-video">
+        <div className="grid grid-cols-7 gap-1 aspect-ratio-video">
           {days.map((day, index) => (
             <button
               key={index}

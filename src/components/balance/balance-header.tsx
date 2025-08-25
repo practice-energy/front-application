@@ -24,7 +24,6 @@ export function BalanceHeader({
                   isAuthenticated={isAuthenticated}
                   title="Баланс и планы"
               />
-              <div className="h-16"/>
           </>
       )
   }

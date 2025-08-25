@@ -26,7 +26,7 @@ export const SettingsMobileHeader = ({
                                          title,
                                      }: SettingsMobileHeaderProps) => {
     return (
-        <header className="top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-30 px-4 flex items-center justify-between shadow-active fixed">
+        <header className="top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-30 px-4 flex items-center justify-between shadow-active sticky">
             <div className="flex flex-row items-center gap-3">
                 <div className="aspect-square rounded-sm shadow-custom h-10 w-10 p-1 border border-neutral-100/70 bg-white">
                 <SlidersVerticalIcon
