@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import {IconPractice} from "@/src/components/icons/icon-practice";
 import {useBecomeSpecialist} from "@/src/stores/chat-store";
 import {IconPractice1} from "@/src/components/icons/practice-1-logo";
-import {IconPractice2} from "@/src/components/icons/prractice-2-logo";
+import {IconPure} from "@/src/components/icons/prractice-2-logo";
 import {useAuth} from "@/src/hooks/use-auth";
 
 interface LogoProps {
@@ -39,7 +39,7 @@ export function Logo({ onClick }: LogoProps) {
           }
 
           if (becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) {
-              return (<IconPractice2
+              return (<IconPure
                   width={48}
                   height={48}
                   className="text-neutral-900 bg-none rounded-sm"

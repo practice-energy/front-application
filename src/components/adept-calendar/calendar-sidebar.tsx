@@ -30,7 +30,7 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
     // const useSide
 
     return (
-        <div className="w-[370px] bg-white border-t border-gray-100">
+        <div className="bg-white border-t border-gray-100">
             <div className="top-0 z-30 border-gray-100 py-4 px-2">
                 {!showSettings ? (
                     <>
@@ -47,12 +47,14 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
                         </div>
                     </>
                 ) : (
+                    <div className="flex flex-1">
                     <CalendarSettings
                         restrictions={calendarRestrictions}
                         disableSettings={() => {setShowSettings(false)}}
                         onUpdate={(r) => {setCalendarRestrictions(r)}}
                     />
-          )}
+                    </div>
+                )}
       </div>
     </div>
   )

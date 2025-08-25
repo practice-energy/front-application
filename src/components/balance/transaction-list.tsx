@@ -46,6 +46,7 @@ export function TransactionList({ transactions, isMobile }: TransactionListProps
 
             {!isMobile && (
                 <div className="flex gap-1 flex-col w-[108px] items-center justify-center">
+                  {!isMobile && (<div className="h-[18px]"/>)}
                   <div className="items-end ml-auto text-sm text-neutral-900 flex whitespace-nowrap">
                     {formatDateTime(transaction.time)}
                   </div>

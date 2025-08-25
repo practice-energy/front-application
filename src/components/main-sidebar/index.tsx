@@ -261,37 +261,12 @@ export function MainSidebar() {
       icon: UserSwitchIcon
     },
     {
-      id: "settings-master",
-      topText: "Настройки аккаунт",
-      variant: "two-lines",
-      onClick: () => setShowMasterChats(false),
-      show: user?.hat === "master" && showMasterChats,
-      icon: SettingsIcon
-    },
-    {
-      id: "security",
-      topText: "Безопасность",
-      bottomText: "Активно 100%",
-      variant: "with-bottom-text",
-      onClick: () => setShowMasterChats(false),
-      show: true,
-      icon: PentagonIcon
-    },
-    {
       id: "settings-account",
       topText: "Настройки аккаунт",
       variant: "two-lines",
       onClick: () => setShowMasterChats(false),
       show: true,
       icon: SlidersVerticalIcon
-    },
-    {
-      id: "logout",
-      topText: "Выйти",
-      variant: "logout",
-      onClick: () => logout(),
-      show: true,
-      icon: LogOutIcon
     },
   ].filter(button => button.show)
 
@@ -309,19 +284,21 @@ export function MainSidebar() {
         isCollapsed && "pointer-events-none",
       )}
     >
-      <Topper
-          toggleSidebar={toggleSidebar}
-          searchQuery={searchQuery}
-          handleSearch={handleSearch}
-          isMobile={isMobile}
-      />
+      <div className="bg-white">
+        <Topper
+            toggleSidebar={toggleSidebar}
+            searchQuery={searchQuery}
+            handleSearch={handleSearch}
+            isMobile={isMobile}
+        />
 
-      {isMobile && (
-          <BigProfileButtons
-              buttons={buttons}
-              user={user}
-          />
-      )}
+        {isMobile && (
+            <BigProfileButtons
+                buttons={buttons}
+                user={user}
+            />
+        )}
+      </div>
 
       {/* Область скролла - общая для всех устройств */}
       <ScrollArea className={cn("flex-1 relative")}>

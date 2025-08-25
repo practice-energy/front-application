@@ -8,7 +8,7 @@ export interface IconPractice2Props {
     height?: number;
 }
 
-function IconPractice2({ className, width = 192, height = 225 }: IconPractice2Props) {
+function IconPure({ className, width = 192, height = 225 }: IconPractice2Props) {
     return <Image
         src="/practice-2.svg"
         alt="Practices"
@@ -18,4 +18,4 @@ function IconPractice2({ className, width = 192, height = 225 }: IconPractice2Pr
     />
 }
 
-export { IconPractice2 };
+export { IconPure };

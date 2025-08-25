@@ -29,4 +29,4 @@ export type Language = "ru" | "en"
 
 export type Hat = "master" | "adept" | "superviser"
 
-export type Tier = "pure" | "practice" | "pro" | "infinite"
+export type Tier = "pure" | "practice" | "pro" | "infinite" | "pure_senti"

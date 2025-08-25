@@ -2,7 +2,7 @@
 
 import {Subscription} from "@/types/balance";
 import {cn} from "@/lib/utils";
-import {IconPractice2} from "@/components/icons/prractice-2-logo";
+import {IconPure} from "@/components/icons/prractice-2-logo";
 import {Hat, Tier} from "@/types/user";
 import {IconPractice} from "@/components/icons/icon-practice";
 import {RubleIcon} from "@/components/ui/ruble-sign";
@@ -26,7 +26,7 @@ function renderPlanIcon(tier ) {
   switch (tier) {
     case "pure":
       return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[17px] px-0.5 transition-all duration-500 ease-in-out">
-        <IconPractice2 width={36} height={42}/>
+        <IconPure width={36} height={42}/>
       </div>
     case "practice":
       return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[20px] px-0.5 transition-all duration-500 ease-in-out">

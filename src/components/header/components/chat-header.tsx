@@ -10,7 +10,7 @@ import {cn} from "@/src/lib/utils";
 import {PentagramIcon} from "@phosphor-icons/react";
 import RomanStep from "@/src/components/roman-step";
 import {IconPractice1} from "@/src/components/icons/practice-1-logo";
-import {IconPractice2} from "@/src/components/icons/prractice-2-logo";
+import {IconPure} from "@/src/components/icons/prractice-2-logo";
 import {IconPractice} from "@/src/components/icons/icon-practice";
 
 interface ChatHeaderProps {
@@ -64,7 +64,7 @@ export const ChatHeader = ({
                 {(becomeSpecialistState.step === 2 || becomeSpecialistState.step === 3) && (
                     <div className="gap-[18px] flex flex-row items-center">
                         <RomanStep step={2}/>
-                        <IconPractice2
+                        <IconPure
                             width={36}
                             height={36}
                         />

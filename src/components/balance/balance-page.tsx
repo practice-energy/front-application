@@ -13,12 +13,16 @@ import {Hat} from "@/types/user";
 import { cn } from "@/lib/utils";
 import { PlanCardsContainer } from "./plan-cards-container";
 import { TransactionHistory } from "./transaction-history";
+import {useAuth} from "@/hooks/use-auth";
+import {useSidebar} from "@/contexts/sidebar-context";
 
 export function BalancePage() {
   const isMobile = useIsMobile()
   const {user} = useProfileStore()
   const [cardFilter, setCardFilter] = useState<Hat>('adept')
-  const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'year'>('year')
+  const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'year'>('month')
+  const { isAuthenticated } = useAuth()
+  const { toggleSidebar, isCollapsed } = useSidebar()
 
    const mockBalance: Balance = {
       amount: 1488,
@@ -30,6 +34,14 @@ export function BalancePage() {
                price: 30000,
                endDate: new Date(),
                isActive: true
+           },
+           {
+               id: uuidv4(),
+               tier: "pure_senti",
+               hat: "master",
+               price: 30000,
+               endDate: new Date(),
+               isActive: false
            },
            {
                id: uuidv4(),
@@ -72,11 +84,12 @@ export function BalancePage() {
   return (
       <div className={cn(!isMobile && "pt-24")}>
           <div className="w-full max-w-[845px] mx-auto bg-white shadow-custom-card rounded-sm">
-              {!isMobile && (
-                  <BalanceHeader
-                      isMobile={isMobile}
-                  />
-              )}
+              <BalanceHeader
+                  isMobile={isMobile}
+                  user={user}
+                  isAuthenticated={isAuthenticated}
+                  toggleSidebar={toggleSidebar}
+              />
               <BalanceContent
                   isMobile={isMobile}
                   user={user}
@@ -87,6 +100,8 @@ export function BalancePage() {
               "w-full items-center flex flex-row justify-between",
               isMobile ? "p-3" : "p-4"
           )}>
+              {!isMobile && (<div/>)}
+              {!isMobile && (<div/>)}
               <div/>
               <div/>
               <div className="gap-6 flex flex-row">

@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/src/components/ui/card"
 import {Subscription} from "@/types/balance";
 import {cn} from "@/lib/utils";
-import {IconPractice2} from "@/components/icons/prractice-2-logo";
+import {IconPure} from "@/components/icons/prractice-2-logo";
 import {Hat, Tier} from "@/types/user";
 import {IconPractice} from "@/components/icons/icon-practice";
 import {RubleIcon} from "@/components/ui/ruble-sign";
@@ -23,6 +23,8 @@ function tierName(tier: Tier) {
       return "Practice"
     case "pro":
       return "Senti Pro"
+    case "pure_senti":
+      return "Pure Senti"
   }
 }
 
@@ -30,7 +32,11 @@ function renderPlanIcon(tier ) {
   switch (tier) {
     case "pure":
       return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[17px] px-0.5">
-        <IconPractice2 width={36} height={42}/>
+        <IconPure width={36} height={42}/>
+      </div>
+    case "pure_senti":
+      return <div className="border border-neutral-900 bg-neutral-900 rounded-sm items-center justify-center py-[17px] px-0.5">
+        <IconPure width={36} height={42} className="text-white"/>
       </div>
     case "practice":
       return <div className="border border-neutral-900 rounded-sm items-center justify-center py-[22px] px-0.5">
@@ -93,7 +99,7 @@ export function SubscriptionPlanCard({ plan, isMobile }: SubscriptionPlanCardPro
               <div>
                 до {plan.endDate ? new Date(plan.endDate).toLocaleDateString('ru-RU') : ''}
               </div>
-              <ActivityStatus status={plan.isActive ? 'activePractice' : 'outOfPractice'} showTitle={false} />
+              <ActivityStatus status={plan.isActive ? 'payed' : 'unpayed'} showTitle={false} />
             </div>
             <div className="flex flex-row text-sm font-medium items-center">
               {formatNumber(plan.price)}

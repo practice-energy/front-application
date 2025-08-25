@@ -64,7 +64,7 @@ export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPe
           {/* Передняя сторона карточки */}
           <div
             className={cn(
-              "w-full h-full bg-white border border-colors-custom-accent rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
+              "w-full h-full bg-white border hover:border-colors-custom-accent rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
               "flex flex-col backface-hidden"
             )}
             style={{ backfaceVisibility: 'hidden' }}
@@ -143,26 +143,30 @@ export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPe
         </div>
 
         {/* Features List */}
-        <div className="flex-1 flex flex-col pl-6 pr-1.5 gap-1.5 mt-[12px]">
-          <div className="flex gap-1.5 flex-row items-center">
-            <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
-            <p className="text-sm text-neutral-900">3,000,000 символов с Alura / месяц</p>
-          </div>
-          <div className="flex gap-1.5 flex-row items-center">
-            <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
-            <p className="text-sm text-neutral-900">Приоритетная поддержка</p>
-          </div>
-          <div className="flex gap-1.5 flex-row items-center">
-            <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
-            <p className="text-sm text-neutral-900">Расширенная аналитика</p>
+        <div className="flex flex-1 px-2">
+          <div className="flex-1 flex flex-col px-1.5 gap-1.5 pt-3 border border-neutral-900 rounded-sm">
+            <div className="flex gap-1.5 flex-row items-center">
+              <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
+              <p className="text-sm text-neutral-900">3,000,000 символов с Alura / месяц</p>
+            </div>
+            <div className="flex gap-1.5 flex-row items-center">
+              <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
+              <p className="text-sm text-neutral-900">Приоритетная поддержка</p>
+            </div>
+            <div className="flex gap-1.5 flex-row items-center">
+              <div className="w-3 h-3 bg-colors-custom-accent rounded-sm flex-shrink-0"></div>
+              <p className="text-sm text-neutral-900">Расширенная аналитика</p>
+            </div>
           </div>
         </div>
 
-        {/* Footer */}
-        {/*<div className="p-4 flex justify-between items-center">*/}
-        {/*  <span className="text-base text-neutral-900">Для профессионалов</span>*/}
-        {/*  <Sparkles size={24}/>*/}
-        {/*</div>*/}
+         {/*Footer*/}
+            <div className="flex w-full p-2">
+              <div className="p-2 flex flex-1 justify-between items-center border border-neutral-900 rounded-sm">
+                <span className="text-base text-neutral-900">Для глубокого погружения</span>
+                <Sparkles size={24}/>
+              </div>
+            </div>
           </div>
 
           {/* Задняя сторона карточки - Payment Interface */}
@@ -198,13 +202,13 @@ export function PracticeProPlanCard({ isCurrentPlan = false, onClick, selectedPe
                 />
               </div>
 
-              <div className="items-center justify-center border border-neutral-900 font-semibold rounded-sm p-2 gap-[14px] h-[100px]">
+              <div className="items-center justify-center border border-neutral-900 font-semibold rounded-sm p-2 h-[100px]">
                 <div className="flex flex-row items-start justify-center text-2xl">
                   <div className="text-colors-custom-accent ">Senti</div>
                   <div className="text-neutral-900 ">Pay</div>
                 </div>
                 <button
-                    className="bg-colors-custom-accent mx-auto text-white rounded-sm h-[36px] w-[180px] flex items-center justify-center transition-colors hover:bg-violet-700"
+                    className="bg-colors-custom-accent mx-auto mt-3 text-white rounded-sm h-[36px] w-[180px] flex items-center justify-center transition-colors hover:bg-violet-700"
                     onClick={(e) => e.stopPropagation()}
                 >
                   Оплатить в Senti

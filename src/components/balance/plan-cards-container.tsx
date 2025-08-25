@@ -4,22 +4,23 @@ import React from "react"
 import { PurePlanCard } from "./pure-plan-card"
 import { PracticePlanCard } from "./practice-plan-card"
 import { PracticeProPlanCard } from "./practice-pro-plan-card"
-import { Hat, User } from "@/types/user"
+import {Hat, Tier, User} from "@/types/user"
 import { cn } from "@/src/lib/utils"
+import {PureSentiPlanCard} from "@/components/balance/pure-senti-plan-card";
 
 interface PlanCardsContainerProps {
-  currentPlan?: 'pure' | 'practice' | 'pro'
-  onPlanSelect?: (plan: 'pure' | 'practice' | 'pro') => void
+  currentPlan?: Tier
+  onPlanSelect?: (plan: Tier) => void
   userRole?: Hat
   selectedPeriod: 'month' | 'year'
   isMobile: boolean
   user?: User
 }
 
-export function PlanCardsContainer({ 
-  currentPlan = 'pure', 
-  onPlanSelect,
+export function PlanCardsContainer({
   userRole = 'adept',
+  currentPlan = userRole === 'adept' ? 'pure' : 'pure_senti',
+  onPlanSelect,
   isMobile,
   selectedPeriod,
   user,
@@ -41,7 +42,7 @@ export function PlanCardsContainer({
         "flex justify-center items-start",
         isMobile ? " flex-col gap-6 mx-auto w-[300px] py-[18px]" : "flex-row gap-[114px] p-[18px]"
         )}>
-      <div className={cn(
+      {userRole === 'adept' && (<div className={cn(
         "transition-all duration-500 ease-in-out flex",
         "transform-gpu",
           isMobile && "w-max-[300px]"
@@ -51,6 +52,7 @@ export function PlanCardsContainer({
           onClick={handlePurePlanClick}
         />
       </div>
+      )}
       
       {userRole === 'adept' && (
         <div className={cn(
@@ -68,6 +70,18 @@ export function PlanCardsContainer({
           user={user}
         />
       </div>
+      )}
+
+      {userRole === 'master' && (<div className={cn(
+              "transition-all duration-500 ease-in-out flex",
+              "transform-gpu",
+              isMobile && "w-max-[300px]"
+          )}>
+            <PureSentiPlanCard
+                isCurrentPlan={currentPlan === 'pure_senti'}
+                onClick={handlePurePlanClick}
+            />
+          </div>
       )}
 
       {userRole === 'master' && (

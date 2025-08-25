@@ -20,7 +20,7 @@ export function SidebarToggleButton({
         <div className={cn("flex-1 opacity-100", className)}>
             <button
                 onClick={toggleSidebar}
-                className="h-full px-3 flex items-center focus:outline-none "
+                className="h-full px-3 flex items-center justify-center focus:outline-none "
                 aria-label={ariaLabel}
             >
                 <PanelRightClose

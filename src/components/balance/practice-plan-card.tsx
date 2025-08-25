@@ -64,7 +64,7 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
           {/* Передняя сторона карточки */}
           <div
             className={cn(
-              "w-full h-full bg-white border border-colors-custom-accent  rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
+              "w-full h-full bg-white border hover:border-colors-custom-accent  rounded-sm shadow-custom cursor-pointer transition-all duration-200 hover:shadow-active",
               "flex flex-col backface-hidden"
             )}
             style={{ backfaceVisibility: 'hidden' }}
@@ -181,13 +181,13 @@ export function PracticePlanCard({ isCurrentPlan = false, onClick, selectedPerio
                 />
               </div>
 
-              <div className="items-center justify-center border border-neutral-900 font-semibold rounded-sm p-2 gap-[14px] h-[100px]">
+              <div className="items-center justify-center border border-neutral-900 font-semibold rounded-sm p-2 h-[100px]">
                 <div className="flex flex-row items-start justify-center text-2xl">
                   <div className="text-colors-custom-accent ">Senti</div>
                   <div className="text-neutral-900 ">Pay</div>
                 </div>
                 <button
-                    className="bg-colors-custom-accent mx-auto text-white rounded-sm h-[36px] w-[180px] flex items-center justify-center transition-colors hover:bg-violet-700"
+                    className="bg-colors-custom-accent mx-auto mt-3 text-white rounded-sm h-[36px] w-[180px] flex items-center justify-center transition-colors hover:bg-violet-700"
                     onClick={(e) => e.stopPropagation()}
                 >
                   Оплатить в Senti

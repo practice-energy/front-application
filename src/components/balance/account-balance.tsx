@@ -14,7 +14,7 @@ export function AccountBalance({isMobile, balanceAmount}: AccountBalanceProps) {
   const [balance] = useState(balanceAmount)
 
   return (
-    <div className="space-y-4">
+    <div className={cn(!isMobile && "space-y-4")}>
         <div className={cn(
             "flex",
             !isMobile ? "flex-col gap-4" : "flex-row justify-between gap-10"
@@ -25,7 +25,7 @@ export function AccountBalance({isMobile, balanceAmount}: AccountBalanceProps) {
                 Доступный баланс аккаунта
             </div>
 
-            <div className="items-center">
+            <div className="items-center flex flex-1">
                 <div className="bg-colors-custom-specialistCardStatItemBg rounded-sm shadow-custom w-min my-auto">
                     <div className="text-2xl font-semibold text-colors-custom-accent px-2 whitespace-nowrap">
                         {formatNumber(balance)} Senti
