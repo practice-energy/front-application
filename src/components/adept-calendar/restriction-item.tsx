@@ -124,10 +124,20 @@ export function RestrictionItem({
   }
 
   const handleTimeChange = (intervalIndex: number, field: 'start' | 'end', value: string) => {
+    // Валидация: приводим время к ближайшему значению, кратному 30 минутам
+    const [hours, minutes] = value.split(':').map(Number)
+    const totalMinutes = hours * 60 + minutes
+    const roundedMinutes = Math.round(totalMinutes / 30) * 30
+    
+    // Преобразуем обратно в формат HH:MM
+    const roundedHours = Math.floor(roundedMinutes / 60)
+    const finalMinutes = roundedMinutes % 60
+    const validatedValue = `${roundedHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`
+    
     const newIntervals = [...editedIntervals]
     newIntervals[intervalIndex] = {
       ...newIntervals[intervalIndex],
-      [field]: value
+      [field]: validatedValue
     }
     setEditedIntervals(newIntervals)
   }
@@ -176,6 +186,7 @@ export function RestrictionItem({
           type="time"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          step="1800"
           className="
         appearance-none text-sm border rounded-sm
         hover:border-gray-100 active:border-gray-100 active:ring-0

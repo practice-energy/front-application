@@ -145,7 +145,7 @@ export function DayColumnContent({ date, bookings, slotHeight, calendarRestricti
           </div>
         )
       })}
-      <div className="h-[56px]" />
+      {/*<div className="h-[56px]" />*/}
     </div>
   )
 }

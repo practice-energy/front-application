@@ -36,9 +36,9 @@ export function CalendarSettings({ restrictions, onUpdate, disableSettings }: Ca
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white rounded-sm">
+    <div className="flex flex-1 flex-col h-screen bg-white rounded-sm">
       <ScrollArea className="flex-1 flex h-screen">
-        <div className="flex flex-row items-center justify-between gap-3 pb-2 px-3">
+        <div className="flex flex-row items-center justify-between gap-3 flex-1 pb-2 px-3">
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center justify-center aspect-square rounded-sm shadow-custom h-10 w-10 p-1 border-0 bg-colors-custom-accent">
               <Settings className="h-[30px] w-[30px] text-white" />

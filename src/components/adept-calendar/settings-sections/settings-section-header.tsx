@@ -42,7 +42,7 @@ export function SettingsSectionHeader({
               }}
           >
             {showAddButton && onAddClick && <AddEntityButton onClick={onAddClick} />}
-            <div className="tracking-wider font-semibold">{title}</div>
+            <div className="font-semibold">{title}</div>
             <ChevronDown
                 className={cn(
                     "w-6 h-6 text-colors-custom-accent transition-all duration-200 ease-in-out transform ml-auto",
