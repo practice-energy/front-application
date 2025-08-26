@@ -3,14 +3,16 @@
 import { TimeColumnHeader, TimeColumnContent } from "./time-column"
 import { DayColumnHeader, DayColumnContent } from "./day-column"
 import type { Booking } from "@/src/types/booking"
+import type { CalendarRestrictions } from "@/src/types/calendar-event"
 import { useIsMobile } from "@/src/hooks/use-mobile"
 
 interface ScheduleViewProps {
   selectedDate: Date
   bookings: Booking[]
+  calendarRestrictions?: CalendarRestrictions
 }
 
-export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
+export function ScheduleView({ selectedDate, bookings, calendarRestrictions }: ScheduleViewProps) {
   const isMobile = useIsMobile()
   const slotHeight = isMobile ? 52 : 56
 
@@ -50,7 +52,12 @@ export function ScheduleView({ selectedDate, bookings }: ScheduleViewProps) {
           </div>
           {displayDates.map((date) => (
             <div key={`content-${date.toISOString()}`} className="flex-1 flex-shrink-1">
-              <DayColumnContent date={date} bookings={bookings} slotHeight={slotHeight} />
+              <DayColumnContent 
+                date={date} 
+                bookings={bookings} 
+                slotHeight={slotHeight} 
+                calendarRestrictions={calendarRestrictions}
+              />
             </div>
           ))}
         </div>

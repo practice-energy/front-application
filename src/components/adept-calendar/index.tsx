@@ -93,7 +93,11 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                             {/* Mobile Schedule */}
                             <div className="flex-1 overflow-y-auto border-t border-gray-100">
                                 <div className="flex h-full px-2 justify-center">
-                                    <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                                    <ScheduleView 
+                                      selectedDate={selectedDate} 
+                                      bookings={bookings} 
+                                      calendarRestrictions={calendarRestrictions}
+                                    />
                                 </div>
                             </div>
                         </motion.div>
@@ -129,7 +133,11 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                     onDateSelect={setSelectedDate}
                 />
                 <div className="flex-1">
-                    <ScheduleView selectedDate={selectedDate} bookings={bookings} />
+                    <ScheduleView 
+                      selectedDate={selectedDate} 
+                      bookings={bookings} 
+                      calendarRestrictions={calendarRestrictions}
+                    />
                 </div>
             </div>
         </div>

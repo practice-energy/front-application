@@ -27,6 +27,7 @@ export interface Booking {
   updatedAt: Date
   isRepeat?: boolean
   price: number
+  chatId?: string
 }
 
 export interface BookingSlot {
