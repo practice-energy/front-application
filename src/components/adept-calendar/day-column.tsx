@@ -87,7 +87,7 @@ export function DayColumnContent({ date, bookings, slotHeight, calendarRestricti
 
   // Проверяем, активен ли слот на основе calendar restrictions
   const isSlotActive = (halfhour: number) => {
-    if (!calendarRestrictions) return true
+    if (!calendarRestrictions) return false
 
     // Получаем день недели
     const dayOfWeek = date.getDay()
@@ -98,27 +98,27 @@ export function DayColumnContent({ date, bookings, slotHeight, calendarRestricti
     const dayRestriction = calendarRestrictions.commons[currentDay as keyof typeof calendarRestrictions.commons]
     if (!dayRestriction || !dayRestriction.isActive) return false
 
+    // Если день активен, но нет интервалов - считаем весь день активным
+    if (dayRestriction.intervals.length === 0) return true
+
     // Преобразуем номер получасового интервала в часы и минуты
     const hour = Math.floor(halfhour / 2)
     const minute = (halfhour % 2) * 30
 
-    // Создаем время для текущего слота
-    const slotTime = new Date(date)
-    slotTime.setHours(hour, minute, 0, 0)
+    // Создаем время для текущего слота (в минутах от начала дня)
+    const slotMinutes = hour * 60 + minute
 
     // Проверяем, попадает ли слот в один из интервалов
     return dayRestriction.intervals.some(interval => {
       const startTime = new Date(interval.start)
       const endTime = new Date(interval.end)
       
-      // Нормализуем время интервала к текущей дате
-      const normalizedStart = new Date(slotTime)
-      normalizedStart.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0)
+      // Преобразуем время интервала в минуты от начала дня
+      const startMinutes = startTime.getHours() * 60 + startTime.getMinutes()
+      const endMinutes = endTime.getHours() * 60 + endTime.getMinutes()
       
-      const normalizedEnd = new Date(slotTime)
-      normalizedEnd.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0)
-      
-      return slotTime >= normalizedStart && slotTime < normalizedEnd
+      // Проверяем, попадает ли слот в интервал
+      return slotMinutes >= startMinutes && slotMinutes < endMinutes
     })
   }
 
@@ -138,9 +138,9 @@ export function DayColumnContent({ date, bookings, slotHeight, calendarRestricti
               </div>
             )}
 
-            {/* Покраска активных слотов в белый цвет */}
-            {isActive && (
-              <div className="absolute w-full inset-0 bg-white z-5" />
+            {/* Покраска неактивных слотов в серый цвет */}
+            {!isActive && (
+              <div className="absolute w-full inset-0 bg-colors-custom-calendarSlotBg z-5" />
             )}
           </div>
         )

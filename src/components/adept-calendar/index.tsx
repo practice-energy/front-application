@@ -43,8 +43,30 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt:  timezone || getSystemTimezone(),
         commons: {
-            Mon: { id: "mon", isActive: true, intervals: [], isPractice: false },
-            Tue: { id: "tue", isActive: true, intervals: [], isPractice: false },
+            Mon: { 
+                id: "mon", 
+                isActive: true, 
+                intervals: [
+                    {
+                        start: new Date(new Date().setHours(9, 0, 0, 0)),
+                        end: new Date(new Date().setHours(17, 0, 0, 0)),
+                        formats: ["in-person", "video"]
+                    }
+                ], 
+                isPractice: false 
+            },
+            Tue: { 
+                id: "tue", 
+                isActive: true, 
+                intervals: [
+                    {
+                        start: new Date(new Date().setHours(10, 0, 0, 0)),
+                        end: new Date(new Date().setHours(18, 0, 0, 0)),
+                        formats: ["in-person", "video"]
+                    }
+                ], 
+                isPractice: false 
+            },
             Wed: { id: "wed", isActive: true, intervals: [], isPractice: false },
             Thu: { id: "thu", isActive: true, intervals: [], isPractice: false },
             Fri: { id: "fri", isActive: true, intervals: [], isPractice: false },
@@ -125,7 +147,7 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     return (
         <div className="h-full flex flex-col">
             <div className={cn(
-                "flex h-full mt-[66px] transition-all duration-300 ease-in-out",
+                "flex h-full mt-[66px] transition-all duration-500 ease-in-out",
                 isCollapsed ? "ml-0" : "ml-[400px]"
             )}>
                 <CalendarSidebar

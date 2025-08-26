@@ -5,6 +5,7 @@ import { DayColumnHeader, DayColumnContent } from "./day-column"
 import type { Booking } from "@/src/types/booking"
 import type { CalendarRestrictions } from "@/src/types/calendar-event"
 import { useIsMobile } from "@/src/hooks/use-mobile"
+import { ScrollArea } from "@/src/components/ui/scroll-area"
 
 interface ScheduleViewProps {
   selectedDate: Date
@@ -45,7 +46,7 @@ export function ScheduleView({ selectedDate, bookings, calendarRestrictions }: S
       </div>
 
       {/* Скроллируемое содержимое */}
-      <div className="flex-1 overflow-auto">
+      <ScrollArea className="flex-1">
         <div className="flex h-full">
           <div className="w-16 flex-shrink-0 bg-white border-gray-200">
             <TimeColumnContent slotHeight={slotHeight} />
@@ -61,7 +62,7 @@ export function ScheduleView({ selectedDate, bookings, calendarRestrictions }: S
             </div>
           ))}
         </div>
-      </div>
+      </ScrollArea>
     </div>
   )
 }

@@ -17,8 +17,30 @@ export function CalendarSidebar({selectedDate, onDateSelect}: CalendarSidebarPro
     const [calendarRestrictions, setCalendarRestrictions] = useState<CalendarRestrictions>({
         gmt: "GMT+3",
         commons: {
-            Mon: { id: "mon", isActive: true, intervals: [], isPractice: false },
-            Tue: { id: "tue", isActive: true, intervals: [], isPractice: false },
+            Mon: { 
+                id: "mon", 
+                isActive: true, 
+                intervals: [
+                    {
+                        start: new Date(new Date().setHours(9, 0, 0, 0)),
+                        end: new Date(new Date().setHours(17, 0, 0, 0)),
+                        formats: ["in-person", "video"]
+                    }
+                ], 
+                isPractice: false 
+            },
+            Tue: { 
+                id: "tue", 
+                isActive: true, 
+                intervals: [
+                    {
+                        start: new Date(new Date().setHours(10, 0, 0, 0)),
+                        end: new Date(new Date().setHours(18, 0, 0, 0)),
+                        formats: ["in-person", "video"]
+                    }
+                ], 
+                isPractice: false 
+            },
             Wed: { id: "wed", isActive: true, intervals: [], isPractice: false },
             Thu: { id: "thu", isActive: true, intervals: [], isPractice: false },
             Fri: { id: "fri", isActive: true, intervals: [], isPractice: false },
