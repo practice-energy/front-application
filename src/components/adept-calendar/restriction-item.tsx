@@ -231,7 +231,7 @@ export function RestrictionItem({
                     )}>
                       <AnimatePresence>
                         {Array.from({ length: intervalCount }).map((_, i) => {
-                          const interval = editedIntervals[i] || { start: '09:00', end: '17:00', formats: ["video" as Format, "in-person" as Format] }
+                          const interval = editedIntervals[i] || { start: '09:00', end: '17:00', formats: ["video" as Format, "in-person" as Format] as Format[] }
                           return (
                               <motion.div
                                   key={`interval-${i}`}
