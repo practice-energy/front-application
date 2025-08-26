@@ -40,14 +40,12 @@ export const SettingsMobileHeader = ({
             </div>
 
             <div className="flex flex-row items-center gap-[18px]">
-                <div className="gap-6 flex flex-row items-center justify-center">
-                    <ProfileIcon
-                        isAuthenticated={isAuthenticated}
-                        toggleProfileMenu={toggleProfileMenu}
-                        user={user}
-                        iconSize={50}
-                    />
-                </div>
+                <ProfileIcon
+                    isAuthenticated={isAuthenticated}
+                    toggleProfileMenu={toggleProfileMenu}
+                    user={user}
+                    iconSize={36}
+                />
 
                 <SidebarToggleButton
                     toggleSidebar={toggleSidebar}

@@ -23,6 +23,7 @@ interface AdeptCalendarProps {
 
 export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+    const [calendarCollapsed, setCalendarCollapsed] = useState(false)
     const isMobile = useIsMobile()
     const { user } = useProfileStore()
     const { isAuthenticated } = useAuth()
@@ -87,6 +88,9 @@ export function AdeptCalendar({ bookings, timezone }: AdeptCalendarProps) {
                         isAuthenticated={isAuthenticated}
                         isSettingsOpen={showSettings}
                         toggleSidebar={toggleSidebar}
+                        calendarCollapsed={calendarCollapsed}
+                        onToggleCalendar={() => setCalendarCollapsed(!calendarCollapsed)}
+                        currentDate={selectedDate}
                     />
                 )}
 

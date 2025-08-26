@@ -227,7 +227,8 @@ export function RestrictionItem({
                   <div className="space-y-4">
                     <div className={cn(
                         "flex items-start w-full",
-                        !isEditMode && "gap-4"
+                        !isEditMode && "gap-4",
+                        intervalCount === 3 && "justify-between",
                     )}>
                       <AnimatePresence>
                         {Array.from({ length: intervalCount }).map((_, i) => {
